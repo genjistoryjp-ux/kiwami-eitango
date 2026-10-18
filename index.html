@@ -596,7 +596,7 @@ const DECK_META = [
 ].filter(m => (RAW[m.id] || []).length || !Object.keys(RAW).length);
 const POS = ['名','動','形','副','前','接','熟'];
 const POS_NAME = {名:'名詞', 動:'動詞', 形:'形容詞', 副:'副詞', 前:'前置詞', 接:'接続詞', 熟:'熟語'};
-const DEF = {newPerDay:20, setSize:10, retention:0.9, mode:'auto', spell:true, deriv:true, autoSpeak:true, rate:0.95, sfx:true, autoNext:true, haptic:true, zoom:1, maxRev:150, dir:'auto', senseCards:true, onboarded:false, drillMin:2, pace:'normal', timeLimit:10, veil:false, order:'seq', active:['j1'], upd:0};
+const DEF = {newPerDay:20, setSize:10, retention:0.9, mode:'auto', spell:true, deriv:true, autoSpeak:true, rate:0.95, sfx:true, autoNext:true, haptic:true, zoom:1, maxRev:150, dir:'auto', senseCards:true, onboarded:false, drillMin:2, timeLimit:10, veil:false, order:'seq', active:['j1'], upd:0};
 const DAY = 86400000;
 const LS_KEY = 'tangoloop.v1';
 
@@ -847,8 +847,7 @@ function senseDots(c){
   return `<span class="sdots" role="img" aria-label="意味 ${learnedSenses(c)}/${c.s.length}">${c.s.map((_, i) => { const st = senseState(c, i); return `<i class="${st}" title="${i + 1}つ目の意味：${lab[st]}"></i>`; }).join('')}</span>`;
 }
 const revLeft = () => Math.max(0, (S.settings.maxRev || 9999) - (todayStat().rn || 0));
-const freePace = () => S.settings.pace === 'free';
-const newLeftToday = () => freePace() ? Infinity : Math.max(0, S.settings.newPerDay - (todayStat().nw||0));
+const newLeftToday = () => Math.max(0, S.settings.newPerDay - (todayStat().nw||0));
 function counts(ids=activeIds()){
   const P = pools(ids);
   const newLeft = newLeftToday();
@@ -1194,7 +1193,6 @@ function stackBar(st){
 }
 const legendHTML = () => `<div class="legend"><span><i style="background:var(--st-master)"></i>習得（安定度21日以上）</span><span><i style="background:var(--st-learn)"></i>学習中</span><span><i style="background:var(--st-new)"></i>未学習</span></div>`;
 
-const paceRow = () => `<div class="dirrow"><span>ペース</span><div class="seg seg-sm" role="group" aria-label="学習ペース">${[['normal', 'ふつう'], ['free', 'どんどん']].map(([v, l]) => `<button aria-pressed="${(S.settings.pace || 'normal') === v}" data-act="set" data-k="pace" data-v="${v}">${l}</button>`).join('')}</div></div>`;
 const dirRow = () => `<div class="dirrow"><span>出題</span><div class="seg seg-sm" role="group" aria-label="出題の向き">${Object.entries(DIR_LABEL).map(([v, l]) => `<button aria-pressed="${(S.settings.dir || 'auto') === v}" data-act="set" data-k="dir" data-v="${v}">${l}</button>`).join('')}</div></div>`;
 function viewHome(){
   const c = counts(); const td = todayStat();
@@ -1204,21 +1202,21 @@ function viewHome(){
   const today = dayIdx();
   const tomorrow = cardsOf(act, true).filter(x => { const p = prog(x); return isReview(p) && !p.sus && p.due === today + 1; }).length;
   const n = Math.min(S.settings.setSize, total);
+  const canMore = act.length > 0 && c.fresh + c.queued + c.dnew > 0;
   const nRecent = drillCards('recent', act).length, nMany = drillCards('many', act).length;
   const hero = total ? `
     <div class="today-k">今日の学習</div>
     <div class="today-nums">
       <div class="bignum due"><b>${c.due}</b><span>復習${c.dueAll > c.due ? `<small>（残り${c.dueAll - c.due}は明日以降）</small>` : ''}</span></div>
-      <div class="bignum"><b>${c.newToday}</b><span>${freePace() ? '残りの新しい単語<small>（どんどんモード）</small>' : `新しい単語${c.dnew ? `<small>（派生語・意味 ${Math.min(c.dnew, c.newToday)}まで）</small>` : ''}`}</span></div>
+      <div class="bignum"><b>${c.newToday}</b><span>新しい単語${c.dnew ? `<small>（派生語・意味 ${Math.min(c.dnew, c.newToday)}まで）</small>` : ''}</span></div>
     </div>
     <div class="today-meta">${act.map(id => esc(deckById(id).name)).join('・')}</div>
-    ${dirRow()}${paceRow()}`
+    ${dirRow()}`
   : `
     <div class="done-badge">${I.check}</div>
-    <div class="today-k">今日の分は完了</div>
-    <div class="today-meta">${act.length ? `明日の復習は ${tomorrow}語。` : '単語帳タブで学習する単語帳を選んでください。'}${td.n ? `今日は ${td.n}問 解きました。` : ''}</div>
-    ${dirRow()}${paceRow()}
-    <button class="btn btn-soft btn-block" id="herobtn" data-act="goFree" ${c.fresh + c.queued + c.dnew ? '' : 'disabled'}>${I.plus}どんどんモードで続ける</button>`;
+    <div class="today-k">今日の目標は達成</div>
+    <div class="today-meta">${act.length ? `明日の復習は ${tomorrow}語。` : '単語帳タブで学習する単語帳を選んでください。'}${td.n ? `今日は ${td.n}問 解きました。` : ''}${canMore ? 'このまま新しい単語を続けられます。' : ''}</div>
+    ${dirRow()}`;
   return `${topbar()}
   <section class="tcard holed today ${total ? '' : 'is-done'}" aria-label="今日の学習"><span class="ring"></span>${hero}
     <div class="btn-row">
@@ -1242,7 +1240,8 @@ function viewHome(){
     <div class="decks">${act.length ? act.map(id => deckRow(deckById(id), false)).join('') : `<div class="empty">単語帳タブで「学習する」をオンにしてください。</div>`}</div>
     ${act.length ? legendHTML() : ''}
   </div>
-  ${total ? `<div class="dock-space"></div><div class="ctadock" id="ctadock"><button class="btn btn-primary btn-block btn-big" data-act="study">${I.play}学習をはじめる<small>${n}問</small></button></div>` : ''}`;
+  ${total ? `<div class="dock-space"></div><div class="ctadock" id="ctadock"><button class="btn btn-primary btn-block btn-big" data-act="study">${I.play}学習をはじめる<small>${n}問</small></button></div>`
+    : canMore ? `<div class="dock-space"></div><div class="ctadock" id="ctadock"><button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}続けて学習する<small>新しい単語 ${S.settings.setSize}問</small></button></div>` : ''}`;
 }
 function heatmap(){
   const today = dayIdx(); const dow = new Date(today*DAY).getUTCDay();
@@ -1389,8 +1388,7 @@ function viewSettings(){
   return `${topbar()}
   <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">設定</h2></div>
   <div class="sec" style="margin-top:14px"><div class="sec-h"><h2>学習</h2></div><div class="form">
-    <div class="frow"><div class="lab"><b>学習ペース</b><span>どんどん：新しい単語の1日の上限なしで、続けられるだけ進める</span></div>${seg('pace',[['normal','ふつう'],['free','どんどん']])}</div>
-    <div class="frow"><div class="lab"><b>1日の新しい単語</b><span>ふつうペースのとき、復習とは別に毎日これだけ新しく覚える</span></div>
+    <div class="frow"><div class="lab"><b>1日の目標（新しい単語）</b><span>毎日これだけ新しく覚えるのが目標。達成したあともそのまま続けられます</span></div>
       <div class="stepper"><button data-act="step" data-k="newPerDay" data-d="-5" aria-label="減らす">−</button><output class="num">${s.newPerDay}</output><button data-act="step" data-k="newPerDay" data-d="5" aria-label="増やす">＋</button></div></div>
     <div class="frow"><div class="lab"><b>1日の復習の上限</b><span>たまった復習は、忘れかけの単語から順に少しずつ出します</span></div>
       <div class="stepper"><button data-act="step" data-k="maxRev" data-d="-50" aria-label="減らす">−</button><output class="num">${s.maxRev}</output><button data-act="step" data-k="maxRev" data-d="50" aria-label="増やす">＋</button></div></div>
@@ -1943,7 +1941,7 @@ function renderResults(){
     <div class="words rlist">${rows}</div>
     <div class="res-btns">
       ${hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}次の${Math.min(S.settings.setSize, more.due + more.newToday)}問<small>復習${more.due}・新規${more.newToday}</small></button>`
-        : `<div class="res-done">${I.check}今日の分はすべて完了です</div>${more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="goFree">${I.plus}どんどんモードで続ける<small>1日の上限なし</small></button>` : ''}`}
+        : `<div class="res-done">${I.check}今日の目標は達成</div>${more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>新しい単語</small></button>` : ''}`}
       <button class="btn btn-ghost btn-block" data-act="quitQuiz">ホームへ</button></div></div>`;
   Q.done = true; Q.lockUntil = performance.now() + 400;
 }
@@ -2202,8 +2200,8 @@ const ACT = {
   again: () => { if (locked()) return; ACT.againGo(); },
   againGo: () => {
     if (Q?.opts?.drill) { const cards = drillCards(Q.opts.drill); if (cards.length) return startQuiz({cards: cards.slice(0, S.settings.setSize), drill: Q.opts.drill}); } const ids = Q?.opts?.deckIds; const flash = Q?.opts?.flash; startQuiz(ids ? {deckIds:ids, flash} : {flash}); },
-  goFree: () => { if (locked()) return; setSetting('pace', 'free'); toast('どんどんモードにしました（ホームか設定で「ふつう」に戻せます）');
-    startQuiz({deckIds: Q?.opts?.deckIds}); },
+  // past today's goal: keep going with new words (and whatever reviews are left)
+  studyMore: () => { if (locked()) return; startQuiz({extraNew: true, deckIds: Q?.opts?.deckIds, flash: Q?.opts?.flash}); },
   flash: () => startQuiz({flash:true}),
   swipe: () => startSwipe(),
   studyDeck: t => startQuiz({deckIds:[t.dataset.id], extraNew: counts([t.dataset.id]).due === 0 && counts([t.dataset.id]).newToday === 0}),
@@ -2294,8 +2292,8 @@ const ACT = {
   signOut: () => signOutNow(),
   obStart: t => {
     const deck = document.querySelector('input[name="obdeck"]:checked')?.value || 'j1';
-    const v = document.querySelector('input[name="obnew"]:checked')?.value || '20';
-    setSetting('active', [deck]); if (v === 'free') setSetting('pace', 'free'); else { setSetting('pace', 'normal'); setSetting('newPerDay', +v); } setSetting('onboarded', true);
+    const n = +(document.querySelector('input[name="obnew"]:checked')?.value || 20);
+    setSetting('active', [deck]); setSetting('newPerDay', n); setSetting('onboarded', true);
     closeSheet(); render();
     if (t.dataset.mode === 'swipe') startSwipe([deck]); else startQuiz({});
   },
@@ -2431,10 +2429,9 @@ function onboard(){
     <fieldset class="ob-f"><legend>どこから始める？</legend>
       ${opts.map(([id, name, sub], i) => `<label class="ob-opt"><input type="radio" name="obdeck" value="${id}" ${i === 0 ? 'checked' : ''}><span><b>${name}</b><small>${sub}</small></span></label>`).join('')}
     </fieldset>
-    <fieldset class="ob-f"><legend>1日に覚える新しい単語</legend><div class="ob-row">
+    <fieldset class="ob-f"><legend>1日の目標（新しい単語）</legend><div class="ob-row">
       ${[10, 20, 30].map(n => `<label class="ob-chip"><input type="radio" name="obnew" value="${n}" ${n === 20 ? 'checked' : ''}><span>${n}語</span></label>`).join('')}
-      <label class="ob-chip"><input type="radio" name="obnew" value="free"><span>どんどん</span></label>
-    </div><p class="ob-note">どんどん＝1日の上限なし。いつでも設定で変えられます</p></fieldset>
+    </div><p class="ob-note">目標を達成したあとも、そのまま続けて学習できます</p></fieldset>
     <button class="btn btn-primary btn-big btn-block" data-act="obStart" data-mode="swipe">知っている単語を仕分けてから始める</button>
     <button class="btn btn-ghost btn-block" data-act="obStart" data-mode="study">すぐに学習をはじめる</button>
     ${FIREBASE ? '<button class="btn btn-ghost btn-block" data-act="signIn">ほかの端末で使っていた人：ログイン</button>' : ''}
