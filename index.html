@@ -564,6 +564,11 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .qrate.gone{opacity:0}
 .qrate.pop{animation:ratepop .35s cubic-bezier(.2,.9,.3,1.4)}
 @keyframes ratepop{from{transform:scale(.7)}50%{transform:scale(1.25)}to{transform:none}}
+
+.today-again{margin-top:10px;justify-content:space-between;min-height:50px}
+.today-again b{font-size:16px;font-family:var(--f-word);font-variant-numeric:lining-nums tabular-nums}
+.res-note{margin-top:8px;font-size:12.5px;color:var(--muted);text-align:center}
+.res-btns .btn-ghost small{margin-left:6px;font-size:11.5px;font-weight:400;color:var(--muted)}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -839,6 +844,11 @@ function status(p){
 const wrongCount = p => Math.max(p?.w || 0, p?.l || 0);
 const isLeech = p => wrongCount(p) >= 3;
 const missedLast = p => isReview(p) && p.lg === 1;
+/* 今日やった単語: answered in a study set today (a word only sorted as 知ってる in 高速仕分け doesn't count) */
+function todayCards(ids=activeIds()){
+  const t = dayIdx();
+  return cardsOf(ids, true).filter(c => { const p = prog(c); return p && isReview(p) && !p.sus && dayIdx(p.last) === t && !(p.k && (p.r || 0) <= 1); });
+}
 /* 苦手を特訓: 前回まちがえた (newest first) / 3回以上まちがえた (most missed first, not yet answered today) */
 function drillCards(kind, ids=activeIds()){
   const today = dayIdx();
@@ -1378,7 +1388,7 @@ function viewHome(){
   const tomorrow = cardsOf(act, true).filter(x => { const p = prog(x); return isReview(p) && !p.sus && p.due === today + 1; }).length;
   const n = Math.min(S.settings.setSize, total);
   const canMore = act.length > 0 && c.fresh + c.queued + c.dnew > 0;
-  const nRecent = drillCards('recent', act).length, nMany = drillCards('many', act).length;
+  const nRecent = drillCards('recent', act).length, nMany = drillCards('many', act).length, nToday = todayCards(act).length;
   const hero = total ? `
     <div class="today-k">今日の学習</div>
     <div class="today-nums">
@@ -1410,6 +1420,7 @@ function viewHome(){
       <button class="btn btn-ghost" data-act="drill" data-kind="many" ${nMany ? '' : 'disabled'}><span>${S.settings.drillMin || 2}回以上まちがえた</span><b>${nMany}語</b></button>
     </div>
     <div class="dirrow"><span>回数</span><div class="seg seg-sm" role="group" aria-label="何回以上まちがえた単語にするか">${[1, 2, 3, 5].map(n => `<button aria-pressed="${(S.settings.drillMin || 2) === n}" data-act="set" data-k="drillMin" data-v="${n}">${n}回以上</button>`).join('')}</div></div></div>
+    ${nToday ? `<button class="btn btn-ghost btn-block today-again" data-act="practiceToday">${I.play}今日やった単語をもう一度<b>${nToday}語</b></button>` : ''}
   <div class="sec"><div class="sec-h"><h2>学習の記録</h2><span class="sub">直近20週</span></div>${heatmap()}</div>
   <div class="sec"><div class="sec-h"><h2>学習中の単語帳</h2><span class="sp"></span><button class="link" data-act="tab" data-tab="decks">すべて見る</button></div>
     <div class="decks">${act.length ? act.map(id => deckRow(deckById(id), false)).join('') : `<div class="empty">単語帳タブで「学習する」をオンにしてください。</div>`}</div>
@@ -1909,7 +1920,7 @@ function renderQ(){
   }
   $('#screen').innerHTML = `<div class="screen-in study">${qHeader()}
     ${live ? rateHTML() : clock ? TIMER_HTML : ''}
-    <div class="qstage">${behind}<div class="tcard holed qcard" id="qcard"><span class="ring"></span><span class="qtype">${fresh ? '新しい単語' : TYPE_LABEL[type]}${it.tries ? ' ・ もう一度' : ''}</span><div class="qcard-in">${card}</div></div></div>
+    <div class="qstage">${behind}<div class="tcard holed qcard" id="qcard"><span class="ring"></span><span class="qtype">${Q.opts.practice ? '練習 ・ ' : ''}${fresh ? '新しい単語' : TYPE_LABEL[type]}${it.tries ? ' ・ もう一度' : ''}</span><div class="qcard-in">${card}</div></div></div>
     <div id="qbody">${body}</div></div><div id="fb"></div>`;
   Q.t0 = performance.now(); Q.lockUntil = Q.t0 + 250; Q.timedOut = false;
   if (clock) countdown(type === 'flash' ? S.settings.timeLimit * 500 : slowMs(type), () => timeUp(it),
@@ -1969,12 +1980,14 @@ function answer(ok, grade){
   const ub = $('.qundo'); if (ub) ub.disabled = false;
   const ms = Math.min(60000, performance.now() - Q.t0);
   const g = grade ?? gradeFrom(it.type, ok, ms, Q.hint > 1, isReview(it.p0));
-  if (it.first === null && ok && grade == null) { noteRT(it.type, ms); snap.rt = it.type; }
+  const practice = !!Q.opts.practice; snap.practice = practice;
+  if (it.first === null && ok && grade == null && !practice) { noteRT(it.type, ms); snap.rt = it.type; }
   if (grade != null) ok = grade > 1;
   const tier = ok && grade == null && it.first === null && it.type in SLOW_DEF ? speedTier(it.type, ms) : 0;
   showRate(tier, true);   // the tier it earned pops; a miss clears it
   let np = null;
-  if (it.first === null) {
+  if (it.first === null && practice) { it.first = g; it.ok = ok; it.ms = ms; it.grade = g; it.tier = tier; }   // 練習: nothing is saved
+  else if (it.first === null) {
     const wasNew = !isReview(it.p0);
     it.first = g; it.ok = ok; it.ms = ms;
     np = nextState(it.p0, g);
@@ -2014,7 +2027,7 @@ function showFeedback(it, ok, np){
   const auto = ok && S.settings.autoNext;
   const canUndo = !ok && np && it.type !== 'flash' && !Q.gaveUp;
   const tn = it.tier || ({4: 3, 3: 2, 2: 1})[it.grade];   // spelling has no tier: 簡単 reads as Excellent
-  const rating = ok && np && RATE_NAME[tn] ? `<span class="rate t${tn}">${RATE_NAME[tn]}</span>` : '';
+  const rating = ok && (np || Q.opts.practice) && it.first !== null && RATE_NAME[tn] ? `<span class="rate t${tn}">${RATE_NAME[tn]}</span>` : '';
   const title = ok ? `<span class="mk o">○</span>正解${rating}` : `<span class="mk x">×</span>${Q.timedOut ? '時間切れ' : np ? '不正解' : 'まだ覚えていない'}`;
   // what you answered vs what was right, so the wrong option is corrected explicitly
   let cmp = '';
@@ -2094,7 +2107,7 @@ function undoAnswer(){
   if (!Q || !Q.hist?.length) return;
   const h = Q.hist.pop(), it = h.it;
   clearTimeout(Q.timer); Q.timer = null; stopCountdown();
-  if (h.first === null) {
+  if (h.first === null && !h.practice) {
     // the answer had scheduled the card: put its record back, stamped so a sync doesn't bring the answer back
     setProg(it.c, h.prog ? {...h.prog, u: Date.now()} : {st:0, last: Date.now()});
     if (h.bump) bumpDaily(Object.fromEntries(Object.entries(h.bump).map(([k, v]) => [k, -v])));
@@ -2182,22 +2195,25 @@ function renderResults(){
   const rows = its.map(x => `<div class="rrow"><span class="mk ${x.ok?'o':'x'}">${x.ok?'○':'×'}</span>
     <div class="rword"><b>${esc(x.c.w)}</b><span>${x.c.isD ? `← ${esc(x.c.parent.w)}　` : ''}${studyMeaningHTML(x.c)}</span></div><span class="ivl">${x.after ? ivlText(x.after.due - today) : ''}</span></div>`).join('');
   const hasMore = more.due + more.newToday > 0;
-  const pct = Math.round(ok / n * 100);
+  const pct = Math.round(ok / n * 100), prac = !!Q.opts.practice;
   $('#screen').innerHTML = `<div class="screen-in res">
     <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span></div>
-    <div class="res-h"><div class="eyebrow">セット完了</div>
+    <div class="res-h"><div class="eyebrow">${prac ? '練習おわり' : 'セット完了'}</div>
       <div class="ring-score" style="--p:${pct}"><div><b class="big">${pct}<small>%</small></b><span>1回目で正解</span></div></div>
       <div class="res-tiles">
-        <div><b>+${learned}</b><span>新しく覚えた</span></div>
-        <div><b>${reviewed}</b><span>復習した</span></div>
+        ${prac ? `<div><b>${n}</b><span>練習した</span></div><div><b>${ok}</b><span>1回目で正解</span></div>`
+          : `<div><b>+${learned}</b><span>新しく覚えた</span></div><div><b>${reviewed}</b><span>復習した</span></div>`}
         <div><b>${st.n}<small>日</small></b><span>連続学習</span></div>
       </div>
-      <div class="res-meta"><span>${fmtMs(dur)}</span><span>最大 ${Q.maxCombo} 連続正解</span></div></div>
+      <div class="res-meta"><span>${fmtMs(dur)}</span><span>最大 ${Q.maxCombo} 連続正解</span></div>
+      ${prac ? '<div class="res-note">練習なので、復習日と学習の記録は変わりません</div>' : ''}</div>
     ${nudgeHTML()}<div class="words rlist">${rows}</div>
     <div class="res-undo"><button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）">${I.undo}<span>1問もどす</span></button></div>
     <div class="res-btns">
-      ${hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}次の${Math.min(S.settings.setSize, more.due + more.newToday)}問<small>復習${more.due}・新規${more.newToday}</small></button>`
+      ${prac ? `<button class="btn btn-primary btn-block btn-big" data-act="practiceAgain">${I.play}もう一度<small>${Q.opts.practice === 'today' && todayCards().length > n ? `今日の単語から${n}問` : `同じ${n}語で練習`}</small></button>`
+      : hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}次の${Math.min(S.settings.setSize, more.due + more.newToday)}問<small>復習${more.due}・新規${more.newToday}</small></button>`
         : `<div class="res-done">${I.check}今日の目標は達成</div>${more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>新しい単語</small></button>` : ''}`}
+      ${prac ? '' : '<button class="btn btn-ghost btn-block" data-act="practiceSet">同じ単語でもう一度<small>練習・復習日は変わりません</small></button>'}
       <button class="btn btn-ghost btn-block" data-act="quitQuiz">ホームへ</button></div></div>`;
   Q.done = true; Q.lockUntil = performance.now() + 400;
   flush();                                         // set end: save to the cloud now
@@ -2496,6 +2512,12 @@ const ACT = {
   hint: () => hint(),
   reveal: () => reveal(),
   grade: t => { if (!locked()) answer(null, +t.dataset.g); },
+  // 練習: today's words (a fresh sample each time) or the set just finished; the schedule is left alone
+  practiceToday: () => { const cards = todayCards(); if (!cards.length) return toast('今日はまだ学習した単語がありません');
+    startQuiz({cards: shuffle(cards).slice(0, S.settings.setSize), practice: 'today'}); },
+  practiceSet: () => { if (!Q || locked()) return; startQuiz({cards: shuffle(Q.items.map(x => x.c)), practice: 'set', deckIds: Q.opts.deckIds}); },
+  practiceAgain: () => { if (!Q || locked()) return; if (Q.opts.practice === 'today') return ACT.practiceToday();
+    startQuiz({cards: shuffle(Q.items.map(x => x.c)), practice: 'set', deckIds: Q.opts.deckIds}); },
   drill: t => { const cards = drillCards(t.dataset.kind); if (!cards.length) return toast('対象の単語はありません');
     startQuiz({cards: cards.slice(0, S.settings.setSize), drill: t.dataset.kind}); },
   studyFiltered: () => { const d = deckById(route.deck); if (!d) return; const cards = filterCards(d).filter(c => !prog(c)?.sus);
