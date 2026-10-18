@@ -542,9 +542,9 @@ const IS_WEB = true;
 const FIREBASE = null;
 
 const DECK_META = [
-  {id:'j1',     name:'受験2500 基礎', desc:'入試の土台になる語',                 tag:'LEVEL 1'},
-  {id:'j2',     name:'受験2500 標準', desc:'入試で繰り返し出る語',               tag:'LEVEL 2'},
-  {id:'j3',     name:'受験2500 発展', desc:'難関大で差がつく語',                 tag:'LEVEL 3'},
+  {id:'j1',     name:'受験英単語 基礎', desc:'全2500語のうち 1〜750番 ・ 高校の基本〜共通テスト',        tag:'No.1–750'},
+  {id:'j2',     name:'受験英単語 標準', desc:'全2500語のうち 751〜1700番 ・ 共通テスト〜中堅大',        tag:'No.751–1700'},
+  {id:'j3',     name:'受験英単語 発展', desc:'全2500語のうち 1701〜2500番 ・ 難関大・英検準1級',     tag:'No.1701–2500'},
   {id:'idioms', name:'必修英熟語',     desc:'句動詞とイディオム',                 tag:'PHRASE'},
   {id:'theme',  name:'テーマ別 長文頻出語', desc:'環境・医療・経済などの専門用語と固有名詞', tag:'THEME'},
   {id:'toeic',  name:'TOEIC頻出',      desc:'ビジネス・オフィスの定番語',         tag:'600–860'},
@@ -2232,7 +2232,7 @@ addEventListener('pagehide', () => { saveNow(); flush(); });
 /* ---------- first run ---------- */
 const hasProgress = () => Object.values(S.prog).some(d => d && Object.keys(d).length);
 function onboard(){
-  const opts = [['j1','受験2500 基礎','高校の基本〜共通テスト'], ['j2','受験2500 標準','共通テスト〜中堅大'], ['j3','受験2500 発展','難関大・英検準1級'], ['toeic','TOEIC頻出','ビジネス・オフィス'], ['theme','テーマ別 長文頻出語','環境・医療・経済などの専門語']]
+  const opts = [['j1','受験英単語 基礎（No.1–750）','高校の基本〜共通テスト'], ['j2','受験英単語 標準（No.751–1700）','共通テスト〜中堅大'], ['j3','受験英単語 発展（No.1701–2500）','難関大・英検準1級'], ['toeic','TOEIC頻出','ビジネス・オフィス'], ['theme','テーマ別 長文頻出語','環境・医療・経済などの専門語']]
     .filter(([id]) => deckById(id));
   openSheet(`<div class="ob">
     <div class="ob-logo" aria-hidden="true">極</div>
