@@ -200,6 +200,8 @@ p{margin:0}
 .form{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
 .frow{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--line)}
 .frow:first-child{border-top:0}
+.frow.wrap{flex-wrap:wrap}
+.frow.wrap .lab{flex-basis:100%}
 .frow .lab{flex:1;min-width:0;display:flex;flex-direction:column}
 .frow .lab b{font-size:14px}
 .frow .lab span{font-size:12px;color:var(--muted)}
@@ -469,7 +471,11 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .ob-opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
 .ob-opt input,.ob-chip input{accent-color:var(--accent);width:18px;height:18px;margin:0}
 .ob-row{display:flex;gap:8px}
-.ob-chip{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1.5px solid var(--line);border-radius:12px;font-weight:700;cursor:pointer}
+.ob-chip{flex:1;position:relative;display:flex;align-items:center;justify-content:center;padding:11px 4px;border:1.5px solid var(--line);border-radius:12px;font-weight:700;white-space:nowrap;cursor:pointer}
+/* the chip's border and fill show the choice; the radio itself stays for keyboard and screen readers */
+.ob-chip input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.ob-chip:has(input:focus-visible){outline:2.5px solid var(--accent);outline-offset:2px}
+.ob-note{font-size:12px;color:var(--muted);margin-top:6px}
 .ob-chip:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
 .ob-skip{align-self:center;padding:6px}
 
@@ -496,7 +502,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .fc-cap{font-size:12px!important}
 
 .moremean{display:inline-block;margin-left:8px;font-size:.78em;font-weight:400;color:var(--muted)}
-.swmean.hide .moremean{color:transparent}
+.swnote{margin-top:-6px;font-size:12.5px;color:var(--muted)}
 .rword .moremean{font-size:11px}
 .pat{display:block;font-family:var(--f-word);font-weight:600;font-size:14px;color:var(--accent);line-height:1.35}
 .pat.inl{display:inline;margin-right:8px}
@@ -510,6 +516,12 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .grades.two{grid-template-columns:1fr 1fr}
 .grades.two small{font-family:var(--f-ui)}
 .grade-note{text-align:center;font-size:12.5px;color:var(--muted);margin-top:10px}
+
+.qtimer{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:12px}
+.qtimer i{display:block;height:100%;width:100%;border-radius:3px;background:var(--good);transition:width .1s linear,background-color .3s}
+.qtimer i.mid{background:var(--hard)}
+.qtimer i.low{background:var(--again)}
+.qtimer + .qstage{margin-top:10px}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -580,7 +592,7 @@ const DECK_META = [
 ].filter(m => (RAW[m.id] || []).length || !Object.keys(RAW).length);
 const POS = ['名','動','形','副','前','接','熟'];
 const POS_NAME = {名:'名詞', 動:'動詞', 形:'形容詞', 副:'副詞', 前:'前置詞', 接:'接続詞', 熟:'熟語'};
-const DEF = {newPerDay:20, setSize:10, retention:0.9, mode:'auto', spell:true, deriv:true, autoSpeak:true, rate:0.95, sfx:true, autoNext:true, haptic:true, zoom:1, maxRev:150, dir:'auto', senseCards:true, onboarded:false, drillMin:2, order:'seq', active:['j1'], upd:0};
+const DEF = {newPerDay:20, setSize:10, retention:0.9, mode:'auto', spell:true, deriv:true, autoSpeak:true, rate:0.95, sfx:true, autoNext:true, haptic:true, zoom:1, maxRev:150, dir:'auto', senseCards:true, onboarded:false, drillMin:2, pace:'normal', timeLimit:10, order:'seq', active:['j1'], upd:0};
 const DAY = 86400000;
 const LS_KEY = 'tangoloop.v1';
 
@@ -679,10 +691,11 @@ const allMeanings = c => c.s.map(s => s.m).join(' ／ ');
 /* what a study screen shows for a card: a meaning card names its number; a headword shows its main meaning + how many more */
 const studyMeaning = c => c.isS ? `${c.m}（${c.si + 1}つ目の意味）` : (S.settings.senseCards && !c.isD && c.s.length > 1) ? `${c.m} ほか${c.s.length - 1}つ` : allMeanings(c);
 /* the same, as HTML: the meaning itself, then the note (which meaning / how many more) in small grey type */
+const studyMain = c => c.isS || (S.settings.senseCards && !c.isD && c.s.length > 1) ? c.m : allMeanings(c);
+const studyNote = c => c.isS ? `${c.si + 1}つ目の意味` : (S.settings.senseCards && !c.isD && c.s.length > 1) ? `ほかに意味が${c.s.length - 1}つ` : '';
 function studyMeaningHTML(c){
-  if (c.isS) return `${esc(c.m)}<span class="moremean">${c.si + 1}つ目の意味</span>`;
-  if (S.settings.senseCards && !c.isD && c.s.length > 1) return `${esc(c.m)}<span class="moremean">ほかに意味が${c.s.length - 1}つ</span>`;
-  return esc(allMeanings(c));
+  const note = studyNote(c);
+  return esc(studyMain(c)) + (note ? `<span class="moremean">${note}</span>` : '');
 }
 function customSenses(c){
   if (Array.isArray(c.s) && c.s.length) return c.s;
@@ -830,9 +843,11 @@ function senseDots(c){
   return `<span class="sdots" role="img" aria-label="意味 ${learnedSenses(c)}/${c.s.length}">${c.s.map((_, i) => { const st = senseState(c, i); return `<i class="${st}" title="${i + 1}つ目の意味：${lab[st]}"></i>`; }).join('')}</span>`;
 }
 const revLeft = () => Math.max(0, (S.settings.maxRev || 9999) - (todayStat().rn || 0));
+const freePace = () => S.settings.pace === 'free';
+const newLeftToday = () => freePace() ? Infinity : Math.max(0, S.settings.newPerDay - (todayStat().nw||0));
 function counts(ids=activeIds()){
   const P = pools(ids);
-  const newLeft = Math.max(0, S.settings.newPerDay - (todayStat().nw||0));
+  const newLeft = newLeftToday();
   return {due:Math.min(P.due.length, revLeft()), dueAll:P.due.length, fresh:P.fresh.length, queued:P.queued.length, dnew:P.dnew.length,
           newToday: Math.min(newLeft, P.fresh.length + P.queued.length + P.dnew.length), newLeft};
 }
@@ -840,7 +855,7 @@ function pickSet({deckIds=activeIds(), size=S.settings.setSize, extraNew=false}=
   const P = pools(deckIds);
   P.due.sort((a,b) => retr(prog(b),P.today) - retr(prog(a),P.today));
   const out = P.due.slice(0, Math.min(size, extraNew ? size : revLeft()));
-  let newLeft = extraNew ? size : Math.max(0, S.settings.newPerDay - (todayStat().nw||0));
+  let newLeft = extraNew ? size : newLeftToday();
   const fresh = S.settings.order === 'rand' ? shuffle(P.fresh) : P.fresh;
   const mixed = []; // derivatives and new headwords alternate so neither crowds out the other
   for (let i = 0; i < Math.max(fresh.length, P.dnew.length); i++) { if (P.dnew[i]) mixed.push(P.dnew[i]); if (fresh[i]) mixed.push(fresh[i]); }
@@ -1145,7 +1160,7 @@ function openSheet(html, modal=false){
 function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); }
 const sheetOpen = () => !!$('#sheetroot').firstChild;
 function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); }
-function closeScreen(){ clearTimeout(Q?.timer); Q = null; SW = null; const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); }
+function closeScreen(){ clearTimeout(Q?.timer); clearInterval(Q?.tick); Q = null; SW = null; const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); }
 
 /* ---------- views ---------- */
 let route = {tab:'home', deck:null, filter:'all', cat:'', q:'', red:false, limit:150};
@@ -1189,7 +1204,7 @@ function viewHome(){
     <div class="today-k">今日の学習</div>
     <div class="today-nums">
       <div class="bignum due"><b>${c.due}</b><span>復習${c.dueAll > c.due ? `<small>（残り${c.dueAll - c.due}は明日以降）</small>` : ''}</span></div>
-      <div class="bignum"><b>${c.newToday}</b><span>新しい単語${c.dnew ? `<small>（派生語・意味 ${Math.min(c.dnew, c.newToday)}まで）</small>` : ''}</span></div>
+      <div class="bignum"><b>${c.newToday}</b><span>${freePace() ? '残りの新しい単語<small>（どんどんモード）</small>' : `新しい単語${c.dnew ? `<small>（派生語・意味 ${Math.min(c.dnew, c.newToday)}まで）</small>` : ''}`}</span></div>
     </div>
     <div class="today-meta">${act.map(id => esc(deckById(id).name)).join('・')}</div>
     ${dirRow()}`
@@ -1369,7 +1384,8 @@ function viewSettings(){
   return `${topbar()}
   <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">設定</h2></div>
   <div class="sec" style="margin-top:14px"><div class="sec-h"><h2>学習</h2></div><div class="form">
-    <div class="frow"><div class="lab"><b>1日の新しい単語</b><span>復習とは別に、毎日これだけ新しく覚える</span></div>
+    <div class="frow"><div class="lab"><b>学習ペース</b><span>どんどん：新しい単語の1日の上限なしで、続けられるだけ進める</span></div>${seg('pace',[['normal','ふつう'],['free','どんどん']])}</div>
+    <div class="frow"><div class="lab"><b>1日の新しい単語</b><span>ふつうペースのとき、復習とは別に毎日これだけ新しく覚える</span></div>
       <div class="stepper"><button data-act="step" data-k="newPerDay" data-d="-5" aria-label="減らす">−</button><output class="num">${s.newPerDay}</output><button data-act="step" data-k="newPerDay" data-d="5" aria-label="増やす">＋</button></div></div>
     <div class="frow"><div class="lab"><b>1日の復習の上限</b><span>たまった復習は、忘れかけの単語から順に少しずつ出します</span></div>
       <div class="stepper"><button data-act="step" data-k="maxRev" data-d="-50" aria-label="減らす">−</button><output class="num">${s.maxRev}</output><button data-act="step" data-k="maxRev" data-d="50" aria-label="増やす">＋</button></div></div>
@@ -1382,8 +1398,9 @@ function viewSettings(){
     <div class="frow"><div class="lab"><b>意味を1つずつ覚える</b><span>最初はメインの意味だけを出題し、覚えたら2つ目・3つ目の意味を新しいカードとして1つずつ出題。OFFにすると毎回すべての意味を表示</span></div>${sw('senseCards')}</div>
     <div class="frow"><div class="lab"><b>派生語も出題する</b><span>見出し語を覚えたあと、派生語（decide → decision など）を別のカードとして復習</span></div>${sw('deriv')}</div>
     <div class="frow"><div class="lab"><b>新しい単語の順番</b></div>${seg('order',[['seq','単語帳の順'],['rand','ランダム']])}</div>
+    <div class="frow wrap"><div class="lab"><b>制限時間（4択）</b><span>単語の上のバーが緑のうちに答えるとふつうの評価、黄色になると正解でも「難しい」、なくなると「わからない」</span></div>${seg('timeLimit',[[0,'オフ'],[5,'5秒'],[10,'10秒'],[15,'15秒']])}</div>
     <div class="frow"><div class="lab"><b>正解したら自動で次へ</b><span>正解のカードをタップするとすぐ次へ進めます</span></div>${sw('autoNext')}</div>
-    <div class="frow"><div class="lab"><b>復習日の決まり方</b><span>正解・不正解に加えて答えるまでの速さも使います。速く正解した単語ほど、次の復習は先になります。時間制限はありません。</span></div></div>
+    <div class="frow"><div class="lab"><b>復習日の決まり方</b><span>正解・不正解に加えて答えるまでの速さも使います。速く正解した単語ほど、次の復習は先になります。4択の制限時間は上の設定で変えられます（オフにもできます）。</span></div></div>
   </div></div>
   <div class="sec"><div class="sec-h"><h2>表示</h2></div><div class="form">
     <div class="frow"><div class="lab"><b>文字の大きさ</b></div>${seg('zoom',[[0.92,'小'],[1,'標準'],[1.12,'大']])}</div>
@@ -1589,6 +1606,28 @@ function sensesHTML(c, hit=-1, ex='hit', compact=false, limit=0){
       ? `<div class="sex">${markWord(s.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(s.e)}" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(s.j)}</div>` : ''}</div></li>`;
   }).join('')}</ol>${hidden ? `<button class="more-s" data-act="moreSenses">＋ほかの意味 ${hidden}つ</button>` : ''}`;
 }
+/* 制限時間: choice questions only (typing and self-graded cards keep their own pace) */
+const timed = type => S.settings.timeLimit > 0 && ['e2j', 'j2e', 'odd', 'dform', 'snew'].includes(type);
+function runTimer(it){
+  clearInterval(Q.tick);
+  const limit = S.settings.timeLimit * 1000, slow = slowMs(it.type), q = Q;
+  // a short interval (not requestAnimationFrame, which some browsers pause) + a CSS transition between steps
+  q.tick = setInterval(() => {
+    if (Q !== q || q.cur !== it || q.answered) return clearInterval(q.tick);
+    if (document.visibilityState === 'hidden') return;
+    const bar = $('#qtbar'); if (!bar) return;
+    const ms = performance.now() - q.t0, left = Math.max(0, 1 - ms / limit);
+    bar.style.width = (left * 100) + '%';
+    bar.className = left < 0.2 ? 'low' : ms > slow ? 'mid' : '';
+    if (left <= 0) { clearInterval(q.tick); q.timedOut = true; q.lockUntil = 0; dunno(); }
+  }, 100);
+}
+/* time spent with the app in the background doesn't count against the clock or the speed grade */
+document.addEventListener('visibilitychange', () => {
+  if (!Q || Q.answered) return;
+  if (document.visibilityState === 'hidden') Q.hiddenAt = performance.now();
+  else if (Q.hiddenAt) { Q.t0 += performance.now() - Q.hiddenAt; Q.hiddenAt = 0; }
+});
 const TYPE_LABEL = {e2j:'英 → 日', j2e:'日 → 英', spell:'スペル', flash:'カード', odd:'仲間はずれ', dform:'派生語', dspell:'派生語スペル', snew:'新しい意味'};
 function segsInner(){
   return Q.items.map((it, i) => {
@@ -1656,9 +1695,11 @@ function renderQ(){
     body = `<div class="reveal"><button class="btn btn-primary btn-block" data-act="reveal">答えを見る（Space）</button></div>`;
   }
   $('#screen').innerHTML = `<div class="screen-in study">${qHeader()}
+    ${timed(type) ? '<div class="qtimer" aria-hidden="true"><i id="qtbar"></i></div>' : ''}
     <div class="qstage">${behind}<div class="tcard holed qcard" id="qcard"><span class="ring"></span><span class="qtype">${TYPE_LABEL[type]}${it.tries ? ' ・ もう一度' : ''}</span><div class="qcard-in">${card}</div></div></div>
     <div id="qbody">${body}</div></div><div id="fb"></div>`;
-  Q.t0 = performance.now(); Q.lockUntil = Q.t0 + 250;
+  Q.t0 = performance.now(); Q.lockUntil = Q.t0 + 250; Q.timedOut = false;
+  if (timed(type)) runTimer(it);
   if (S.settings.autoSpeak && (type === 'e2j' || type === 'snew' || (type === 'flash' && !it.flip) || type === 'odd')) playWord(c.w, sense.p);
   if (isSpell(type)) setTimeout(() => $('#spellin')?.focus(), 30);
 }
@@ -1672,11 +1713,14 @@ function noteRT(type, ms){
   try { localStorage.setItem('tangoloop.rt', JSON.stringify(RT)); } catch(e) {}
 }
 function rtMedian(type){ const a = RT[type]; if (!a || a.length < 12) return 0; const b = [...a].sort((x,y) => x - y); return b[b.length >> 1]; }
+/* past this many ms a correct choice answer counts as 難しい (the timer bar turns yellow here) */
+const SLOW_DEF = {e2j: 6000, snew: 6000, odd: 9000, dform: 7000, j2e: 7000};
+function slowMs(type){ const med = rtMedian(type); return med ? Math.max(med * 2.2, med + 3500) : (SLOW_DEF[type] || 7000); }
 function gradeFrom(type, ok, ms, hinted, wasReview){
   if (!ok) return 1;
   const med = rtMedian(type);
   if (med && !hinted) {
-    if (ms > Math.max(med * 2.2, med + 3500)) return 2;
+    if (ms > slowMs(type)) return 2;
     if (wasReview && type !== 'e2j' && type !== 'dform' && ms < med * 0.6) return 4;
     return 3;
   }
@@ -1720,7 +1764,7 @@ function showFeedback(it, ok, np){
   const auto = ok && S.settings.autoNext;
   const canUndo = !ok && np && it.type !== 'flash' && !Q.gaveUp;
   const rating = ok && np ? ({4:'<span class="rate r4">Excellent</span>', 3:'<span class="rate r3">Great</span>', 2:'<span class="rate r2">Good</span>'})[it.grade] || '' : '';
-  const title = ok ? `<span class="mk o">○</span>正解${rating}` : `<span class="mk x">×</span>${np ? '不正解' : 'まだ覚えていない'}`;
+  const title = ok ? `<span class="mk o">○</span>正解${rating}` : `<span class="mk x">×</span>${Q.timedOut ? '時間切れ' : np ? '不正解' : 'まだ覚えていない'}`;
   // what you answered vs what was right, so the wrong option is corrected explicitly
   let cmp = '';
   if (!ok && it.type !== 'flash') {
@@ -1873,7 +1917,7 @@ function renderResults(){
     <div class="words rlist">${rows}</div>
     <div class="res-btns">
       ${hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}次の${Math.min(S.settings.setSize, more.due + more.newToday)}問<small>復習${more.due}・新規${more.newToday}</small></button>`
-        : `<div class="res-done">${I.check}今日の分はすべて完了です</div>`}
+        : `<div class="res-done">${I.check}今日の分はすべて完了です</div>${more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyExtra">${I.plus}もっとやる<small>新しい単語 ${S.settings.setSize}問</small></button>` : ''}`}
       <button class="btn btn-ghost btn-block" data-act="quitQuiz">ホームへ</button></div></div>`;
   Q.done = true; Q.lockUntil = performance.now() + 400;
 }
@@ -1891,7 +1935,7 @@ function startSwipe(deckIds=activeIds()){
 function swCardHTML(c, cls){
   return `<div class="tcard holed swcard ${cls}" ${cls ? '' : 'id="swcard"'}><span class="ring"></span><span class="swlab l">知らない</span><span class="swlab r">知ってる</span>
     <div class="qpos"><span class="pos">${esc(c.p||'—')}</span>${c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : ''}</div><div class="qword">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}${ipaHTML(c)}
-    <div class="swmean hide" ${cls ? '' : 'id="swmean"'}>${studyMeaningHTML(c)}</div></div>`;
+    <div class="swmean hide" ${cls ? '' : 'id="swmean"'}>${esc(studyMain(c))}</div>${studyNote(c) ? `<div class="swnote">${studyNote(c)}</div>` : ''}</div>`;
 }
 function renderSwipe(){
   if (SW.i >= SW.cards.length) return renderSwipeDone();
@@ -2199,7 +2243,7 @@ const ACT = {
     const id = createDeck(($('#ainame').value || '英文から').slice(0,40), picked);
     closeSheet(); route.tab = 'decks'; route.deck = id; render(); toast(`${picked.length}語の単語帳をつくりました`);
   },
-  set: t => { const k = t.dataset.k; let v = t.dataset.v; if (['setSize','rate','zoom','drillMin'].includes(k)) v = +v; setSetting(k, v); applyZoom(); render(); },
+  set: t => { const k = t.dataset.k; let v = t.dataset.v; if (['setSize','rate','zoom','drillMin','timeLimit'].includes(k)) v = +v; setSetting(k, v); applyZoom(); render(); },
   toggle: t => { setSetting(t.dataset.k, !S.settings[t.dataset.k]); render(); },
   step: t => { const k = t.dataset.k; setSetting(k, clamp(S.settings[k] + (+t.dataset.d), k === 'maxRev' ? 50 : 0, k === 'maxRev' ? 1000 : 200)); render(); },
   install: async () => { if (!installEvt) return; installEvt.prompt(); try { await installEvt.userChoice; } catch(e) {} installEvt = null; render(); },
@@ -2209,8 +2253,8 @@ const ACT = {
   signOut: () => signOutNow(),
   obStart: t => {
     const deck = document.querySelector('input[name="obdeck"]:checked')?.value || 'j1';
-    const n = +(document.querySelector('input[name="obnew"]:checked')?.value || 20);
-    setSetting('active', [deck]); setSetting('newPerDay', n); setSetting('onboarded', true);
+    const v = document.querySelector('input[name="obnew"]:checked')?.value || '20';
+    setSetting('active', [deck]); if (v === 'free') setSetting('pace', 'free'); else { setSetting('pace', 'normal'); setSetting('newPerDay', +v); } setSetting('onboarded', true);
     closeSheet(); render();
     if (t.dataset.mode === 'swipe') startSwipe([deck]); else startQuiz({});
   },
@@ -2347,7 +2391,8 @@ function onboard(){
     </fieldset>
     <fieldset class="ob-f"><legend>1日に覚える新しい単語</legend><div class="ob-row">
       ${[10, 20, 30].map(n => `<label class="ob-chip"><input type="radio" name="obnew" value="${n}" ${n === 20 ? 'checked' : ''}><span>${n}語</span></label>`).join('')}
-    </div></fieldset>
+      <label class="ob-chip"><input type="radio" name="obnew" value="free"><span>どんどん</span></label>
+    </div><p class="ob-note">どんどん＝1日の上限なし。いつでも設定で変えられます</p></fieldset>
     <button class="btn btn-primary btn-big btn-block" data-act="obStart" data-mode="swipe">知っている単語を仕分けてから始める</button>
     <button class="btn btn-ghost btn-block" data-act="obStart" data-mode="study">すぐに学習をはじめる</button>
     ${FIREBASE ? '<button class="btn btn-ghost btn-block" data-act="signIn">ほかの端末で使っていた人：ログイン</button>' : ''}

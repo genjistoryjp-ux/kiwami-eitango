@@ -2,7 +2,7 @@
    - the page: network first, so a new version arrives as soon as you are online
    - audio sprites: cached on first play (or all at once from 設定), kept until the audio set changes
    - Google Fonts: served from cache, refreshed in the background */
-const APP = 'kyokutan-app-2f3ab9276d';
+const APP = 'kyokutan-app-ff8e8a42f3';
 const AUDIO = 'kyokutan-audio-f026ca2bc4';
 const FONTS = 'kyokutan-fonts-v1';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
@@ -30,7 +30,7 @@ async function cacheFirst(req, name) {
 async function networkFirst(req) {
   const c = await caches.open(APP);
   try {
-    const res = await fetch(req);
+    const res = await fetch(req, {cache: 'no-cache'});   // revalidate, so a new version is never held back by the HTTP cache
     if (res.ok) c.put(req, res.clone());
     return res;
   } catch (err) {
