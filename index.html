@@ -9,7 +9,7 @@
   --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F6F8FB; --ink:#17202E; --muted:#58657A; --faint:#8C97A8; --line:#D8DEE7;
   --accent:#2B45D3; --accent-ink:#FFFFFF; --accent-soft:#E2E7FF; --accent-2:#8D9CF0;
   --red:#D2363C; --red-soft:#FBE3E3; --sheet:#E04A50; --marker:#FFE45C; --ring:#A9B1BE;
-  --good:#167F56; --good-soft:#DCF2E8; --hard:#A8650C; --hard-soft:#FAEBD4; --again:#D9480F; --again-soft:#FDE6DC; --easy:#2259B8; --easy-soft:#DEE8FA;
+  --good:#167F56; --good-soft:#DCF2E8; --hard:#A8650C; --hard-soft:#FAEBD4; --again:#D9480F; --again-soft:#FDE6DC; --easy:#2259B8; --perfect:#8A3FD1; --easy-soft:#DEE8FA;
   --heat0:#E1E6EE; --heat1:#C9D1FA; --heat2:#97A6F2; --heat3:#5D73E4; --heat4:#2B45D3;
   --st-new:#D6DCE6; --st-learn:#8D9CF0; --st-master:#2B45D3;
   --shadow:0 1px 2px rgba(23,32,46,.06),0 8px 22px rgba(23,32,46,.07);
@@ -22,7 +22,7 @@
   --bg:#0F131A; --surface:#181E28; --surface-2:#131922; --ink:#E7ECF3; --muted:#9AA6B9; --faint:#6E7A8D; --line:#2A3341;
   --accent:#7F94FF; --accent-ink:#0F131A; --accent-soft:#232C4D; --accent-2:#4C5DAE;
   --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --ring:#59616E;
-  --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --easy-soft:#1A2A45;
+  --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
   --heat0:#1F2633; --heat1:#27325C; --heat2:#3A4A92; --heat3:#5B70D4; --heat4:#8FA2FF;
   --st-new:#2C3544; --st-learn:#4C5DAE; --st-master:#8FA2FF;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
@@ -31,7 +31,7 @@
   --bg:#0F131A; --surface:#181E28; --surface-2:#131922; --ink:#E7ECF3; --muted:#9AA6B9; --faint:#6E7A8D; --line:#2A3341;
   --accent:#7F94FF; --accent-ink:#0F131A; --accent-soft:#232C4D; --accent-2:#4C5DAE;
   --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --ring:#59616E;
-  --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --easy-soft:#1A2A45;
+  --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
   --heat0:#1F2633; --heat1:#27325C; --heat2:#3A4A92; --heat3:#5B70D4; --heat4:#8FA2FF;
   --st-new:#2C3544; --st-learn:#4C5DAE; --st-master:#8FA2FF;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
@@ -449,7 +449,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .res-done{display:flex;align-items:center;justify-content:center;gap:6px;font-weight:700;color:var(--good);padding:10px}
 
 .rate{margin-left:8px;font-family:var(--f-word);font-style:italic;font-weight:600;font-size:14px;letter-spacing:.01em}
-.rate.r4{color:var(--easy)} .rate.r3{color:var(--good)} .rate.r2{color:var(--hard)}
+.rate.t4{color:var(--perfect)} .rate.t3{color:var(--easy)} .rate.t2{color:var(--good)} .rate.t1{color:var(--hard)}
 
 .dirrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;font-weight:700;color:var(--muted)}
 .seg-sm button{padding:6px 10px;font-size:12.5px}
@@ -559,6 +559,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .qclock .qtimer{flex:1;margin-top:0}
 .qclock + .qstage{margin-top:8px}
 .qtimer i.ex{background:var(--easy)}
+.qtimer i.pf{background:var(--perfect)}
 .qrate{margin:0;min-width:5.6em;text-align:right;font-size:16px;line-height:1;transition:opacity .2s}
 .qrate.gone{opacity:0}
 .qrate.pop{animation:ratepop .35s cubic-bezier(.2,.9,.3,1.4)}
@@ -1822,13 +1823,13 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 /* the grade a right answer earns at this moment, shown beside the bar so the speed rule is visible */
-const RATE_NAME = {4: 'Excellent', 3: 'Great', 2: 'Good'};
-const rateHTML = () => `<div class="qclock">${TIMER_HTML}<b class="rate qrate r3" id="qrate" aria-hidden="true">Great</b></div>`;
-function showRate(g, final){
+const RATE_NAME = {4: 'Perfect', 3: 'Excellent', 2: 'Great', 1: 'Good'};
+const rateHTML = () => `<div class="qclock">${TIMER_HTML}<b class="rate qrate t4" id="qrate" aria-hidden="true">Perfect</b></div>`;
+function showRate(t, final){
   const el = $('#qrate'); if (!el) return;
-  if (!RATE_NAME[g]) { el.classList.add('gone'); return; }
-  if (el.dataset.g !== String(g) || final) { el.textContent = RATE_NAME[g]; el.className = `rate qrate r${g}${final ? ' pop' : ''}`; el.dataset.g = g; }
-  if (!final) { const bar = $('#qtbar'); if (bar && !bar.classList.contains('low')) bar.classList.toggle('ex', g === 4); }
+  if (!RATE_NAME[t]) { el.classList.add('gone'); return; }
+  if (el.dataset.t !== String(t) || final) { el.textContent = RATE_NAME[t]; el.className = `rate qrate t${t}${final ? ' pop' : ''}`; el.dataset.t = t; }
+  if (!final) { const bar = $('#qtbar'); if (bar && !bar.classList.contains('low')) { bar.classList.toggle('pf', t === 4); bar.classList.toggle('ex', t === 3); } }
 }
 /* time's up: a choice question counts as わからない; a card turns over and counts as もう一度 */
 function timeUp(it){
@@ -1912,9 +1913,9 @@ function renderQ(){
     <div id="qbody">${body}</div></div><div id="fb"></div>`;
   Q.t0 = performance.now(); Q.lockUntil = Q.t0 + 250; Q.timedOut = false;
   if (clock) countdown(type === 'flash' ? S.settings.timeLimit * 500 : slowMs(type), () => timeUp(it),
-    live ? ms => showRate(gradeFrom(type, true, ms, false, isReview(it.p0))) : null);
+    live ? ms => showRate(speedTier(type, ms)) : null);
   else stopCountdown();
-  if (live) showRate(gradeFrom(type, true, 0, false, isReview(it.p0)));
+  if (live) showRate(speedTier(type, 0));
   if (S.settings.autoSpeak && (type === 'e2j' || type === 'snew' || (type === 'flash' && !it.flip) || type === 'odd')) playWord(c.w, sense.p);
   if (isSpell(type)) setTimeout(() => $('#spellin')?.focus(), 30);
 }
@@ -1931,17 +1932,27 @@ function rtMedian(type){ const a = RT[type]; if (!a || a.length < 12) return 0; 
 /* past this many ms a correct choice answer counts as 難しい (the timer bar turns yellow here) */
 const SLOW_DEF = {e2j: 6000, snew: 6000, odd: 9000, dform: 7000, j2e: 7000};
 function slowMs(type){ const med = rtMedian(type); return med ? Math.max(med * 2.2, med + 3500) : (SLOW_DEF[type] || 7000); }
+/* a right 4択 answer earns one of four speed tiers: 4 Perfect / 3 Excellent / 2 Great / 1 Good.
+   Perfect is well under your usual time, Excellent under it, Good past the slow line (fixed times until 12 answers exist) */
+const FAST_DEF = {e2j: [1500, 2600], snew: [1500, 2600], odd: [3500, 5500], dform: [2000, 3500], j2e: [2500, 4000]};
+function speedTier(type, ms){
+  const med = rtMedian(type), [perfect, excellent] = med ? [med * 0.6, med] : (FAST_DEF[type] || [2000, 3500]);
+  return ms > slowMs(type) ? 1 : ms < perfect ? 4 : ms < excellent ? 3 : 2;
+}
+/* what a tier does to the schedule: Perfect = 簡単; where 簡単 would be too generous (recognising a meaning) a longer 正解 instead.
+   Excellent is a slightly longer 正解, Great a plain 正解, Good = 難しい */
+const easyOK = type => type !== 'e2j' && type !== 'dform' && type !== 'snew';
+const tierGrade = (type, tier) => tier === 4 && easyOK(type) ? 4 : tier === 1 ? 2 : 3;
+const tierBoost = (type, tier) => tier === 4 && !easyOK(type) ? 1.5 : tier === 3 ? 1.25 : 1;
 function gradeFrom(type, ok, ms, hinted, wasReview){
   if (!ok) return 1;
+  if (type in SLOW_DEF) { const g = tierGrade(type, speedTier(type, ms)); return g === 4 && !wasReview ? 3 : g; }
   const med = rtMedian(type);
   if (med && !hinted) {
     if (ms > slowMs(type)) return 2;
-    if (wasReview && type !== 'e2j' && type !== 'dform' && ms < med * 0.6) return 4;
+    if (wasReview && ms < med * 0.6) return 4;
     return 3;
   }
-  if (type === 'e2j' || type === 'snew') return ms > 6000 ? 2 : 3;
-  if (type === 'odd') return ms > 9000 ? 2 : ms < 3500 ? 4 : 3;
-  if (type === 'dform') return ms > 7000 ? 2 : 3;
   if (type === 'dspell') return hinted ? 2 : ms < 6000 ? 4 : 3;
   if (type === 'j2e') return ms > 7000 ? 2 : ms < 2500 ? 4 : 3;
   if (type === 'spell') return hinted ? 2 : ms < 5000 ? 4 : 3;
@@ -1952,7 +1963,7 @@ function answer(ok, grade){
   Q.answered = true; stopCountdown();
   // everything this answer changes, so 「1問もどす」 can put it back
   const snap = {it, queue: [...Q.queue], cleared: Q.cleared, combo: Q.combo, maxCombo: Q.maxCombo, prog: clone(prog(it.c)),
-    first: it.first, ok: it.ok, ms: it.ms, after: it.after, grade: it.grade, tries: it.tries, gaveUp: it.gaveUp, type: it.type, check: it.check, bump: null, rt: null};
+    first: it.first, ok: it.ok, ms: it.ms, after: it.after, grade: it.grade, tier: it.tier, tries: it.tries, gaveUp: it.gaveUp, type: it.type, check: it.check, bump: null, rt: null};
   const card = it.type === 'flash';
   (Q.hist ||= []).push(snap);
   const ub = $('.qundo'); if (ub) ub.disabled = false;
@@ -1960,12 +1971,16 @@ function answer(ok, grade){
   const g = grade ?? gradeFrom(it.type, ok, ms, Q.hint > 1, isReview(it.p0));
   if (it.first === null && ok && grade == null) { noteRT(it.type, ms); snap.rt = it.type; }
   if (grade != null) ok = grade > 1;
-  showRate(ok && it.first === null ? g : 0, true);   // the grade it earned pops; a miss clears it
+  const tier = ok && grade == null && it.first === null && it.type in SLOW_DEF ? speedTier(it.type, ms) : 0;
+  showRate(tier, true);   // the tier it earned pops; a miss clears it
   let np = null;
   if (it.first === null) {
     const wasNew = !isReview(it.p0);
     it.first = g; it.ok = ok; it.ms = ms;
-    np = nextState(it.p0, g); setProg(it.c, np); it.after = np; it.grade = g;
+    np = nextState(it.p0, g);
+    const boost = tier ? tierBoost(it.type, tier) : 1, today = dayIdx();
+    if (boost > 1 && np.due > today) np.due = today + Math.round((np.due - today) * boost);
+    setProg(it.c, np); it.after = np; it.grade = g; it.tier = tier;
     snap.bump = {n:1, c:ok?1:0, nw:wasNew?1:0, rn:wasNew?0:1, rc:(!wasNew && ok)?1:0, t:ms};
     if (!card && swCheck(it.p0)) { snap.bump.kc = 1; snap.bump.kh = ok ? 1 : 0; }   // the first 4択 on a word sorted as 知ってる: was it right?
     bumpDaily(snap.bump);
@@ -1998,7 +2013,8 @@ function showFeedback(it, ok, np){
   const head = `<div class="fb-word"><b>${esc(c.w)}</b>${ipaHTML(c)}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc((c.s[it.si] || c.s[0]).p)}" aria-label="発音">${I.say}</button>${c.n && !c.isD ? `<span class="no">No.${c.n}</span>` : ''}</div>`;
   const auto = ok && S.settings.autoNext;
   const canUndo = !ok && np && it.type !== 'flash' && !Q.gaveUp;
-  const rating = ok && np ? ({4:'<span class="rate r4">Excellent</span>', 3:'<span class="rate r3">Great</span>', 2:'<span class="rate r2">Good</span>'})[it.grade] || '' : '';
+  const tn = it.tier || ({4: 3, 3: 2, 2: 1})[it.grade];   // spelling has no tier: 簡単 reads as Excellent
+  const rating = ok && np && RATE_NAME[tn] ? `<span class="rate t${tn}">${RATE_NAME[tn]}</span>` : '';
   const title = ok ? `<span class="mk o">○</span>正解${rating}` : `<span class="mk x">×</span>${Q.timedOut ? '時間切れ' : np ? '不正解' : 'まだ覚えていない'}`;
   // what you answered vs what was right, so the wrong option is corrected explicitly
   let cmp = '';
@@ -2084,7 +2100,7 @@ function undoAnswer(){
     if (h.bump) bumpDaily(Object.fromEntries(Object.entries(h.bump).map(([k, v]) => [k, -v])));
     if (h.rt && RT[h.rt]?.length) { RT[h.rt].pop(); try { localStorage.setItem('tangoloop.rt', JSON.stringify(RT)); } catch(e) {} }
   }
-  Object.assign(it, {first: h.first, ok: h.ok, ms: h.ms, after: h.after, grade: h.grade, tries: h.tries, gaveUp: h.gaveUp, type: h.type, check: h.check});
+  Object.assign(it, {first: h.first, ok: h.ok, ms: h.ms, after: h.after, grade: h.grade, tier: h.tier, tries: h.tries, gaveUp: h.gaveUp, type: h.type, check: h.check});
   Object.assign(Q, {queue: h.queue, cleared: h.cleared, combo: h.combo, maxCombo: h.maxCombo, done: false, undoable: null, revealed: null});
   renderQ();
   toast(`「${it.c.w}」をやり直します`);

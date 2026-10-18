@@ -4,7 +4,7 @@
    - audio sprites: cached on first play (or all at once from 設定), kept until the audio set changes
    - the login / sync library (Firebase, one fixed version): cached on first use, so an offline start still syncs later
    - Google Fonts: served from cache, refreshed in the background */
-const APP = 'kyokutan-app-616624327d';
+const APP = 'kyokutan-app-b8d47933ec';
 const AUDIO = 'kyokutan-audio-f026ca2bc4';
 const FONTS = 'kyokutan-fonts-v1';
 const LIB = 'kyokutan-lib-10.12.2';
