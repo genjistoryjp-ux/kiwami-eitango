@@ -2,7 +2,7 @@
    - the page: network first, so a new version arrives as soon as you are online
    - audio sprites: cached on first play (or all at once from 設定), kept until the audio set changes
    - Google Fonts: served from cache, refreshed in the background */
-const APP = 'kyokutan-app-60ed76bd73';
+const APP = 'kyokutan-app-65ffbc13c4';
 const AUDIO = 'kyokutan-audio-f026ca2bc4';
 const FONTS = 'kyokutan-fonts-v1';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
