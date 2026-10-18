@@ -62,6 +62,17 @@ p{margin:0}
 .pill.streak .ico{color:var(--red)}
 .syncdot{width:8px;height:8px;border-radius:50%;background:var(--faint)}
 .syncdot.on{background:var(--good)} .syncdot.syncing{background:var(--hard)} .syncdot.err{background:var(--again)}
+.syncbtn{display:inline-flex;align-items:center;gap:5px;min-height:32px;padding:0 2px 0 6px;font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.syncbtn.warn .synclab{color:var(--hard)}
+.synclab:empty{display:none}
+.iab{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:var(--hard-soft);color:var(--ink);font-size:12.5px;line-height:1.5}
+.topbar + .iab{margin:-6px 0 12px}
+.iab span{flex:1}
+.iab .link{white-space:nowrap;padding:6px 0}
+.nudge{display:flex;flex-direction:column;gap:8px;margin-top:18px;padding:14px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);text-align:left}
+.nudge b{font-size:14.5px;line-height:1.45}
+.nudge span{font-size:12.5px;color:var(--muted)}
+.nudge .btn{min-height:42px}
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
 .tabbar-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
 .tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 8px;font-size:11px;color:var(--faint);font-weight:700}
@@ -532,6 +543,26 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .qundo .ico{width:16px;height:16px}
 .qundo:disabled{opacity:.35}
 .qundo.col{flex-direction:column;gap:1px;height:auto;padding:6px 12px;border-radius:12px;font-size:11px}
+.res-undo{display:flex;justify-content:center;margin-top:14px}
+.res-undo .qundo{height:40px;padding:0 14px}
+@media (max-width:400px){.qtop{gap:8px}.qtop .qundo{padding:0 8px}}
+/* a card you graded yourself leaves without a sheet: it slides away, or (もう一度) drops to the back of the pile */
+.qcard.away{animation:cardaway .17s ease-in forwards}
+.qcard.away.back{animation-name:cardback}
+@keyframes cardaway{to{transform:translateX(-36px) rotate(-1.5deg);opacity:0}}
+@keyframes cardback{to{transform:translateY(18px) scale(.93);opacity:0}}
+.grade small.jp{font-family:var(--f-ui);font-size:10.5px;line-height:1.3;word-break:keep-all}
+.swrate{margin-top:10px;font-size:13px;color:var(--muted);line-height:1.6}
+.swrate b{color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums}
+
+.qclock{display:flex;align-items:center;gap:10px;margin-top:12px}
+.qclock .qtimer{flex:1;margin-top:0}
+.qclock + .qstage{margin-top:8px}
+.qtimer i.ex{background:var(--easy)}
+.qrate{margin:0;min-width:5.6em;text-align:right;font-size:16px;line-height:1;transition:opacity .2s}
+.qrate.gone{opacity:0}
+.qrate.pop{animation:ratepop .35s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes ratepop{from{transform:scale(.7)}50%{transform:scale(1.25)}to{transform:none}}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -552,6 +583,11 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .plist b{font-family:var(--f-word)}
 .confirm{background:var(--again-soft);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:95;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:13.5px;font-weight:700;max-width:calc(100% - 32px);box-shadow:var(--shadow);animation:rise .18s ease-out}
+/* while studying or sorting, notices sit under the header, clear of the answer buttons; their button is a full-height tap target */
+#screen:not([hidden]) ~ #toastroot .toast{top:calc(62px + env(safe-area-inset-top,0px));bottom:auto}
+.toast-btn{min-height:44px;margin:-10px -16px -10px 0;padding:0 14px;border-radius:0 12px 12px 0;background:color-mix(in srgb,var(--bg) 16%,transparent)}
+.toast{animation-name:toastin;width:max-content}   /* its own width, centred (left:50% alone would cap it at half the screen) */
+@keyframes toastin{from{transform:translate(-50%,6px);opacity:.4}}
 @keyframes fade{from{opacity:0}}
 @keyframes up{from{transform:translateY(30px);opacity:.5}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
@@ -661,9 +697,13 @@ function loadLocal(){
 }
 let S = loadLocal();
 let saveT = null;
-function saveNow(){ try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch(e) {} }
+let saveWarned = false;
+function saveNow(){
+  try { localStorage.setItem(LS_KEY, JSON.stringify(S)); }
+  catch(e) { if (!saveWarned) { saveWarned = true; setTimeout(() => toast('この端末に保存できませんでした。空き容量やプライベートモードを確認してください', null, 6000), 0); } }   // full storage / private mode: say it once
+}
 function save(){ clearTimeout(saveT); saveT = setTimeout(saveNow, 300); }
-function setSetting(k, v){ S.settings[k] = v; S.settings.upd = Date.now(); save(); markDirty('meta'); }
+function setSetting(k, v){ S.settings[k] = v; S.settings.upd = Date.now(); save(); markDirty('meta', true); }
 
 /* ---------- decks ---------- */
 /* A card holds every meaning of a word: s = [{p 品詞, m 意味, e 例文, j 訳}], most important first. */
@@ -760,6 +800,10 @@ const fD   = (d,g) => clamp(W[7]*fD0(4) + (1-W[7])*(d - W[6]*(g-3)), 1, 10);
 const fSr  = (d,s,r,g) => s*(1 + Math.exp(W[8])*(11-d)*Math.pow(s,-W[9])*(Math.exp((1-r)*W[10]) - 1)*(g===2?W[15]:1)*(g===4?W[16]:1));
 const fSf  = (d,s,r) => W[11]*Math.pow(d,-W[12])*(Math.pow(s+1,W[13]) - 1)*Math.exp((1-r)*W[14]);
 const isReview = p => p && p.st === 2;
+/* settled: answered right in a review on a later day than it was first learned (sd = that day; it stays once set).
+   Only then do its next meaning and its derivatives open. Records from before f / sd existed count once they have
+   two answers, the last one right or two right in all. */
+const settled = p => isReview(p) && !!(p.sd || (p.f == null && (p.r || 0) >= 2 && (p.lg >= 2 || p.r - (p.w || 0) >= 2)));
 function retr(p, today=dayIdx()){ return isReview(p) ? fR(Math.max(0, today - dayIdx(p.last)), p.s) : 0; }
 /** g: 1 もう一度 / 2 難しい / 3 正解 / 4 簡単 */
 function nextState(p, g, now=Date.now(), fuzz=true){
@@ -781,12 +825,15 @@ function nextState(p, g, now=Date.now(), fuzz=true){
   const out = {...(p||{}), st:2, s:+s.toFixed(3), d:+d.toFixed(3), due:today+ivl, last:now, r:(p?.r||0)+1, l};
   if (g === 1) delete out.k;
   out.w = (p?.w || 0) + (g === 1 ? 1 : 0); out.lg = g;
+  // f: the day it was first learned; sd: the first later day it was answered right
+  if (!isReview(p)) { out.f = today; delete out.sd; }
+  else if (!out.sd && (settled(p) || (g > 1 && today > (p.f ?? dayIdx(p.last))))) out.sd = today;
   return out;
 }
 function status(p){
   if (!p || p.st === 0) return 'new';
   if (p.st === 1) return 'learn';
-  return (p.s >= 21 || p.k) ? 'master' : 'learn';
+  return (p.s >= 21 || (p.k && p.r >= 2)) ? 'master' : 'learn';   // 知ってる from sorting counts once its first 4択 check is passed
 }
 const wrongCount = p => Math.max(p?.w || 0, p?.l || 0);
 const isLeech = p => wrongCount(p) >= 3;
@@ -826,23 +873,24 @@ function streakInfo(){
 const streak = () => streakInfo().n;
 
 /* ---------- queue ---------- */
-/* due: reviews whose day has come. queued: swiped 「知らない」. fresh: never-seen headwords. dnew: derivatives whose headword is already learned. */
+/* due: reviews whose day has come. queued: swiped 「知らない」. fresh: never-seen headwords.
+   dnew: meanings and derivatives whose previous card (the meaning before, or the headword) is settled. */
 function pools(ids){
   const today = dayIdx(), due = [], queued = [], fresh = [], dnew = [];
   for (const c of cardsOf(ids, true)) {
     const p = prog(c); if (p?.sus) continue;
     if (isReview(p)) { if (p.due <= today) due.push(c); continue; }
-    if (c.isD) { if (isReview(prog(c.parent))) dnew.push(c); continue; }
+    if (c.isD) { if (settled(prog(c.parent))) dnew.push(c); continue; }
     if (c.isS) { if (senseUnlocked(c)) dnew.push(c); continue; }
     if (p?.st === 1) queued.push(c); else fresh.push(c);
   }
   return {today, due, queued, fresh, dnew};
 }
-function senseUnlocked(x){ const prev = x.si === 1 ? x.parent : x.parent.sc[x.si - 2]; return isReview(prog(prev)); }
+function senseUnlocked(x){ const prev = x.si === 1 ? x.parent : x.parent.sc[x.si - 2]; return settled(prog(prev)); }
 const senseProg = (c, i) => i === 0 ? prog(c) : prog(c.sc?.[i - 1]);
 function senseState(c, i){
   const p = senseProg(c, i);
-  if (isReview(p)) return (p.s >= 21 || p.k) ? 'm' : 'l';
+  if (isReview(p)) return (p.s >= 21 || (p.k && p.r >= 2)) ? 'm' : 'l';
   if (!S.settings.senseCards || i === 0) return 'n';
   return senseUnlocked(c.sc[i - 1]) ? 'n' : 'x';
 }
@@ -951,69 +999,142 @@ const cap = name => (window.claude && typeof window.claude.use === 'function') ?
 let AI = null;
 cap('sample').then(s => { if (s) { AI = s; document.body.classList.add('has-ai'); } });
 
-/* ---------- cloud sync (db, per-viewer private subtree) ---------- */
-const Sync = {col:null, state:'local', dirty:new Set(), busy:false, timer:null, first:0, err:null, lastOk:0};
-function markDirty(name){ Sync.dirty.add(name); if (!Sync.first) Sync.first = Date.now(); scheduleFlush(); }
-function scheduleFlush(){
-  if (!Sync.col) return;
-  clearTimeout(Sync.timer);
-  const wait = (Date.now() - Sync.first > 15000) ? 50 : 2500;
-  Sync.timer = setTimeout(flush, wait);
+/* ---------- cloud sync (Firestore on the web, db in the artifact: private docs, one per deck) ---------- */
+/* Saving is batched: at the end of a set, when the app is hidden or closed, and otherwise at most once a minute.
+   Card maps travel as one JSON string (cj / dj / mj), not as a map: Firestore indexes every key of a map and refuses a
+   document past 40,000 index entries, which a deck reached at about 2,000 studied cards. A string too big for one
+   document is cut into parts (prog_j1, prog_j1~1, prog_j1~2 ...). Docs that older versions saved as maps are still read. */
+const Sync = {col:null, uid:null, par:false, state:'local', dirty:new Set(), busy:false, again:false, timer:null, timerAt:0, err:null, lastOk:0, pulled:0, part:200000, parts:{}, bad:{}, warned:false};
+const SYNC_EVERY = 60000;
+const UID_KEY = 'tangoloop.uid';   // the account this device last merged with: its first sync on a device takes the account's settings
+const lsGet = k => { try { return localStorage.getItem(k); } catch(e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} };
+/* soon: an edit outside a study set (settings, decks, memos) is saved after 3 s; answers wait for the set's end or a minute */
+function markDirty(name, soon=false){ Sync.dirty.add(name); scheduleFlush(soon); }
+function scheduleFlush(soon=false){
+  if (!Sync.col || !Sync.dirty.size) return;
+  const now = Date.now(), ready = Math.min(...[...Sync.dirty].map(n => Sync.bad[n]?.at || 0));   // a doc whose save failed waits for its retry time
+  const at = Math.max(now + (soon ? 3000 : SYNC_EVERY), ready);
+  if (Sync.timer && Sync.timerAt <= at) return;
+  clearTimeout(Sync.timer); Sync.timerAt = at;
+  Sync.timer = setTimeout(() => { Sync.timer = null; flush(); }, at - now);
 }
-function docBody(name){
-  if (name === 'meta') return {settings:S.settings, daily:S.daily, upd:Date.now()};
-  if (name.startsWith('prog_')) return {c:S.prog[name.slice(5)] || {}, upd:Date.now()};
-  if (name.startsWith('deck_')) return S.custom[name.slice(5)] || null;
-  if (name.startsWith('note_')) return {m:S.notes[name.slice(5)] || {}, upd:Date.now()};
-  return null;
+const byteLen = s => s.length + (s.match(/[^\x00-\x7f]/g)?.length || 0) * 2;
+/* a map as JSON strings, each small enough for one document (Firestore 1 MiB, the claude.ai db 256 KiB) */
+function packMap(map){
+  const out = []; let cur = {}, size = 0;
+  for (const [k, v] of Object.entries(map || {})) {
+    const n = byteLen(k) + byteLen(JSON.stringify(v) ?? '') + 6;
+    if (size && size + n > Sync.part) { out.push(cur); cur = {}; size = 0; }
+    cur[k] = v; size += n;
+  }
+  out.push(cur);
+  return out.map(o => JSON.stringify(o));
 }
-async function flush(){
-  if (!Sync.col || Sync.busy || !Sync.dirty.size) return;
-  Sync.busy = true; Sync.state = 'syncing'; renderSync();
-  let stop = false;
+function unpackMap(data, f, legacy){
+  let o = {};
+  if (typeof data?.[f] === 'string') { try { o = JSON.parse(data[f]) || {}; } catch(e) {} }
+  const old = data?.[legacy];
+  return old && typeof old === 'object' ? {...old, ...o} : o;
+}
+/* the [doc id, body] pairs that one dirty name is saved as */
+function docBodies(name){
+  const upd = Date.now();
+  if (name === 'meta') return [[name, {settings:S.settings, dj:JSON.stringify(S.daily), upd}]];
+  if (name.startsWith('deck_')) { const d = S.custom[name.slice(5)]; return d ? [[name, d]] : []; }
+  const f = name.startsWith('prog_') ? 'cj' : name.startsWith('note_') ? 'mj' : null; if (!f) return [];
+  const parts = packMap((f === 'cj' ? S.prog : S.notes)[name.slice(5)]);
+  const out = parts.map((s, i) => [i ? `${name}~${i}` : name, {[f]:s, upd}]);
+  for (let i = parts.length; i < (Sync.parts[name] || 1); i++) out.push([`${name}~${i}`, {[f]:'{}', upd}]);   // empty the parts a smaller map no longer uses
+  out.parts = parts.length;
+  return out;
+}
+/* Firestore queues writes itself, so all docs go at once (they are on their way even if the page is closed right after);
+   the claude.ai db gets one write at a time */
+const eachDoc = (arr, fn) => Sync.par ? Promise.all(arr.map(fn)) : arr.reduce((p, x) => p.then(() => fn(x)), Promise.resolve());
+async function flush(force=false){
+  if (!Sync.col || !Sync.dirty.size) return;
+  if (Sync.busy) { Sync.again = true; return; }
+  const now = Date.now(), names = [...Sync.dirty].filter(n => force || !(Sync.bad[n]?.at > now));
+  if (!names.length) return scheduleFlush();
+  clearTimeout(Sync.timer); Sync.timer = null;
+  for (const n of names) Sync.dirty.delete(n);
+  const col = Sync.col; let failed = null;
+  Sync.busy = true; Sync.again = false; Sync.state = 'syncing'; renderSync();
+  const slow = setTimeout(() => { if (Sync.busy) { Sync.state = 'err'; renderSync(); } }, 20000);   // offline: Firestore keeps the write and sends it when the network is back
   try {
-    for (const name of [...Sync.dirty]) {
-      if (stop) break;
-      Sync.dirty.delete(name);
-      const body = docBody(name); if (!body) continue;
-      try { await Sync.col.doc(name).set(body); Sync.err = null; Sync.lastOk = Date.now(); }
-      catch(e) {
-        const code = e?.code || 'unavailable';
-        if (code === 'invalid_argument' || code === 'quota_exceeded') { Sync.err = code; }
-        else { Sync.dirty.add(name); Sync.err = code; stop = true; if (code === 'revoked' || code === 'not_granted') Sync.col = null; }
+    await eachDoc(names, async name => {
+      if (Sync.col !== col) { Sync.dirty.add(name); return; }
+      const bodies = docBodies(name);
+      try {
+        await eachDoc(bodies, ([id, body]) => col.doc(id).set(body));
+        delete Sync.bad[name]; if (bodies.parts) Sync.parts[name] = bodies.parts;
+      } catch(e) {
+        const code = e?.code || 'unavailable', b = Sync.bad[name] = {n:(Sync.bad[name]?.n || 0) + 1, code};
+        b.at = Date.now() + Math.min(30 * 60000, SYNC_EVERY * 2 ** (b.n - 1));   // try again after 1, 2, 4 ... 30 minutes, never in a tight loop
+        Sync.dirty.add(name); failed = code;
+        if (code === 'revoked' || code === 'not_granted') Sync.col = null;
       }
-    }
+    });
   } finally {
-    Sync.busy = false; Sync.first = Sync.dirty.size ? Date.now() : 0;
+    clearTimeout(slow);
+    Sync.busy = false;
+    if (failed) {
+      Sync.err = failed;
+      const studying = !$('#screen').hidden && !Q?.done && !(SW && SW.i >= SW.cards.length);   // not over the choices: the notice waits for the end of the set
+      if (!Sync.warned && Sync.col && !studying) { Sync.warned = true; toast('一部の記録がクラウドに保存できていません。この端末には残っているので、あとで自動でもう一度保存します', null, 5000); }
+    } else if (!Object.keys(Sync.bad).length) { Sync.err = null; Sync.lastOk = Date.now(); }
     Sync.state = !Sync.col ? 'local' : Sync.err ? 'err' : 'on'; renderSync();
+    scheduleFlush(Sync.again);
   }
 }
 const mergeDay = (a={}, b={}) => { const o = {...a}; for (const [k,v] of Object.entries(b)) o[k] = Math.max(o[k]||0, v||0); return o; };
 const sameObj = (a,b) => JSON.stringify(a) === JSON.stringify(b);
 const progTime = p => Math.max(p?.u || 0, p?.last || 0);   // u: when 「戻る」 restored it
 async function pull(){
-  if (!Sync.col) return;
-  let snap; try { snap = await Sync.col.get(); } catch(e) { return; }
-  let changed = false; const seen = new Set();
+  const col = Sync.col; if (!col) return;
+  let snap; try { snap = await col.get(); } catch(e) { scheduleFlush(true); return; }
+  if (col !== Sync.col) return;                                     // signed out meanwhile
+  Sync.pulled = Date.now();
+  const first = !!Sync.uid && lsGet(UID_KEY) !== Sync.uid;         // this account's first sync on this device
+  let changed = false; const seen = new Set(), maps = {};
   for (const doc of snap.docs) {
-    const id = doc.id, data = doc.data() || {}; seen.add(id);
+    const id = doc.id, data = doc.data() || {};
+    const pm = /^((?:prog|note)_.+?)(?:~(\d+))?$/.exec(id);
+    if (pm) {                                                       // collect every part of a deck's map before merging
+      const name = pm[1], f = name.startsWith('prog_') ? 'cj' : 'mj', part = unpackMap(data, f, f === 'cj' ? 'c' : 'm');
+      const g = maps[name] ||= {R:{}, legacy:false, parts:1};
+      for (const [k, v] of Object.entries(part)) if (!(k in g.R) || (f === 'cj' && progTime(v) > progTime(g.R[k]))) g.R[k] = v;
+      if (typeof data[f] !== 'string' && Object.keys(part).length) g.legacy = true;   // saved as a map by an older version: rewrite it once
+      if (pm[2] && Object.keys(part).length) g.parts = Math.max(g.parts, +pm[2] + 1);
+      continue;
+    }
+    seen.add(id);
     if (id === 'meta') {
       const ru = data.settings?.upd || 0, lu = S.settings.upd || 0;
-      if (ru > lu) { S.settings = {...DEF, ...data.settings}; changed = true; } else if (lu > ru) Sync.dirty.add('meta');
-      const rd = data.daily || {};
+      // a new device that just logged in keeps the account's settings instead of pushing its own fresh defaults
+      if (data.settings && (first || ru > lu)) { const ob = S.settings.onboarded; S.settings = {...DEF, ...data.settings}; if (ob) S.settings.onboarded = true; applyZoom(); changed = true; }
+      else if (lu > ru) Sync.dirty.add('meta');
+      const rd = unpackMap(data, 'dj', 'daily');
+      if (typeof data.dj !== 'string') Sync.dirty.add('meta');
       for (const [k,v] of Object.entries(rd)) { const m = mergeDay(S.daily[k], v); if (!sameObj(m, S.daily[k]||{})) { S.daily[k] = m; changed = true; } if (!sameObj(m, v)) Sync.dirty.add('meta'); }
       for (const k of Object.keys(S.daily)) if (!rd[k]) Sync.dirty.add('meta');
-    } else if (id.startsWith('prog_')) {
-      const deck = id.slice(5), R = data.c || {}, L = S.prog[deck] ||= {};
-      for (const [k,rp] of Object.entries(R)) { const lp = L[k];
-        if (!lp || progTime(rp) > progTime(lp)) { L[k] = rp; changed = true; } else if (progTime(lp) > progTime(rp)) Sync.dirty.add(id); }
-      for (const k of Object.keys(L)) if (!R[k]) Sync.dirty.add(id);
     } else if (id.startsWith('deck_')) {
       const did = id.slice(5), L = S.custom[did];
       if (!L || (data.upd||0) > (L.upd||0)) { S.custom[did] = data; changed = true; invalidateDecks(); }
       else if ((L.upd||0) > (data.upd||0)) Sync.dirty.add(id);
-    } else if (id.startsWith('note_')) {
-      const deck = id.slice(5), R = data.m || {}, L = S.notes[deck] ||= {};
+    }
+  }
+  for (const [id, g] of Object.entries(maps)) {
+    const R = g.R; seen.add(id); Sync.parts[id] = g.parts;
+    if (g.legacy) Sync.dirty.add(id);
+    if (id.startsWith('prog_')) {
+      const L = S.prog[id.slice(5)] ||= {};
+      for (const [k,rp] of Object.entries(R)) { const lp = L[k];
+        if (!lp || progTime(rp) > progTime(lp)) { L[k] = rp; changed = true; } else if (progTime(lp) > progTime(rp)) Sync.dirty.add(id); }
+      for (const k of Object.keys(L)) if (!R[k]) Sync.dirty.add(id);
+    } else {
+      const L = S.notes[id.slice(5)] ||= {};
       for (const [k,v] of Object.entries(R)) if (!(k in L)) { L[k] = v; changed = true; }
       if (Object.keys(L).some(k => R[k] !== L[k])) Sync.dirty.add(id);
     }
@@ -1022,23 +1143,36 @@ async function pull(){
   for (const deck of Object.keys(S.prog)) if (!seen.has('prog_'+deck) && Object.keys(S.prog[deck]).length) Sync.dirty.add('prog_'+deck);
   for (const did of Object.keys(S.custom)) if (!seen.has('deck_'+did)) Sync.dirty.add('deck_'+did);
   for (const deck of Object.keys(S.notes)) if (!seen.has('note_'+deck) && Object.keys(S.notes[deck]).length) Sync.dirty.add('note_'+deck);
+  if (Sync.uid) lsSet(UID_KEY, Sync.uid);
   if (changed) { save(); if ($('#screen').hidden) render(); }
-  if (Sync.dirty.size) { Sync.first = Date.now(); scheduleFlush(); }
+  scheduleFlush(true);
 }
 async function initSync(){
   try {
     const [u, db] = await Promise.all([cap('user'), cap('db')]);
     if (!u || !db) return;
     const id = await u.id(); if (!id) return;
-    Sync.col = db.collection('data/users/' + id);
+    Sync.col = db.collection('data/users/' + id); Sync.uid = id; Sync.par = false; Sync.part = 170000;   // the claude.ai db takes documents up to 256 KiB (counted with the string's quotes escaped)
     Sync.state = 'syncing'; renderSync();
     await pull();
     Sync.state = Sync.err ? 'err' : 'on'; renderSync();
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { saveNow(); flush(); } else pull(); });
   } catch(e) { Sync.col = null; Sync.state = 'local'; renderSync(); }
 }
+/* hidden or closed: save now. Back in the app: fetch what other devices saved, at most every 10 minutes */
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') { saveNow(); flush(); return; }
+  if (Auth.failed && navigator.onLine !== false) initFirebase();
+  else if (Sync.col && Date.now() - Sync.pulled > 10 * 60000) pull();
+});
+/* started without a signal: connect, and send what waited, as soon as the network is back */
+addEventListener('online', () => {
+  if (Auth.failed) { initFirebase(); return; }
+  if (!Sync.col) return;
+  for (const b of Object.values(Sync.bad)) b.at = 0;
+  pull();
+});
 const FB_VER = '10.12.2';
-const Auth = {user:null, api:null, ready:false, failed:false};
+const Auth = {user:null, api:null, ready:false, failed:false, loading:false};
 function fsCollection(fs, db, uid){
   const col = fs.collection(db, 'users', uid, 'docs');
   return {
@@ -1047,29 +1181,30 @@ function fsCollection(fs, db, uid){
   };
 }
 async function initFirebase(){
-  if (!IS_WEB || !FIREBASE) return;
+  if (!IS_WEB || !FIREBASE || Auth.loading || Auth.api) return;
+  Auth.loading = true;
   try {
     const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
     const [appM, authM, fs] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
     const app = appM.initializeApp(FIREBASE);
     const auth = authM.getAuth(app), db = fs.getFirestore(app);
-    Auth.api = {authM, auth, fs, db};
+    Auth.api = {authM, auth, fs, db}; Auth.failed = false;
     try { await authM.getRedirectResult(auth); } catch(e) {}
-    let hooked = false;
     authM.onAuthStateChanged(auth, async u => {
-      Auth.user = u; Auth.ready = true;
+      Auth.user = u; Auth.ready = true; Sync.bad = {}; Sync.parts = {};
       if (u) {
-        Sync.col = fsCollection(fs, db, u.uid); Sync.err = null; Sync.state = 'syncing'; renderSync();
+        Sync.col = fsCollection(fs, db, u.uid); Sync.uid = u.uid; Sync.par = true; Sync.part = 900000;   // Firestore takes documents up to 1 MiB
+        Sync.err = null; Sync.state = 'syncing'; renderSync();
         await pull();                                   // merges this device's records with the account's
         Sync.state = Sync.err ? 'err' : 'on';
-        if (!hooked) { hooked = true; document.addEventListener('visibilitychange', () => { if (!Sync.col) return; if (document.visibilityState === 'hidden') { saveNow(); flush(); } else pull(); }); }
         if (S.settings.onboarded && $('.ob')) closeSheet();
         if (!S.settings.onboarded && !sheetOpen()) onboard();
-      } else { Sync.col = null; Sync.state = 'local'; }
+      } else { Sync.col = null; Sync.uid = null; Sync.state = 'local'; }
       renderSync();
       if ($('#screen').hidden && !sheetOpen()) render();
     });
-  } catch(e) { Auth.failed = true; if (route.tab === 'settings') render(); }
+  } catch(e) { Auth.failed = true; renderSync(); if (route.tab === 'settings') render(); }   // offline start: tried again on 'online' and when the app comes back
+  finally { Auth.loading = false; }
 }
 const AUTH_ERR = {
   'auth/invalid-email':'メールアドレスの形が正しくありません', 'auth/invalid-credential':'メールアドレスかパスワードが違います',
@@ -1095,9 +1230,10 @@ async function signIn(kind='google'){
 function loginSheet(){
   openSheet(`<div class="sheet-h"><h3>ログイン</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <p class="small muted">ログインすると学習記録がアカウントに保存され、スマホと PC で同じ記録を使えます。この端末の記録もそのまま引き継がれます。</p>
-    <button class="btn btn-ghost btn-block btn-big lbtn" data-act="signIn" data-kind="google"><span class="lg g">G</span>Google でログイン</button>
-    ${FIREBASE?.apple ? `<button class="btn btn-block btn-big lbtn apple" data-act="signIn" data-kind="apple"><span class="lg a"></span>Apple でサインイン</button>` : ''}
-    <div class="or"><span>またはメールアドレスで</span></div>
+    ${inApp ? '<p class="iab">このアプリ内のブラウザでは Google ログインが使えません。メールアドレスでログインするか、メニューの「ブラウザで開く」で開いてください。</p>'
+      : `<button class="btn btn-ghost btn-block btn-big lbtn" data-act="signIn" data-kind="google"><span class="lg g">G</span>Google でログイン</button>
+    ${FIREBASE?.apple ? `<button class="btn btn-block btn-big lbtn apple" data-act="signIn" data-kind="apple"><span class="lg a"></span>Apple でサインイン</button>` : ''}`}
+    <div class="or"><span>${inApp ? 'メールアドレスで' : 'またはメールアドレスで'}</span></div>
     <form id="mailform" style="display:flex;flex-direction:column;gap:10px">
       <div class="field"><label for="lmail">メールアドレス</label><input class="input" id="lmail" type="email" autocomplete="email" required></div>
       <div class="field"><label for="lpass">パスワード（6文字以上）</label><input class="input" id="lpass" type="password" autocomplete="current-password" minlength="6" required></div>
@@ -1125,21 +1261,52 @@ async function resetPass(){
 }
 async function signOutNow(){
   const {authM, auth} = Auth.api || {}; if (!authM) return;
-  await flush(); await authM.signOut(auth); toast('ログアウトしました（この端末の記録は残ります）');
+  await flush(true); await authM.signOut(auth); toast('ログアウトしました（この端末の記録は残ります）');
 }
 function syncLabel(){
-  if (Sync.state === 'on' && Auth.user) return `Google アカウントに保存中（${Auth.user.email || Auth.user.displayName || 'ログイン中'}）`;
-  return {on:'クラウドに保存中（他の端末と同期）', syncing:'同期しています…', err:'同期できていません（この端末には保存済み）',
+  if (IS_WEB && FIREBASE && !Auth.user) return Auth.failed ? 'この端末に保存（ログイン機能を読み込めませんでした。通信が戻ると自動でつなぎ直します）'
+    : 'この端末だけに保存（ログインするとアカウントにも保存され、機種変更やブラウザのデータ削除でも消えません）';
+  if (Sync.state === 'on' && Auth.user) return `アカウントに保存済み（${Auth.user.email || Auth.user.displayName || 'ログイン中'}）`;
+  return {on:'クラウドに保存中（他の端末と同期）', syncing:'同期しています…', err:'一部の記録がクラウドに保存できていません（この端末には保存済み。あとで自動でもう一度保存します）',
     local: IS_WEB ? 'この端末に保存（ほかの端末へはバックアップで移せます）' : 'この端末のブラウザに保存'}[Sync.state];
+}
+/* the word next to the dot (web build with login): 未保存 until logged in, then 保存済み */
+function syncShort(){
+  if (!Auth.user) return Auth.failed ? 'オフライン' : Auth.ready ? '未保存' : '';
+  return {on:'保存済み', syncing:'保存中', err:'未保存'}[Sync.state] || '';
 }
 function renderSync(){
   const dot = $('#syncdot'); if (dot) { dot.className = 'syncdot ' + Sync.state; dot.title = syncLabel(); }
+  const b = $('#syncbtn'); if (b) { const s = syncShort(); b.querySelector('.synclab').textContent = s; b.classList.toggle('warn', s === '未保存'); b.setAttribute('aria-label', '保存の状態：' + syncLabel()); }
   const t = $('#synctext'); if (t) t.textContent = syncLabel();
+}
+/* not logged in: after the first finished set, and once more at 100 learned words, say that the record lives only here */
+const NUDGE_KEY = 'tangoloop.nudge';
+function nudgeHTML(){
+  if (!IS_WEB || !FIREBASE || !Auth.ready || Auth.user) return '';
+  const lv = +(lsGet(NUDGE_KEY) || 0); if (lv >= 2) return '';
+  const n = Object.values(S.prog).reduce((a, d) => a + Object.values(d || {}).filter(isReview).length, 0);
+  if (lv >= 1 && n < 100) return '';
+  lsSet(NUDGE_KEY, n >= 100 ? '2' : '1');
+  return `<div class="nudge" role="note"><b>${n >= 100 ? '100語を超えた記録は、' : 'この記録は'}この端末の中だけにあります</b>
+    <span>ログインすると、機種変更やブラウザのデータ削除でも消えません。ほかの端末でも続きから使えます。</span>
+    <div class="btn-row"><button class="btn btn-primary" data-act="nudgeLogin">ログインして保存</button><button class="btn btn-ghost" data-act="nudgeLater">あとで</button></div></div>`;
 }
 
 /* ---------- web app (installable, offline) ---------- */
 let installEvt = null;
 const isStandalone = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch(e) { return false; } };
+/* in-app browsers (LINE, Instagram, TikTok ...): Google refuses to log in there, and what is saved stays apart from Safari / Chrome.
+   LINE opens a link in the phone's own browser when the URL has openExternalBrowser=1; the others get a one-line hint */
+const IAB = !IS_WEB ? '' : / Line\//.test(navigator.userAgent) ? 'line'
+  : /Instagram|FBAN|FBAV|FB_IAB|FBIOS|musical_ly|Bytedance|TikTok|Twitter|KAKAOTALK|Snapchat|Pinterest|MicroMessenger|Barcelona|; wv\)/i.test(navigator.userAgent) ? 'app' : '';
+const EXT_Q = IS_WEB && /[?&]openExternalBrowser=1/.test(location.search);
+if (IAB === 'line' && !EXT_Q) { try { const u = new URL(location.href); u.searchParams.set('openExternalBrowser', '1'); location.replace(u.href); } catch(e) {} }
+else if (!IAB && EXT_Q) { try { const u = new URL(location.href); u.searchParams.delete('openExternalBrowser'); history.replaceState(history.state, '', u.href); } catch(e) {} }
+const inApp = !!IAB;   // inside an app's browser (LINE too, in case it stays open behind): the hint, and email login only
+function iabNote(){
+  return inApp ? `<div class="iab" role="note"><span>アプリ内ブラウザでは記録が別になります。メニューの「ブラウザで開く」で開いてね</span><button class="link" data-act="copyUrl">URLをコピー</button></div>` : '';
+}
 if (IS_WEB) {
   if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   try { navigator.storage?.persist?.(); } catch(e) {}
@@ -1170,7 +1337,7 @@ function openSheet(html, modal=false){
 function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); }
 const sheetOpen = () => !!$('#sheetroot').firstChild;
 function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); }
-function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); Q = null; SW = null; const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); }
+function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); Q = null; SW = null; const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); }
 
 /* ---------- views ---------- */
 let route = {tab:'home', deck:null, filter:'all', cat:'', q:'', red:false, limit:150};
@@ -1187,7 +1354,7 @@ function topbar(){
   const st = streakInfo();
   const fz = st.freeze ? `<span class="fz" title="お休みチケット：1日休んでも連続記録が続きます（7日続けるごとに1枚、最大2枚）">${I.shield}${st.freeze}</span>` : '';
   return `<div class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">極</span><span class="brand-name">極単<small>きょくたん</small></span></div><span class="sp"></span>
-    <span class="pill streak ${st.done ? 'done' : ''}" title="連続学習日数">${I.flame}<span class="num">${st.n}</span>日${fz}</span><span id="syncdot" class="syncdot ${Sync.state}"></span></div>`;
+    <span class="pill streak ${st.done ? 'done' : ''}" title="連続学習日数">${I.flame}<span class="num">${st.n}</span>日${fz}</span>${IS_WEB && FIREBASE ? `<button id="syncbtn" class="syncbtn" data-act="syncInfo"><span id="syncdot" class="syncdot ${Sync.state}"></span><span class="synclab">${syncShort()}</span></button>` : `<span id="syncdot" class="syncdot ${Sync.state}"></span>`}</div>${iabNote()}`;
 }
 function deckStats(d){
   let n=0,l=0,m=0,due=0; const today = dayIdx();
@@ -1313,7 +1480,7 @@ function wordRows(d){
     const p = prog(c), s = status(p);
     const due = p?.sus ? '除外' : isReview(p) ? (p.due <= today ? '復習' : mdLabel(p.due)) : s === 'learn' ? '学習待ち' : '';
     return `<button class="wrow" data-act="card" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">
-      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword">${c.n && !c.isD ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD ? senseDots(c) : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean">${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !isReview(prog(c.parent)) ? '見出し語の後' : '')}</span></button>`;
+      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword">${c.n && !c.isD ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD ? senseDots(c) : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean">${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !settled(prog(c.parent)) ? (isReview(prog(c.parent)) ? '見出し語の復習後' : '見出し語の後') : '')}</span></button>`;
   }).join('');
   return rows + (list.length > route.limit ? `<div class="more"><button class="link" data-act="more">さらに表示（残り${list.length - route.limit}語）</button></div>` : '');
 }
@@ -1406,12 +1573,12 @@ function viewSettings(){
     <div class="frow"><div class="lab"><b>出題の形式</b><span>段階式：覚えるほど 英→日 → 日→英 → スペル と難しくなる</span></div>${seg('mode',[['auto','段階式'],['choice','4択だけ'],['flash','カード']])}</div>
     <div class="frow"><div class="lab"><b>選択肢をタップで表示</b><span>4択の選択肢を隠しておき、答えを思い浮かべてからタップで表示（仲間はずれ問題は除く）</span></div>${sw('veil')}</div>
     <div class="frow"><div class="lab"><b>スペル入力を出す</b><span>段階式で、しっかり覚えた単語に出題</span></div>${sw('spell')}</div>
-    <div class="frow"><div class="lab"><b>意味を1つずつ覚える</b><span>最初はメインの意味だけを出題し、覚えたら2つ目・3つ目の意味を新しいカードとして1つずつ出題。OFFにすると毎回すべての意味を表示</span></div>${sw('senseCards')}</div>
-    <div class="frow"><div class="lab"><b>派生語も出題する</b><span>見出し語を覚えたあと、派生語（decide → decision など）を別のカードとして復習</span></div>${sw('deriv')}</div>
+    <div class="frow"><div class="lab"><b>意味を1つずつ覚える</b><span>最初はメインの意味だけを出題し、後日の復習で正解したら2つ目・3つ目の意味を新しいカードとして1つずつ出題。OFFにすると毎回すべての意味を表示</span></div>${sw('senseCards')}</div>
+    <div class="frow"><div class="lab"><b>派生語も出題する</b><span>見出し語を後日の復習で正解したら、派生語（decide → decision など）を別のカードとして出題</span></div>${sw('deriv')}</div>
     <div class="frow"><div class="lab"><b>新しい単語の順番</b></div>${seg('order',[['seq','単語帳の順'],['rand','ランダム']])}</div>
     <div class="frow wrap"><div class="lab"><b>制限時間</b><span>4択・カード・高速仕分けで、単語の上に残り時間のバーが出ます。なくなると「わからない」（カードは「もう一度」、仕分けは「知らない」）。4択は黄色になると正解でも「難しい」。新しい単語のカードには出ません</span></div>${seg('timeLimit',[[0,'オフ'],[5,'5秒'],[10,'10秒'],[15,'15秒']])}</div>
     <div class="frow"><div class="lab"><b>正解したら自動で次へ</b><span>正解のカードをタップするとすぐ次へ進めます</span></div>${sw('autoNext')}</div>
-    <div class="frow"><div class="lab"><b>復習日の決まり方</b><span>新しい単語はカードで覚えて、自分で「もう一度・難しい・正解・簡単」を選びます。復習は4択で、正解・不正解と答えるまでの速さで決まります。速く正解した単語ほど、次の復習は先になります。</span></div></div>
+    <div class="frow"><div class="lab"><b>復習日の決まり方</b><span>新しい単語はカードで覚えて、自分で「もう一度・難しい・正解・簡単」を選びます。「もう一度」の単語は、そのセットのうちに4択でもう一度確かめます。復習は4択で、正解・不正解と答えるまでの速さで決まります。速く正解した単語ほど、次の復習は先になります。</span></div></div>
   </div></div>
   <div class="sec"><div class="sec-h"><h2>表示</h2></div><div class="form">
     <div class="frow"><div class="lab"><b>文字の大きさ</b></div>${seg('zoom',[[0.92,'小'],[1,'標準'],[1.12,'大']])}</div>
@@ -1423,7 +1590,7 @@ function viewSettings(){
     <div class="frow"><div class="lab"><b>振動</b><span>正解・不正解を振動でも知らせる（対応端末のみ）</span></div>${sw('haptic')}</div>
   </div></div>
   ${IS_WEB ? `<div class="sec"><div class="sec-h"><h2>アプリとして使う</h2></div><div class="form">
-    <div class="frow"><div class="lab"><b>ホーム画面に追加</b><span>${isStandalone() ? 'ホーム画面から起動しています' : installEvt ? 'アプリのように全画面で使えます' : 'iPhone：Safari の共有ボタン →「ホーム画面に追加」／Android：メニュー →「アプリをインストール」'}</span></div>${installEvt && !isStandalone() ? '<button class="btn btn-primary" data-act="install" style="min-height:38px">追加する</button>' : ''}</div>
+    <div class="frow"><div class="lab"><b>ホーム画面に追加</b><span>${FIREBASE && !Auth.user && !isStandalone() ? '先にログインしておくと、ホーム画面に追加したアプリでも今の記録の続きから使えます（ログインしないと記録は別々になります）。' : ''}${isStandalone() ? 'ホーム画面から起動しています' : installEvt ? 'アプリのように全画面で使えます' : 'iPhone：Safari の共有ボタン →「ホーム画面に追加」／Android：メニュー →「アプリをインストール」'}</span></div>${installEvt && !isStandalone() ? '<button class="btn btn-primary" data-act="install" style="min-height:38px">追加する</button>' : ''}</div>
     <div class="frow"><div class="lab"><b>音声をまとめてダウンロード</b><span>約25MB。通信なしでも全単語の発音を再生できます（一度再生した音声は自動で保存されます）</span></div><button class="btn btn-ghost" data-act="dlAudio" style="min-height:38px">保存する</button></div>
   </div></div>` : ''}
   ${IS_WEB && FIREBASE ? `<div class="sec"><div class="sec-h"><h2>アカウント</h2></div><div class="form">
@@ -1434,11 +1601,11 @@ function viewSettings(){
   <div class="sec"><div class="sec-h"><h2>データ</h2></div><div class="form">
     <div class="frow"><div class="lab"><b>保存先</b><span id="synctext">${syncLabel()}</span></div></div>
     <div class="frow"><div class="lab"><b>はじめての案内</b><span>アプリのしくみと使い方をもう一度見る</span></div><button class="btn btn-ghost" data-act="showOnboard" style="min-height:38px">見る</button></div>
-    <div class="frow"><div class="lab"><b>バックアップ</b><span>学習記録と自作の単語帳をファイルに${IS_WEB ? '。記録はこの端末だけに保存されるので、機種変更の前に書き出してください' : ''}</span></div><button class="btn btn-ghost" data-act="backup" style="min-height:38px">書き出す</button></div>
+    <div class="frow"><div class="lab"><b>バックアップ</b><span>学習記録と自作の単語帳をファイルに${!IS_WEB ? '' : Auth.user ? '。ログイン中は記録がアカウントにも保存されています' : '。ログインしていないと記録はこの端末だけにあるので、機種変更の前に書き出してください'}</span></div><button class="btn btn-ghost" data-act="backup" style="min-height:38px">書き出す</button></div>
     <div class="frow"><div class="lab"><b>バックアップから戻す</b></div><button class="btn btn-ghost" data-act="restoreSheet" style="min-height:38px">読み込む</button></div>
     <div class="frow"><div class="lab"><b>学習記録をリセット</b><span>単語帳は残ります</span></div><button class="btn btn-danger" data-act="resetSheet" style="min-height:38px">リセット</button></div>
   </div></div>
-  <div class="sec small faint">ショートカット：一つ前に戻るは Backspace。4択は 1〜4 キー、わからないは 0、次へは Enter。仕分けは ← →、めくるのは ↑。</div>`;
+  <div class="sec small faint">ショートカット：1問もどすは Backspace。4択は 1〜4 キー、わからないは 0、次へは Enter。仕分けは ← →、めくるのは ↑。</div>`;
 }
 
 /* ---------- card detail ---------- */
@@ -1596,17 +1763,24 @@ function sensesProgress(c){
   const n = learnedSenses(c);
   return `<div class="sprog">${senseDots(c)}<span>意味 ${n} / ${c.s.length} を習得${n < c.s.length ? ` ・ あと${c.s.length - n}つ` : ' ・ コンプリート'}</span></div>`;
 }
+/* the meanings a question may show: the first one and those already learned (the rest stay ？？？ until their turn) */
+const metSenses = c => S.settings.senseCards && !c.isS && !c.isD ? c.s.filter((_, i) => i === 0 || 'ml'.includes(senseState(c, i))) : c.s;
+/* what a locked meaning waits for: the meaning before it (for the 2nd, the word itself) to be learned, then answered right in a later review */
+function lockNote(c, i){
+  if (senseState(c, i) === 'n') return '次に出題';
+  return isReview(senseProg(c, i - 1)) ? `${i === 1 ? `${esc(c.w)} ` : `${i}つ目の意味`}の復習で正解すると出題` : `${i}つ目を覚えると出題`;
+}
 /* Meanings shown during study: the ones already met in full, the rest as ？？？ until their turn. */
 function sensesGated(c, hit, compact=false){
   const open = i => i === 0 || i === hit || 'ml'.includes(senseState(c, i));
   if (compact) {
-    const locked = c.s.filter((_, i) => !open(i)).length;
-    return `<div class="fb-mean">${patHTML(c.s[hit]?.pat, 'pat inl')}${esc(c.s[hit]?.m || c.m)}</div>${locked ? `<div class="tease">ほかに意味があと${locked}つ。この意味を覚えると1つずつ出題します</div>` : ''}`;
+    const locked = c.s.filter((_, i) => !open(i)).length, nx = c.s.findIndex((_, i) => !open(i));
+    return `<div class="fb-mean">${patHTML(c.s[hit]?.pat, 'pat inl')}${esc(c.s[hit]?.m || c.m)}</div>${locked ? `<div class="tease">ほかに意味があと${locked}つ。${senseState(c, nx) === 'n' ? '次から1つずつ出題します' : 'この意味を後日の復習で正解すると、1つずつ出題します'}</div>` : ''}`;
   }
   return sensesProgress(c) + `<ol class="senses">${c.s.map((x, i) => open(i)
     ? `<li class="${i === hit ? 'hit' : ''}"><span class="pos">${esc(x.p || '—')}</span><div class="sbody">${patHTML(x.pat)}<span class="sm">${esc(x.m)}</span>${i === hit && x.e
         ? `<div class="sex">${markWord(x.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(x.e)}" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(x.j)}</div>` : ''}</div></li>`
-    : `<li class="locked"><span class="pos">${esc(x.p || '—')}</span><div class="sbody"><span class="sm">？？？</span><span class="lk">${senseState(c, i) === 'n' ? '次に出題' : `${i}つ目を覚えると出題`}</span></div></li>`).join('')}</ol>`;
+    : `<li class="locked"><span class="pos">${esc(x.p || '—')}</span><div class="sbody"><span class="sm">？？？</span><span class="lk">${lockNote(c, i)}</span></div></li>`).join('')}</ol>`;
 }
 function sensesHTML(c, hit=-1, ex='hit', compact=false, limit=0){
   // limit: show the first N meanings (plus the tested one) and fold the rest behind 「＋N」
@@ -1624,7 +1798,7 @@ const TIMER_HTML = '<div class="qtimer" aria-hidden="true"><i id="qtbar"></i></d
 let CD = null;
 /* runs #qtbar down over the time limit (yellow after `slow` ms, red near the end), then calls done().
    A short interval rather than requestAnimationFrame, which some browsers pause; CSS smooths the steps. */
-function countdown(slow, done){
+function countdown(slow, done, tick){
   stopCountdown();
   const limit = S.settings.timeLimit * 1000, cd = CD = {t0: performance.now(), hiddenAt: 0};
   cd.iv = setInterval(() => {
@@ -1634,6 +1808,7 @@ function countdown(slow, done){
     const ms = performance.now() - cd.t0, left = Math.max(0, 1 - ms / limit);
     bar.style.width = (left * 100) + '%';
     bar.className = left < 0.2 ? 'low' : ms > slow ? 'mid' : '';
+    if (tick && left > 0) tick(ms, bar);
     if (left <= 0) { stopCountdown(); done(); }
   }, 100);
 }
@@ -1646,6 +1821,15 @@ document.addEventListener('visibilitychange', () => {
     if (hidden) o.hiddenAt = now; else if (o.hiddenAt) { o.t0 += now - o.hiddenAt; o.hiddenAt = 0; }
   }
 });
+/* the grade a right answer earns at this moment, shown beside the bar so the speed rule is visible */
+const RATE_NAME = {4: 'Excellent', 3: 'Great', 2: 'Good'};
+const rateHTML = () => `<div class="qclock">${TIMER_HTML}<b class="rate qrate r3" id="qrate" aria-hidden="true">Great</b></div>`;
+function showRate(g, final){
+  const el = $('#qrate'); if (!el) return;
+  if (!RATE_NAME[g]) { el.classList.add('gone'); return; }
+  if (el.dataset.g !== String(g) || final) { el.textContent = RATE_NAME[g]; el.className = `rate qrate r${g}${final ? ' pop' : ''}`; el.dataset.g = g; }
+  if (!final) { const bar = $('#qtbar'); if (bar && !bar.classList.contains('low')) bar.classList.toggle('ex', g === 4); }
+}
 /* time's up: a choice question counts as わからない; a card turns over and counts as もう一度 */
 function timeUp(it){
   if (!Q || Q.cur !== it || Q.answered) return;
@@ -1665,7 +1849,7 @@ function qHeader(){
   return `<div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="やめる">${I.close}</button>
     <div class="segs" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${Q.cleared}" style="--n:${n}">${segsInner()}</div>
     <span class="qcount num">${Q.cleared}/${n}</span>
-    <button class="qundo" data-act="undoAnswer" aria-label="一つ前に戻る" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>戻る</span></button></div>
+    <button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>1問もどす</span></button></div>
     <div class="combo">${Q.combo >= 3 ? `${Q.combo} 連続正解` : ''}</div>`;
 }
 /* ignore taps for a moment after the screen changes, so a fast double tap can't answer the next card */
@@ -1677,10 +1861,11 @@ function renderQ(){
   if (!it.type) { it.type = qType(it.c, it.p0); if (it.type === 'flash') { const d = S.settings.dir; it.flip = d === 'j2e' || (d === 'mix' && Math.random() < 0.5); } }
   if (it.si == null) it.si = senseFor(it.c, it.p0);
   if (it.tries > 0 && (isSpell(it.type) || it.type === 'odd')) it.type = it.c.isD ? 'dform' : 'e2j';
-  Q.cur = it; Q.answered = false; Q.hint = 0; Q.gaveUp = false; Q.picked = null; Q.typed = '';
+  Q.cur = it; Q.answered = false; Q.hint = 0; Q.gaveUp = false; Q.picked = null; Q.typed = ''; Q.revealed = null;   // a card that comes back starts face down again
   if (it.type === 'odd') { Q.choices = pickOdd(it.c); if (!Q.choices) it.type = 'j2e'; }
   const c = it.c, type = it.type, left = Q.queue.length, sense = c.s[it.si] || c.s[0];
-  const fresh = type === 'flash' && !isReview(it.p0), clock = timed(type) && !fresh;   // no clock while a word is brand new
+  const fresh = type === 'flash' && !isReview(it.p0), clock = timed(type) && !fresh && !it.check;   // no clock while a word is brand new, nor on its check later in the set
+  const live = clock && type !== 'flash' && it.first === null;   // speed decides the grade only on a review's first answer
   const behind = (left > 1 ? '<div class="behind"></div>' : '') + (left > 2 ? '<div class="behind b2"></div>' : '');
   const sayBtn = `<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(sense.p)}" aria-label="発音を聞く">${I.say}</button>`;
   const multi = (c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : '') + (c.cat ? `<span class="cat">${esc(c.cat)}</span>` : '');
@@ -1692,7 +1877,7 @@ function renderQ(){
       ${known.length ? `<div class="qknown">知っている意味：${esc(known.join(' ／ '))}</div>` : ''}
       <div class="qask">${type === 'snew' || (type === 'flash' && !isReview(it.p0)) ? '<b class="newtag">新しい意味</b>' : ''}${c.si + 1}つ目の意味は？</div>`;
   } else if (type === 'flash' && it.flip) {
-    card = `<div class="qask">この意味の英単語は？</div><ul class="qmeans">${c.s.slice(0, 4).map(s => `<li><span class="pos">${esc(s.p||'—')}</span>${esc(s.m)}</li>`).join('')}</ul>${c.isD ? `<div class="qask">← ${esc(c.parent.w)} の派生語</div>` : ''}`;
+    card = `<div class="qask">この意味の英単語は？</div><ul class="qmeans">${metSenses(c).slice(0, 4).map(s => `<li><span class="pos">${esc(s.p||'—')}</span>${esc(s.m)}</li>`).join('')}</ul>${c.isD ? `<div class="qask">← ${esc(c.parent.w)} の派生語</div>` : ''}`;
   } else if (type === 'e2j' || type === 'flash' || type === 'odd') {
     card = `<div class="qpos"><span class="pos">${esc((type === 'odd' || type === 'flash') ? c.p || '—' : sense.p || '—')}</span>${sayBtn}${multi}</div><div class="qword">${esc(c.w)}</div>${type !== 'odd' ? patHTML(sense.pat, 'qpat') : ''}${c.isD ? `<div class="qask">← ${esc(c.parent.w)} の派生語</div>` : ''}`;
     if (type === 'odd') card += `<div class="qask">この単語の意味<b>ではない</b>ものは？</div>`;
@@ -1701,7 +1886,7 @@ function renderQ(){
     card = `${from}<div class="qpos"><span class="pos">${esc(c.p)}</span><span class="qposname">${POS_NAME[c.p] || ''}</span></div><div class="qmean">${esc(c.m)}</div>`;
     if (type === 'dspell' && c.e) { const b = blankWord(c.e, c.w); if (b) card += `<div class="qex">${b}</div>`; }
   } else if (type === 'spell') {
-    const met = S.settings.senseCards ? c.s.filter((_, i) => i === 0 || 'ml'.includes(senseState(c, i))) : c.s;
+    const met = metSenses(c);
     card = `<ul class="qmeans">${met.slice(0, 4).map(s => `<li><span class="pos">${esc(s.p||'—')}</span>${esc(s.m)}</li>`).join('')}</ul>`;
     const ex = sense.e || c.e; if (ex) { const b = blankWord(ex, c.w); if (b) card += `<div class="qex">${b}</div>`; }
   } else {
@@ -1722,11 +1907,14 @@ function renderQ(){
     body = `<div class="reveal"><button class="btn btn-primary btn-block" data-act="reveal">答えを見る（Space）</button></div>`;
   }
   $('#screen').innerHTML = `<div class="screen-in study">${qHeader()}
-    ${clock ? TIMER_HTML : ''}
+    ${live ? rateHTML() : clock ? TIMER_HTML : ''}
     <div class="qstage">${behind}<div class="tcard holed qcard" id="qcard"><span class="ring"></span><span class="qtype">${fresh ? '新しい単語' : TYPE_LABEL[type]}${it.tries ? ' ・ もう一度' : ''}</span><div class="qcard-in">${card}</div></div></div>
     <div id="qbody">${body}</div></div><div id="fb"></div>`;
   Q.t0 = performance.now(); Q.lockUntil = Q.t0 + 250; Q.timedOut = false;
-  if (clock) countdown(type === 'flash' ? S.settings.timeLimit * 500 : slowMs(type), () => timeUp(it)); else stopCountdown();
+  if (clock) countdown(type === 'flash' ? S.settings.timeLimit * 500 : slowMs(type), () => timeUp(it),
+    live ? ms => showRate(gradeFrom(type, true, ms, false, isReview(it.p0))) : null);
+  else stopCountdown();
+  if (live) showRate(gradeFrom(type, true, 0, false, isReview(it.p0)));
   if (S.settings.autoSpeak && (type === 'e2j' || type === 'snew' || (type === 'flash' && !it.flip) || type === 'odd')) playWord(c.w, sense.p);
   if (isSpell(type)) setTimeout(() => $('#spellin')?.focus(), 30);
 }
@@ -1762,29 +1950,44 @@ function gradeFrom(type, ok, ms, hinted, wasReview){
 function answer(ok, grade){
   const it = Q.cur; if (!it || Q.answered) return;
   Q.answered = true; stopCountdown();
-  // everything this answer changes, so 「戻る」 can put it back
+  // everything this answer changes, so 「1問もどす」 can put it back
   const snap = {it, queue: [...Q.queue], cleared: Q.cleared, combo: Q.combo, maxCombo: Q.maxCombo, prog: clone(prog(it.c)),
-    first: it.first, ok: it.ok, ms: it.ms, after: it.after, grade: it.grade, tries: it.tries, gaveUp: it.gaveUp, bump: null, rt: null};
+    first: it.first, ok: it.ok, ms: it.ms, after: it.after, grade: it.grade, tries: it.tries, gaveUp: it.gaveUp, type: it.type, check: it.check, bump: null, rt: null};
+  const card = it.type === 'flash';
   (Q.hist ||= []).push(snap);
   const ub = $('.qundo'); if (ub) ub.disabled = false;
   const ms = Math.min(60000, performance.now() - Q.t0);
   const g = grade ?? gradeFrom(it.type, ok, ms, Q.hint > 1, isReview(it.p0));
   if (it.first === null && ok && grade == null) { noteRT(it.type, ms); snap.rt = it.type; }
   if (grade != null) ok = grade > 1;
+  showRate(ok && it.first === null ? g : 0, true);   // the grade it earned pops; a miss clears it
   let np = null;
   if (it.first === null) {
     const wasNew = !isReview(it.p0);
     it.first = g; it.ok = ok; it.ms = ms;
     np = nextState(it.p0, g); setProg(it.c, np); it.after = np; it.grade = g;
-    snap.bump = {n:1, c:ok?1:0, nw:wasNew?1:0, rn:wasNew?0:1, rc:(!wasNew && ok)?1:0, t:ms}; bumpDaily(snap.bump);
+    snap.bump = {n:1, c:ok?1:0, nw:wasNew?1:0, rn:wasNew?0:1, rc:(!wasNew && ok)?1:0, t:ms};
+    if (!card && swCheck(it.p0)) { snap.bump.kc = 1; snap.bump.kh = ok ? 1 : 0; }   // the first 4択 on a word sorted as 知ってる: was it right?
+    bumpDaily(snap.bump);
   }
   const idx = Q.queue.shift(); it.tries++;
+  let back = -1;
   if (ok) { Q.cleared++; Q.combo++; Q.maxCombo = Math.max(Q.maxCombo, Q.combo); }
-  else { Q.queue.push(idx); Q.combo = 0; }
-  sfx(ok ? 'ok' : 'ng');
+  else { back = Math.min(3, Q.queue.length); Q.queue.splice(back, 0, idx); Q.combo = 0; }   // a miss comes back after 3 other questions (sooner only when fewer are left)
   const sg = $('.segs'); if (sg) { sg.innerHTML = segsInner(); sg.setAttribute('aria-valuenow', Q.cleared); }
   const qc = $('.qcount'); if (qc) qc.textContent = `${Q.cleared}/${Q.items.length}`;
+  if (card && !Q.timedOut) {
+    // a card you graded yourself already shows its answer: no sheet and no buzzer, it just slides away
+    sfx(ok ? 'ok' : 'tick'); if (ok) haptic(true);
+    const el = $('#qcard'); if (el) { el.classList.add('away'); if (!ok) el.classList.add('back'); }
+    if (!ok && !isReview(it.p0) && !Q.flash) { it.type = 'e2j'; it.check = true; }   // a new word marked もう一度 returns as a 英→日 4択: can you recall it now?
+    Q.timer = setTimeout(nextQ, 170);
+    return;
+  }
+  sfx(ok ? 'ok' : 'ng');
   showFeedback(it, ok, np);
+  // right back (few questions left): ask it the other way, so it isn't the same four options again
+  if (back >= 0 && back < 3 && it.type === 'e2j' && !it.check && (S.settings.dir || 'auto') === 'auto') it.type = it.c.isD ? 'dform' : 'j2e';
 }
 function showFeedback(it, ok, np){
   const c = it.c, today = dayIdx();
@@ -1863,13 +2066,14 @@ function nextQ(){
   clearTimeout(Q.timer); Q.timer = null;
   const prev = Q.cur;
   renderQ();
-  // a wrong answer can still be taken back for a few seconds after moving on
-  if (prev && !prev.ok && prev.after && !prev.gaveUp && prev.type !== 'flash' && !Q.done) {
+  // a wrong answer can still be taken back for a few seconds after moving on (only the answer that set the review date, not a retry)
+  const last = Q.hist?.[Q.hist.length - 1];
+  if (prev && last?.it === prev && last.bump && last.type !== 'flash' && !prev.ok && prev.after && !prev.gaveUp && !Q.done) {
     toast(`× ${prev.c.w}`, {label:'押し間違えた', act:'mistapPrev'}, 3200);
     Q.undoable = prev;
   } else if (Q) Q.undoable = null;
 }
-/* 一つ前に戻る: take back the latest answer (also from the next question or the results) and ask it again */
+/* 1問もどす: take back the latest answer (also from the next question or the results) and ask it again */
 function undoAnswer(){
   if (!Q || !Q.hist?.length) return;
   const h = Q.hist.pop(), it = h.it;
@@ -1880,7 +2084,7 @@ function undoAnswer(){
     if (h.bump) bumpDaily(Object.fromEntries(Object.entries(h.bump).map(([k, v]) => [k, -v])));
     if (h.rt && RT[h.rt]?.length) { RT[h.rt].pop(); try { localStorage.setItem('tangoloop.rt', JSON.stringify(RT)); } catch(e) {} }
   }
-  Object.assign(it, {first: h.first, ok: h.ok, ms: h.ms, after: h.after, grade: h.grade, tries: h.tries, gaveUp: h.gaveUp});
+  Object.assign(it, {first: h.first, ok: h.ok, ms: h.ms, after: h.after, grade: h.grade, tries: h.tries, gaveUp: h.gaveUp, type: h.type, check: h.check});
   Object.assign(Q, {queue: h.queue, cleared: h.cleared, combo: h.combo, maxCombo: h.maxCombo, done: false, undoable: null, revealed: null});
   renderQ();
   toast(`「${it.c.w}」をやり直します`);
@@ -1888,8 +2092,9 @@ function undoAnswer(){
 function mistap(it = Q?.cur, advance = true){
   if (!it || !it.after || it.ok) return;
   const np = nextState(it.p0, 3); setProg(it.c, np); it.after = np; it.first = 3; it.ok = true;
-  bumpDaily({c:1, rc: isReview(it.p0) ? 1 : 0});
-  const h = Q.hist?.findLast(x => x.it === it && x.bump); if (h) { h.bump.c++; if (isReview(it.p0)) h.bump.rc++; }
+  const h = Q.hist?.findLast(x => x.it === it && x.bump), kh = h?.bump.kc ? 1 : 0;   // a 知ってる check that was really right
+  bumpDaily(kh ? {c:1, rc: isReview(it.p0) ? 1 : 0, kh} : {c:1, rc: isReview(it.p0) ? 1 : 0});
+  if (h) { h.bump.c++; if (isReview(it.p0)) h.bump.rc++; if (kh) h.bump.kh = (h.bump.kh || 0) + 1; }
   const qi = Q.items.indexOf(it), pos = Q.queue.indexOf(qi); if (pos >= 0) Q.queue.splice(pos, 1);
   Q.cleared++;
   if (advance) nextQ();
@@ -1931,9 +2136,11 @@ function spellGo(){
 }
 function hint(){ if (!Q || Q.answered) return; Q.hint = Math.max(2, Q.hint + 1); $('#hint').textContent = hintText(Q.cur.c.w, Q.hint); $('#spellin')?.focus(); }
 function reveal(){
-  if (!Q || Q.answered || Q.revealed === Q.cur) return; Q.revealed = Q.cur; stopCountdown();
-  const it = Q.cur, c = it.c, today = dayIdx();
-  const prev = g => it.first === null ? `<small>${ivlShort(nextState(it.p0, g, Date.now(), false).due - today)}</small>` : '';
+  if (!Q || Q.answered || Q.revealed === Q.cur || locked()) return; Q.revealed = Q.cur; stopCountdown();
+  Q.lockUntil = performance.now() + 200;   // a double tap on 答えを見る doesn't grade the card
+  const it = Q.cur, c = it.c, today = dayIdx(), isNew = !isReview(it.p0);
+  const prev = g => it.first !== null ? '' : isNew && g === 1 ? '<small class="jp">このあと<wbr>また出る</small>'
+    : `<small>${ivlShort(nextState(it.p0, g, Date.now(), false).due - today)}</small>`;
   const front = it.flip ? `<div class="qword">${esc(c.w)}</div>${ipaHTML(c)}` : '';
   const back = c.isD || !S.settings.senseCards ? sensesHTML(c, -1, 'all') : c.isS ? sensesGated(c.parent, c.si) : sensesGated(c, 0);
   $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `<div class="back-face">${front}${back}</div>`);
@@ -1961,8 +2168,7 @@ function renderResults(){
   const hasMore = more.due + more.newToday > 0;
   const pct = Math.round(ok / n * 100);
   $('#screen').innerHTML = `<div class="screen-in res">
-    <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span>
-      <button class="qundo" data-act="undoAnswer" aria-label="一つ前に戻る">${I.undo}<span>戻る</span></button></div>
+    <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span></div>
     <div class="res-h"><div class="eyebrow">セット完了</div>
       <div class="ring-score" style="--p:${pct}"><div><b class="big">${pct}<small>%</small></b><span>1回目で正解</span></div></div>
       <div class="res-tiles">
@@ -1971,21 +2177,35 @@ function renderResults(){
         <div><b>${st.n}<small>日</small></b><span>連続学習</span></div>
       </div>
       <div class="res-meta"><span>${fmtMs(dur)}</span><span>最大 ${Q.maxCombo} 連続正解</span></div></div>
-    <div class="words rlist">${rows}</div>
+    ${nudgeHTML()}<div class="words rlist">${rows}</div>
+    <div class="res-undo"><button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）">${I.undo}<span>1問もどす</span></button></div>
     <div class="res-btns">
       ${hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}次の${Math.min(S.settings.setSize, more.due + more.newToday)}問<small>復習${more.due}・新規${more.newToday}</small></button>`
         : `<div class="res-done">${I.check}今日の目標は達成</div>${more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>新しい単語</small></button>` : ''}`}
       <button class="btn btn-ghost btn-block" data-act="quitQuiz">ホームへ</button></div></div>`;
   Q.done = true; Q.lockUntil = performance.now() + 400;
+  flush();                                         // set end: save to the cloud now
 }
 
 /* ---------- swipe (高速仕分け) ---------- */
+/* 知ってる is checked by a 4択 later and counts as 習得 only once that is right. The day comes from the word's key, so a big
+   sort spreads over 7–21 days instead of landing on one; someone whose 知ってる often turned out wrong (under 70% of 10+
+   checks) gets the check in 3–7 days, from a weaker start. The checks are counted per day (kc, kh) so the rate syncs. */
+const keyHash = s => { let h = 7; for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
+function swStats(){ let n = 0, hit = 0; for (const d of Object.values(S.daily)) { n += d?.kc || 0; hit += d?.kh || 0; } return {n, hit}; }
+const swEarly = (st = swStats()) => st.n >= 10 && st.hit / st.n < 0.7;
+const swCheck = p => isReview(p) && !!p.k && (p.r || 0) === 1;   // not answered since it was sorted as 知ってる
+function swKnown(prev, c, now){
+  const early = swEarly(), np = {...nextState(prev, early ? 3 : 4, now, false), k:1};
+  np.due = dayIdx(now) + (early ? 3 + keyHash(c.k) % 5 : 7 + keyHash(c.k) % 15);
+  return np;
+}
 let SW = null;
 function startSwipe(deckIds=activeIds()){
   let pool = cardsOf(deckIds).filter(c => { const p = prog(c); return (!p || p.st === 0) && !p?.sus; });
   if (S.settings.order === 'rand') pool = shuffle(pool);
   if (!pool.length) { toast('仕分けできる未学習の単語がありません'); return; }
-  SW = {cards:pool.slice(0, 50), i:0, hist:[], shown:false};
+  SW = {cards:pool.slice(0, 50), i:0, hist:[], shown:false, deckIds};   // 続けて仕分ける stays in these decks
   audioCtx(); prefetchAudio(SW.cards);
   openScreen(); renderSwipe();
 }
@@ -2006,9 +2226,9 @@ function renderSwipe(){
     ${S.settings.timeLimit > 0 ? TIMER_HTML : ''}
     <div class="swarea" id="swarea">${nx ? swCardHTML(nx, 'next') : ''}${swCardHTML(c, '')}</div>
     <div class="swbtns"><button class="btn sw-no" data-act="swNo">← 知らない</button>
-      <button class="qundo col" data-act="swUndo" aria-label="一つ前に戻る" ${SW.hist.length ? '' : 'disabled'}>${I.undo}<span>戻る</span></button>
+      <button class="qundo col" data-act="swUndo" aria-label="1枚もどす（最後の仕分けを取り消す）" ${SW.hist.length ? '' : 'disabled'}>${I.undo}<span>1枚もどす</span></button>
       <button class="btn sw-yes" data-act="swYes">知ってる →</button></div>
-    <div class="swhelp">カードをタップで意味を確認 ・ 左右にスワイプで仕分け<br>「知ってる」は14日後に4択で確認、「知らない」は次のセットで学習します</div></div>`;
+    <div class="swhelp">カードをタップで意味を確認 ・ 左右にスワイプで仕分け<br>「知ってる」は${swEarly() ? '3日〜1週間' : '1〜3週間'}のうちに4択で確認、「知らない」は次のセットで学習します</div></div>`;
   bindDrag($('#swcard'));
   if (S.settings.timeLimit > 0) countdown(S.settings.timeLimit * 500, swTimeUp); else stopCountdown();
   if (S.settings.autoSpeak) playWord(c.w, c.p);
@@ -2027,7 +2247,7 @@ function swDecide(known){
   if (!SW || SW.busy || SW.i >= SW.cards.length) return;
   stopCountdown();
   const c = SW.cards[SW.i], prev = clone(prog(c)), now = Date.now();
-  const np = known ? {...nextState(prev, 4, now), k:1} : {st:1, last:now, r:0, l:0};
+  const np = known ? swKnown(prev, c, now) : {st:1, last:now, r:0, l:0};
   setProg(c, np); SW.hist.push({c, prev, known});
   bumpDaily({sw:1});
   sfx('tick');
@@ -2055,27 +2275,30 @@ function bindDrag(el){
 function renderSwipeDone(){
   stopCountdown();
   const unk = SW.hist.filter(h => !h.known).map(h => h.c), known = SW.hist.length - unk.length;
+  const ks = swStats();
+  const rate = ks.n >= 5 ? `<div class="swrate">これまでの「知ってる」の的中率 <b>${Math.round(ks.hit / ks.n * 100)}%</b>${swEarly(ks) ? '<br><span class="small">はずれが多めなので、確認の4択を早めに出します</span>' : ''}</div>` : '';
   sfx('done');
   $('#screen').innerHTML = `<div class="screen-in">
-    <div class="qtop"><button class="iconbtn" data-act="quitSwipe" aria-label="閉じる">${I.close}</button><span style="flex:1"></span>
-      <button class="qundo" data-act="swUndo" aria-label="一つ前に戻る">${I.undo}<span>戻る</span></button></div>
+    <div class="qtop"><button class="iconbtn" data-act="quitSwipe" aria-label="閉じる">${I.close}</button><span style="flex:1"></span></div>
     <div class="res-h"><div class="muted small" style="font-weight:700;letter-spacing:.08em">仕分け完了</div>
-      <div class="res-meta" style="font-size:15px;margin-top:8px"><span>知ってる <b class="num" style="color:var(--easy)">${known}</b></span><span>知らない <b class="num" style="color:var(--again)">${unk.length}</b></span></div></div>
-    <div class="words rlist">${unk.slice(0,30).map(c => `<div class="rrow"><span class="mk x">×</span><div class="rword"><b>${esc(c.w)}</b><span>${esc(allMeanings(c))}</span></div><span></span></div>`).join('') || '<div class="empty">知らない単語はありませんでした。</div>'}</div>
+      <div class="res-meta" style="font-size:15px;margin-top:8px"><span>知ってる <b class="num" style="color:var(--easy)">${known}</b></span><span>知らない <b class="num" style="color:var(--again)">${unk.length}</b></span></div>${rate}</div>
+    ${nudgeHTML()}<div class="words rlist">${unk.slice(0,30).map(c => `<div class="rrow"><span class="mk x">×</span><div class="rword"><b>${esc(c.w)}</b><span>${esc(allMeanings(c))}</span></div><span></span></div>`).join('') || '<div class="empty">知らない単語はありませんでした。</div>'}</div>
+    ${SW.hist.length ? `<div class="res-undo"><button class="qundo" data-act="swUndo" aria-label="1枚もどす（最後の仕分けを取り消す）">${I.undo}<span>1枚もどす</span></button></div>` : ''}
     <div class="res-btns">
       ${unk.length ? `<button class="btn btn-primary btn-block" data-act="learnUnknown">${I.play}知らない単語を覚える（${Math.min(unk.length, S.settings.setSize)}語ずつ）</button>` : ''}
       <button class="btn btn-ghost btn-block" data-act="swipeMore">続けて仕分ける</button>
       <button class="btn btn-ghost btn-block" data-act="quitSwipe">ホームに戻る</button></div></div>`;
   SW.unknown = unk;
+  flush();
 }
 
 /* ---------- custom decks ---------- */
 const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-function touchDeck(id){ S.custom[id].upd = Date.now(); invalidateDecks(); save(); markDirty('deck_' + id); }
+function touchDeck(id){ S.custom[id].upd = Date.now(); invalidateDecks(); save(); markDirty('deck_' + id, true); }
 function createDeck(name, cards=[]){
   const id = uid('u');
   S.custom[id] = {id, name, desc:'自作の単語帳', created:Date.now(), upd:Date.now(), cards:cards.map(storeCard)};
-  invalidateDecks(); save(); markDirty('deck_' + id);
+  invalidateDecks(); save(); markDirty('deck_' + id, true);
   if (!S.settings.active.includes(id)) setSetting('active', [...S.settings.active, id]);
   return id;
 }
@@ -2256,7 +2479,7 @@ const ACT = {
   spellGo: () => spellGo(),
   hint: () => hint(),
   reveal: () => reveal(),
-  grade: t => answer(null, +t.dataset.g),
+  grade: t => { if (!locked()) answer(null, +t.dataset.g); },
   drill: t => { const cards = drillCards(t.dataset.kind); if (!cards.length) return toast('対象の単語はありません');
     startQuiz({cards: cards.slice(0, S.settings.setSize), drill: t.dataset.kind}); },
   studyFiltered: () => { const d = deckById(route.deck); if (!d) return; const cards = filterCards(d).filter(c => !prog(c)?.sus);
@@ -2267,7 +2490,7 @@ const ACT = {
   swYes: () => swDecide(true),
   swNo: () => swDecide(false),
   swUndo: () => swUndo(),
-  swipeMore: () => { const ids = activeIds(); SW = null; startSwipe(ids); },
+  swipeMore: () => { const ids = SW?.deckIds || activeIds(); SW = null; startSwipe(ids); },
   learnUnknown: () => { const u = SW.unknown.slice(0, S.settings.setSize); SW = null; startQuiz({cards:u}); },
   filter: t => { route.filter = t.dataset.f; route.limit = 150; render(); },
   cat: t => { route.cat = route.cat === t.dataset.c ? '' : t.dataset.c; route.limit = 150; render(); },
@@ -2281,7 +2504,7 @@ const ACT = {
   suspend: t => { const c = findCard(t.dataset.deck, t.dataset.k); const p = clone(prog(c)) || {st:0}; p.sus = !p.sus; p.last = Date.now(); setProg(c, p); cardSheet(c); render(); },
   resetCard: t => { const c = findCard(t.dataset.deck, t.dataset.k); setProg(c, {st:0, last:Date.now()}); cardSheet(c); render(); toast('記録をリセットしました'); },
   aiMnemonic: t => { const c = findCard(t.dataset.deck, t.dataset.k); if (c) aiMnemonic(c); },
-  saveMemo: t => { const txt = $('#aiout')?.dataset.text; if (!txt) return; (S.notes[t.dataset.deck] ||= {})[t.dataset.k] = txt; save(); markDirty('note_' + t.dataset.deck); const c = findCard(t.dataset.deck, t.dataset.k); cardSheet(c); toast('メモを保存しました'); },
+  saveMemo: t => { const txt = $('#aiout')?.dataset.text; if (!txt) return; (S.notes[t.dataset.deck] ||= {})[t.dataset.k] = txt; save(); markDirty('note_' + t.dataset.deck, true); const c = findCard(t.dataset.deck, t.dataset.k); cardSheet(c); toast('メモを保存しました'); },
   newDeck: () => newDeckSheet(),
   addCard: t => cardForm(t.dataset.id, null),
   editCard: t => cardForm(t.dataset.deck, findCard(t.dataset.deck, t.dataset.k)),
@@ -2325,6 +2548,15 @@ const ACT = {
   signIn: t => t.dataset.kind ? signIn(t.dataset.kind) : loginSheet(),
   resetPass: () => resetPass(),
   signOut: () => signOutNow(),
+  syncInfo: () => {
+    if (!Auth.user) { if (Auth.api) loginSheet(); else toast(Auth.failed ? 'ログイン機能を読み込めませんでした。通信が戻ると自動でつなぎ直します' : '準備中です。少し待ってからお試しください'); return; }
+    if (Sync.state === 'err') { for (const b of Object.values(Sync.bad)) b.at = 0; flush(true); toast('一部の記録がまだクラウドに保存できていません（この端末には残っています）。通信が戻ると自動で保存します', null, 4000); return; }
+    toast(syncLabel(), null, 3000);
+  },
+  nudgeLogin: () => loginSheet(),
+  nudgeLater: t => t.closest('.nudge')?.remove(),
+  copyUrl: () => { const u = new URL(location.href); u.searchParams.delete('openExternalBrowser'); const s = u.href;
+    try { navigator.clipboard.writeText(s).then(() => toast('URLをコピーしました。Safari や Chrome に貼り付けて開いてね', null, 4000), () => toast(s, null, 8000)); } catch(e) { toast(s, null, 8000); } },
   obStart: t => {
     const deck = document.querySelector('input[name="obdeck"]:checked')?.value || 'j1';
     const n = +(document.querySelector('input[name="obnew"]:checked')?.value || 20);
@@ -2347,7 +2579,7 @@ const ACT = {
       for (const deck of Object.keys(S.prog)) markDirty('prog_'+deck);
       for (const id of Object.keys(S.custom)) { S.custom[id].upd = now; markDirty('deck_'+id); }
       for (const deck of Object.keys(S.notes)) markDirty('note_'+deck);
-      markDirty('meta'); invalidateDecks(); saveNow(); closeSheet(); render(); toast('バックアップから戻しました');
+      markDirty('meta', true); invalidateDecks(); saveNow(); closeSheet(); render(); toast('バックアップから戻しました');
     } catch(e) { $('#rinfo').innerHTML = '<span style="color:var(--again)">極単のバックアップとして読み取れませんでした。</span>'; }
   },
   resetSheet: () => openSheet(`<div class="sheet-h"><h3>学習記録をリセット</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
@@ -2355,7 +2587,7 @@ const ACT = {
     <div class="btn-row"><button class="btn btn-ghost" data-act="closeSheet">やめる</button><button class="btn btn-danger" data-act="resetGo">リセットする</button></div></div>`),
   resetGo: () => { const now = Date.now();
     for (const deck of Object.keys(S.prog)) { for (const k of Object.keys(S.prog[deck])) S.prog[deck][k] = {st:0, last:now}; markDirty('prog_'+deck); }
-    S.daily = {}; S.settings.upd = now; markDirty('meta'); saveNow(); closeSheet(); render(); toast('リセットしました'); },
+    S.daily = {}; S.settings.upd = now; markDirty('meta', true); saveNow(); closeSheet(); render(); toast('リセットしました'); },
 };
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
@@ -2454,13 +2686,13 @@ function onboard(){
     .filter(([id]) => deckById(id));
   openSheet(`<div class="ob">
     <div class="ob-logo" aria-hidden="true">極</div>
-    <h3>極単へようこそ</h3>
+    <h3>極単へようこそ</h3>${iabNote()}
     <ul class="ob-points">
-      <li><b>覚えるのはカード、復習は4択</b><span>新しい単語はカードで覚えて自分で評価。復習は4択でサクサク、速く正解した単語ほど次の復習は先になります。押し間違えたら「戻る」でやり直せます。</span></li>
+      <li><b>覚えるのはカード、復習は4択</b><span>新しい単語はカードで覚えて自分で評価。復習は4択でサクサク、速く正解した単語ほど次の復習は先になります。押し間違えたら「1問もどす」でやり直せます。</span></li>
       <li class="ob-curve"><b>忘却曲線に沿って設計</b><span>人は覚えたことを時間とともに忘れていきます（エビングハウスの忘却曲線）。極単は単語ごとの忘れ方を計算して、記憶が薄れかけた頃に復習を出すので、少ない回数で長く覚えていられます。</span>
         ${forgetChart()}
         <span class="fc-cap">復習するたびに忘れにくくなり、次の復習までの間隔が「1日 → 3日 → 8日 → 20日」と伸びていきます。</span></li>
-      <li><b>意味も派生語も1つずつ</b><span>1つ覚えるたびに、次の意味や派生語が出てきます。発音は AI 音声つき。</span></li>
+      <li><b>意味も派生語も1つずつ</b><span>覚えた意味を後日の復習で正解すると、次の意味や派生語が1つずつ出てきます。発音は AI 音声つき。</span></li>
     </ul>
     <fieldset class="ob-f"><legend>どこから始める？</legend>
       ${opts.map(([id, name, sub], i) => `<label class="ob-opt"><input type="radio" name="obdeck" value="${id}" ${i === 0 ? 'checked' : ''}><span><b>${name}</b><small>${sub}</small></span></label>`).join('')}
@@ -2470,7 +2702,7 @@ function onboard(){
     </div><p class="ob-note">目標を達成したあとも、そのまま続けて学習できます</p></fieldset>
     <button class="btn btn-primary btn-big btn-block" data-act="obStart" data-mode="swipe">知っている単語を仕分けてから始める</button>
     <button class="btn btn-ghost btn-block" data-act="obStart" data-mode="study">すぐに学習をはじめる</button>
-    ${FIREBASE ? '<button class="btn btn-ghost btn-block" data-act="signIn">ほかの端末で使っていた人：ログイン</button>' : ''}
+    ${FIREBASE ? '<button class="btn btn-ghost btn-block" data-act="signIn">ほかの端末やブラウザで使っていた人：ログイン</button>' : ''}
     <button class="link ob-skip" data-act="obSkip">あとで決める</button>
   </div>`, true);
 }
