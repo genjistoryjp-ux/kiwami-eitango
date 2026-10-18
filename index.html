@@ -575,6 +575,57 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .stepper-sm output{min-width:46px;font-size:13.5px}
 .segs.dense{gap:1px}
 .segs.dense i{border-radius:1px}
+
+.pill.streak:not(.done) .ico{color:var(--faint)}
+.pill.streak.done .ico{color:#F2701F}
+.goal-line{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:13px;color:var(--muted)}
+.goal-line .ico{width:16px;height:16px;flex:none;color:var(--faint)}
+.goal-line b{color:var(--ink)}
+.goal-line.done .ico{color:#F2701F}
+.stk-card{display:flex;align-items:center;gap:14px;width:100%;margin-bottom:10px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);text-align:left}
+.stk-num{display:flex;align-items:baseline;gap:3px;flex:none}
+.stk-num .ico{width:22px;height:22px;align-self:center;color:var(--faint)}
+.stk-card.done .stk-num .ico{color:#F2701F}
+.stk-num b{font-size:26px;font-family:var(--f-word);line-height:1}
+.stk-num small{font-size:12px;color:var(--muted);font-weight:700}
+.week{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:4px;min-width:0}
+.wd{display:flex;flex-direction:column;align-items:center;gap:3px}
+.wd i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);border:1.5px solid var(--line)}
+.wd i .ico{width:15px;height:15px}
+.wd.on i{background:#F2701F;border-color:#F2701F;color:#fff}
+.wd.fz i{background:var(--easy-soft);border-color:var(--easy);color:var(--easy)}
+.wd.now i{border:2px dashed #F2701F;background:transparent}
+.wd small{font-size:10.5px;color:var(--muted);font-weight:700}
+.stk{display:flex;flex-direction:column;gap:12px}
+.stk-top{display:flex;align-items:baseline;justify-content:center;gap:6px;color:var(--faint)}
+.stk-top .ico{width:40px;height:40px;align-self:center}
+.stk-top.done .ico{color:#F2701F}
+.stk-top b{font-size:52px;font-family:var(--f-word);color:var(--ink);line-height:1}
+.stk-top span{font-weight:700;color:var(--muted)}
+.stk-sub{text-align:center;font-size:13px;color:var(--muted)}
+.stk-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stk-kpis div{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:12px;background:var(--surface-2)}
+.stk-kpis b{font-size:20px;font-family:var(--f-word)}
+.stk-kpis span{font-size:11.5px;color:var(--muted);font-weight:700}
+.mcal-h{font-weight:700;font-size:13px;margin-bottom:6px}
+.mcal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.mcal-g b{font-size:11px;color:var(--muted)}
+.mcal-g i{font-style:normal;font-size:12px;line-height:30px;border-radius:50%;font-variant-numeric:tabular-nums}
+.mcal-g i.on{background:#F2701F;color:#fff;font-weight:700}
+.mcal-g i.fz{background:var(--easy-soft);color:var(--easy);font-weight:700}
+.mcal-g i.now{box-shadow:inset 0 0 0 2px #F2701F}
+.mcal-g i.fut{color:var(--faint)}
+.stk-rule{display:flex;gap:8px;font-size:12.5px;color:var(--muted);line-height:1.6}
+.stk-rule .ico{width:16px;height:16px;flex:none;color:var(--easy);margin-top:3px}
+.stk-win{display:flex;align-items:center;gap:12px;margin:0 auto 14px;padding:12px 18px;border-radius:16px;background:color-mix(in srgb,#F2701F 12%,var(--surface));border:1.5px solid color-mix(in srgb,#F2701F 45%,var(--line));animation:stkwin .5s cubic-bezier(.2,.9,.3,1.3)}
+.stk-win div{display:flex;flex-direction:column;gap:2px;text-align:left}
+.stk-win b{font-size:19px}
+.stk-win b .num{font-family:var(--f-word);font-size:24px;color:#F2701F}
+.stk-win span{font-size:12.5px;color:var(--muted)}
+.stk-flame .ico{width:38px;height:38px;color:#F2701F;animation:flame 1.2s ease-in-out infinite alternate}
+@keyframes stkwin{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes flame{from{transform:scale(1) rotate(-4deg)}to{transform:scale(1.12) rotate(4deg)}}
+@media (prefers-reduced-motion: reduce){.stk-win,.stk-flame .ico{animation:none}}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -872,20 +923,69 @@ function bumpDaily(o){
   for (const [f,v] of Object.entries(o)) d[f] = (d[f]||0) + v;
   save(); markDirty('meta');
 }
+/* 連続記録: a day counts when its goal was reached — every review due that day (up to the daily limit) and the day's
+   new words are done (daily.g, set by checkGoal). Days before the goal rule started count if anything was studied. */
+const GOAL_FROM = '2026-10-19';
+const MILESTONES = [3, 7, 14, 30, 50, 100, 150, 200, 300, 365, 500, 1000];
+function dayOn(k){ const d = S.daily[k]; return !!d && (k < GOAL_FROM ? (d.n || 0) + (d.sw || 0) > 0 : !!d.g); }
 function streakInfo(){
-  const isOn = k => { const d = S.daily[k]; return d && ((d.n||0) + (d.sw||0)) > 0; };
-  const days = Object.keys(S.daily).filter(isOn).map(k => Math.round(Date.parse(k) / DAY)).sort((a,b) => a - b);
-  const today = dayIdx();
-  if (!days.length) return {n:0, freeze:0, done:false};
-  const on = new Set(days);
-  let n = 0, run = 0, freeze = 0;
-  for (let d = days[0]; d <= today; d++) {
+  const today = dayIdx(), on = new Set(), frozen = new Set();
+  const days = Object.keys(S.daily).filter(dayOn).map(k => Math.round(Date.parse(k) / DAY)).sort((a,b) => a - b);
+  days.forEach(d => on.add(d));
+  let n = 0, run = 0, freeze = 0, best = 0, prev = 0;
+  for (let d = days[0] ?? today; d <= today; d++) {
     if (on.has(d)) { n++; run++; if (run % 7 === 0) freeze = Math.min(2, freeze + 1); }
-    else if (d === today) {}                    // today isn't over yet
-    else if (freeze > 0) { freeze--; run = 0; } // a missed day uses one お休み
-    else { n = 0; run = 0; }
+    else if (d === today) {}                                   // today isn't over yet
+    else if (freeze > 0) { freeze--; run = 0; frozen.add(d); }  // a missed day uses one お休みチケット
+    else { if (n) prev = n; n = 0; run = 0; }
+    best = Math.max(best, n);
   }
-  return {n, freeze, done:on.has(today)};
+  return {n, freeze, done: on.has(today), best, prev, on, frozen};
+}
+function goalReached(){
+  if (!todayStat().n || !activeIds().length) return false;
+  const c = counts(); return c.due === 0 && c.newToday === 0;
+}
+/* records today's goal the first time it is reached; true at that moment (the set's results celebrate it) */
+function checkGoal(){
+  if (todayStat().g || !goalReached()) return false;
+  bumpDaily({g: 1}); return true;
+}
+const milestoneText = n => ({3: '3日連続！いい調子', 7: '1週間 連続！', 14: '2週間 連続！', 30: '1か月 連続！', 50: '50日 連続！',
+  100: '100日 連続！すごい', 150: '150日 連続！', 200: '200日 連続！', 300: '300日 連続！', 365: '1年 連続！', 500: '500日 連続！', 1000: '1000日 連続！'})[n] || '';
+/* the last 7 days: 🔥 goal reached, 🛡 お休みチケット used, ○ today still open */
+function weekRow(st = streakInfo()){
+  const today = dayIdx(), WD = '日月火水木金土';
+  let out = '';
+  for (let d = today - 6; d <= today; d++) {
+    const cls = st.on.has(d) ? 'on' : st.frozen.has(d) ? 'fz' : d === today ? 'now' : 'off';
+    out += `<span class="wd ${cls}"><i>${cls === 'on' ? I.flame : cls === 'fz' ? I.shield : ''}</i><small>${d === today ? '今日' : WD[new Date(d * DAY).getUTCDay()]}</small></span>`;
+  }
+  return `<div class="week">${out}</div>`;
+}
+function monthCal(st){
+  const today = dayIdx(), t = new Date(today * DAY), y = t.getUTCFullYear(), m = t.getUTCMonth();
+  const first = Math.round(Date.UTC(y, m, 1) / DAY), last = Math.round(Date.UTC(y, m + 1, 0) / DAY);
+  let cells = '日月火水木金土'.split('').map(w => `<b>${w}</b>`).join('') + '<i></i>'.repeat(new Date(first * DAY).getUTCDay());
+  for (let d = first; d <= last; d++) {
+    const cls = st.on.has(d) ? 'on' : st.frozen.has(d) ? 'fz' : d === today ? 'now' : d > today ? 'fut' : '';
+    cells += `<i class="${cls}">${new Date(d * DAY).getUTCDate()}</i>`;
+  }
+  return `<div class="mcal"><div class="mcal-h">${y}年${m + 1}月</div><div class="mcal-g">${cells}</div></div>`;
+}
+const streakCard = (st = streakInfo()) => `<button class="stk-card ${st.done ? 'done' : ''}" data-act="streakSheet" aria-label="連続 ${st.n}日（くわしく見る）">
+  <span class="stk-num">${I.flame}<b class="num">${st.n}</b><small>日 連続</small></span>${weekRow(st)}</button>`;
+function streakSheet(){
+  const st = streakInfo(), next = MILESTONES.find(x => x > st.n);
+  openSheet(`<div class="stk">
+    <div class="stk-top ${st.done ? 'done' : ''}">${I.flame}<b class="num">${st.n}</b><span>日 連続</span></div>
+    <p class="stk-sub">${st.done ? '今日の目標は達成！ また明日もやろう' : '今日の目標（今日の復習と新しい単語）を全部終えると、連続記録が1日のびます'}</p>
+    ${weekRow(st)}
+    <div class="stk-kpis"><div><b class="num">${st.best}</b><span>最長記録</span></div><div><b class="num">${st.freeze}</b><span>お休みチケット</span></div>
+      <div><b class="num">${next ? next - st.n : '—'}</b><span>${next ? `${next}日まであと` : '目標なし'}</span></div></div>
+    ${monthCal(st)}
+    <p class="stk-rule">${I.shield}<span><b>お休みチケット</b>：7日続けるごとに1枚もらえます（最大2枚）。目標を達成できなかった日に自動で使われて、連続記録が続きます。</span></p>
+    <button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button></div>`);
 }
 const streak = () => streakInfo().n;
 
@@ -1371,7 +1471,7 @@ function topbar(){
   const st = streakInfo();
   const fz = st.freeze ? `<span class="fz" title="お休みチケット：1日休んでも連続記録が続きます（7日続けるごとに1枚、最大2枚）">${I.shield}${st.freeze}</span>` : '';
   return `<div class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">極</span><span class="brand-name">極単<small>きょくたん</small></span></div><span class="sp"></span>
-    <span class="pill streak ${st.done ? 'done' : ''}" title="連続学習日数">${I.flame}<span class="num">${st.n}</span>日${fz}</span>${IS_WEB && FIREBASE ? `<button id="syncbtn" class="syncbtn" data-act="syncInfo"><span id="syncdot" class="syncdot ${Sync.state}"></span><span class="synclab">${syncShort()}</span></button>` : `<span id="syncdot" class="syncdot ${Sync.state}"></span>`}</div>${iabNote()}`;
+    <button class="pill streak ${st.done ? 'done' : ''}" data-act="streakSheet" aria-label="連続 ${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}">${I.flame}<span class="num">${st.n}</span>日${fz}</button>${IS_WEB && FIREBASE ? `<button id="syncbtn" class="syncbtn" data-act="syncInfo"><span id="syncdot" class="syncdot ${Sync.state}"></span><span class="synclab">${syncShort()}</span></button>` : `<span id="syncdot" class="syncdot ${Sync.state}"></span>`}</div>${iabNote()}`;
 }
 function deckStats(d){
   let n=0,l=0,m=0,due=0; const today = dayIdx();
@@ -1388,7 +1488,8 @@ const STEP_RANGE = {maxRev: [50, 1000], setSize: [5, 50], newPerDay: [0, 200]};
 const sizeRow = () => `<div class="dirrow"><span>1回</span><div class="stepper stepper-sm"><button data-act="step" data-k="setSize" data-d="-5" aria-label="1回の問題数を減らす" ${S.settings.setSize <= 5 ? 'disabled' : ''}>−</button><output class="num">${S.settings.setSize}問</output><button data-act="step" data-k="setSize" data-d="5" aria-label="1回の問題数を増やす" ${S.settings.setSize >= 50 ? 'disabled' : ''}>＋</button></div></div>`;
 const dirRow = () => `<div class="dirrow"><span>出題</span><div class="seg seg-sm" role="group" aria-label="出題の向き">${Object.entries(DIR_LABEL).map(([v, l]) => `<button aria-pressed="${(S.settings.dir || 'auto') === v}" data-act="set" data-k="dir" data-v="${v}">${l}</button>`).join('')}</div></div>`;
 function viewHome(){
-  const c = counts(); const td = todayStat();
+  checkGoal();                                     // e.g. reached before this version, or via another screen
+  const c = counts(); const td = todayStat(); const stk = streakInfo();
   const acc = td.n ? Math.round((td.c||0)/td.n*100) : null;
   const total = c.due + c.newToday;
   const act = activeIds();
@@ -1404,10 +1505,12 @@ function viewHome(){
       <div class="bignum"><b>${c.newToday}</b><span>新しい単語${c.dnew ? `<small>（派生語・意味 ${Math.min(c.dnew, c.newToday)}まで）</small>` : ''}</span></div>
     </div>
     <div class="today-meta">${act.map(id => esc(deckById(id).name)).join('・')}</div>
+    <div class="goal-line ${stk.done ? 'done' : ''}">${I.flame}<span>${stk.done ? `<b>連続 ${stk.n}日</b> ・ 今日の分は記録ずみ` : stk.n === 0 && stk.prev > 1 ? `前回は${stk.prev}日続きました。今日の目標を終えて、また1日目から！` : `今日の目標を全部終えると <b>連続 ${stk.n + 1}日</b>`}</span></div>
     ${dirRow()}${sizeRow()}`
   : `
     <div class="done-badge">${I.check}</div>
     <div class="today-k">今日の目標は達成</div>
+    ${stk.done ? `<div class="goal-line done">${I.flame}<span><b>連続 ${stk.n}日</b>${milestoneText(stk.n) ? ` ・ ${milestoneText(stk.n)}` : ''}</span></div>` : ''}
     <div class="today-meta">${act.length ? `明日の復習は ${tomorrow}語。` : '単語帳タブで学習する単語帳を選んでください。'}${td.n ? `今日は ${td.n}問 解きました。` : ''}${canMore ? 'このまま新しい単語を続けられます。' : ''}</div>
     ${dirRow()}${sizeRow()}`;
   return `${topbar()}
@@ -1429,7 +1532,7 @@ function viewHome(){
     </div>
     <div class="dirrow"><span>回数</span><div class="seg seg-sm" role="group" aria-label="何回以上まちがえた単語にするか">${[1, 2, 3, 5].map(n => `<button aria-pressed="${(S.settings.drillMin || 2) === n}" data-act="set" data-k="drillMin" data-v="${n}">${n}回以上</button>`).join('')}</div></div></div>
     ${nToday ? `<button class="btn btn-ghost btn-block today-again" data-act="practiceToday">${I.play}今日やった単語をもう一度<b>${nToday}語</b></button>` : ''}
-  <div class="sec"><div class="sec-h"><h2>学習の記録</h2><span class="sub">直近20週</span></div>${heatmap()}</div>
+  <div class="sec"><div class="sec-h"><h2>学習の記録</h2><span class="sub">直近20週</span></div>${streakCard(stk)}${heatmap()}</div>
   <div class="sec"><div class="sec-h"><h2>学習中の単語帳</h2><span class="sp"></span><button class="link" data-act="tab" data-tab="decks">すべて見る</button></div>
     <div class="decks">${act.length ? act.map(id => deckRow(deckById(id), false)).join('') : `<div class="empty">単語帳タブで「学習する」をオンにしてください。</div>`}</div>
     ${act.length ? legendHTML() : ''}
@@ -1447,8 +1550,7 @@ function heatmap(){
     const l = n === 0 ? 0 : n < 10 ? 1 : n < 30 ? 2 : n < 60 ? 3 : 4;
     cells += `<i class="l${l}${i===today?' now':''}" data-tip="${mdLabel(i)}　${n ? n+'問' : '学習なし'}"></i>`;
   }
-  const st = streak(); let best = 0, cur = 0;
-  for (let i = start; i <= today; i++) { const d = S.daily[dayKey(i)]; if (d && ((d.n||0)+(d.sw||0)) > 0) { cur++; best = Math.max(best, cur); } else cur = 0; }
+  const si = streakInfo(), st = si.n, best = si.best;
   return `<div class="heat-wrap"><div class="heat" role="img" aria-label="直近20週の学習量">${cells}</div>
     <div class="heat-foot"><span>連続 <b class="num">${st}</b>日 ・ 最長 <b class="num">${best}</b>日</span><span class="sp"></span>少<span class="heat-key">${[0,1,2,3,4].map(l=>`<i style="background:var(--heat${l})"></i>`).join('')}</span>多</div></div>`;
 }
@@ -1566,7 +1668,7 @@ function viewStats(){
     <div class="panel"><div class="fc"><div class="fc-grid">${grid.join('')}</div><div class="fc-bars" role="img" aria-label="今後30日の復習予定数">${bars}</div></div>
     <div class="fc-x"><span>今日</span><span>1週後</span><span>2週後</span><span>3週後</span><span>4週後</span></div></div>
   </div>
-  <div class="sec"><div class="sec-h"><h2>学習の記録</h2></div>${heatmap()}</div>
+  <div class="sec"><div class="sec-h"><h2>学習の記録</h2></div>${streakCard()}${heatmap()}</div>
   <div class="sec"><div class="sec-h"><h2>単語帳ごとの進み具合</h2></div>
     <div class="panel" style="display:flex;flex-direction:column;gap:14px">${decks().map(d => { const st = deckStats(d);
       return `<div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;gap:8px;align-items:baseline"><b style="font-size:14px">${esc(d.name)}</b><span class="sp" style="flex:1"></span><span class="small muted num">${st.m}/${st.total}</span></div>${stackBar(st)}</div>`; }).join('')}
@@ -1582,7 +1684,7 @@ function viewSettings(){
   return `${topbar()}
   <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">設定</h2></div>
   <div class="sec" style="margin-top:14px"><div class="sec-h"><h2>学習</h2></div><div class="form">
-    <div class="frow"><div class="lab"><b>1日の目標（新しい単語）</b><span>毎日これだけ新しく覚えるのが目標。達成したあともそのまま続けられます</span></div>
+    <div class="frow"><div class="lab"><b>1日の目標（新しい単語）</b><span>今日の復習とこの数の新しい単語を終えると「今日の目標」達成で、連続記録が1日のびます。達成したあともそのまま続けられます</span></div>
       <div class="stepper"><button data-act="step" data-k="newPerDay" data-d="-5" aria-label="減らす">−</button><output class="num">${s.newPerDay}</output><button data-act="step" data-k="newPerDay" data-d="5" aria-label="増やす">＋</button></div></div>
     <div class="frow"><div class="lab"><b>1日の復習の上限</b><span>たまった復習は、忘れかけの単語から順に少しずつ出します</span></div>
       <div class="stepper"><button data-act="step" data-k="maxRev" data-d="-50" aria-label="減らす">−</button><output class="num">${s.maxRev}</output><button data-act="step" data-k="maxRev" data-d="50" aria-label="増やす">＋</button></div></div>
@@ -2124,6 +2226,7 @@ function undoAnswer(){
   }
   Object.assign(it, {first: h.first, ok: h.ok, ms: h.ms, after: h.after, grade: h.grade, tier: h.tier, tries: h.tries, gaveUp: h.gaveUp, type: h.type, check: h.check});
   Object.assign(Q, {queue: h.queue, cleared: h.cleared, combo: h.combo, maxCombo: h.maxCombo, done: false, undoable: null, revealed: null});
+  if (todayStat().g && !goalReached()) bumpDaily({g: -1});
   renderQ();
   toast(`「${it.c.w}」をやり直します`);
 }
@@ -2199,7 +2302,10 @@ function renderResults(){
   const its = Q.items, n = its.length, ok = its.filter(x => x.ok).length, today = dayIdx();
   const dur = Date.now() - Q.start; sfx('done'); haptic(true);
   const learned = its.filter(x => !isReview(x.p0)).length, reviewed = n - learned;
-  const st = streakInfo();
+  const before = streakInfo(), won = checkGoal(), st = won ? streakInfo() : before;
+  if (won) haptic(true);
+  const win = won ? `<div class="stk-win" role="status"><span class="stk-flame">${I.flame}</span><div><b>連続 <span class="num">${st.n}</span>日！</b>
+    <span>${milestoneText(st.n) || '今日の目標を達成しました'}${st.freeze > before.freeze ? '・お休みチケットを1枚もらいました' : ''}</span></div></div>` : '';
   const more = counts(Q.opts.deckIds || activeIds());
   const rows = its.map(x => `<div class="rrow"><span class="mk ${x.ok?'o':'x'}">${x.ok?'○':'×'}</span>
     <div class="rword"><b>${esc(x.c.w)}</b><span>${x.c.isD ? `← ${esc(x.c.parent.w)}　` : ''}${studyMeaningHTML(x.c)}</span></div><span class="ivl">${x.after ? ivlText(x.after.due - today) : ''}</span></div>`).join('');
@@ -2207,7 +2313,7 @@ function renderResults(){
   const pct = Math.round(ok / n * 100), prac = !!Q.opts.practice;
   $('#screen').innerHTML = `<div class="screen-in res">
     <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span></div>
-    <div class="res-h"><div class="eyebrow">${prac ? '練習おわり' : 'セット完了'}</div>
+    <div class="res-h">${win}<div class="eyebrow">${prac ? '練習おわり' : 'セット完了'}</div>
       <div class="ring-score" style="--p:${pct}"><div><b class="big">${pct}<small>%</small></b><span>1回目で正解</span></div></div>
       <div class="res-tiles">
         ${prac ? `<div><b>${n}</b><span>練習した</span></div><div><b>${ok}</b><span>1回目で正解</span></div>`
@@ -2527,6 +2633,7 @@ const ACT = {
   practiceSet: () => { if (!Q || locked()) return; startQuiz({cards: shuffle(Q.items.map(x => x.c)), practice: 'set', deckIds: Q.opts.deckIds}); },
   practiceAgain: () => { if (!Q || locked()) return; if (Q.opts.practice === 'today') return ACT.practiceToday();
     startQuiz({cards: shuffle(Q.items.map(x => x.c)), practice: 'set', deckIds: Q.opts.deckIds}); },
+  streakSheet: () => streakSheet(),
   drill: t => { const cards = drillCards(t.dataset.kind); if (!cards.length) return toast('対象の単語はありません');
     startQuiz({cards: cards.slice(0, S.settings.setSize), drill: t.dataset.kind}); },
   studyFiltered: () => { const d = deckById(route.deck); if (!d) return; const cards = filterCards(d).filter(c => !prog(c)?.sus);
@@ -2746,7 +2853,7 @@ function onboard(){
     </fieldset>
     <fieldset class="ob-f"><legend>1日の目標（新しい単語）</legend><div class="ob-row">
       ${[10, 20, 30].map(n => `<label class="ob-chip"><input type="radio" name="obnew" value="${n}" ${n === 20 ? 'checked' : ''}><span>${n}語</span></label>`).join('')}
-    </div><p class="ob-note">目標を達成したあとも、そのまま続けて学習できます</p></fieldset>
+    </div><p class="ob-note">毎日の目標を達成すると連続記録がのびます。達成したあとも続けて学習できます</p></fieldset>
     <button class="btn btn-primary btn-big btn-block" data-act="obStart" data-mode="swipe">知っている単語を仕分けてから始める</button>
     <button class="btn btn-ghost btn-block" data-act="obStart" data-mode="study">すぐに学習をはじめる</button>
     ${FIREBASE ? '<button class="btn btn-ghost btn-block" data-act="signIn">ほかの端末やブラウザで使っていた人：ログイン</button>' : ''}
