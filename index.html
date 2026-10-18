@@ -481,6 +481,18 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .lbtn .lg.a{width:16px;height:20px;border-radius:0;background:#fff;-webkit-mask:radial-gradient(circle at 70% 18%,transparent 3px,#000 3.5px);mask:radial-gradient(circle at 70% 18%,transparent 3px,#000 3.5px);border-radius:45% 45% 50% 50%}
 .or{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.ob-curve{gap:4px}
+.fchart{width:100%;height:auto;margin:6px 0 2px;overflow:visible}
+.fchart text{font-size:9.5px;fill:var(--muted);font-family:var(--f-ui)}
+.fchart .fc-th{stroke:var(--accent-2);stroke-width:1;stroke-dasharray:3 3}
+.fchart .fc-ax{stroke:var(--line);stroke-width:1}
+.fchart .fc-none{fill:none;stroke:var(--faint);stroke-width:1.6;stroke-dasharray:4 4}
+.fchart .fc-rev{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linejoin:round}
+.fchart .fc-dot{fill:var(--accent);stroke:var(--surface-2);stroke-width:2}
+.fchart .fc-lab-none{fill:var(--faint)}
+.fchart .fc-lab-rev{fill:var(--accent);font-weight:700}
+.fc-cap{font-size:12px!important}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -1349,6 +1361,7 @@ function viewSettings(){
   </div></div>` : ''}
   <div class="sec"><div class="sec-h"><h2>データ</h2></div><div class="form">
     <div class="frow"><div class="lab"><b>保存先</b><span id="synctext">${syncLabel()}</span></div></div>
+    <div class="frow"><div class="lab"><b>はじめての案内</b><span>アプリのしくみと使い方をもう一度見る</span></div><button class="btn btn-ghost" data-act="showOnboard" style="min-height:38px">見る</button></div>
     <div class="frow"><div class="lab"><b>バックアップ</b><span>学習記録と自作の単語帳をファイルに${IS_WEB ? '。記録はこの端末だけに保存されるので、機種変更の前に書き出してください' : ''}</span></div><button class="btn btn-ghost" data-act="backup" style="min-height:38px">書き出す</button></div>
     <div class="frow"><div class="lab"><b>バックアップから戻す</b></div><button class="btn btn-ghost" data-act="restoreSheet" style="min-height:38px">読み込む</button></div>
     <div class="frow"><div class="lab"><b>学習記録をリセット</b><span>単語帳は残ります</span></div><button class="btn btn-danger" data-act="resetSheet" style="min-height:38px">リセット</button></div>
@@ -2143,6 +2156,7 @@ const ACT = {
     closeSheet(); render();
     if (t.dataset.mode === 'swipe') startSwipe([deck]); else startQuiz({});
   },
+  showOnboard: () => onboard(),
   obSkip: () => { setSetting('onboarded', true); closeSheet(); render(); },
   backup: () => offerFile(`kyokutan-backup-${dayKey(dayIdx())}.json`, backupJSON()),
   restoreSheet: () => openSheet(`<div class="sheet-h"><h3>バックアップから戻す</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
@@ -2230,6 +2244,31 @@ addEventListener('scroll', () => { tip.hidden = true; }, {passive:true});
 addEventListener('pagehide', () => { saveNow(); flush(); });
 
 /* ---------- first run ---------- */
+function forgetChart(){
+  const W = 300, H = 120, X0 = 30, Y0 = 8, PW = W - X0 - 8, PH = H - Y0 - 22, days = 34, lo = 0.4;
+  const x = t => X0 + t / days * PW, y = r => Y0 + (1 - (r - lo) / (1 - lo)) * PH;
+  const R = (t, st) => Math.pow(1 + FACTOR * t / st, DECAY);
+  const pts = (from, to, st) => { const a = []; for (let t = from; t <= to + 1e-9; t += 0.25) a.push(`${x(t).toFixed(1)},${y(R(t - from, st)).toFixed(1)}`); return a; };
+  const stab = [1, 3, 8, 20]; let t = 0, d = '', dots = '';
+  for (const st of stab) {                       // each review resets memory to 100% and the next decay is slower
+    const end = Math.min(days, t + st);
+    d += (d ? ' L' : 'M') + pts(t, end, st).join(' L');
+    dots += `<circle cx="${x(t).toFixed(1)}" cy="${y(1).toFixed(1)}" r="3.2" class="fc-dot"/>`;
+    t = end; if (t >= days) break;
+  }
+  const tEnd = (Math.pow(lo, 1 / DECAY) - 1) / FACTOR * stab[0];   // the no-review curve runs until it reaches the bottom of the chart
+  const none = 'M' + pts(0, Math.min(days, tEnd), stab[0]).join(' L');
+  const tick = v => `<text x="${X0 - 5}" y="${(y(v) + 3.5).toFixed(1)}" text-anchor="end">${Math.round(v * 100)}%</text>`;
+  return `<svg class="fchart" viewBox="0 0 ${W} ${H}" role="img" aria-label="復習すると記憶が保たれ、復習しないと記憶が下がっていくグラフ">
+    <line x1="${X0}" x2="${X0 + PW}" y1="${y(0.9).toFixed(1)}" y2="${y(0.9).toFixed(1)}" class="fc-th"/>
+    <line x1="${X0}" x2="${X0 + PW}" y1="${y(lo).toFixed(1)}" y2="${y(lo).toFixed(1)}" class="fc-ax"/>
+    ${tick(1)}${tick(0.9)}${tick(0.6)}
+    <path d="${none}" class="fc-none"/><path d="${d}" class="fc-rev"/>${dots}
+    <text x="${(x(Math.min(days, tEnd)) + 4).toFixed(1)}" y="${(y(lo) - 3).toFixed(1)}" class="fc-lab-none">復習しない場合</text>
+    <text x="${x(14).toFixed(1)}" y="${y(0.72).toFixed(1)}" class="fc-lab-rev">● ＝ 極単が出す復習</text>
+    <text x="${X0}" y="${H - 6}" class="fc-x">覚えた日</text><text x="${X0 + PW}" y="${H - 6}" text-anchor="end" class="fc-x">${days}日後</text>
+  </svg>`;
+}
 const hasProgress = () => Object.values(S.prog).some(d => d && Object.keys(d).length);
 function onboard(){
   const opts = [['j1','受験英単語 基礎（No.1–750）','高校の基本〜共通テスト'], ['j2','受験英単語 標準（No.751–1700）','共通テスト〜中堅大'], ['j3','受験英単語 発展（No.1701–2500）','難関大・英検準1級'], ['toeic','TOEIC頻出','ビジネス・オフィス'], ['theme','テーマ別 長文頻出語','環境・医療・経済などの専門語']]
@@ -2239,7 +2278,9 @@ function onboard(){
     <h3>極単へようこそ</h3>
     <ul class="ob-points">
       <li><b>4択でサクサク</b><span>1問数秒。速く正解した単語ほど、次の復習は先になります。</span></li>
-      <li><b>忘れる前に自動で復習</b><span>単語ごとに忘れかける頃を計算して、ちょうどいい日に出題します。</span></li>
+      <li class="ob-curve"><b>忘却曲線に沿って設計</b><span>人は覚えたことを時間とともに忘れていきます（エビングハウスの忘却曲線）。極単は単語ごとの忘れ方を計算して、記憶が薄れかけた頃に復習を出すので、少ない回数で長く覚えていられます。</span>
+        ${forgetChart()}
+        <span class="fc-cap">復習するたびに忘れにくくなり、次の復習までの間隔が「1日 → 3日 → 8日 → 20日」と伸びていきます。</span></li>
       <li><b>意味も派生語も1つずつ</b><span>1つ覚えるたびに、次の意味や派生語が出てきます。発音は AI 音声つき。</span></li>
     </ul>
     <fieldset class="ob-f"><legend>どこから始める？</legend>
