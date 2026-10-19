@@ -2711,7 +2711,7 @@ function renderQ(){
   const live = clock && type !== 'flash' && it.first === null;   // speed decides the grade only on a review's first answer
   const behind = (left > 1 ? '<div class="behind"></div>' : '') + (left > 2 ? '<div class="behind b2"></div>' : '');
   const sayBtn = `<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(sense.p)}" aria-label="発音を聞く">${I.say}</button>`;
-  const multi = (c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : '') + (c.cat ? `<span class="cat">${esc(c.cat)}</span>` : '');
+  const multi = c.cat ? `<span class="cat">${esc(c.cat)}</span>` : '';   // no 「意味 Nつ」 on a question: it read as "choose N"; the answer side shows the meanings
   const from = c.isD ? `<div class="qfrom"><b class="fw" lang="en">${esc(c.parent.w)}</b><span>${esc(c.parent.m)}</span>の派生語</div>` : '';
   let card, body = '';
   if (c.isS && (type === 'e2j' || type === 'snew' || (type === 'flash' && !it.flip))) {
@@ -3210,7 +3210,7 @@ function startSwipe(deckIds=activeIds()){
 }
 function swCardHTML(c, cls){
   return `<div class="tcard holed swcard ${cls}" ${cls ? '' : 'id="swcard"'}><span class="ring"></span><span class="swlab l">知らない</span><span class="swlab r">知ってる</span>
-    <div class="qpos"><span class="pos">${esc(c.p||'—')}</span>${c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : ''}</div><div class="qword" lang="en">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}${ipaHTML(c)}
+    <div class="qpos"><span class="pos">${esc(c.p||'—')}</span></div><div class="qword" lang="en">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}${ipaHTML(c)}
     <div class="swmean hide" ${cls ? '' : 'id="swmean"'} aria-hidden="true">${esc(studyMain(c))}</div>${studyNote(c) ? `<div class="swnote">${studyNote(c)}</div>` : ''}</div>`;
 }
 function renderSwipe(){
