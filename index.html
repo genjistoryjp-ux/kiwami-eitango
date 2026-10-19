@@ -2282,16 +2282,21 @@ const nextDeckBtn = (nd, cls) => `<button class="btn ${cls} btn-block" data-act=
 const nextDeckLine = nd => `<div class="goal-line nd">${I.check}<span>${esc(shortName(nd.from))}${nd.left ? `の新しい単語は あと${nd.left}語` : 'をひととおり学習しました'}</span></div>`;
 const sizeRow = () => `<div class="dirrow"><span>1セット</span><div class="stepper stepper-sm"><button data-act="step" data-k="setSize" data-d="-5" aria-label="1セットの問題数を5減らす" ${S.settings.setSize <= 5 ? 'disabled' : ''}>−</button><output class="num">${S.settings.setSize}問</output><button data-act="step" data-k="setSize" data-d="5" aria-label="1セットの問題数を5増やす" ${S.settings.setSize >= 50 ? 'disabled' : ''}>＋</button></div></div>`;
 const dirRow = () => `<div class="dirrow"><span>出題</span><div class="seg seg-sm" role="group" aria-label="出題の向き">${Object.entries(DIR_LABEL).map(([v, l]) => `<button aria-pressed="${(S.settings.dir || 'auto') === v}" data-act="set" data-k="dir" data-v="${v}">${l}</button>`).join('')}</div></div>`;
-/* 出題の向き・1セットの問題数 on the home hero: one chip with the current values; a tap opens them in a sheet */
-const optChip = () => `<button class="optchip" data-act="studyOpts" aria-label="出題の向きと1セットの問題数を変える">出題 ${DIR_LABEL[S.settings.dir || 'auto']} ・ 1セット ${S.settings.setSize}問${I.right}</button>`;
+/* 復習のしかた: 4択 (graded by right/wrong and speed) or カード (you say yourself whether you remembered). 4択 keeps
+   段階式 or 4択だけ, whichever was set in くわしい設定 */
+const isCardMode = () => S.settings.mode === 'flash';
+const modeRow = () => `<div class="dirrow"><span>復習</span><div class="seg seg-sm" role="group" aria-label="復習のしかた">${[[S.settings.mode === 'choice' ? 'choice' : 'auto', '4択'], ['flash', 'カード']].map(([v, l]) => `<button aria-pressed="${isCardMode() === (v === 'flash')}" data-act="set" data-k="mode" data-v="${v}">${l}</button>`).join('')}</div></div>`;
+const modeNote = () => `<p class="small muted" id="modenote">${isCardMode() ? 'カード：意味を思い出してからめくって、覚えてたかどうかを自分で選びます' : '4択：正解と答えの速さ（Perfect など）で、次の復習日が決まります'}</p>`;
+/* 復習のしかた・出題の向き・1セットの問題数 on the home hero: one chip with the current values; a tap opens them in a sheet */
+const optChip = () => `<button class="optchip" data-act="studyOpts" aria-label="復習のしかた・出題の向き・1セットの問題数を変える">復習 ${isCardMode() ? 'カード' : '4択'} ・ ${DIR_LABEL[S.settings.dir || 'auto']} ・ ${S.settings.setSize}問${I.right}</button>`;
 function studyOpts(){
-  openSheet(`<div class="sheet-h"><h3>出題のしかた</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="stk" id="optbox">${dirRow()}${sizeRow()}</div><button class="btn btn-primary btn-block" data-act="closeSheet">これでOK</button>`);
+  openSheet(`<div class="sheet-h"><h3>出題のしかた</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="stk" id="optbox">${modeRow()}${modeNote()}${dirRow()}${sizeRow()}</div><button class="btn btn-primary btn-block" data-act="closeSheet">これでOK</button>`);
 }
 /* after a change: the sheet's rows drawn again (like #pacebox), the focus kept on the same control */
 function refreshOpts(){
   const ob = $('#optbox'); if (!ob) return;
   const a = document.activeElement, sel = ob.contains(a) && a.dataset.k ? `[data-k="${a.dataset.k}"]` + (a.dataset.v != null ? `[data-v="${a.dataset.v}"]` : `[data-d="${a.dataset.d}"]`) : '';
-  ob.innerHTML = dirRow() + sizeRow();
+  ob.innerHTML = modeRow() + modeNote() + dirRow() + sizeRow();
   if (sel) (ob.querySelector(sel + ':not([disabled])') || ob.querySelector(`[data-k="${a.dataset.k}"]:not([disabled])`))?.focus();   // at 5 or 50 the pressed one is disabled: the other one
 }
 function viewHome(){
@@ -2327,9 +2332,9 @@ function viewHome(){
     ${optChip()}`;
   return `${topbar()}
   <section class="tcard holed today ${total ? '' : 'is-done'}" aria-label="今日の学習"><span class="ring"></span>${hero}
-    ${c.fresh || total ? `<div class="btn-row alt">
+    ${c.fresh || (total && !isCardMode()) ? `<div class="btn-row alt">
       ${c.fresh ? `<button class="btn btn-ghost" data-act="swipe"><span class="bt">${I.swipe}高速仕分け</span><small>知ってる単語をよける</small></button>` : ''}
-      ${total ? `<button class="btn btn-ghost" data-act="flash"><span class="bt">${I.flash}カードで復習</span><small>4択なしでめくる</small></button>` : ''}
+      ${total && !isCardMode() ? `<button class="btn btn-ghost" data-act="flash"><span class="bt">${I.flash}カードで復習</span><small>4択なしでめくる</small></button>` : ''}
     </div>` : ''}
   </section>
   ${td.n ? `<div class="sec"><div class="statline">
