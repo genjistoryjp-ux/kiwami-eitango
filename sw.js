@@ -1,11 +1,11 @@
-/* 極単 service worker: the app works offline after the first visit.
+/* 極（きわみ） service worker: the app works offline after the first visit.
    - the page: network first, so a new version arrives as soon as you are online; on a weak signal (no answer in 3 s)
      the saved page opens, and the download carries on in the background for next time
    - audio sprites (words sNNN, example sentences eNNN): cached on first play (the words also all at once from 設定).
      A sprite file never changes (tools/pack_*.py put new audio in new files), so this cache keeps one name and is never cleared
    - the login / sync library (Firebase, one fixed version): cached on first use, so an offline start still syncs later
    - Google Fonts: served from cache, refreshed in the background */
-const APP = 'kyokutan-app-fe01c6faea';
+const APP = 'kyokutan-app-cdfbf68474';
 const AUDIO = 'kyokutan-audio';
 const AUDIO_OLD = 'kyokutan-audio-f026ca2bc4';   // the last name that changed with the audio set: the same files, so they move over
 const FONTS = 'kyokutan-fonts-v1';

@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="受験2500語・派生語・テーマ別頻出語を、複数の意味とAI音声で覚える英単語アプリ。忘れる前に自動で復習（FSRS）。"><meta name="theme-color" content="#EDF0F5" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0F131A" media="(prefers-color-scheme: dark)"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icons/favicon-64.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="極単"><meta name="apple-mobile-web-app-status-bar-style" content="default"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style><title>極単</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="受験2500語・派生語・テーマ別頻出語を、複数の意味とAI音声で覚える英単語アプリ。忘れる前に自動で復習（FSRS）。"><meta name="theme-color" content="#EDF0F5" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0F131A" media="(prefers-color-scheme: dark)"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icons/favicon-64.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="極"><meta name="apple-mobile-web-app-status-bar-style" content="default"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style><title>極（きわみ）</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,6 +68,8 @@ p{margin:0}
 .topbar{display:flex;align-items:center;gap:10px;padding-block:6px 14px}
 .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:17px;letter-spacing:.02em}
 .brand-mark{width:28px;height:28px;border-radius:7px;background:var(--accent);color:var(--accent-ink);position:relative;flex:none;display:grid;place-items:center;font-size:17px;font-weight:700;line-height:1}
+.ob-logo{position:relative}
+.ob-logo i{position:absolute;inset:0;background:currentColor;-webkit-mask:var(--brand) center/100% 100% no-repeat;mask:var(--brand) center/100% 100% no-repeat}
 .brand-mark i{position:absolute;inset:0;background:currentColor;-webkit-mask:var(--brand) center/100% 100% no-repeat;mask:var(--brand) center/100% 100% no-repeat}
 .brand-mark::after{content:"";position:absolute;left:3px;top:3px;width:4px;height:4px;border-radius:50%;background:var(--bg)}
 .brand-name{display:flex;align-items:baseline;gap:6px;font-size:18px;letter-spacing:.06em}
@@ -2003,7 +2005,7 @@ addEventListener('pageshow', dayCheck);
 function topbar(){
   const st = streakInfo();
   const fz = st.freeze ? `<span class="fz" title="お休みチケット：1日休んでも連続記録が続きます（7日続けるごとに1枚、最大2枚）">${I.shield}${st.freeze}</span>` : '';
-  return `<div class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span><span class="brand-name">極単<small>きょくたん</small></span></div><span class="sp"></span>
+  return `<div class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span><span class="brand-name">極<small>きわみ</small></span></div><span class="sp"></span>
     <button class="pill streak ${st.done ? 'done' : ''}" data-act="streakSheet" aria-label="連続 ${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}">${I.flame}<span class="num">${st.n}</span>日${fz}</button>${IS_WEB && FIREBASE ? `<button id="syncbtn" class="syncbtn" data-act="syncInfo"><span id="syncdot" class="syncdot ${Sync.state}"></span><span class="synclab">${syncShort()}</span></button>` : `<span id="syncdot" class="syncdot ${Sync.state}"></span>`}</div>${iabNote()}`;
 }
 function deckStats(d){
@@ -3461,7 +3463,7 @@ const storeCard = c => c.ref ? {k:uid('c'), ref:c.ref, w:c.w, s:c.s.slice(0, 1).
 
 /* ---------- 英単語を貼るだけ ---------- */
 /* One English word per line, as iPhone Live Text copies a printed list (numbers, bullets and a Japanese meaning after it are
-   fine). A word 極単 has becomes a reference to its card; any other word can be added with a meaning (typed now or later)
+   fine). A word the app has becomes a reference to its card; any other word can be added with a meaning (typed now or later)
    or left out. Lines in the 「英単語, 意味, 例文, 例文の訳」 form keep their own meaning, as before. */
 let IMP = {on: new Map(), mean: new Map(), file: '', last: null};
 const JA = /[\u3040-\u30ff\u3400-\u9fff]/;
@@ -3496,7 +3498,7 @@ function findBuiltin(w){
   const score = c => { const p = prog(c); return (isReview(p) ? 4 : p?.st === 1 ? 2 : 0) + (c.isD ? 0 : 1); };
   return cands.reduce((a, b) => score(b) > score(a) ? b : a);
 }
-/* what a pasted text would add, in its order: {c} a built-in card, {own} a word with its own meaning, {nw} a word 極単 doesn't have */
+/* what a pasted text would add, in its order: {c} a built-in card, {own} a word with its own meaning, {nw} a word the app doesn't have */
 function analyzeImport(text, deckId){
   const a = {list: [], found: 0, mastered: 0, own: 0, unknown: [], dup: 0, bad: 0, fixed: []};
   const seen = new Set(), tgt = deckId && S.custom[deckId];
@@ -3539,19 +3541,19 @@ function impCount(){
   const go = $('#impgo'), n = IMP.last ? importItems(IMP.last).length : 0;
   if (go) go.textContent = n ? `${go.dataset.label}（${n}語）` : go.dataset.label;
 }
-/* before importing: 「極単にある 47語（うち習得済み 12）／ない 3語」, and each word 極単 doesn't have, to add or leave out */
+/* before importing: 「アプリにある 47語（うち習得済み 12）／ない 3語」, and each word the app doesn't have, to add or leave out */
 function impPreview(){
   const box = $('#impinfo'); if (!box) return;
   const tgt = $('#imptarget')?.value, text = ($('#imptext')?.value || '') + (IMP.file ? '\n' + IMP.file : '');
   const a = IMP.last = analyzeImport(text, tgt && tgt !== '__new' ? tgt : null);
   impCount();
   if (!a.list.length && !a.bad && !a.dup) { box.innerHTML = ''; return; }
-  const sum = [a.found ? `極単にある <b class="num">${a.found}語</b>（うち習得済み ${a.mastered}）` : '', a.unknown.length ? `ない <b class="num">${a.unknown.length}語</b>` : '',
+  const sum = [a.found ? `アプリにある <b class="num">${a.found}語</b>（うち習得済み ${a.mastered}）` : '', a.unknown.length ? `ない <b class="num">${a.unknown.length}語</b>` : '',
     a.own ? `意味つき <b class="num">${a.own}語</b>` : ''].filter(Boolean).join('／');
   box.innerHTML = `<div class="impsum">${sum || '取り込める単語がありません'}</div>
     ${a.dup ? `<div>重複 ${a.dup}語は入れません</div>` : ''}${a.bad ? `<div>読み取れなかった行 ${a.bad}</div>` : ''}
     ${a.fixed.length ? `<div>形を直して見つけた語：${esc(a.fixed.slice(0, 8).join('、'))}${a.fixed.length > 8 ? ' ほか' : ''}</div>` : ''}
-    ${a.unknown.length ? `<div class="impx"><div class="impx-h">極単にない語は、チェックすると自分のカードとして追加します（意味はあとで入れてもOK）</div>
+    ${a.unknown.length ? `<div class="impx"><div class="impx-h">アプリにない語は、チェックすると自分のカードとして追加します（意味はあとで入れてもOK）</div>
       ${a.unknown.map(x => { const k = esc(normW(x.w)); return `<div class="impx-row"><input type="checkbox" class="impx-on" data-w="${k}" ${impOn(x) ? 'checked' : ''} aria-label="${esc(x.w)}を追加"><b>${esc(x.w)}</b><input class="input impx-m" data-w="${k}" value="${esc(impMean(x))}" placeholder="意味（あとでもOK）" aria-label="${esc(x.w)}の意味"></div>`; }).join('')}</div>` : ''}`;
 }
 let impT = null;
@@ -3672,7 +3674,7 @@ function importSheet(deckId){
   const custom = decks().filter(d => !d.builtin);
   IMP = {on: new Map(), mean: new Map(), file: '', last: null};
   openSheet(`<div class="sheet-h"><h3>単語をまとめて取り込む</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-    <p class="small muted">英単語を1行に1語ずつ貼るだけでOK。極単にある単語は、極単の意味・例文・派生語・音声とこれまでの学習記録をそのまま使います。自分の意味を付けるときは「英単語, 意味, 例文, 例文の訳」（タブ区切りかカンマ区切り。意味が複数あるときは ／ で区切る）。Anki の「プレーンテキストで書き出し（.txt）」もそのまま読めます。</p>
+    <p class="small muted">英単語を1行に1語ずつ貼るだけでOK。アプリにある単語は、アプリの意味・例文・派生語・音声とこれまでの学習記録をそのまま使います。自分の意味を付けるときは「英単語, 意味, 例文, 例文の訳」（タブ区切りかカンマ区切り。意味が複数あるときは ／ で区切る）。Anki の「プレーンテキストで書き出し（.txt）」もそのまま読めます。</p>
     <div class="field"><label for="imptext">テキスト</label><textarea class="textarea" id="imptext" placeholder="abandon&#10;abolish&#10;book,本 ／ 動:～を予約する" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
       <span class="small faint">写真の文字はライブテキストでコピーして貼れます</span></div>
     <div class="field"><label for="impfile">またはファイルを選ぶ（.txt .tsv .csv）</label><input type="file" id="impfile" accept=".txt,.tsv,.csv,text/plain,text/csv" class="input"></div>
@@ -3790,7 +3792,7 @@ const ACT = {
       <form id="renameform" data-id="${esc(d.id)}" style="display:flex;flex-direction:column;gap:12px"><input class="input" id="rname" value="${esc(d.name)}" required maxlength="40"><button class="btn btn-primary" type="submit">保存</button></form>`); },
   delDeck: t => { const d = S.custom[t.dataset.id];
     openSheet(`<div class="sheet-h"><h3>単語帳を削除</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-      <div class="confirm"><b>「${esc(d.name)}」（${d.cards.length}語）を削除します。</b><span class="small">${d.cards.some(x => x.ref) ? '自分で追加した単語の学習記録も一緒に消え、元に戻せません（極単にある単語の記録は残ります）。' : '学習記録も一緒に消え、元に戻せません。'}</span>
+      <div class="confirm"><b>「${esc(d.name)}」（${d.cards.length}語）を削除します。</b><span class="small">${d.cards.some(x => x.ref) ? '自分で追加した単語の学習記録も一緒に消え、元に戻せません（アプリにある単語の記録は残ります）。' : '学習記録も一緒に消え、元に戻せません。'}</span>
       <div class="btn-row"><button class="btn btn-ghost" data-act="closeSheet">やめる</button><button class="btn btn-danger" data-act="delDeckGo" data-id="${esc(d.id)}">削除する</button></div></div>`); },
   delDeckGo: t => { const id = t.dataset.id; S.custom[id] = {id, del:true, upd:Date.now(), cards:[]}; delete S.prog[id]; markDirty('prog_'+id); touchDeck(id);
     setSetting('active', S.settings.active.filter(x => x !== id)); route.deck = null; closeSheet(); render(); toast('削除しました'); },
@@ -3860,7 +3862,7 @@ const ACT = {
       for (const id of Object.keys(S.custom)) { S.custom[id].upd = now; markDirty('deck_'+id); }
       for (const deck of Object.keys(S.notes)) markDirty('note_'+deck);
       markDirty('meta', true); invalidateDecks(); saveNow(); closeSheet(); render(); toast('バックアップから戻しました');
-    } catch(e) { $('#rinfo').innerHTML = '<span style="color:var(--again-t)">極単のバックアップとして読み取れませんでした。</span>'; }
+    } catch(e) { $('#rinfo').innerHTML = '<span style="color:var(--again-t)">このアプリのバックアップとして読み取れませんでした。</span>'; }
   },
   resetSheet: () => openSheet(`<div class="sheet-h"><h3>学習記録をリセット</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="confirm"><b>すべての単語の学習記録と、毎日の記録を消します。</b><span class="small">自作の単語帳と設定は残ります。元に戻せないので、先にバックアップを書き出すと安心です。</span>
@@ -3905,7 +3907,7 @@ document.addEventListener('keydown', e => {
 document.addEventListener('input', e => {
   if (e.target.id === 'q') { route.q = e.target.value; route.limit = 150; const d = deckById(route.deck); if (d) { $('#wordlist').innerHTML = wordRows(d); const dk = $('#deckdock'); if (dk) dk.innerHTML = deckDock(d); } }
   if (e.target.id === 'imptext') { clearTimeout(impT); impT = setTimeout(() => { impT = null; impPreview(); }, 250); }
-  if (e.target.classList?.contains('impx-m')) {   // a meaning typed for a word 極単 doesn't have: add that word
+  if (e.target.classList?.contains('impx-m')) {   // a meaning typed for a word the app doesn't have: add that word
     const k = e.target.dataset.w, v = e.target.value; IMP.mean.set(k, v);
     const box = e.target.parentElement?.querySelector('.impx-on'); if (box && v.trim() && !box.checked) { box.checked = true; IMP.on.set(k, true); }
     impCount();
@@ -3970,7 +3972,7 @@ function forgetChart(){
     ${tick(1)}${tick(0.9)}${tick(0.6)}
     <path d="${none}" class="fc-none"/><path d="${d}" class="fc-rev"/>${dots}
     <text x="${(x(Math.min(days, tEnd)) + 4).toFixed(1)}" y="${(y(lo) - 3).toFixed(1)}" class="fc-lab-none">復習しない場合</text>
-    <text x="${x(14).toFixed(1)}" y="${y(0.72).toFixed(1)}" class="fc-lab-rev">● ＝ 極単が出す復習</text>
+    <text x="${x(14).toFixed(1)}" y="${y(0.72).toFixed(1)}" class="fc-lab-rev">● ＝ アプリが出す復習</text>
     <text x="${X0}" y="${H - 6}" class="fc-x">覚えた日</text><text x="${X0 + PW}" y="${H - 6}" text-anchor="end" class="fc-x">${days}日後</text>
   </svg>`;
 }
@@ -3982,7 +3984,7 @@ function onboard(){
   const main = opts.filter(([id]) => /^j\d$/.test(id)), more = opts.filter(([id]) => !/^j\d$/.test(id));
   const opt = ([id, name, sub], i) => `<label class="ob-opt"><input type="radio" name="obdeck" value="${id}" ${i === 0 ? 'checked' : ''}><b>${name}</b><small>${sub}</small></label>`;
   openSheet(`<div class="ob">
-    <div class="ob-hd"><span class="ob-logo" aria-hidden="true">極</span><h3>極単へようこそ</h3></div>${iabNote()}
+    <div class="ob-hd"><span class="ob-logo" aria-hidden="true">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span><h3>極（きわみ）へようこそ</h3></div>${iabNote()}
     <p class="ob-lead">新しい単語はカードで覚えて、復習は4択でサクサク。忘れかけたころに復習が出るので、少ない回数で長く覚えられます。</p>
     ${forgetChart()}
     <fieldset class="ob-f"><legend>どこから始める？</legend>
@@ -3999,7 +4001,7 @@ function onboard(){
 }
 /* 設定 →「アプリのしくみ」: the same ideas in a plain sheet (it sets nothing, so the choices made on the first run stay) */
 function howSheet(){
-  openSheet(`<div class="sheet-h"><h3>極単のしくみ</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+  openSheet(`<div class="sheet-h"><h3>極のしくみ</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <ul class="ob-points">
       <li><b>覚えるのはカード、復習は4択</b><span>新しい単語はカードで覚えて、復習は4択。速く正解した単語ほど、次の復習は先になります。</span></li>
       <li class="ob-curve"><b>忘却曲線に沿って設計</b><span>忘れかけたころに復習が出るので、少ない回数で長く覚えられます。</span>
