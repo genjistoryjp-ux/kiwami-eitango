@@ -5,11 +5,22 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Charis+SIL&family=IBM+Plex+Mono:wght@500&family=Literata:opsz,wght@7..72,500;7..72,600&display=swap">
 <style>
 /* Layout: one 560px study column. Every word lives on a ring-bound 単語カード; red ink + 赤シート for hiding answers; tab bar at the bottom. */
+/* Colour meanings (one each, everywhere):
+     accent = what you press, the current choice, links      red = reviews that are due, and the red ink under the 赤シート (nothing else)
+     again = wrong / 知らない / もう一度      hard = 難しい / Good / 連続正解      good = correct / 覚えた
+     easy = 知ってる / Excellent      perfect = Perfect only      streak = the 連続記録 only
+   --again / --hard / --good are for bars, borders and fills; as text use --again-t / --hard-t / --good-t (readable on light fills too).
+   New CSS uses them with the old colour as a fallback, e.g. var(--again-t,var(--again)).
+   Type scale (px): 11.5 (helper text inside a button only) / 12 / 12.5 / 13.5 / 15 / 17 / 20 — no Japanese label under 12.
+   Tap areas about 44px (--tap). Spacing 4 / 8 / 12 / 16 / 24.
+   Motion: once, when a thing enters the screen, .15–.2s ease-out; a redraw never replays it. prefers-reduced-motion stops all of it (rule near the end).
+   The tokens below hold these values; older rules still write the numbers. */
 :root{
-  --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F6F8FB; --ink:#17202E; --muted:#58657A; --faint:#69758A; --line:#D8DEE7;
+  --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F6F8FB; --ink:#17202E; --muted:#58657A; --faint:#5C687D; --line:#D8DEE7;
   --accent:#2B45D3; --accent-ink:#FFFFFF; --accent-soft:#E2E7FF; --accent-2:#8D9CF0;
-  --red:#D2363C; --red-soft:#FBE3E3; --sheet:#E04A50; --marker:#FFE45C; --ring:#A9B1BE;
+  --red:#D2363C; --red-soft:#FBE3E3; --sheet:#E04A50; --marker:#FFE45C; --hit:color-mix(in srgb,var(--marker) 42%,transparent); --ring:#A9B1BE;
   --good:#167F56; --good-soft:#DCF2E8; --hard:#A8650C; --hard-soft:#FAEBD4; --again:#D9480F; --again-soft:#FDE6DC; --easy:#2259B8; --perfect:#8A3FD1; --easy-soft:#DEE8FA;
+  --again-t:#B93E0C; --hard-t:#8A5208; --good-t:#126B48; --memo-ink:#2b2508; --streak:#F2701F; --streak-ink:#3B1A05; --streak-t:#B9520E; --sw-off:var(--line);
   --heat0:#E1E6EE; --heat1:#C9D1FA; --heat2:#97A6F2; --heat3:#5D73E4; --heat4:#2B45D3;
   --st-new:#D6DCE6; --st-learn:#8D9CF0; --st-master:#2B45D3;
   --shadow:0 1px 2px rgba(23,32,46,.06),0 8px 22px rgba(23,32,46,.07);
@@ -17,12 +28,15 @@
   --f-ui:"BIZ UDPGothic","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
   --r:14px;
+  --tap:44px; --fs-cap:12px; --fs-meta:12.5px; --fs-ui:13.5px; --fs-body:15px; --fs-lead:17px;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --dur-1:.15s; --dur-2:.2s; --ease-out:cubic-bezier(.2,.8,.3,1);
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#0F131A; --surface:#181E28; --surface-2:#131922; --ink:#E7ECF3; --muted:#9AA6B9; --faint:#8592A5; --line:#2A3341;
   --accent:#7F94FF; --accent-ink:#0F131A; --accent-soft:#232C4D; --accent-2:#4C5DAE;
-  --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --ring:#59616E;
+  --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hit:color-mix(in srgb,var(--marker) 28%,transparent); --ring:#59616E;
   --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
+  --again-t:#FF8A5C; --hard-t:#F0B35A; --good-t:#4FD39B; --memo-ink:var(--ink); --streak-t:var(--streak); --sw-off:var(--ring);
   --heat0:#1F2633; --heat1:#27325C; --heat2:#3A4A92; --heat3:#5B70D4; --heat4:#8FA2FF;
   --st-new:#2C3544; --st-learn:#4C5DAE; --st-master:#8FA2FF;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
@@ -30,8 +44,9 @@
 :root[data-theme="dark"]{
   --bg:#0F131A; --surface:#181E28; --surface-2:#131922; --ink:#E7ECF3; --muted:#9AA6B9; --faint:#8592A5; --line:#2A3341;
   --accent:#7F94FF; --accent-ink:#0F131A; --accent-soft:#232C4D; --accent-2:#4C5DAE;
-  --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --ring:#59616E;
+  --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hit:color-mix(in srgb,var(--marker) 28%,transparent); --ring:#59616E;
   --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
+  --again-t:#FF8A5C; --hard-t:#F0B35A; --good-t:#4FD39B; --memo-ink:var(--ink); --streak-t:var(--streak); --sw-off:var(--ring);
   --heat0:#1F2633; --heat1:#27325C; --heat2:#3A4A92; --heat3:#5B70D4; --heat4:#8FA2FF;
   --st-new:#2C3544; --st-learn:#4C5DAE; --st-master:#8FA2FF;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
@@ -59,7 +74,6 @@ p{margin:0}
 .topbar .sp{flex:1}
 .pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13px;font-weight:700}
 .pill .ico{width:16px;height:16px}
-.pill.streak .ico{color:var(--red)}
 .syncdot{width:8px;height:8px;border-radius:50%;background:var(--faint)}
 .syncdot.on{background:var(--good)} .syncdot.syncing{background:var(--hard)} .syncdot.err{background:var(--again)}
 .syncbtn{display:inline-flex;align-items:center;gap:5px;min-height:32px;padding:0 2px 0 6px;font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap}
@@ -95,7 +109,7 @@ p{margin:0}
 
 .today{padding:22px 20px 18px 44px;display:flex;flex-direction:column;gap:16px}
 .today-k{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em}
-.today-nums{display:flex;gap:26px;align-items:flex-end;flex-wrap:wrap}
+.today-nums{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}
 .bignum{display:flex;flex-direction:column;gap:0}
 .bignum b{font-size:44px;line-height:1;font-weight:700;letter-spacing:-.01em}
 .bignum span{font-size:12px;color:var(--muted);font-weight:700;margin-top:6px}
@@ -149,8 +163,8 @@ p{margin:0}
 .deck-count{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-align:right;line-height:1.35}
 .deck-count b{display:block;font-size:15px;color:var(--ink);font-family:var(--f-ui)}
 
-.switch{position:relative;width:44px;height:26px;border-radius:999px;background:var(--line);flex:none;transition:background .15s}
-.switch::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .15s}
+.switch{position:relative;width:44px;height:26px;border-radius:999px;background:var(--sw-off);flex:none;transition:background .15s}
+.switch::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .15s}
 .switch[aria-checked="true"]{background:var(--accent)}
 .switch[aria-checked="true"]::after{transform:translateX(18px)}
 
@@ -178,7 +192,7 @@ p{margin:0}
 .wrow:first-child{border-top:0}
 .wdot{width:8px;height:8px;border-radius:50%;background:var(--st-new)}
 .wdot.learn{background:var(--st-learn)} .wdot.master{background:var(--st-master)}
-.wdot.leech{background:var(--red)}
+.wdot.leech{background:var(--again)}
 .wword{font-family:var(--f-word);font-weight:600;font-size:16px;overflow-wrap:break-word;line-height:1.3}
 @media (max-width:400px){.wword{font-size:15px}}
 .wmean{font-size:13px;color:var(--red);font-weight:700;overflow-wrap:anywhere;line-height:1.4;border-radius:4px;transition:background .15s,color .15s;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -211,7 +225,7 @@ p{margin:0}
 .form{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
 .frow{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--line)}
 .frow:first-child{border-top:0}
-.frow.wrap{flex-wrap:wrap}
+.frow.wrap{flex-wrap:wrap;margin:0;max-width:none}
 .frow.wrap .lab{flex-basis:100%}
 .frow .lab{flex:1;min-width:0;display:flex;flex-direction:column}
 .frow .lab b{font-size:14px}
@@ -239,7 +253,6 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .prog{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
 .prog i{display:block;height:100%;background:var(--good);border-radius:4px;transition:width .3s ease}
 .qcount{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);min-width:44px;text-align:right}
-.combo{font-size:12px;font-weight:700;color:var(--hard);min-height:18px;text-align:center}
 
 .screen-in.study{height:100%;min-height:0;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
 .qstage{position:relative;margin-top:14px;flex:1 1 auto;min-height:150px;display:flex;flex-direction:column}
@@ -265,7 +278,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .senses{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;text-align:left;width:100%;counter-reset:sn}
 .senses li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:start;padding:6px 8px;border-radius:9px}
 .senses li .pos{margin-top:2px}
-.senses li.hit{background:color-mix(in srgb,var(--marker) 42%,transparent)}
+.senses li.hit{background:var(--hit)}
 .senses .sm{font-weight:700;font-size:15px;line-height:1.45}
 .senses .sbody{min-width:0}
 .sex{font-family:var(--f-word);font-size:14px;line-height:1.5;margin-top:3px;overflow-wrap:anywhere}
@@ -299,7 +312,6 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .ftag.ok{color:var(--good);border-color:var(--good)}
 .fb-mean{font-weight:700}
 .wfrom{display:block;font-family:var(--f-ui);font-size:11px;font-weight:400;color:var(--faint)}
-.bignum span small{font-size:11px;font-weight:400;margin-left:2px}
 .cats .chip{font-weight:400}
 .cat{font-size:11.5px;font-weight:700;color:var(--easy);padding:1px 7px;border-radius:999px;background:var(--easy-soft)}
 .wno{font-family:var(--f-mono);font-size:10.5px;color:var(--faint);margin-right:6px;font-weight:500}
@@ -314,13 +326,15 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .choice .key{width:24px;height:24px;border-radius:6px;display:grid;place-items:center;font-family:var(--f-mono);font-size:12px;color:var(--faint);border:1px solid var(--line);font-weight:700}
 .choice .ctext{overflow-wrap:anywhere;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .choice .ctext.en{font-family:var(--f-word);font-weight:600;font-size:17px}
-.choice .csub{grid-column:3;max-width:9em;font-size:12px;font-weight:400;color:var(--muted);font-family:var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.choice .csub{margin-left:.5em;font-size:12px;font-weight:400;color:var(--muted);font-family:var(--f-ui)}
 .choice.ok{background:var(--good-soft);border-color:var(--good)}
 .choice.ok .key{background:var(--good);color:#fff;border-color:var(--good)}
 .choice.ng{background:var(--again-soft);border-color:var(--again)}
 .choice.ng .key{background:var(--again);color:#fff;border-color:var(--again)}
 .choice.dim{opacity:.55}
 .answered .choice{pointer-events:none}
+/* iOS sends a click to a document listener only when the tapped element (or an ancestor below body) is clickable */
+.screen-in.study[data-act],.fb[data-act],.backdrop[data-act]{cursor:pointer}
 .answered .dunno{visibility:hidden}
 .dunno{display:block;margin:6px auto 0;padding:10px 18px;font-size:13.5px;font-weight:700;color:var(--muted);border-radius:10px}
 .dunno:hover{background:var(--surface)}
@@ -334,7 +348,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .fb-actions .btn{min-height:52px}
 .fb-actions .btn-primary{flex:1}
 @keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
-.fb-head{display:flex;align-items:center;gap:8px;font-weight:700}
+.fb-head{display:flex;align-items:center;gap:8px;font-weight:700;font-size:17px}
 .fb.ok .fb-head{color:var(--good)} .fb.ng .fb-head{color:var(--again)}
 .fb-head .sp{flex:1}
 .ivl{font-family:var(--f-mono);font-size:12px;font-weight:500;padding:2px 8px;border-radius:999px;background:var(--surface);color:var(--muted)}
@@ -356,7 +370,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .spell input:focus{border-color:var(--accent)}
 .spell input.ok{border-color:var(--good);background:var(--good-soft)}
 .spell input.ng{border-color:var(--again);background:var(--again-soft)}
-.spell-btns{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:8px}
+.spell-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .spell-note{margin-top:-4px;text-align:center;font-size:13.5px;font-weight:700;color:var(--again)}
 
 .grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:22px}
@@ -377,11 +391,11 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .swlab.r{right:18px;color:var(--easy);border-color:var(--easy);transform:rotate(8deg)}
 .swmean{min-height:28px;font-weight:700;font-size:17px;color:var(--red);line-height:1.5;max-width:30ch}
 .swmean.hide{color:transparent;background:var(--sheet);border-radius:6px;padding:0 10px}
-.swbtns{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;margin-top:26px;align-items:center}
+.swbtns{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;margin-top:26px;align-items:center}
 .swbtns .btn{min-height:54px}
 .sw-no{background:var(--again-soft);color:var(--again)}
 .sw-yes{background:var(--easy-soft);color:var(--easy)}
-.swhelp{text-align:center;font-size:12px;color:var(--faint);margin-top:12px}
+.swhelp{text-align:center;font-size:12px;color:var(--muted)}
 
 /* results */
 .res-h{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:22px;text-align:center}
@@ -395,19 +409,18 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .mk.o{background:var(--good-soft);color:var(--good)} .mk.x{background:var(--again-soft);color:var(--again)}
 .rword{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;min-width:0}
 .rword b{font-family:var(--f-word);font-size:16px}
-.rword span{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rword>span{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .res-btns{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding-top:22px}
 
 
 /* ---- study ergonomics ---- */
-.screen,.tabbar,.sheet{touch-action:manipulation}
 .segs{flex:1;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:3px;height:8px}
 .segs i{display:block;border-radius:3px;background:var(--line)}
-.segs i.cur{background:var(--accent-2)}
+.segs i.cur{background:transparent;box-shadow:inset 0 0 0 1.5px var(--accent-2)}   /* outlined: not another bar like the timer */
 .segs i.ok{background:var(--good)}
 .segs i.ng{background:var(--again)}
 .segs i.fix{background:var(--hard)}
-.fb-head .mk{width:22px;height:22px;margin-right:6px;font-size:12px}
+.fb-head .mk{width:26px;height:26px;margin-right:6px;font-size:14px}
 .fb-more{font-size:12.5px;font-weight:700;color:var(--muted);padding:4px 10px;border-radius:999px;border:1px solid var(--line);margin-left:8px}
 .cmp{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border-radius:10px;background:var(--surface-2)}
 .cmp-row{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:14.5px;line-height:1.45}
@@ -425,7 +438,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .fchip.on{border-color:var(--accent);background:var(--accent-soft)}
 .fdetail:not(:empty){padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--marker) 30%,transparent);display:flex;flex-direction:column;gap:2px}
 .toast{display:flex;align-items:center;gap:12px}
-.toast-btn{color:var(--accent-2);font-weight:700;font-size:13px;padding:4px 2px;white-space:nowrap}
+.toast-btn{color:inherit;text-decoration:underline;text-underline-offset:3px;font-weight:700;font-size:13px;padding:4px 2px;white-space:nowrap}
 .sja,.fb-ja,.fdetail .sja{line-height:1.7}
 .ipa{font-family:"Charis SIL","Noto Sans","Segoe UI",sans-serif}
 .bignum b,.statline b,.kpi b,.res-h .big{font-family:var(--f-word);font-variant-numeric:lining-nums tabular-nums;font-weight:600}
@@ -434,7 +447,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 
 .pill .fz{display:inline-flex;align-items:center;gap:2px;margin-left:4px;color:var(--easy);font-size:12px}
 .pill .fz .ico{width:13px;height:13px}
-.pill.streak.done{border-color:color-mix(in srgb,var(--red) 40%,var(--line))}
+.pill.streak.done{border-color:color-mix(in srgb,var(--streak) 40%,var(--line))}
 .btn-big{min-height:54px;font-size:16px}
 .btn-big small,.btn small{font-weight:400;font-size:12px;opacity:.85;margin-left:4px}
 .today.is-done{align-items:flex-start}
@@ -451,7 +464,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .ring-score .big{font-size:44px;line-height:1}
 .ring-score .big small{font-size:18px}
 .ring-score span{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:4px}
-.res-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin-top:10px}
+.res-tiles{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;width:100%;margin-top:10px}
 .res-tiles div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 8px;display:flex;flex-direction:column;align-items:center}
 .res-tiles b{font-family:var(--f-word);font-size:22px;font-weight:600;font-variant-numeric:lining-nums tabular-nums}
 .res-tiles b small{font-size:12px;margin-left:1px}
@@ -500,9 +513,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 /* the chip's border and fill show the choice; the radio itself stays for keyboard and screen readers */
 .ob-chip input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 .ob-chip:has(input:focus-visible){outline:2.5px solid var(--accent);outline-offset:2px}
-.ob-note{font-size:12px;color:var(--muted);margin-top:6px}
 .ob-chip:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
-.ob-skip{align-self:center;padding:6px}
 
 .avatar{width:36px;height:36px;border-radius:50%;flex:none}
 
@@ -528,7 +539,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 
 .moremean{display:inline-block;margin-left:8px;font-size:.78em;font-weight:400;color:var(--muted)}
 .swnote{margin-top:-6px;font-size:12.5px;color:var(--muted)}
-.rword .moremean{font-size:11px}
+.rword .moremean{font-size:12px}
 .pat{display:block;font-family:var(--f-word);font-weight:600;font-size:14px;color:var(--accent);line-height:1.35}
 .pat.inl{display:inline;margin-right:8px}
 .qpat{font-family:var(--f-word);font-weight:600;font-size:17px;color:var(--accent)}
@@ -546,20 +557,18 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .qtimer i{display:block;height:100%;width:100%;border-radius:3px;background:var(--good);transition:width .1s linear,background-color .3s}
 .qtimer i.mid{background:var(--hard)}
 .qtimer i.low{background:var(--again)}
-.qtimer + .qstage{margin-top:10px}
-.qtimer + .swarea{margin-top:16px}
+.qclock + .qstage,.qtimer + .qstage{margin-top:20px}   /* the card's ring (top:-15px) stays clear of the bar */
+.qtimer + .swarea{margin-top:20px}
 
 
 .qundo{display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-weight:700;font-size:12.5px;white-space:nowrap}
 .qundo .ico{width:16px;height:16px}
 .qundo:disabled{opacity:.35}
 .qundo.col{flex-direction:column;gap:1px;height:auto;padding:6px 12px;border-radius:12px;font-size:11px}
-.res-undo{display:flex;justify-content:center;margin-top:14px}
-.res-undo .qundo{height:40px;padding:0 14px}
 @media (max-width:400px){.qtop{gap:8px}.qtop .qundo{padding:0 8px}}
 /* a card you graded yourself leaves without a sheet: it slides away, or (もう一度) drops to the back of the pile */
 .qcard.away{animation:cardaway .17s ease-in forwards}
-.qcard.away.back{animation-name:cardback}
+.qcard.away.drop{animation-name:cardback}
 @keyframes cardaway{to{transform:translateX(-36px) rotate(-1.5deg);opacity:0}}
 @keyframes cardback{to{transform:translateY(18px) scale(.93);opacity:0}}
 .grade small.jp{font-family:var(--f-ui);font-size:10.5px;line-height:1.3;word-break:keep-all}
@@ -568,10 +577,9 @@ input[type=range]{accent-color:var(--accent);width:130px}
 
 .qclock{display:flex;align-items:center;gap:10px;margin-top:12px}
 .qclock .qtimer{flex:1;margin-top:0}
-.qclock + .qstage{margin-top:8px}
 .qtimer i.ex{background:var(--easy)}
 .qtimer i.pf{background:var(--perfect)}
-.qrate{margin:0;min-width:5.6em;text-align:right;font-size:16px;line-height:1;transition:opacity .2s}
+.qrate{margin:0;min-width:5.2em;text-align:right;font-size:16px;line-height:1;transition:opacity .2s}
 .qrate.gone{opacity:0}
 .qrate.pop{animation:ratepop .35s cubic-bezier(.2,.9,.3,1.4)}
 @keyframes ratepop{from{transform:scale(.7)}50%{transform:scale(1.25)}to{transform:none}}
@@ -588,11 +596,11 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .segs.dense i{border-radius:1px}
 
 .pill.streak:not(.done) .ico{color:var(--faint)}
-.pill.streak.done .ico{color:#F2701F}
+.pill.streak.done .ico{color:var(--streak)}
 .goal-line{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:13px;color:var(--muted)}
 .goal-line .ico{width:16px;height:16px;flex:none;color:var(--faint)}
 .goal-line b{color:var(--ink)}
-.goal-line.done .ico{color:#F2701F}
+.goal-line.done .ico{color:var(--streak)}
 /* the hero's one-line hints: goal / streak, and the finish line (tap: change the daily goal) */
 .hero-lines{display:flex;flex-direction:column;gap:2px;align-self:stretch}
 .hero-lines .goal-line{margin-top:0}
@@ -605,7 +613,6 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .pace-step{display:flex;align-items:center;gap:12px;font-weight:700;color:var(--muted);font-size:13.5px}
 .pace-res{font-size:15px;line-height:1.6}
 .pace-res b{font-size:16px}
-#peekbar:empty{display:none}
 /* 設定の「くわしい設定」 */
 .more-set>summary{display:flex;align-items:center;gap:8px;min-height:48px;padding:0 16px;border-top:1px solid var(--line);font-weight:700;font-size:14px;color:var(--accent);cursor:pointer;list-style:none}
 .more-set>summary::-webkit-details-marker{display:none}
@@ -617,21 +624,21 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .stk-card{display:flex;align-items:center;gap:14px;width:100%;margin-bottom:10px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);text-align:left}
 .stk-num{display:flex;align-items:baseline;gap:3px;flex:none}
 .stk-num .ico{width:22px;height:22px;align-self:center;color:var(--faint)}
-.stk-card.done .stk-num .ico{color:#F2701F}
+.stk-card.done .stk-num .ico{color:var(--streak)}
 .stk-num b{font-size:26px;font-family:var(--f-word);line-height:1}
 .stk-num small{font-size:12px;color:var(--muted);font-weight:700}
 .week{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:4px;min-width:0}
 .wd{display:flex;flex-direction:column;align-items:center;gap:3px}
 .wd i{width:min(26px,100%);height:auto;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);border:1.5px solid var(--line)}
 .wd i .ico{width:15px;height:15px}
-.wd.on i{background:#F2701F;border-color:#F2701F;color:#fff}
+.wd.on i{background:var(--streak);border-color:var(--streak);color:#fff}
 .wd.fz i{background:var(--easy-soft);border-color:var(--easy);color:var(--easy)}
-.wd.now i{border:2px dashed #F2701F;background:transparent}
+.wd.now i{border:2px dashed var(--streak);background:transparent}
 .wd small{font-size:10.5px;color:var(--muted);font-weight:700}
 .stk{display:flex;flex-direction:column;gap:12px}
 .stk-top{display:flex;align-items:baseline;justify-content:center;gap:6px;color:var(--faint)}
 .stk-top .ico{width:40px;height:40px;align-self:center}
-.stk-top.done .ico{color:#F2701F}
+.stk-top.done .ico{color:var(--streak)}
 .stk-top b{font-size:52px;font-family:var(--f-word);color:var(--ink);line-height:1}
 .stk-top span{font-weight:700;color:var(--muted)}
 .stk-sub{text-align:center;font-size:13px;color:var(--muted)}
@@ -643,21 +650,104 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .mcal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
 .mcal-g b{font-size:11px;color:var(--muted)}
 .mcal-g i{font-style:normal;font-size:12px;line-height:30px;border-radius:50%;font-variant-numeric:tabular-nums}
-.mcal-g i.on{background:#F2701F;color:#fff;font-weight:700}
+.mcal-g i.on{background:var(--streak);color:#fff;font-weight:700}
 .mcal-g i.fz{background:var(--easy-soft);color:var(--easy);font-weight:700}
-.mcal-g i.now{box-shadow:inset 0 0 0 2px #F2701F}
+.mcal-g i.now{box-shadow:inset 0 0 0 2px var(--streak)}
 .mcal-g i.fut{color:var(--faint)}
 .stk-rule{display:flex;gap:8px;font-size:12.5px;color:var(--muted);line-height:1.6}
 .stk-rule .ico{width:16px;height:16px;flex:none;color:var(--easy);margin-top:3px}
-.stk-win{display:flex;align-items:center;gap:12px;margin:0 auto 14px;padding:12px 18px;border-radius:16px;background:color-mix(in srgb,#F2701F 12%,var(--surface));border:1.5px solid color-mix(in srgb,#F2701F 45%,var(--line));animation:stkwin .5s cubic-bezier(.2,.9,.3,1.3)}
+.stk-win{display:flex;align-items:center;gap:12px;margin:0 auto 14px;padding:12px 18px;border-radius:16px;background:color-mix(in srgb,var(--streak) 12%,var(--surface));border:1.5px solid color-mix(in srgb,var(--streak) 45%,var(--line));animation:stkwin .5s cubic-bezier(.2,.9,.3,1.3)}
 .stk-win div{display:flex;flex-direction:column;gap:2px;text-align:left}
 .stk-win b{font-size:19px}
-.stk-win b .num{font-family:var(--f-word);font-size:24px;color:#F2701F}
+.stk-win b .num{font-family:var(--f-word);font-size:24px;color:var(--streak)}
 .stk-win span{font-size:12.5px;color:var(--muted)}
-.stk-flame .ico{width:38px;height:38px;color:#F2701F;animation:flame 1.2s ease-in-out infinite alternate}
+.stk-flame .ico{width:38px;height:38px;color:var(--streak);animation:flame 1.2s ease-in-out infinite alternate}
 @keyframes stkwin{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
 @keyframes flame{from{transform:scale(1) rotate(-4deg)}to{transform:scale(1.12) rotate(4deg)}}
 @media (prefers-reduced-motion: reduce){.stk-win,.stk-flame .ico{animation:none}}
+/* === B: study === */
+/* a right 4択 answer stays on the question: its grade on the chosen line, the next review where わからない was */
+.inl-fb{display:flex;justify-content:center;align-items:center;gap:12px;min-height:44px;margin-top:6px}
+.inl-fb .fb-more{margin-left:0}
+.choice .crate{margin:0;font-size:15px;animation:ratepop .35s cubic-bezier(.2,.9,.3,1.4)}
+.qnow{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.qcombo{position:absolute;left:42px;top:12px;font-size:12px;font-weight:700;color:var(--hard-t,var(--hard));white-space:nowrap;z-index:1}
+/* the sheet: [hidden] really hides (.fb-body / .fb-actions are display:flex); a sayex at a line end doesn't scroll it sideways */
+.fb [hidden]{display:none}
+.fb .fb-body{overflow-x:hidden}
+/* 詳しく open: the sheet grows to its content, up to just below × and 1問もどす */
+.fb:has(#fbmore:not([hidden])){max-height:calc(100% - 64px)}
+/* a miss: when it comes back, 押し間違えた on your own answer (not next to 次へ) */
+.ivl.again{font-family:var(--f-ui);font-weight:700;color:var(--again-t,var(--again));background:var(--again-soft)}
+.cmp-undo{margin:-12px -6px -12px auto;padding:0 6px;min-height:44px;font-size:12.5px;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.lkn{font-size:12px;color:var(--muted);margin-top:2px}
+/* a new word's card turns over on a tap anywhere; the word keeps its place and the back is added below it */
+.qcard.flashc{cursor:pointer}
+.qcard.flashc .qcard-in{justify-content:flex-start;padding-top:clamp(36px,10vh,96px)}
+.qcard.flashc .qcard-in>:first-child{margin-top:0}
+.qcard.flashc .qcard-in>:last-child{margin-bottom:0}
+/* the key numbers mean nothing on a phone; after the answer ○ / × show in the same box (.choice.ok/.ng .key) */
+@media (hover:none) and (pointer:coarse){.choice .key{color:transparent;border-color:transparent}}
+/* スペル: every button above the field, 答える beside it, so the keyboard covers nothing */
+.spell-btns .btn{min-height:40px}
+.spell-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.spell-row .btn{min-height:56px}
+.spell input{min-width:0}
+.spell input.ng{font-size:17px}
+/* results: each word opens its explanation; the speed grades counted */
+button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) auto 14px}
+.rrow>.ico{width:14px;height:14px;color:var(--faint)}
+.res-tiles b small.pre{margin:0 2px 0 0}
+.sheet-h h3[lang="en"]{font-family:var(--f-word);font-size:20px}
+.res-btns .btn-row .btn{white-space:normal;line-height:1.3}
+.tierrow{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;margin-top:8px}
+.tierrow .rate{margin:0}
+.rate.tx{color:var(--again-t,var(--again));font-style:normal;font-family:var(--f-ui)}
+/* the day's goal reached: the streak in big type, counting up by one */
+.stk-win.stk-big{flex-direction:column;width:100%;padding:18px 16px;gap:6px;text-align:center}
+.stk-win.stk-big>div{align-items:center;text-align:center}
+.stk-win.stk-big .stk-flame .ico{width:56px;height:56px}
+.stk-win.stk-big .stk-nrow{flex-direction:row;align-items:baseline;gap:4px}
+.stk-win.stk-big .stk-nrow span{font-size:15px;font-weight:700;color:var(--ink)}
+.stk-win.stk-big .stk-n{font-family:var(--f-word);font-size:48px;line-height:1;color:var(--streak-t,var(--streak))}
+.stk-win.stk-big .stk-n.pop{animation:ratepop .35s cubic-bezier(.2,.9,.3,1.4)}
+.stk-win.stk-big .stk-msg{font-size:15px;font-weight:700;color:var(--ink)}
+.stk-win.stk-big .week{display:grid;width:100%}
+.stk-win.stk-big .wd.on:last-child i{animation:ratepop .4s .5s both}
+/* 高速仕分け: the buttons sit at the bottom edge with the counts inside; the red band says it opens */
+.screen-in.sw{height:100%;min-height:0;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.sw .swarea{flex:1 1 auto;height:auto;min-height:240px;max-height:480px;margin-top:20px}
+.swfoot{margin-top:auto;padding-top:14px}
+.swfoot .swbtns{margin-top:10px}
+.swbtns .btn{gap:4px;padding:0 8px;white-space:nowrap;flex-wrap:wrap;column-gap:4px;row-gap:0;line-height:1.2}
+/* a narrow row (文字「大」): smaller type keeps each button on one line; the wrap above is the fallback */
+.swfoot{container-type:inline-size}@container (max-width:340px){.swbtns{gap:6px}.swbtns .btn{font-size:13.5px;padding:0 4px}}
+.swn{margin-left:2px;font-size:13px;opacity:.8}
+.swmean{position:relative}
+.swmean.hide{min-width:8em;background:color-mix(in srgb,var(--sheet) 88%,#000)}
+.swmean.hide::after{content:"タップで意味";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:12px;font-weight:700;letter-spacing:.06em}
+/* 派生語: the chips open on a tap */
+.fam-sub{margin-left:6px;font-weight:400;letter-spacing:0}
+.fchip::after{content:"›";color:var(--faint);font-size:14px;margin-left:-2px}
+.fchip.on::after{content:none}
+/* VoiceOver: one short line per answer (#sr) */
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+/* a short screen (iPhone SE, 文字「大」; fitCheck): the study screens pack tighter so わからない stays in view */
+.short .qtop{padding-block:2px 0}
+.short .qclock,.short .screen-in.study>.qtimer{margin-top:6px}
+.short .qclock + .qstage,.short .qtimer + .qstage{margin-top:18px}
+.short #qbody{padding-top:10px}
+.short .choices{gap:6px}
+.short .choice{height:auto;min-height:48px;padding-block:4px}
+.short .dunno{margin-top:2px;padding:6px 18px}
+.short .dunrow,.short .inl-fb{margin-top:2px}
+.short .qstage{min-height:120px}
+.short .qstage .behind{display:none}
+.short .qcard-in{padding:28px 16px 10px}
+.short .qcard.flashc .qcard-in{padding-top:28px}
+.short .grades{margin-top:10px}
+.short .grade{padding-block:7px}
+.short .sw .swarea{min-height:200px}
 /* 後半の4択（文脈・語法）, 語源・コアイメージ・接辞, 紛らわしい語の見分け方, 英単語を貼るだけ */
 .qctx{font-family:var(--f-word);font-size:clamp(18px,5.2vw,21px);line-height:1.55;color:var(--ink);max-width:30ch;overflow-wrap:anywhere}
 .qask b.qw{color:var(--ink);font-family:var(--f-word);font-weight:600}
@@ -678,6 +768,61 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .impx-row b{font-family:var(--f-word);font-weight:600;color:var(--ink);overflow-wrap:anywhere}
 .impx-row input[type=checkbox]{width:18px;height:18px;margin:0;accent-color:var(--accent)}
 .impx-m{padding:6px 10px}
+/* === A: home & decks === */
+/* home hero: what is left of today's goal, side by side; the number is red only while reviews are due */
+.bignum.due.zero b{color:var(--faint)}
+.today-note{font-size:12px;color:var(--muted);margin-top:-8px}
+/* 出題の向き・1セットの問題数: one chip with the current values, changed in a sheet */
+.optchip{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;min-height:40px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);font-size:12.5px;font-weight:700;color:var(--muted)}
+.optchip .ico{width:14px;height:14px}
+#optbox .dirrow{justify-content:space-between;font-size:13.5px;color:var(--ink)}
+/* the hero's other ways to study: only the ones that can start, a one-line hint each, quieter than the dock */
+.today .btn-row.alt{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:1fr}
+.today .btn-row.alt .btn{flex-direction:column;gap:1px;min-height:52px;line-height:1.25;font-size:14px;background:var(--surface-2);border-color:transparent}
+.today .btn-row.alt .btn small{margin-left:0;font-size:11.5px;color:var(--muted);opacity:1}
+.today .btn-row.alt .bt{display:inline-flex;align-items:center;gap:6px}
+/* deck rows: a letter on the card icon; the counts never break inside a word */
+.deck-ico{display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--accent)}
+.deck-ico::after{content:none}   /* the letter tells the decks apart; the punched hole beside it read as °基 */
+.nw{white-space:nowrap}
+/* deck rows and the 記録 notes: each item brings its own ・; the row sits 1.2em further left and that strip is clipped,
+   so no line starts or ends with a lone ・ */
+.deck-sub,.dots{display:flex;flex-wrap:wrap;margin-left:-1.2em;clip-path:inset(0 0 0 1.2em)}
+.deck-sub .nw::before,.dots .nw::before{content:"・";display:inline-block;width:1.2em;text-align:center}
+.deck-sub .nw::before{color:var(--muted)}   /* not red before 復習待ち */
+/* first run: the logo beside the title, a short lead, the curve kept small; the start buttons stay in view */
+.ob-hd{display:flex;align-items:center;justify-content:center;gap:10px}
+.ob-hd .ob-logo{width:40px;height:40px;border-radius:11px;font-size:24px}
+.ob-lead{text-align:center;font-size:13.5px;color:var(--muted);line-height:1.7}
+.ob .fchart{max-height:110px}
+.ob .fchart text{font-size:13px}   /* held to 110px tall (scale ~0.92), so 13 viewBox units ~ 12px on screen */
+.ob-opt{min-height:46px;padding:8px 12px;flex-wrap:wrap;column-gap:10px;row-gap:0}
+.ob-opt small{margin-left:auto;text-align:right}
+.ob-chip span{display:flex;flex-direction:column;align-items:center;line-height:1.25}
+.ob-chip small{font-size:11.5px;font-weight:400;color:var(--muted)}
+.ob-more>summary{min-height:44px;display:flex;align-items:center;font-size:13px;font-weight:700;color:var(--accent);list-style:none;cursor:pointer}
+.ob-more>summary::-webkit-details-marker{display:none}
+.ob-more>summary::after{content:"";margin-left:8px;width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg)}
+.ob-more[open]>summary::after{transform:translateY(2px) rotate(-135deg)}
+.ob-more .ob-opt+.ob-opt{margin-top:6px}
+.ob-go{position:sticky;bottom:0;z-index:1;margin:2px -18px -22px;padding:12px 18px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);box-shadow:0 -12px 16px -14px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:8px}
+.ob-go .btn-big{flex-direction:column;gap:0;line-height:1.3}   /* the label on one line, 50語・約2分 under it (side by side both broke: 始め／る, 約2／分) */
+.ob-go .btn-big small{margin-left:0}
+/* a short screen (iPhone SE's Safari, in-app browsers): the deck choices come before the curve, so they show above the stuck start buttons */
+@media (max-height:639px){.ob .fchart{order:1}.ob-go{order:2}}
+.ob-links{display:flex;justify-content:center;gap:20px}
+.ob-links .link{min-height:44px;padding:0 4px}
+/* deck page: search first, the chips in one row that scrolls sideways, a key for the dots */
+.chips.filter{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;padding-block:4px;margin-block:-4px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent)}
+.chips.filter::-webkit-scrollbar{display:none}
+.chips.filter .chip{flex:none;white-space:nowrap}
+.legend i.wdot{width:8px;height:8px;border-radius:50%}
+.wsn{margin-left:6px;font-family:var(--f-ui);font-size:11.5px;font-weight:700;color:var(--muted)}
+/* card sheet: the reset is a small text button, away from 出題しない (it can be undone from the notice) */
+.reset-link{align-self:center;min-height:40px;font-size:12.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+/* settings: a segmented control under its label spans the row */
+.frow.wrap>.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;width:100%}
+.frow.wrap>.seg button{padding:9px 4px}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -697,9 +842,12 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .plist label:first-child{border-top:0}
 .plist b{font-family:var(--f-word)}
 .confirm{background:var(--again-soft);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
-.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:95;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:13.5px;font-weight:700;max-width:calc(100% - 32px);box-shadow:var(--shadow);animation:rise .18s ease-out}
-/* while studying or sorting, notices sit under the header, clear of the answer buttons; their button is a full-height tap target */
-#screen:not([hidden]) ~ #toastroot .toast{top:calc(62px + env(safe-area-inset-top,0px));bottom:auto}
+.toast{position:fixed;left:50%;bottom:calc(84px + var(--kb,0px) + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:95;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:13.5px;font-weight:700;max-width:calc(100% - 32px);box-shadow:var(--shadow);animation:rise .18s ease-out}
+#app:has(.ctadock) ~ #toastroot .toast{bottom:calc(132px + var(--kb,0px) + env(safe-area-inset-bottom,0px))}   /* a page with a bottom dock (home, deck page): above its button (58 + 10 + 54 = 122px), not on it */
+/* while studying or sorting, notices sit over the header row (between × and 1問もどす), clear of the timer bar, the speed label and the answers;
+   one without a button lets taps through; their button is a full-height tap target */
+#screen:not([hidden]) ~ #toastroot .toast{top:calc(8px + env(safe-area-inset-top,0px));bottom:auto;max-width:calc(100% - 112px);font-size:13px;line-height:1.4}
+#screen:not([hidden]) ~ #toastroot .toast:not(:has(.toast-btn)){pointer-events:none}
 .toast-btn{min-height:44px;margin:-10px -16px -10px 0;padding:0 14px;border-radius:0 12px 12px 0;background:color-mix(in srgb,var(--bg) 16%,transparent)}
 .toast{animation-name:toastin;width:max-content}   /* its own width, centred (left:50% alone would cap it at half the screen) */
 @keyframes toastin{from{transform:translate(-50%,6px);opacity:.4}}
@@ -713,11 +861,58 @@ input[type=range]{accent-color:var(--accent);width:130px}
   .dhead{padding-left:36px;padding-right:16px}
   .tcard.holed::before{left:12px;top:14px}
   .ring{left:5px}
-  .today-nums{gap:18px}.bignum b{font-size:38px}.statline b{font-size:17px}
+  .bignum b{font-size:38px}.statline b{font-size:17px}
   .statline>div{padding:10px}
   .btn-row .btn{font-size:14px;gap:6px}
 }
 @media (max-width:350px){.btn-row{grid-template-columns:1fr}.statline span{font-size:10.5px}}
+/* === C: tokens & base === */
+/* state colours as text: dark enough on white and on their own soft fills (bars, borders and fills keep --again / --hard / --good) */
+.g1{color:var(--again-t)} .g2{color:var(--hard-t)} .g3{color:var(--good-t)}
+.grade small{opacity:1}
+.sw-no,.fb.ng .fb-head,.cmp-row.ng s,.qask b{color:var(--again-t)}
+.swlab.l{color:var(--again-t);border-color:var(--again-t)}
+.btn-danger,.mk.x,.spell-note{color:var(--again-t)}
+.mk.o,.res-done,.rate.t2{color:var(--good-t)}
+.rate.t1,.syncbtn.warn .synclab{color:var(--hard-t)}
+.swn{opacity:1}
+.choice.ok .key,.choice.ng .key{color:var(--surface);font-family:var(--f-ui);font-size:14px;line-height:1}   /* the ○ / × on its filled key: white in light mode, dark in dark mode; ○ is not in IBM Plex Mono, so use the UI font */
+.mcal-g i.on{color:var(--streak-ink)}
+.sheetbtn[aria-pressed="true"]{background:color-mix(in srgb,var(--sheet) 88%,#000);border-color:transparent}
+.memo{color:var(--memo-ink)}
+.syncbtn.login .synclab{color:var(--accent)}
+/* Japanese labels: 12px at least (11.5 only for helper text inside a button / chip) */
+.ety-k,.senses li.locked .lk,.cmp-l,.wd small,.qundo.col,.qtype{font-size:12px}
+.grade small.jp,.ftag,.fchip .pos{font-size:11.5px}
+.fchart text{font-size:11.5px}   /* viewBox units: about 12px on a phone */
+.tab,.legend,.syncbtn,.res-tiles span,.ring-score span,.rword .moremean,.kv span,.mcal-g b{font-size:12px}
+.tab{line-height:1.45}   /* 12px x 1.45 = 17.4px, about the old 17.6px: the tab bar stays about 59px tall, because .ctadock sits at a fixed bottom:58px */
+/* the dock rises when it first appears, not on every redraw of the same page */
+.ctadock.still{animation:none}
+/* tap areas about 44px, the look unchanged */
+.iconbtn,.qundo,.say,.pill.streak,.back{position:relative}
+.iconbtn::after{content:"";position:absolute;inset:-2px}
+.qundo::after{content:"";position:absolute;inset:-5px -2px}
+.say::after{content:"";position:absolute;inset:-5px}
+.pill.streak::after{content:"";position:absolute;inset:-8px -4px}
+/* .seg clips its buttons, so these grow for real */
+.seg button,.seg-sm button{min-height:40px}
+.stepper button,.stepper-sm button{width:40px;height:40px}
+.chip{min-height:36px;padding:7px 12px}
+.chips{gap:8px}
+.back{padding:11px 0}
+.sec-h .link{padding:12px 4px;margin:-12px -4px}   /* a taller target, the header row keeps its height */
+/* no double-tap zoom on any page (pinch zoom still works); .swarea's touch-action:none still narrows it */
+html{touch-action:manipulation}
+/* a settings row flips its switch wherever it is tapped */
+.frow:has(.switch){cursor:pointer;-webkit-user-select:none;user-select:none}
+/* sheets: pulled down by the grab bar or the header to close; they sit on the on-screen keyboard (--kb, set from visualViewport) */
+.sheet{bottom:var(--kb,0px);max-height:calc(90% - var(--kb,0px))}
+.sheet.drag{transition:none;animation:none;-webkit-user-select:none;user-select:none}
+.grab,.sheet-h{touch-action:none}
+.grab{position:relative}
+.grab::after{content:"";position:absolute;inset:-14px -60px}
+.sheet form .btn-primary[type=submit],#impgo{position:sticky;bottom:8px;z-index:1}
 </style>
 
 </head><body><div id="app" lang="ja"><main class="wrap" id="view"></main></div>
@@ -731,6 +926,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 <div id="sheetroot"></div>
 <div id="tip" class="tip" hidden></div>
 <div id="toastroot"></div>
+<div id="sr" class="sr-only" aria-live="polite" lang="ja"></div>
 
 <script>
 'use strict';
@@ -748,9 +944,9 @@ const IS_WEB = true;
 const FIREBASE = {"apiKey":"AIzaSyDo6nmhIEeA33nSWiv_1z0IUxpFHPhLq9M","authDomain":"kyokutan.firebaseapp.com","projectId":"kyokutan","storageBucket":"kyokutan.firebasestorage.app","messagingSenderId":"1048494403824","appId":"1:1048494403824:web:b5f7301b1e5e4541bf5235"};
 
 const DECK_META = [
-  {id:'j1',     name:'受験英単語 基礎', desc:'全2500語のうち 1〜750番 ・ 高校の基本〜共通テスト',        tag:'No.1–750'},
-  {id:'j2',     name:'受験英単語 標準', desc:'全2500語のうち 751〜1700番 ・ 共通テスト〜中堅大',        tag:'No.751–1700'},
-  {id:'j3',     name:'受験英単語 発展', desc:'全2500語のうち 1701〜2500番 ・ 難関大・英検準1級',     tag:'No.1701–2500'},
+  {id:'j1',     name:'受験英単語 基礎', desc:'No.1〜750 ・ 高校の基本〜共通テスト',        tag:'No.1–750'},
+  {id:'j2',     name:'受験英単語 標準', desc:'No.751〜1700 ・ 共通テスト〜中堅大',        tag:'No.751–1700'},
+  {id:'j3',     name:'受験英単語 発展', desc:'No.1701〜2500 ・ 難関大・英検準1級',     tag:'No.1701–2500'},
   {id:'idioms', name:'必修英熟語',     desc:'句動詞とイディオム',                 tag:'PHRASE'},
   {id:'theme',  name:'テーマ別 長文頻出語', desc:'環境・医療・経済などの専門用語と固有名詞', tag:'THEME'},
   {id:'toeic',  name:'TOEIC頻出',      desc:'ビジネス・オフィスの定番語',         tag:'600–860'},
@@ -981,7 +1177,7 @@ function status(p){
   return (p.s >= 21 || (p.k && p.r >= 2)) ? 'master' : 'learn';   // 知ってる from sorting counts once its first 4択 check is passed
 }
 const wrongCount = p => Math.max(p?.w || 0, p?.l || 0);
-const isLeech = p => wrongCount(p) >= 3;
+const isLeech = p => wrongCount(p) >= (S.settings.drillMin || 2);
 const missedLast = p => isReview(p) && p.lg === 1;
 /* 今日やった単語: answered in a study set today (a word only sorted as 知ってる in 高速仕分け doesn't count) */
 function todayCards(ids=activeIds()){
@@ -1041,7 +1237,8 @@ function weekRow(st = streakInfo()){
   let out = '';
   for (let d = today - 6; d <= today; d++) {
     const cls = st.on.has(d) ? 'on' : st.frozen.has(d) ? 'fz' : d === today ? 'now' : 'off';
-    out += `<span class="wd ${cls}"><i>${cls === 'on' ? I.flame : cls === 'fz' ? I.shield : ''}</i><small>${d === today ? '今日' : WD[new Date(d * DAY).getUTCDay()]}</small></span>`;
+    const wd = d === today ? '今日' : WD[new Date(d * DAY).getUTCDay()];
+    out += `<span class="wd ${cls}" role="img" aria-label="${wd}：${{on: '学習した', fz: 'お休みチケット', now: 'まだ', off: '記録なし'}[cls]}"><i aria-hidden="true">${cls === 'on' ? I.flame : cls === 'fz' ? I.shield : ''}</i><small>${wd}</small></span>`;
   }
   return `<div class="week">${out}</div>`;
 }
@@ -1064,7 +1261,7 @@ function streakSheet(){
     <p class="stk-sub">${st.done ? '今日の目標は達成！ また明日もやろう' : '今日の目標（今日の復習と新しい単語）を全部終えると、連続記録が1日のびます'}</p>
     ${weekRow(st)}
     <div class="stk-kpis"><div><b class="num">${st.best}</b><span>最長記録</span></div><div><b class="num">${st.freeze}</b><span>お休みチケット</span></div>
-      <div><b class="num">${next ? next - st.n : '—'}</b><span>${next ? `${next}日まであと` : '目標なし'}</span></div></div>
+      <div><b class="num">${next ? `あと${next - st.n}日` : '—'}</b><span>${next ? `${next}日連続まで` : '目標なし'}</span></div></div>
     ${monthCal(st)}
     <p class="stk-rule">${I.shield}<span><b>お休みチケット</b>：7日続けるごとに1枚もらえます（最大2枚）。目標を達成できなかった日に自動で使われて、連続記録が続きます。</span></p>
     <button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button></div>`);
@@ -1552,7 +1749,7 @@ function loginSheet(){
     <form id="mailform" style="display:flex;flex-direction:column;gap:10px">
       <div class="field"><label for="lmail">メールアドレス</label><input class="input" id="lmail" type="email" autocomplete="email" required></div>
       <div class="field"><label for="lpass">パスワード（6文字以上）</label><input class="input" id="lpass" type="password" autocomplete="current-password" minlength="6" required></div>
-      <div id="lerr" class="small" style="color:var(--again)"></div>
+      <div id="lerr" class="small" style="color:var(--again-t)"></div>
       <div class="btn-row"><button class="btn btn-primary" type="submit" data-mode="in">ログイン</button><button class="btn btn-ghost" type="submit" data-mode="up">新しく登録</button></div>
       <button class="link" type="button" data-act="resetPass" style="align-self:center;padding:6px">パスワードを忘れた</button>
     </form>`);
@@ -1585,14 +1782,15 @@ function syncLabel(){
   return {on:'クラウドに保存中（他の端末と同期）', syncing:'同期しています…', err: fatalText() || '一部の記録がクラウドに保存できていません（この端末には保存済み。あとで自動でもう一度保存します）',
     local: IS_WEB ? 'この端末に保存（ほかの端末へはバックアップで移せます）' : 'この端末のブラウザに保存'}[Sync.state];
 }
-/* the word next to the dot (web build with login): 未保存 until logged in, then 保存済み */
+/* the word next to the dot (web build with login): ログイン until logged in (the record is safe on this device), then 保存済み;
+   未保存 only when saving to the account really failed */
 function syncShort(){
-  if (!Auth.user) return Auth.failed ? 'オフライン' : Auth.ready ? '未保存' : '';
+  if (!Auth.user) return Auth.failed ? 'オフライン' : Auth.ready ? 'ログイン' : '';
   return {on:'保存済み', syncing:'保存中', err:'未保存'}[Sync.state] || '';
 }
 function renderSync(){
   const dot = $('#syncdot'); if (dot) { dot.className = 'syncdot ' + Sync.state; dot.title = syncLabel(); }
-  const b = $('#syncbtn'); if (b) { const s = syncShort(); b.querySelector('.synclab').textContent = s; b.classList.toggle('warn', s === '未保存'); b.setAttribute('aria-label', '保存の状態：' + syncLabel()); }
+  const b = $('#syncbtn'); if (b) { const s = syncShort(); b.querySelector('.synclab').textContent = s; b.classList.toggle('warn', s === '未保存'); b.classList.toggle('login', s === 'ログイン'); b.setAttribute('aria-label', '保存の状態：' + syncLabel()); }
   const t = $('#synctext'); if (t) t.textContent = syncLabel();
 }
 /* not logged in: after the first finished set, and once more at 100 learned words, say that the record lives only here */
@@ -1645,28 +1843,96 @@ function toast(msg, action, ms=2400){
   r.innerHTML = `<div class="toast" role="status"><span>${esc(msg)}</span>${action ? `<button class="toast-btn" data-act="${action.act}">${esc(action.label)}</button>` : ''}</div>`;
   clearTimeout(toastT); toastT = setTimeout(() => r.innerHTML = '', ms);
 }
-function openSheet(html, modal=false){
-  $('#sheetroot').innerHTML = `<div class="backdrop" ${modal ? '' : 'data-act="closeSheet"'}></div><div class="sheet" role="dialog" aria-modal="true"><div class="sheet-in"><div class="grab"></div>${html}</div></div>`;
+/* web: the browser's back (Safari's edge swipe, Android's back) closes the top layer (sheet, study screen, deck page) instead of leaving the app.
+   At most one marker entry: × and 閉じる leave it in place, and the next back only clears it */
+let HG = false;   // the marker is on the history
+if (IS_WEB) try { history.scrollRestoration = 'manual'; } catch(e) {}   // the marker is reused, so 'auto' would put back the scroll of the page it was pushed on
+function guard(){ if (IS_WEB && !HG) { try { history.pushState({kt: 1}, ''); HG = true; } catch(e) {} } }
+function openSheet(html, modal=false, keep=false){
+  const again = sheetOpen(), top = keep ? $('#sheetroot .sheet')?.scrollTop || 0 : 0;
+  $('#sheetroot').innerHTML = `<div class="backdrop" ${modal ? '' : 'data-act="closeSheet"'}></div><div class="sheet" role="dialog" aria-modal="true"><div class="sheet-in">${modal ? '' : '<div class="grab"></div>'}${html}</div></div>`;
+  if (again) $('#sheetroot').querySelectorAll('.sheet,.backdrop').forEach(e => e.style.animation = 'none');   // a sheet already up: a redraw never replays the slide-in / fade
+  if (top) $('#sheetroot .sheet').scrollTop = top;   // the same sheet redrawn (出題しない, リセット, メモ): it stays where the user was
   document.body.classList.add('locked');
+  if (!modal) { bindSheetDrag($('#sheetroot .sheet')); guard(); }
+}
+/* pull a sheet down by its grab bar or header to close it; the body below keeps its own scrolling */
+function bindSheetDrag(sh){
+  if (!sh) return;
+  const bd = sh.previousElementSibling;   // .backdrop
+  let y0 = null, t0 = 0, dy = 0, pid = null;
+  sh.addEventListener('pointerdown', e => {
+    if (!e.target.closest('.grab,.sheet-h') || e.target.closest('button,a,input,select,textarea,[data-act]')) return;
+    y0 = e.clientY; t0 = performance.now(); dy = 0; pid = e.pointerId;
+    sh.style.animation = 'none'; sh.style.transition = ''; sh.classList.add('drag');   // the slide-in stays off: putting it back would replay it
+    try { sh.setPointerCapture(pid); } catch(err) {}
+  });
+  sh.addEventListener('pointermove', e => {
+    if (y0 === null || e.pointerId !== pid) return;
+    dy = Math.max(0, e.clientY - y0); sh.style.transform = `translateY(${dy}px)`;
+    if (bd) bd.style.opacity = String(Math.max(0, 1 - dy / 400));
+  });
+  const end = e => {
+    if (y0 === null || e.pointerId !== pid) return;
+    const fling = dy > 8 && dy / Math.max(1, performance.now() - t0) > 0.5;   // a quick flick closes it too (not a tap's jitter)
+    y0 = null; sh.classList.remove('drag');
+    if (dy > 80 || fling) {
+      sh.style.transition = 'transform .16s ease-in'; sh.style.transform = 'translateY(100%)';
+      if (bd) { bd.style.transition = 'opacity .16s'; bd.style.opacity = '0'; }
+      setTimeout(() => { if ($('#sheetroot .sheet') === sh) ACT.closeSheet(); }, 160);
+    } else {
+      sh.style.transition = 'transform .18s ease-out'; sh.style.transform = '';
+      if (bd) { bd.style.transition = 'opacity .18s'; bd.style.opacity = ''; }
+    }
+  };
+  sh.addEventListener('pointerup', end); sh.addEventListener('pointercancel', end);
 }
 function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); }
 const sheetOpen = () => !!$('#sheetroot').firstChild;
-function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); }
+function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); viewKey = ''; guard(); }   // viewKey: the home dock rises again when this closes
 function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); Q = null; SW = null; const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); }
+const layerOpen = () => sheetOpen() || !$('#screen').hidden || (route.tab === 'decks' && !!route.deck);
+addEventListener('popstate', e => {
+  if (!IS_WEB) return;
+  if (e.state?.kt) { HG = true; return; }   // forward onto the marker again
+  HG = false;
+  if (sheetOpen()) { if ($('#sheetroot .backdrop[data-act]')) ACT.closeSheet(); }   // the first-run welcome stays open
+  else if (!$('#screen').hidden) closeScreen();
+  else if (route.tab === 'decks' && route.deck) ACT.backDecks();
+  else { history.back(); return; }   // a marker left behind by ×: this back was meant for the page before
+  if (layerOpen()) guard();
+});
+/* the on-screen keyboard: sheets ride on top of it (on iPhone a fixed bottom edge stays under the keyboard). Left alone while pinch-zoomed */
+if (window.visualViewport) {
+  const vv = visualViewport, kb = () => document.documentElement.style.setProperty('--kb',
+    (vv.scale > 1.01 ? 0 : Math.max(0, innerHeight - vv.height - vv.offsetTop) / (S.settings.zoom || 1)) + 'px');
+  vv.addEventListener('resize', kb); vv.addEventListener('scroll', kb);
+}
 
 /* ---------- views ---------- */
 let route = {tab:'home', deck:null, filter:'all', cat:'', q:'', red:false, limit:150};
 const PEEK = new Set();   // 赤シートでのぞいた語 (deck \t key), only while this deck's page is open
 let shownDay = dayIdx();  // the day the view was drawn for
 let moreSetOpen = false;  // 設定の「くわしい設定」 stays open when the view is drawn again
+const SCROLL = {};        // each tab's scroll position, back where it was when you return to the tab
 function applyZoom(){ try { document.documentElement.style.zoom = S.settings.zoom && S.settings.zoom !== 1 ? String(S.settings.zoom) : ''; } catch(e) {} }
+let viewKey = '';   // the page #view showed last time with nothing covering it
 function render(){
-  const v = $('#view');
+  const v = $('#view'), key = route.tab + (route.tab === 'decks' && route.deck ? '/' + route.deck : '');
+  // drawing the same page again: the dock doesn't rise again, and VoiceOver / the keyboard stay on the control they were on
+  const a = document.activeElement, still = key === viewKey && !!v.querySelector('.ctadock');
+  const sx = key === viewKey ? [...v.querySelectorAll('.chips.filter')].map(e => e.scrollLeft) : [];   // the chip rows keep their sideways scroll
+  const sel = a && v.contains(a) && a.dataset?.act ? ['act','k','v','d','f','c','id','tab'].filter(n => a.dataset[n] != null).map(n => `[data-${n}="${CSS.escape(a.dataset[n])}"]`).join('') : '';
   v.innerHTML = route.tab === 'home' ? viewHome()
     : route.tab === 'decks' ? (route.deck && deckById(route.deck) ? viewDeck() : viewDecks())
     : route.tab === 'stats' ? viewStats() : viewSettings();
+  v.querySelectorAll('.chips.filter').forEach((e, i) => { if (sx[i]) e.scrollLeft = sx[i]; });
+  if (still) v.querySelectorAll('.ctadock').forEach(d => d.classList.add('still'));
+  if (sel) v.querySelector(sel)?.focus({preventScroll:true});
+  viewKey = $('#screen').hidden ? key : '';   // drawn under the study screen: it rises when the screen closes
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false'));
   renderSync(); shownDay = dayIdx();
+  if (route.tab === 'decks' && route.deck) guard();
 }
 /* a home-screen app resumes from memory: after 4:00 it would still show last night's 「今日の目標は達成」 */
 function dayCheck(){ if (document.visibilityState !== 'hidden' && dayIdx() !== shownDay && $('#screen').hidden && !sheetOpen()) render(); }
@@ -1712,8 +1978,8 @@ function backlog(c, td = todayStat()){
 }
 /* 完走の見込み: the cards still to learn in the active decks ÷ new words a day — the average of the last 14 days
    (from 3 days of record and 1 word a day), else the daily goal. No input fields: the line is a mirror of the pace.
-   "No.1700 まで" is reached with the last headword; meanings and derivatives take every other new slot while there are
-   any, so that is about min(2H, H + D) cards. "… は終わる" counts them all. */
+   "基礎 を一周" / "No.1700 まで一周" is reached with the last headword; meanings and derivatives take every other new slot
+   while there are any, so that is about min(2H, H + D) cards. Any other deck "を一周" counts them all. */
 function paceInfo(act = activeIds()){
   const ds = act.map(deckById).filter(Boolean); if (!ds.length) return null;
   let h = 0, dd = 0;
@@ -1726,14 +1992,14 @@ function paceInfo(act = activeIds()){
   const lastNo = d => d.cards[d.cards.length - 1]?.n || 0;
   const jd = ds.filter(d => /^j\d$/.test(d.id) && lastNo(d)).sort((a, b) => lastNo(b) - lastNo(a));
   const byNo = h && jd.length === ds.length;
-  const what = byNo ? [`${shortName(jd[0])} No.${lastNo(jd[0])}`, ' まで'] : [ds.length === 1 ? ds[0].name : '学習中の単語帳', ' は'];
+  const what = byNo ? (jd.length === 1 ? [shortName(jd[0]), ' を一周'] : [`No.${lastNo(jd[0])}`, ' まで一周']) : [ds.length === 1 ? ds[0].name : '使っている単語帳', ' を一周'];
   return {left: byNo ? Math.min(2 * h, h + dd) : h + dd, avg, span, what};
 }
 const shortName = d => d.name.replace(/^受験英単語\s*/, '');
 function endLabel(idx){ const d = new Date(idx * DAY); return idx - dayIdx() > 300 ? `${d.getUTCFullYear()}/${d.getUTCMonth() + 1}/${d.getUTCDate()}` : mdLabel(idx); }
 function paceText(pi, perDay, lead){
   if (perDay <= 0) return '新しい単語は <b>1日0語</b> の設定です';
-  return `${lead} <b>${esc(pi.what[0])}</b>${pi.what[1]} <b class="num">${endLabel(dayIdx() + Math.ceil(pi.left / perDay))}</b> に終わる`;
+  return `${lead} <b class="num">${endLabel(dayIdx() + Math.ceil(pi.left / perDay))}</b> に <b>${esc(pi.what[0])}</b>${pi.what[1]}`;
 }
 function paceHTML(act){
   const pi = paceInfo(act); if (!pi) return '';
@@ -1742,9 +2008,9 @@ function paceHTML(act){
 }
 function paceBody(){
   const pi = paceInfo(), n = S.settings.newPerDay, [lo, hi] = STEP_RANGE.newPerDay;
-  return `<div class="pace-step"><div class="stepper"><button data-act="paceStep" data-d="-5" aria-label="減らす" ${n <= lo ? 'disabled' : ''}>−</button><output class="num">${n}</output><button data-act="paceStep" data-d="5" aria-label="増やす" ${n >= hi ? 'disabled' : ''}>＋</button></div><span>語 ／ 1日（新しい単語）</span></div>
+  return `<div class="pace-step"><div class="stepper"><button data-act="paceStep" data-d="-5" aria-label="1日の目標を5減らす" ${n <= lo ? 'disabled' : ''}>−</button><output class="num">${n}</output><button data-act="paceStep" data-d="5" aria-label="1日の目標を5増やす" ${n >= hi ? 'disabled' : ''}>＋</button></div><span>語 ／ 1日（新しい単語）</span></div>
     ${pi ? `<p class="pace-res">${paceText(pi, n, `1日${n}語なら`)}</p>` : ''}
-    ${pi?.avg ? `<p class="small muted">今のペース（直近${pi.span}日の平均 1日${Math.round(pi.avg)}語）なら ${endLabel(dayIdx() + Math.ceil(pi.left / pi.avg))} に終わります。</p>` : ''}
+    ${pi?.avg ? `<p class="small muted">今のペース（直近${pi.span}日の平均 1日${Math.round(pi.avg)}語）なら ${endLabel(dayIdx() + Math.ceil(pi.left / pi.avg))} に ${esc(pi.what[0])}${pi.what[1]}できます。</p>` : ''}
     <p class="small muted">今日の復習と、この数の新しい単語を終えると「今日の目標」達成です。達成したあとも続けられます。</p>
     <button class="btn btn-primary btn-block" data-act="closeSheet">これでOK</button>`;
 }
@@ -1760,8 +2026,20 @@ function nextDeck(act = activeIds(), c = counts(act)){
 }
 const nextDeckBtn = (nd, cls) => `<button class="btn ${cls} btn-block" data-act="nextDeck" data-id="${esc(nd.to.id)}">${I.play}${esc(shortName(nd.to))}もはじめる<small>${esc(nd.to.tag || '')}</small></button>`;
 const nextDeckLine = nd => `<div class="goal-line nd">${I.check}<span>${esc(shortName(nd.from))}${nd.left ? `の新しい単語は あと${nd.left}語` : 'をひととおり学習しました'}</span></div>`;
-const sizeRow = () => `<div class="dirrow"><span>1回</span><div class="stepper stepper-sm"><button data-act="step" data-k="setSize" data-d="-5" aria-label="1回の問題数を減らす" ${S.settings.setSize <= 5 ? 'disabled' : ''}>−</button><output class="num">${S.settings.setSize}問</output><button data-act="step" data-k="setSize" data-d="5" aria-label="1回の問題数を増やす" ${S.settings.setSize >= 50 ? 'disabled' : ''}>＋</button></div></div>`;
+const sizeRow = () => `<div class="dirrow"><span>1セット</span><div class="stepper stepper-sm"><button data-act="step" data-k="setSize" data-d="-5" aria-label="1セットの問題数を5減らす" ${S.settings.setSize <= 5 ? 'disabled' : ''}>−</button><output class="num">${S.settings.setSize}問</output><button data-act="step" data-k="setSize" data-d="5" aria-label="1セットの問題数を5増やす" ${S.settings.setSize >= 50 ? 'disabled' : ''}>＋</button></div></div>`;
 const dirRow = () => `<div class="dirrow"><span>出題</span><div class="seg seg-sm" role="group" aria-label="出題の向き">${Object.entries(DIR_LABEL).map(([v, l]) => `<button aria-pressed="${(S.settings.dir || 'auto') === v}" data-act="set" data-k="dir" data-v="${v}">${l}</button>`).join('')}</div></div>`;
+/* 出題の向き・1セットの問題数 on the home hero: one chip with the current values; a tap opens them in a sheet */
+const optChip = () => `<button class="optchip" data-act="studyOpts" aria-label="出題の向きと1セットの問題数を変える">出題 ${DIR_LABEL[S.settings.dir || 'auto']} ・ 1セット ${S.settings.setSize}問${I.right}</button>`;
+function studyOpts(){
+  openSheet(`<div class="sheet-h"><h3>出題のしかた</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="stk" id="optbox">${dirRow()}${sizeRow()}</div><button class="btn btn-primary btn-block" data-act="closeSheet">これでOK</button>`);
+}
+/* after a change: the sheet's rows drawn again (like #pacebox), the focus kept on the same control */
+function refreshOpts(){
+  const ob = $('#optbox'); if (!ob) return;
+  const a = document.activeElement, sel = ob.contains(a) && a.dataset.k ? `[data-k="${a.dataset.k}"]` + (a.dataset.v != null ? `[data-v="${a.dataset.v}"]` : `[data-d="${a.dataset.d}"]`) : '';
+  ob.innerHTML = dirRow() + sizeRow();
+  if (sel) (ob.querySelector(sel + ':not([disabled])') || ob.querySelector(`[data-k="${a.dataset.k}"]:not([disabled])`))?.focus();   // at 5 or 50 the pressed one is disabled: the other one
+}
 function viewHome(){
   checkGoal();                                     // e.g. reached before this version, or via another screen
   const c = counts(); const td = todayStat(); const stk = streakInfo();
@@ -1776,43 +2054,43 @@ function viewHome(){
   const nd = act.length ? nextDeck(act, c) : null, heavy = total ? backlog(c, td) : '';
   const tail = nd ? nextDeckLine(nd) : paceHTML(act);   // the finish line, or (deck done) the way to the next deck
   const hero = total ? `
-    <div class="today-k">今日の学習</div>
-    ${heavy ? `<div class="back-h">${heavy === 'away' ? '<b>おかえり！</b>' : ''}忘れかけの単語から出します・<span class="num">${aboutMin(c.due)}</span></div>` : `<div class="today-nums">
-      <div class="bignum due"><b>${c.due}</b><span>復習${c.dueAll > c.due ? `<small>（残り${c.dueAll - c.due}は明日以降）</small>` : ''}</span></div>
-      <div class="bignum"><b>${c.newToday}</b><span>新しい単語${c.dnew ? `<small>（派生語・意味 ${Math.min(c.dnew, c.newToday)}まで）</small>` : ''}</span></div>
-    </div>`}
-    <div class="today-meta">${heavy && c.newToday ? '新しい単語は復習のあとで ・ ' : ''}${act.map(id => esc(deckById(id).name)).join('・')}</div>
+    ${heavy ? `<div class="today-k">今日の学習</div>
+    <div class="back-h">${heavy === 'away' ? '<b>おかえり！</b>' : ''}忘れかけの単語から出します・<span class="num">${aboutMin(c.due)}</span></div>
+    ${c.newToday ? '<div class="today-meta">新しい単語は復習のあとで</div>' : ''}` : `<div class="today-k">今日の目標 のこり</div>
+    <div class="today-nums">
+      <div class="bignum due${c.due ? '' : ' zero'}"><b>${c.due}</b><span>復習</span></div>
+      <div class="bignum"><b>${c.newToday}</b><span>新しい単語</span></div>
+    </div>${c.dueAll > c.due ? `<div class="today-note">ほかの復習${c.dueAll - c.due}語は明日にまわします</div>` : ''}`}
     <div class="hero-lines"><div class="goal-line ${stk.done ? 'done' : ''}">${I.flame}<span>${stk.done ? `<b>連続 ${stk.n}日</b> ・ 今日の分は記録ずみ` : stk.n === 0 && stk.prev > 1 ? `前回は${stk.prev}日続きました。今日の目標を終えて、また1日目から！` : `今日の目標を全部終えると <b>連続 ${stk.n + 1}日</b>`}</span></div>${tail}</div>
     ${nd ? nextDeckBtn(nd, 'btn-soft') : ''}
-    ${dirRow()}${sizeRow()}`
+    ${optChip()}`
   : `
     <div class="done-badge">${I.check}</div>
     <div class="today-k">今日の目標は達成</div>
     ${stk.done || tail ? `<div class="hero-lines">${stk.done ? `<div class="goal-line done">${I.flame}<span><b>連続 ${stk.n}日</b>${milestoneText(stk.n) ? ` ・ ${milestoneText(stk.n)}` : ''}</span></div>` : ''}${tail}</div>` : ''}
-    <div class="today-meta">${act.length ? `明日の復習は ${tomorrow}語。` : '単語帳タブで学習する単語帳を選んでください。'}${td.n ? `今日は ${td.n}問 解きました。` : ''}${canMore && !nd ? 'このまま新しい単語を続けられます。' : ''}</div>
-    ${dirRow()}${sizeRow()}`;
+    <div class="today-meta">${act.length ? `明日の復習は ${tomorrow}語。` : '単語帳タブで、使う単語帳を選んでください。'}${td.n ? `今日は ${td.n}問 解きました。` : ''}${canMore && !nd ? 'このまま新しい単語を続けられます。' : ''}</div>
+    ${optChip()}`;
   return `${topbar()}
   <section class="tcard holed today ${total ? '' : 'is-done'}" aria-label="今日の学習"><span class="ring"></span>${hero}
-    <div class="btn-row">
-      <button class="btn btn-ghost" data-act="swipe" ${c.fresh ? '' : 'disabled'}>${I.swipe}高速仕分け</button>
-      <button class="btn btn-ghost" data-act="flash" ${total ? '' : 'disabled'}>${I.flash}カードで復習</button>
-    </div>
+    ${c.fresh || total ? `<div class="btn-row alt">
+      ${c.fresh ? `<button class="btn btn-ghost" data-act="swipe"><span class="bt">${I.swipe}高速仕分け</span><small>知ってる単語をよける</small></button>` : ''}
+      ${total ? `<button class="btn btn-ghost" data-act="flash"><span class="bt">${I.flash}カードで復習</span><small>4択なしでめくる</small></button>` : ''}
+    </div>` : ''}
   </section>
-  <div class="sec"><div class="statline">
-    <div><b>${td.n||0}</b><span>今日の解答</span></div>
-    <div><b>${acc==null?'—':acc+'%'}</b><span>正答率</span></div>
-    <div><b>${td.t ? Math.max(1, Math.round(td.t/60000)) : 0}分</b><span>学習時間</span></div>
-  </div></div>
-  ${nRecent + nMany ? `<div class="sec"><div class="sec-h"><h2>苦手を特訓</h2><span class="sub">学習中の単語帳から</span></div>
+  ${td.n ? `<div class="sec"><div class="statline">
+    <div><b>${td.n}問</b><span>今日解いた</span></div>
+    <div><b>${acc}%</b><span>今日の正答率</span></div>
+    <div><b>${td.t ? Math.max(1, Math.round(td.t/60000)) : 0}分</b><span>今日の学習時間</span></div>
+  </div></div>` : ''}
+  ${nRecent + nMany ? `<div class="sec"><div class="sec-h"><h2>苦手を特訓</h2><span class="sub">使っている単語帳から</span></div>
     <div class="btn-row drill">
       <button class="btn btn-ghost" data-act="drill" data-kind="recent" ${nRecent ? '' : 'disabled'}><span>前回まちがえた</span><b>${nRecent}語</b></button>
       <button class="btn btn-ghost" data-act="drill" data-kind="many" ${nMany ? '' : 'disabled'}><span>${S.settings.drillMin || 2}回以上まちがえた</span><b>${nMany}語</b></button>
-    </div>
-    <div class="dirrow"><span>回数</span><div class="seg seg-sm" role="group" aria-label="何回以上まちがえた単語にするか">${[1, 2, 3, 5].map(n => `<button aria-pressed="${(S.settings.drillMin || 2) === n}" data-act="set" data-k="drillMin" data-v="${n}">${n}回以上</button>`).join('')}</div></div></div>` : ''}
+    </div></div>` : ''}
     ${nToday ? `<button class="btn btn-ghost btn-block today-again" data-act="practiceToday">${I.play}今日やった単語をもう一度<b>${nToday}語</b></button>` : ''}
-  <div class="sec"><div class="sec-h"><h2>学習の記録</h2><span class="sub">直近20週</span></div>${streakCard(stk)}${heatmap()}</div>
-  <div class="sec"><div class="sec-h"><h2>学習中の単語帳</h2><span class="sp"></span><button class="link" data-act="tab" data-tab="decks">すべて見る</button></div>
-    <div class="decks">${act.length ? act.map(id => deckRow(deckById(id), false)).join('') : `<div class="empty">単語帳タブで「学習する」をオンにしてください。</div>`}</div>
+  <div class="sec">${streakCard(stk)}</div>
+  <div class="sec"><div class="sec-h"><h2>使っている単語帳</h2><span class="sp"></span><button class="link" data-act="tab" data-tab="decks">すべて見る</button></div>
+    <div class="decks">${act.length ? act.map(id => deckRow(deckById(id), false)).join('') : `<div class="empty">単語帳タブで、使う単語帳の右のスイッチをオンにしてください。</div>`}</div>
     ${act.length ? legendHTML() : ''}
   </div>
   ${total ? `<div class="dock-space"></div><div class="ctadock" id="ctadock"><button class="btn btn-primary btn-block btn-big" data-act="study">${I.play}学習をはじめる<small>${n}問・${aboutMin(n)}</small></button></div>`
@@ -1829,27 +2107,28 @@ function heatmap(){
     const l = n === 0 ? 0 : n < 10 ? 1 : n < 30 ? 2 : n < 60 ? 3 : 4;
     cells += `<i class="l${l}${i===today?' now':''}" data-tip="${mdLabel(i)}　${n ? n+'問' : '学習なし'}"></i>`;
   }
-  const si = streakInfo(), st = si.n, best = si.best;
+  const best = streakInfo().best;
   return `<div class="heat-wrap"><div class="heat" role="img" aria-label="直近20週の学習量">${cells}</div>
-    <div class="heat-foot"><span>連続 <b class="num">${st}</b>日 ・ 最長 <b class="num">${best}</b>日</span><span class="sp"></span>少<span class="heat-key">${[0,1,2,3,4].map(l=>`<i style="background:var(--heat${l})"></i>`).join('')}</span>多</div></div>`;
+    <div class="heat-foot"><span>最長 <b class="num">${best}</b>日</span><span class="sp"></span>少<span class="heat-key">${[0,1,2,3,4].map(l=>`<i style="background:var(--heat${l})"></i>`).join('')}</span>多</div></div>`;
 }
+const DECK_ICO = {j1:'基', j2:'標', j3:'発', toeic:'T', theme:'テ', idioms:'熟'};
 function deckRow(d, withToggle){
   const st = deckStats(d); const on = S.settings.active.includes(d.id);
   return `<div class="deck" ${withToggle ? '' : `role="button" tabindex="0" data-act="openDeck" data-id="${esc(d.id)}"`}>
-    <span class="deck-ico ${on?'on':''}"></span>
+    <span class="deck-ico ${on?'on':''}" aria-hidden="true">${esc(DECK_ICO[d.id] || [...d.name][0] || '')}</span>
     <div class="deck-main" ${withToggle ? `data-act="openDeck" data-id="${esc(d.id)}" role="button" tabindex="0"` : ''}>
       <div class="deck-name">${esc(d.name)}<span class="deck-tag">${esc(d.tag||'')}</span></div>
       ${stackBar(st)}
-      <div class="deck-sub">習得 ${st.m} ・ 学習中 ${st.l} ・ 未学習 ${st.n}${st.due ? ` ・ <b style="color:var(--red)">復習 ${st.due}</b>` : ''}</div>
+      <div class="deck-sub"><span class="nw">習得 ${st.m}</span><span class="nw">学習中 ${st.l}</span><span class="nw">未学習 ${st.n}</span>${withToggle && st.due ? `<b class="nw" style="color:var(--red)">復習待ち ${st.due}</b>` : ''}</div>
     </div>
-    ${withToggle ? `<button class="switch" role="switch" aria-checked="${on}" aria-label="${esc(d.name)}を学習する" data-act="toggleDeck" data-id="${esc(d.id)}"></button>`
-      : `<div class="deck-count"><b class="num">${st.total}</b>語</div>`}
+    ${withToggle ? `<button class="switch" role="switch" aria-checked="${on}" aria-label="${esc(d.name)}を使う" data-act="toggleDeck" data-id="${esc(d.id)}"></button>`
+      : `<div class="deck-count"><b class="num">${Math.round(st.m / (st.total || 1) * 100)}%</b>習得</div>`}
   </div>`;
 }
 function viewDecks(){
   const ds = decks();
   return `${topbar()}
-  <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">単語帳</h2><span class="sp"></span><span class="sub">右のスイッチで学習対象を選ぶ</span></div>
+  <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">単語帳</h2><span class="sp"></span><span class="sub">スイッチをオンにした単語帳から出題します</span></div>
   <div class="sec" style="margin-top:14px"><div class="decks">${ds.map(d => deckRow(d, true)).join('')}</div>${legendHTML()}</div>
   <div class="sec"><div class="sec-h"><h2>単語帳をつくる</h2></div>
     <div class="actions">
@@ -1879,47 +2158,52 @@ function wordRows(d){
   if (!list.length) return `<div class="empty">${d.cards.length ? '条件に合う単語はありません。' : 'まだ単語がありません。下のボタンから追加できます。'}</div>`;
   const rows = list.slice(0, route.limit).map(c => {
     const p = prog(c), s = status(p);
-    const due = p?.sus ? '除外' : isReview(p) ? (p.due <= today ? '復習' : mdLabel(p.due)) : s === 'learn' ? '学習待ち' : '';
+    const due = p?.sus ? '出題しない' : isReview(p) ? (p.due <= today ? '復習' : `次 ${mdLabel(p.due)}`) : s === 'learn' ? '学習待ち' : '';
     return `<button class="wrow" data-act="card" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">
-      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword">${c.n && !c.isD ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD ? senseDots(c) : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean">${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !settled(prog(c.parent)) ? (isReview(prog(c.parent)) ? '見出し語の復習後' : '見出し語の後') : '')}</span></button>`;
+      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword" lang="en">${c.n && !c.isD ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD && c.s.length > 1 ? `<span class="wsn" lang="ja">意味${learnedSenses(c)}/${c.s.length}</span>` : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean"${route.red ? ' aria-hidden="true"' : ''}>${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !settled(prog(c.parent)) ? (isReview(prog(c.parent)) ? '見出し語の復習後' : '見出し語の後') : '')}</span></button>`;
   }).join('');
   return rows + (list.length > route.limit ? `<div class="more"><button class="link" data-act="more">さらに表示（残り${list.length - route.limit}語）</button></div>` : '');
 }
 function catChips(d){
   const cats = [...new Set(d.cards.map(c => c.cat).filter(Boolean))];
   if (!cats.length) return '';
-  return `<div class="chips cats">${cats.map(x => `<button class="chip" aria-pressed="${route.cat === x}" data-act="cat" data-c="${esc(x)}">${esc(x)}</button>`).join('')}</div>`;
+  return `<div class="chips cats filter">${cats.map(x => `<button class="chip" aria-pressed="${route.cat === x}" data-act="cat" data-c="${esc(x)}">${esc(x)}</button>`).join('')}</div>`;
 }
-const peekBtn = () => PEEK.size ? `<button class="btn btn-soft btn-block" data-act="studyPeeked">${I.play}のぞいた ${PEEK.size}語を学習</button>` : '';
+/* the deck page's one study button, docked at the bottom: the words peeked at under the 赤シート, else the words shown
+   (a filter, a category or a search), else the whole deck */
+function deckDock(d){
+  if (PEEK.size) return `<button class="btn btn-primary btn-block btn-big" data-act="studyPeeked">${I.play}のぞいた ${PEEK.size}語を学習</button>`;
+  const n = route.filter !== 'all' || route.cat || route.q.trim() ? filterCards(d).filter(c => !prog(c)?.sus).length : 0;
+  return n ? `<button class="btn btn-primary btn-block btn-big" data-act="studyFiltered">${I.play}表示中の単語を学習<small>${Math.min(S.settings.setSize, n)}問</small></button>`
+    : `<button class="btn btn-primary btn-block btn-big" data-act="studyDeck" data-id="${esc(d.id)}">${I.play}この単語帳で学習</button>`;
+}
 function viewDeck(){
   const d = deckById(route.deck); const st = deckStats(d);
   const f = (id, label) => `<button class="chip" aria-pressed="${route.filter===id}" data-act="filter" data-f="${id}">${label}</button>`;
+  const sub = [d.desc, d.builtin && /^j\d$/.test(d.id) ? '' : `${st.total}語`].filter(Boolean).join(' ・ ');   // 基礎・標準・発展 say their range in the description
   return `<button class="back" data-act="backDecks">${I.left}単語帳一覧</button>
   <section class="tcard holed dhead"><span class="ring"></span>
-    <h1>${esc(d.name)}</h1><div class="muted small">${esc(d.desc||'')} ・ ${st.total}語</div>
+    <h1>${esc(d.name)}</h1><div class="muted small">${esc(sub)}</div>
     ${stackBar(st)}
-    <div class="btn-row" style="margin-top:4px">
-      <button class="btn btn-primary" data-act="studyDeck" data-id="${esc(d.id)}">${I.play}この単語帳で学習</button>
-      <button class="btn btn-ghost" data-act="swipeDeck" data-id="${esc(d.id)}" ${st.n ? '' : 'disabled'}>${I.swipe}高速仕分け</button>
-    </div>
+    ${st.n ? `<button class="btn btn-ghost btn-block" data-act="swipeDeck" data-id="${esc(d.id)}" style="margin-top:4px">${I.swipe}高速仕分け</button>` : ''}
   </section>
   <div class="sec">
-    <div class="chips">${f('all','すべて')}${f('new','未学習')}${f('learn','学習中')}${f('master','習得')}${f('recent','前回まちがえた')}${f('leech', `${S.settings.drillMin || 2}回以上まちがえた`)}${d.dcards.length ? f('deriv', `派生語 ${d.dcards.length}`) : ''}${f('sus','除外')}</div>
-    ${catChips(d)}
-    <div class="toolrow"><label class="search">${I.search}<input id="q" type="search" placeholder="英単語・意味で検索" value="${esc(route.q)}" autocomplete="off"></label>
+    <div class="toolrow"><label class="search">${I.search}<input id="q" type="search" placeholder="英単語・意味で検索" value="${esc(route.q)}" autocomplete="off" enterkeyhint="search" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
       <button class="sheetbtn" data-act="red" aria-pressed="${route.red}">赤シート</button></div>
-    ${route.filter !== 'all' || route.q.trim() ? `<button class="btn btn-soft btn-block" data-act="studyFiltered">${I.play}表示中の単語だけ学習（${Math.min(S.settings.setSize, filterCards(d).filter(c => !prog(c)?.sus).length)}問）</button>` : ''}
-    <div id="peekbar">${peekBtn()}</div>
+    ${route.red ? '<p class="small muted">単語をタップすると意味をのぞけます（もう一度タップで詳細）。のぞいた単語は下のボタンでまとめて学習できます。</p>' : ''}
+    <div class="chips filter">${f('all','すべて')}${f('new','未学習')}${f('learn','学習中')}${f('master','習得')}${f('recent','前回まちがえた')}${f('leech', `${S.settings.drillMin || 2}回以上まちがえた`)}${d.dcards.length ? f('deriv', `派生語 ${d.dcards.length}`) : ''}${f('sus','出題しない')}</div>
+    ${catChips(d)}
+    <div class="legend"><span><i class="wdot master"></i>習得</span><span><i class="wdot learn"></i>学習中</span><span><i class="wdot"></i>未学習</span><span><i class="wdot leech"></i>${S.settings.drillMin || 2}回以上まちがえた</span></div>
     <div class="words ${route.red ? 'redsheet' : ''}" id="wordlist">${wordRows(d)}</div>
-    ${route.red ? '<div class="small faint">赤シートの上から単語をタップすると意味をのぞけます。のぞいている間にもう一度タップで詳細。</div>' : ''}
   </div>
   ${d.todo?.length ? `<div class="sec"><div class="sec-h"><h2>意味がまだの単語</h2><span class="sub">${d.todo.length}語 ・ タップして意味を入れると出題されます</span></div>
     <div class="fchips">${d.todo.map(c => `<button class="fchip" data-act="editCard" data-deck="${esc(d.id)}" data-k="${esc(c.k)}"><b>${esc(c.w)}</b></button>`).join('')}</div></div>` : ''}
   <div class="sec"><div class="actions">
     ${d.builtin ? '' : `<button class="action" data-act="addCard" data-id="${esc(d.id)}">${I.plus}単語を追加</button><button class="action" data-act="importSheet" data-id="${esc(d.id)}">${I.import}まとめて取り込む</button>`}
     <button class="action" data-act="exportDeck" data-id="${esc(d.id)}">${I.import}TSVで書き出す</button>
-    ${d.builtin ? '' : `<button class="action" data-act="renameDeck" data-id="${esc(d.id)}">名前を変える</button><button class="action" data-act="delDeck" data-id="${esc(d.id)}" style="color:var(--again)">単語帳を削除</button>`}
-  </div></div>`;
+    ${d.builtin ? '' : `<button class="action" data-act="renameDeck" data-id="${esc(d.id)}">名前を変える</button><button class="action" data-act="delDeck" data-id="${esc(d.id)}" style="color:var(--again-t)">単語帳を削除</button>`}
+  </div></div>
+  <div class="dock-space"></div><div class="ctadock" id="deckdock">${deckDock(d)}</div>`;
 }
 function viewStats(){
   const today = dayIdx(); let tot = 0, totC = 0, rn = 0, rc = 0, time = 0;
@@ -1941,13 +2225,13 @@ function viewStats(){
   return `${topbar()}
   <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">記録</h2></div>
   <div class="sec" style="margin-top:14px"><div class="kpis">
-    <div class="kpi"><span>習得した単語</span><b class="num">${m}</b><small>全${all.length}語中 ・ 学習中 ${l}</small></div>
-    <div class="kpi"><span>覚えた意味</span><b class="num">${senseLearned}</b><small>全${senseTotal}個の意味 ・ 全部覚えた単語 ${senseComplete}</small></div>
-    <div class="kpi"><span>習得した派生語</span><b class="num">${dm}</b><small>全${allD.length}語中 ・ 学習中 ${dl}</small></div>
-    <div class="kpi"><span>復習の正答率（30日）</span><b class="num">${rn ? Math.round(rc/rn*100)+'%' : '—'}</b><small>目標 ${Math.round(S.settings.retention*100)}% ・ ${rn}回の復習</small></div>
-    <div class="kpi"><span>累計の解答</span><b class="num">${tot.toLocaleString()}</b><small>正答率 ${tot ? Math.round(totC/tot*100) : 0}% ・ ${Math.round(time/60000)}分 ・ 連続 ${streak()}日</small></div>
+    <div class="kpi"><span>習得した単語</span><b class="num">${m}</b><small class="dots"><span class="nw">全${all.length}語中</span><span class="nw">学習中 ${l}</span></small></div>
+    <div class="kpi"><span>覚えた意味</span><b class="num">${senseLearned}</b><small class="dots"><span class="nw">全${senseTotal}個の意味</span><span class="nw">全部覚えた単語 ${senseComplete}</span></small></div>
+    <div class="kpi"><span>習得した派生語</span><b class="num">${dm}</b><small class="dots"><span class="nw">全${allD.length}語中</span><span class="nw">学習中 ${dl}</span></small></div>
+    <div class="kpi"><span>復習の正答率（30日）</span><b class="num">${rn ? Math.round(rc/rn*100)+'%' : '—'}</b><small class="dots"><span class="nw">目安 ${Math.round(S.settings.retention*100)}%</span><span class="nw">${rn}回の復習</span></small></div>
+    <div class="kpi"><span>累計の解答</span><b class="num">${tot.toLocaleString()}</b><small class="dots"><span class="nw">正答率 ${tot ? Math.round(totC/tot*100) : 0}%</span><span class="nw">${Math.round(time/60000)}分</span><span class="nw">連続 ${streak()}日</span></small></div>
   </div></div>
-  <div class="sec"><div class="sec-h"><h2>これからの復習予定</h2><span class="sub">学習中の単語帳 ・ 30日間</span></div>
+  <div class="sec"><div class="sec-h"><h2>これからの復習予定</h2><span class="sub">30日間</span></div>
     <div class="panel"><div class="fc"><div class="fc-grid">${grid.join('')}</div><div class="fc-bars" role="img" aria-label="今後30日の復習予定数">${bars}</div></div>
     <div class="fc-x"><span>今日</span><span>1週後</span><span>2週後</span><span>3週後</span><span>4週後</span></div></div>
   </div>
@@ -1962,76 +2246,77 @@ function viewStats(){
 function niceStep(max){ const raw = max/4; const p = Math.pow(10, Math.floor(Math.log10(raw))); for (const m of [1,2,5,10]) if (m*p >= raw) return m*p; return 10*p; }
 function viewSettings(){
   const s = S.settings;
-  const seg = (key, opts) => `<div class="seg">${opts.map(([v,l]) => `<button aria-pressed="${s[key]===v}" data-act="set" data-k="${key}" data-v="${v}">${l}</button>`).join('')}</div>`;
-  const sw = key => `<button class="switch" role="switch" aria-checked="${!!s[key]}" data-act="toggle" data-k="${key}"></button>`;
+  const seg = (key, opts, label) => `<div class="seg" role="group" aria-label="${label}">${opts.map(([v,l]) => `<button aria-pressed="${s[key]===v}" data-act="set" data-k="${key}" data-v="${v}">${l}</button>`).join('')}</div>`;
+  const sw = (key, label) => `<button class="switch" role="switch" aria-checked="${!!s[key]}" aria-label="${label}" data-act="toggle" data-k="${key}"></button>`;
   const ret = s.retention < 0.875 ? 0.85 : s.retention < 0.925 ? 0.9 : 0.95;   // older saved values (80–97%) show as the nearest of the three
   const retSeg = `<div class="seg" role="group" aria-label="復習の量">${[[0.85, '少なめ'], [0.9, 'ふつう'], [0.95, 'しっかり']].map(([v, l]) => `<button aria-pressed="${ret === v}" data-act="set" data-k="retention" data-v="${v}">${l}</button>`).join('')}</div>`;
   return `${topbar()}
   <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">設定</h2></div>
   <div class="sec" style="margin-top:14px"><div class="sec-h"><h2>学習</h2></div><div class="form">
     <div class="frow"><div class="lab"><b>1日の目標（新しい単語）</b><span>今日の復習とこの数の新しい単語を終えると「今日の目標」達成で、連続記録が1日のびます。達成したあともそのまま続けられます</span></div>
-      <div class="stepper"><button data-act="step" data-k="newPerDay" data-d="-5" aria-label="減らす">−</button><output class="num">${s.newPerDay}</output><button data-act="step" data-k="newPerDay" data-d="5" aria-label="増やす">＋</button></div></div>
+      <div class="stepper"><button data-act="step" data-k="newPerDay" data-d="-5" aria-label="1日の目標を5減らす">−</button><output class="num">${s.newPerDay}</output><button data-act="step" data-k="newPerDay" data-d="5" aria-label="1日の目標を5増やす">＋</button></div></div>
     <div class="frow"><div class="lab"><b>1回の問題数</b><span>1回の学習（1セット）で出る問題の数。ホームでも変えられます</span></div>
-      <div class="stepper"><button data-act="step" data-k="setSize" data-d="-5" aria-label="減らす">−</button><output class="num">${s.setSize}</output><button data-act="step" data-k="setSize" data-d="5" aria-label="増やす">＋</button></div></div>
-    <div class="frow wrap"><div class="lab"><b>制限時間</b><span>4択・カード・高速仕分けで、単語の上に残り時間のバーが出ます。なくなると「わからない」（カードは「もう一度」、仕分けは「知らない」）。4択は黄色になると正解でも「難しい」。新しい単語のカードには出ません</span></div>${seg('timeLimit',[[0,'オフ'],[5,'5秒'],[10,'10秒'],[15,'15秒']])}</div>
-    <div class="frow"><div class="lab"><b>出題の向き</b><span>自動：覚え具合に合わせて 英→日 と 日→英 を切り替え</span></div>${seg('dir',[['auto','自動'],['e2j','英→日'],['j2e','日→英'],['mix','まぜる']])}</div>
+      <div class="stepper"><button data-act="step" data-k="setSize" data-d="-5" aria-label="1回の問題数を5減らす">−</button><output class="num">${s.setSize}</output><button data-act="step" data-k="setSize" data-d="5" aria-label="1回の問題数を5増やす">＋</button></div></div>
+    <div class="frow wrap"><div class="lab"><b>制限時間</b><span>4択・カード・高速仕分けで残り時間のバーが出ます。4択の復習は速く正解するほど Good → Great → Excellent → Perfect と評価が上がり、次の復習が先にのびます。時間切れは「わからない」（カードは「もう一度」、仕分けは「知らない」）。新しい単語のカードには出ません</span></div>${seg('timeLimit',[[0,'オフ'],[5,'5秒'],[10,'10秒'],[15,'15秒']], '制限時間')}</div>
+    <div class="frow wrap"><div class="lab"><b>出題の向き</b><span>自動：覚え具合に合わせて 英→日 と 日→英 を切り替え</span></div>${seg('dir',[['auto','自動'],['e2j','英→日'],['j2e','日→英'],['mix','まぜる']], '出題の向き')}</div>
     <details class="more-set" id="moreset" ${moreSetOpen ? 'open' : ''}><summary>くわしい設定</summary>
     <div class="frow"><div class="lab"><b>1日の復習の上限</b><span>たまった復習は、忘れかけの単語から順に少しずつ出します</span></div>
-      <div class="stepper"><button data-act="step" data-k="maxRev" data-d="-50" aria-label="減らす">−</button><output class="num">${s.maxRev}</output><button data-act="step" data-k="maxRev" data-d="50" aria-label="増やす">＋</button></div></div>
+      <div class="stepper"><button data-act="step" data-k="maxRev" data-d="-50" aria-label="1日の復習の上限を50減らす">−</button><output class="num">${s.maxRev}</output><button data-act="step" data-k="maxRev" data-d="50" aria-label="1日の復習の上限を50増やす">＋</button></div></div>
     <div class="frow wrap"><div class="lab"><b>復習の量</b><span>ふつうがおすすめ。しっかりは忘れにくくなるかわりに復習が約2倍、少なめは約6割になります</span></div>${retSeg}</div>
-    <div class="frow"><div class="lab"><b>出題の形式</b><span>段階式：覚えるほど 英→日 → 日→英 → スペル と難しくなる</span></div>${seg('mode',[['auto','段階式'],['choice','4択だけ'],['flash','カード']])}</div>
-    <div class="frow"><div class="lab"><b>選択肢をタップで表示</b><span>4択の選択肢を隠しておき、答えを思い浮かべてからタップで表示（仲間はずれ問題は除く）</span></div>${sw('veil')}</div>
-    <div class="frow"><div class="lab"><b>スペル入力を出す</b><span>段階式で、しっかり覚えた単語に出題</span></div>${sw('spell')}</div>
-    <div class="frow"><div class="lab"><b>意味を1つずつ覚える</b><span><span class="rec">おすすめ：オン。</span>最初はメインの意味だけを出題し、後日の復習で正解したら2つ目・3つ目の意味を新しいカードとして1つずつ出題。OFFにすると毎回すべての意味を表示</span></div>${sw('senseCards')}</div>
-    <div class="frow"><div class="lab"><b>派生語も出題する</b><span><span class="rec">おすすめ：オン。</span>見出し語を後日の復習で正解したら、派生語（decide → decision など）を別のカードとして出題</span></div>${sw('deriv')}</div>
-    <div class="frow"><div class="lab"><b>新しい単語の順番</b></div>${seg('order',[['seq','単語帳の順'],['rand','ランダム']])}</div>
-    <div class="frow"><div class="lab"><b>正解したら自動で次へ</b><span>正解のカードをタップするとすぐ次へ進めます</span></div>${sw('autoNext')}</div>
-    <div class="frow"><div class="lab"><b>復習日の決まり方</b><span>新しい単語はカードで覚えて、自分で「もう一度・難しい・正解・簡単」を選びます。「もう一度」の単語は、そのセットのうちに4択でもう一度確かめます。復習は4択で、正解・不正解と答えるまでの速さで決まります。速く正解した単語ほど、次の復習は先になります。</span></div></div>
+    <div class="frow wrap"><div class="lab"><b>出題の形式</b><span>段階式：覚えるほど 英→日 → 日→英 → スペル と難しくなる</span></div>${seg('mode',[['auto','段階式'],['choice','4択だけ'],['flash','カード']], '出題の形式')}</div>
+    <div class="frow"><div class="lab"><b>選択肢をタップで表示</b><span>4択の選択肢を隠しておき、答えを思い浮かべてからタップで表示（仲間はずれ問題は除く）</span></div>${sw('veil', '選択肢をタップで表示')}</div>
+    <div class="frow"><div class="lab"><b>スペル入力を出す</b><span>段階式で、しっかり覚えた単語に出題</span></div>${sw('spell', 'スペル入力を出す')}</div>
+    <div class="frow"><div class="lab"><b>意味を1つずつ覚える</b><span><span class="rec">おすすめ：オン。</span>最初はメインの意味だけを出題し、後日の復習で正解したら2つ目・3つ目の意味を新しいカードとして1つずつ出題。オフにすると毎回すべての意味を表示</span></div>${sw('senseCards', '意味を1つずつ覚える')}</div>
+    <div class="frow"><div class="lab"><b>派生語も出題する</b><span><span class="rec">おすすめ：オン。</span>見出し語を後日の復習で正解したら、派生語（decide → decision など）を別のカードとして出題</span></div>${sw('deriv', '派生語も出題する')}</div>
+    <div class="frow"><div class="lab"><b>新しい単語の順番</b></div>${seg('order',[['seq','単語帳の順'],['rand','ランダム']], '新しい単語の順番')}</div>
+    <div class="frow wrap"><div class="lab"><b>苦手を特訓の対象</b><span>この回数以上まちがえた単語を集めます</span></div>${seg('drillMin', [[1,'1回以上'],[2,'2回以上'],[3,'3回以上'],[5,'5回以上']], '苦手を特訓の対象')}</div>
+    <div class="frow"><div class="lab"><b>正解したら自動で次へ</b><span>正解したら答えを一瞬見せて、すぐ次の問題へ。「詳しく」で説明も見られます</span></div>${sw('autoNext', '正解したら自動で次へ')}</div>
+    <div class="frow"><div class="lab"><b>復習日の決まり方</b><span>新しい単語：カードを見て「もう一度・難しい・正解・簡単」から選びます。「もう一度」は、そのセットのうちに4択でもう一度確かめます。復習：4択の正解・不正解と速さで自動で決まります（速く正解するほど先に）</span></div></div>
     </details>
   </div></div>
   <div class="sec"><div class="sec-h"><h2>表示</h2></div><div class="form">
-    <div class="frow"><div class="lab"><b>文字の大きさ</b></div>${seg('zoom',[[0.92,'小'],[1,'標準'],[1.12,'大']])}</div>
+    <div class="frow"><div class="lab"><b>文字の大きさ</b></div>${seg('zoom',[[0.92,'小'],[1,'標準'],[1.12,'大']], '文字の大きさ')}</div>
   </div></div>
   <div class="sec"><div class="sec-h"><h2>音</h2></div><div class="form">
-    <div class="frow"><div class="lab"><b>単語を自動で読み上げる</b><span>単語の音声は AI 音声（Kokoro）で収録済み。オフにすると「聞き取り」の問題も出ません。iPhone のマナーモード中は、🔊を2回押すと鳴ります</span></div>${sw('autoSpeak')}</div>
-    <div class="frow"><div class="lab"><b>例文の読み上げの速さ</b><span>${EXI.s?.length ? '例文も AI 音声で再生します。AI 音声のない例文を、この端末の読み上げ機能で読むときの速さです' : '例文はこの端末の読み上げ機能を使います'}</span></div>${seg('rate',[[0.75,'ゆっくり'],[0.95,'ふつう'],[1.15,'速い']])}</div>
-    <div class="frow"><div class="lab"><b>効果音</b></div>${sw('sfx')}</div>
-    <div class="frow"><div class="lab"><b>振動</b><span>正解・不正解を振動でも知らせる（対応端末のみ）</span></div>${sw('haptic')}</div>
+    <div class="frow"><div class="lab"><b>単語を自動で読み上げる</b><span>単語の音声は AI 音声（Kokoro）で収録済み。オフにすると「聞き取り」の問題も出ません。iPhone のマナーモード中は、🔊を2回押すと鳴ります</span></div>${sw('autoSpeak', '単語を自動で読み上げる')}</div>
+    <div class="frow wrap"><div class="lab"><b>例文の読み上げの速さ</b><span>${EXI.s?.length ? '例文も AI 音声で再生します。AI 音声のない例文を、この端末の読み上げ機能で読むときの速さです' : '例文はこの端末の読み上げ機能を使います'}</span></div>${seg('rate',[[0.75,'ゆっくり'],[0.95,'ふつう'],[1.15,'速い']], '例文の読み上げの速さ')}</div>
+    <div class="frow"><div class="lab"><b>効果音</b></div>${sw('sfx', '効果音')}</div>
+    <div class="frow"><div class="lab"><b>振動</b><span>正解・不正解を振動でも知らせる（対応端末のみ）</span></div>${sw('haptic', '振動')}</div>
   </div></div>
   ${IS_WEB ? `<div class="sec"><div class="sec-h"><h2>アプリとして使う</h2></div><div class="form">
-    <div class="frow"><div class="lab"><b>ホーム画面に追加</b><span>${FIREBASE && !Auth.user && !isStandalone() ? '先にログインしておくと、ホーム画面に追加したアプリでも今の記録の続きから使えます（ログインしないと記録は別々になります）。' : ''}${isStandalone() ? 'ホーム画面から起動しています' : installEvt ? 'アプリのように全画面で使えます' : 'iPhone：Safari の共有ボタン →「ホーム画面に追加」／Android：メニュー →「アプリをインストール」'}</span></div>${installEvt && !isStandalone() ? '<button class="btn btn-primary" data-act="install" style="min-height:38px">追加する</button>' : ''}</div>
-    <div class="frow"><div class="lab"><b>音声をまとめてダウンロード</b><span>約25MB。通信なしでも全単語の発音を再生できます（例文など、一度再生した音声は自動で保存されます）</span></div><button class="btn btn-ghost" data-act="dlAudio" style="min-height:38px">保存する</button></div>
+    <div class="frow"><div class="lab"><b>ホーム画面に追加</b><span>${FIREBASE && !Auth.user && !isStandalone() ? '先にログインしておくと、ホーム画面に追加したアプリでも今の記録の続きから使えます（ログインしないと記録は別々になります）。' : ''}${isStandalone() ? 'ホーム画面から起動しています' : installEvt ? 'アプリのように全画面で使えます' : 'iPhone：Safari の共有ボタン →「ホーム画面に追加」／Android：メニュー →「アプリをインストール」'}</span></div>${installEvt && !isStandalone() ? '<button class="btn btn-primary" data-act="install">追加する</button>' : ''}</div>
+    <div class="frow"><div class="lab"><b>音声をまとめてダウンロード</b><span>約25MB。通信なしでも全単語の発音を再生できます（例文など、一度再生した音声は自動で保存されます）</span></div><button class="btn btn-ghost" data-act="dlAudio">保存する</button></div>
   </div></div>` : ''}
   ${IS_WEB && FIREBASE ? `<div class="sec"><div class="sec-h"><h2>アカウント</h2></div><div class="form">
-    ${Auth.user ? `<div class="frow">${Auth.user.photoURL ? `<img class="avatar" src="${esc(Auth.user.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}<div class="lab"><b>${esc(Auth.user.displayName || 'ログイン中')}</b><span>${esc(Auth.user.email || '')} ・ 学習記録はこのアカウントに保存され、ほかの端末でも続きから使えます</span></div><button class="btn btn-ghost" data-act="signOut" style="min-height:38px">ログアウト</button></div>`
-      : `<div class="frow"><div class="lab"><b>ログインして記録を保存</b><span>Google・${FIREBASE.apple ? 'Apple・' : ''}メールアドレスで使えます。スマホと PC で同じ記録を使え、今の端末の記録もそのまま引き継がれます</span></div><button class="btn btn-primary" data-act="signIn" style="min-height:38px">ログイン</button></div>`}
+    ${Auth.user ? `<div class="frow">${Auth.user.photoURL ? `<img class="avatar" src="${esc(Auth.user.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}<div class="lab"><b>${esc(Auth.user.displayName || 'ログイン中')}</b><span>${esc(Auth.user.email || '')} ・ 学習記録はこのアカウントに保存され、ほかの端末でも続きから使えます</span></div><button class="btn btn-ghost" data-act="signOut">ログアウト</button></div>`
+      : `<div class="frow"><div class="lab"><b>ログインして記録を保存</b><span>Google・${FIREBASE.apple ? 'Apple・' : ''}メールアドレスで使えます。スマホと PC で同じ記録を使え、今の端末の記録もそのまま引き継がれます</span></div><button class="btn btn-primary" data-act="signIn">ログイン</button></div>`}
     <div class="frow"><div class="lab"><span>保存されるのは学習記録・設定・自作の単語帳だけです。メールアドレスと名前はこの画面の表示にだけ使います。</span></div></div>
   </div></div>` : ''}
   <div class="sec"><div class="sec-h"><h2>データ</h2></div><div class="form">
     <div class="frow"><div class="lab"><b>保存先</b><span id="synctext">${syncLabel()}</span></div></div>
-    <div class="frow"><div class="lab"><b>はじめての案内</b><span>アプリのしくみと使い方をもう一度見る</span></div><button class="btn btn-ghost" data-act="showOnboard" style="min-height:38px">見る</button></div>
-    <div class="frow"><div class="lab"><b>バックアップ</b><span>学習記録と自作の単語帳をファイルに${!IS_WEB ? '' : Auth.user ? '。ログイン中は記録がアカウントにも保存されています' : '。ログインしていないと記録はこの端末だけにあるので、機種変更の前に書き出してください'}</span></div><button class="btn btn-ghost" data-act="backup" style="min-height:38px">書き出す</button></div>
-    <div class="frow"><div class="lab"><b>バックアップから戻す</b></div><button class="btn btn-ghost" data-act="restoreSheet" style="min-height:38px">読み込む</button></div>
-    <div class="frow"><div class="lab"><b>学習記録をリセット</b><span>単語帳は残ります</span></div><button class="btn btn-danger" data-act="resetSheet" style="min-height:38px">リセット</button></div>
+    <div class="frow"><div class="lab"><b>アプリのしくみ</b><span>覚え方と復習のしくみをもう一度見る</span></div><button class="btn btn-ghost" data-act="showOnboard">見る</button></div>
+    <div class="frow"><div class="lab"><b>バックアップ</b><span>学習記録と自作の単語帳をファイルに${!IS_WEB ? '' : Auth.user ? '。ログイン中は記録がアカウントにも保存されています' : '。ログインしていないと記録はこの端末だけにあるので、機種変更の前に書き出してください'}</span></div><button class="btn btn-ghost" data-act="backup">書き出す</button></div>
+    <div class="frow"><div class="lab"><b>バックアップから戻す</b></div><button class="btn btn-ghost" data-act="restoreSheet">読み込む</button></div>
+    <div class="frow"><div class="lab"><b>学習記録をリセット</b><span>単語帳は残ります</span></div><button class="btn btn-danger" data-act="resetSheet">リセット</button></div>
   </div></div>
   <div class="sec small faint kbd">ショートカット：1問もどすは Backspace。4択は 1〜4 キー、わからないは 0、次へは Enter。仕分けは ← →、めくるのは ↑。</div>`;
 }
 
 /* ---------- card detail ---------- */
-function cardSheet(c){
+function cardSheet(c, keep=false){
   const p = prog(c), today = dayIdx(), s = status(p);
   const memo = S.notes[c.deck]?.[c.k];
   const deck = deckById(c.deck);
-  const stLabel = p?.sus ? '除外中' : {new:'未学習', learn:'学習中', master:'習得'}[s];
+  const stLabel = p?.sus ? '出題しない' : {new:'未学習', learn:'学習中', master:'習得'}[s];
   const refIn = route.tab === 'decks' && S.custom[route.deck]?.cards?.some(x => x.ref === c.deck + '|' + c.k) ? route.deck : null;   // opened from a custom deck that refers to it
   openSheet(`<div class="sheet-h"><h3>${esc(deck?.name || '')}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="tcard holed cardview"><span class="ring"></span>
       <div class="qpos">${c.n ? `<span class="no">No.${c.n}</span>` : ''}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(c.p)}" aria-label="発音">${I.say}</button>${c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : ''}</div>
-      <div class="qword">${esc(c.w)}</div>${ipaHTML(c)}
+      <div class="qword" lang="en">${esc(c.w)}</div>${ipaHTML(c)}
       ${c.isD ? `<div class="qask">← ${esc(c.parent.w)}（${esc(c.parent.m)}）の派生語</div>` : sensesProgress(c)}
       ${sensesHTML(c, -1, 'all')}${c.isD ? affixHTML(c) : etyHTML(c)}
     </div>
-    ${c.isD ? familyHTML(c.parent, c.w) : familyHTML(c, c.fam?.[0]?.w || null)}
+    ${c.isD ? familyHTML(c.parent, c.w, true) : familyHTML(c, c.fam?.[0]?.w || null)}
     <div class="kv">
       <div><span>状態</span><b>${stLabel}</b></div>
       <div><span>次の復習</span><b>${isReview(p) && !p.sus ? (p.due <= today ? '今日' : mdLabel(p.due)) : '—'}</b></div>
@@ -2039,12 +2324,10 @@ function cardSheet(c){
     </div>
     ${memo ? `<div class="memo">${esc(memo)}</div>` : ''}
     <div class="ai-only" style="flex-direction:column;gap:8px"><button class="btn btn-soft" data-act="aiMnemonic" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">${I.spark}Claudeに覚え方を聞く</button><div id="aiout"></div></div>
-    <div class="btn-row">
-      <button class="btn btn-ghost" data-act="suspend" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">${p?.sus ? '出題に戻す' : '出題しない'}</button>
-      <button class="btn btn-ghost" data-act="resetCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}" ${p && p.st ? '' : 'disabled'}>記録をリセット</button>
-    </div>
+    <button class="btn btn-ghost btn-block" data-act="suspend" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">${p?.sus ? '出題に戻す' : '出題しない'}</button>
     ${deck && !deck.builtin ? `<div class="btn-row"><button class="btn btn-ghost" data-act="editCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">編集</button><button class="btn btn-danger" data-act="delCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">削除</button></div>` : ''}
-    ${refIn ? `<button class="btn btn-ghost btn-block" data-act="unref" data-id="${esc(refIn)}" data-ref="${esc(c.deck + '|' + c.k)}">「${esc(deckById(refIn)?.name || '')}」から外す<small>学習記録は残ります</small></button>` : ''}`);
+    ${refIn ? `<button class="btn btn-ghost btn-block" data-act="unref" data-id="${esc(refIn)}" data-ref="${esc(c.deck + '|' + c.k)}">「${esc(deckById(refIn)?.name || '')}」から外す<small>学習記録は残ります</small></button>` : ''}
+    ${p && p.st ? `<button class="link reset-link" data-act="resetCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">この単語の記録をリセット</button>` : ''}`, false, keep);
 }
 function markWord(sentence, word){
   const s = esc(sentence); const w = word.replace(/\b(A|B|one's)\b/g,'').trim().split(/\s+/)[0] || word;
@@ -2265,7 +2548,7 @@ function pickUse(c, si){
 }
 function useNoteHTML(c, si){
   const u = useQ(c, si); if (!u) return '';
-  return `<div class="usenote"><div class="fb-ex">${esc(u[0]).replace('___', () => `<b>${esc(u[1])}</b>`)}</div>${u[5] ? `<div class="why"><span class="ety-k">語法</span>${esc(u[5])}</div>` : ''}</div>`;
+  return `<div class="usenote"><div class="fb-ex" lang="en">${esc(u[0]).replace('___', () => `<b>${esc(u[1])}</b>`)}</div>${u[5] ? `<div class="why"><span class="ety-k">語法</span>${esc(u[5])}</div>` : ''}</div>`;
 }
 /* 語源とコアイメージ: only after the answer, in a line or two */
 function etyHTML(c){
@@ -2302,10 +2585,12 @@ function affixOf(c){
 }
 function affixHTML(c){ const a = affixOf(c); return a ? `<div class="ety"><div><span class="ety-k">${esc(a.a)}</span>${esc(a.m)}</div></div>` : ''; }
 const patHTML = (pat, cls = 'pat') => pat ? `<span class="${cls}">${esc(pat)}</span>` : '';
+/* 覚えた意味 (the 記録 tab's word, not the 3-week 習得): nothing before the first; コンプリート only once every one is 習得 */
 function sensesProgress(c){
   if (c.s.length < 2) return '';
-  const n = learnedSenses(c);
-  return `<div class="sprog">${senseDots(c)}<span>意味 ${n} / ${c.s.length} を習得${n < c.s.length ? ` ・ あと${c.s.length - n}つ` : ' ・ コンプリート'}</span></div>`;
+  const n = learnedSenses(c); if (!n) return '';
+  const all = c.s.every((_, i) => senseState(c, i) === 'm');
+  return `<div class="sprog">${senseDots(c)}<span>覚えた意味 ${n} / ${c.s.length}${n < c.s.length ? ` ・ あと${c.s.length - n}つ` : all ? ' ・ コンプリート' : ''}</span></div>`;
 }
 /* the meanings a question may show: the first one and those already learned (the rest stay ？？？ until their turn) */
 const metSenses = c => S.settings.senseCards && !c.isS && !c.isD ? c.s.filter((_, i) => i === 0 || 'ml'.includes(senseState(c, i))) : c.s;
@@ -2314,17 +2599,16 @@ function lockNote(c, i){
   if (senseState(c, i) === 'n') return '次に出題';
   return isReview(senseProg(c, i - 1)) ? `${i === 1 ? `${esc(c.w)} ` : `${i}つ目の意味`}の復習で正解すると出題` : `${i}つ目を覚えると出題`;
 }
-/* Meanings shown during study: the ones already met in full, the rest as ？？？ until their turn. */
-function sensesGated(c, hit, compact=false){
+/* Meanings shown during study: the ones already met in full; the rest wait behind one ？？？ line until their turn.
+   noProg: without the 覚えた意味 line (right after a miss it would read as praise) */
+function sensesGated(c, hit, compact=false, noProg=false){
   const open = i => i === 0 || i === hit || 'ml'.includes(senseState(c, i));
-  if (compact) {
-    const locked = c.s.filter((_, i) => !open(i)).length, nx = c.s.findIndex((_, i) => !open(i));
-    return `<div class="fb-mean">${patHTML(c.s[hit]?.pat, 'pat inl')}${esc(c.s[hit]?.m || c.m)}</div>${locked ? `<div class="tease">ほかに意味があと${locked}つ。${senseState(c, nx) === 'n' ? '次から1つずつ出題します' : 'この意味を後日の復習で正解すると、1つずつ出題します'}</div>` : ''}`;
-  }
-  return sensesProgress(c) + `<ol class="senses">${c.s.map((x, i) => open(i)
-    ? `<li class="${i === hit ? 'hit' : ''}"><span class="pos">${esc(x.p || '—')}</span><div class="sbody">${patHTML(x.pat)}<span class="sm">${esc(x.m)}</span>${i === hit && x.e
-        ? `<div class="sex">${markWord(x.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(x.e)}" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(x.j)}</div>` : ''}</div></li>`
-    : `<li class="locked"><span class="pos">${esc(x.p || '—')}</span><div class="sbody"><span class="sm">？？？</span><span class="lk">${lockNote(c, i)}</span></div></li>`).join('')}</ol>`;
+  const locked = c.s.filter((_, i) => !open(i)).length, nx = c.s.findIndex((_, i) => !open(i));
+  if (compact) return `<div class="fb-mean">${patHTML(c.s[hit]?.pat, 'pat inl')}${esc(c.s[hit]?.m || c.m)}</div>${locked ? `<div class="tease">ほかの意味 あと${locked}つ（${senseState(c, nx) === 'n' ? '次から1つずつ' : '後日の復習で正解すると1つずつ'}）</div>` : ''}`;
+  return (noProg ? '' : sensesProgress(c)) + `<ol class="senses">${c.s.map((x, i) => !open(i) ? ''
+    : `<li class="${i === hit ? 'hit' : ''}"><span class="pos">${esc(x.p || '—')}</span><div class="sbody">${patHTML(x.pat)}<span class="sm">${esc(x.m)}</span>${i === hit && x.e
+        ? `<div class="sex" lang="en">${markWord(x.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(x.e)}" lang="ja" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(x.j)}</div>` : ''}</div></li>`).join('')}${locked
+    ? `<li class="locked"><span class="pos">？</span><div class="sbody"><span class="sm">？？？</span><span class="lk">ほかの意味 あと${locked}つ</span><div class="lkn">${lockNote(c, nx)}</div></div></li>` : ''}</ol>`;
 }
 function sensesHTML(c, hit=-1, ex='hit', compact=false, limit=0){
   // limit: show the first N meanings (plus the tested one) and fold the rest behind 「＋N」
@@ -2333,7 +2617,7 @@ function sensesHTML(c, hit=-1, ex='hit', compact=false, limit=0){
     const showEx = s.e && (ex === 'all' || (ex === 'hit' && i === hit));
     const extra = hidden && i >= limit && i !== hit;
     return `<li class="${i === hit ? 'hit' : ''}${extra ? ' extra' : ''}"><span class="pos">${esc(s.p || '—')}</span><div class="sbody">${patHTML(s.pat)}<span class="sm">${esc(s.m)}</span>${showEx
-      ? `<div class="sex">${markWord(s.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(s.e)}" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(s.j)}</div>` : ''}</div></li>`;
+      ? `<div class="sex" lang="en">${markWord(s.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(s.e)}" lang="ja" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(s.j)}</div>` : ''}</div></li>`;
   }).join('')}</ol>${hidden ? `<button class="more-s" data-act="moreSenses">＋ほかの意味 ${hidden}つ</button>` : ''}`;
 }
 /* 制限時間 (mikan style): a bar above the word runs down; only typing questions keep their own pace */
@@ -2368,9 +2652,10 @@ document.addEventListener('visibilitychange', () => {
 });
 /* the grade a right answer earns at this moment, shown beside the bar so the speed rule is visible */
 const RATE_NAME = {4: 'Perfect', 3: 'Excellent', 2: 'Great', 1: 'Good'};
-const rateHTML = () => `<div class="qclock">${TIMER_HTML}<b class="rate qrate t4" id="qrate" aria-hidden="true">Perfect</b></div>`;
+const rateHTML = () => `<div class="qclock">${TIMER_HTML}<span class="qnow" id="qnow" aria-hidden="true">今なら</span><b class="rate qrate t4" id="qrate" aria-hidden="true">Perfect</b></div>`;
 function showRate(t, final){
   const el = $('#qrate'); if (!el) return;
+  if (final || !t) $('#qnow')?.remove();   // answered: what stays is the grade it earned, no longer "now"
   if (!RATE_NAME[t]) { el.classList.add('gone'); return; }
   if (el.dataset.t !== String(t) || final) { el.textContent = RATE_NAME[t]; el.className = `rate qrate t${t}${final ? ' pop' : ''}`; el.dataset.t = t; }
   if (!final) { const bar = $('#qtbar'); if (bar && !bar.classList.contains('low')) { bar.classList.toggle('pf', t === 4); bar.classList.toggle('ex', t === 3); } }
@@ -2379,7 +2664,7 @@ function showRate(t, final){
 function timeUp(it){
   if (!Q || Q.cur !== it || Q.answered) return;
   Q.timedOut = true; Q.lockUntil = 0;
-  if (it.type === 'flash') { reveal(); answer(null, 1); } else dunno();
+  if (it.type === 'flash') { reveal(true); answer(null, 1); } else dunno();
 }
 const TYPE_LABEL = {e2j:'英 → 日', j2e:'日 → 英', spell:'スペル', flash:'カード', odd:'仲間はずれ', dform:'派生語', dspell:'派生語スペル', snew:'新しい意味', ctx:'文脈', use:'語法', lis:'聞き取り'};
 function segsInner(){
@@ -2394,13 +2679,16 @@ function qHeader(){
   return `<div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="やめる">${I.close}</button>
     <div class="segs${n > 20 ? ' dense' : ''}" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${Q.cleared}" style="--n:${n}">${segsInner()}</div>
     <span class="qcount num">${Q.cleared}/${n}</span>
-    <button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>1問もどす</span></button></div>
-    <div class="combo">${Q.combo >= 3 ? `${Q.combo} 連続正解` : ''}</div>`;
+    <button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>1問もどす</span></button></div>`;
 }
 /* ignore taps for a moment after the screen changes, so a fast double tap can't answer the next card */
 const locked = () => !!Q && performance.now() < (Q.lockUntil || 0);
+/* a short screen (iPhone SE (Safari / home screen), 文字「大」) packs the study screens tighter (.short), so わからない stays in view */
+function fitCheck(){ document.documentElement.classList.toggle('short', innerHeight / (S.settings.zoom || 1) < 660); }
+addEventListener('resize', () => { if (!$('#screen').hidden) fitCheck(); });
 function renderQ(){
   if (!Q) return;
+  Q.inl = null; fitCheck();
   if (!Q.queue.length) return renderResults();
   const it = Q.items[Q.queue[0]];
   if (!it.type) { it.type = qType(it.c, it.p0); if (it.type === 'flash') { const d = S.settings.dir; it.flip = d === 'j2e' || (d === 'mix' && Math.random() < 0.5); } }
@@ -2417,11 +2705,11 @@ function renderQ(){
   const behind = (left > 1 ? '<div class="behind"></div>' : '') + (left > 2 ? '<div class="behind b2"></div>' : '');
   const sayBtn = `<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(sense.p)}" aria-label="発音を聞く">${I.say}</button>`;
   const multi = (c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : '') + (c.cat ? `<span class="cat">${esc(c.cat)}</span>` : '');
-  const from = c.isD ? `<div class="qfrom"><b class="fw">${esc(c.parent.w)}</b><span>${esc(c.parent.m)}</span>の派生語</div>` : '';
+  const from = c.isD ? `<div class="qfrom"><b class="fw" lang="en">${esc(c.parent.w)}</b><span>${esc(c.parent.m)}</span>の派生語</div>` : '';
   let card, body = '';
   if (c.isS && (type === 'e2j' || type === 'snew' || (type === 'flash' && !it.flip))) {
     const known = c.parent.s.filter((_, i) => i !== c.si && 'ml'.includes(senseState(c.parent, i))).map(x => x.m);
-    card = `<div class="qpos"><span class="pos">${esc(c.p || '—')}</span>${sayBtn}${senseDots(c.parent)}</div><div class="qword">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}
+    card = `<div class="qpos"><span class="pos">${esc(c.p || '—')}</span>${sayBtn}${senseDots(c.parent)}</div><div class="qword" lang="en">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}
       ${known.length ? `<div class="qknown">知っている意味：${esc(known.join(' ／ '))}</div>` : ''}
       <div class="qask">${type === 'snew' || (type === 'flash' && !isReview(it.p0)) ? '<b class="newtag">新しい意味</b>' : ''}${c.si + 1}つ目の意味は？</div>`;
   } else if (type === 'flash' && it.flip) {
@@ -2430,22 +2718,22 @@ function renderQ(){
     card = `<div class="qpos"><span class="pos">${esc(sense.p || '—')}</span></div>
       <button class="lisbtn" data-act="lisPlay" aria-label="もう一度聞く">${I.say}</button><div class="qask">聞こえた単語の意味は？</div>`;
   } else if (type === 'e2j' || type === 'flash' || type === 'odd') {
-    card = `<div class="qpos"><span class="pos">${esc((type === 'odd' || type === 'flash') ? c.p || '—' : sense.p || '—')}</span>${sayBtn}${multi}</div><div class="qword">${esc(c.w)}</div>${type !== 'odd' ? patHTML(sense.pat, 'qpat') : ''}${c.isD ? `<div class="qask">← ${esc(c.parent.w)} の派生語</div>` : ''}`;
+    card = `<div class="qpos"><span class="pos">${esc((type === 'odd' || type === 'flash') ? c.p || '—' : sense.p || '—')}</span>${sayBtn}${multi}</div><div class="qword" lang="en">${esc(c.w)}</div>${type !== 'odd' ? patHTML(sense.pat, 'qpat') : ''}${c.isD ? `<div class="qask">← ${esc(c.parent.w)} の派生語</div>` : ''}`;
     if (type === 'odd') card += `<div class="qask">この単語の意味<b>ではない</b>ものは？</div>`;
-    else if (type === 'e2j' && it.si > 0) card += `<div class="qask">${it.si + 1}番目の意味は？</div>`;
+    else if (type === 'e2j' && it.si > 0) card += `<div class="qask">${it.si + 1}つ目の意味は？</div>`;
   } else if (type === 'dform' || type === 'dspell') {
     card = `${from}<div class="qpos"><span class="pos">${esc(c.p)}</span><span class="qposname">${POS_NAME[c.p] || ''}</span></div><div class="qmean">${esc(c.m)}</div>`;
-    if (type === 'dspell' && c.e) { const b = blankWord(c.e, c.w); if (b) card += `<div class="qex">${b}</div>`; }
+    if (type === 'dspell' && c.e) { const b = blankWord(c.e, c.w); if (b) card += `<div class="qex" lang="en">${b}</div>`; }
   } else if (type === 'spell') {
     const met = metSenses(c);
     card = `<ul class="qmeans">${met.slice(0, 4).map(s => `<li><span class="pos">${esc(s.p||'—')}</span>${esc(s.m)}</li>`).join('')}</ul>`;
-    const ex = sense.e || c.e; if (ex) { const b = blankWord(ex, c.w); if (b) card += `<div class="qex">${b}</div>`; }
+    const ex = sense.e || c.e; if (ex) { const b = blankWord(ex, c.w); if (b) card += `<div class="qex" lang="en">${b}</div>`; }
   } else if (type === 'ctx') {
     // 文脈: only the sentence with the word marked (its part of speech and translation would give the meaning away)
-    card = `<div class="qpos">${sayBtn}${c.isS ? senseDots(c.parent) : multi}</div><div class="qctx">${ctxParts(c, it.si).mark}</div><div class="qask">この文での <b class="qw">${esc(c.w)}</b> の意味は？</div>`;
+    card = `<div class="qpos">${sayBtn}${c.isS ? senseDots(c.parent) : multi}</div><div class="qctx" lang="en">${ctxParts(c, it.si).mark}</div><div class="qask">この文での <b class="qw">${esc(c.w)}</b> の意味は？</div>`;
   } else if (type === 'use') {
     // 語法: the meaning is shown, the 語法 pattern stays hidden until it is answered
-    card = `<div class="qfrom"><b class="fw">${esc(c.w)}</b><span>${esc(sense.m)}</span></div><div class="qctx">${esc(useQ(c, it.si)[0]).replace('___', '<span class="mark">＿＿＿</span>')}</div><div class="qask">空所に入るのは？</div>`;
+    card = `<div class="qfrom"><b class="fw" lang="en">${esc(c.w)}</b><span>${esc(sense.m)}</span></div><div class="qctx" lang="en">${esc(useQ(c, it.si)[0]).replace('___', '<span class="mark">＿＿＿</span>')}</div><div class="qask">空所に入るのは？</div>`;
   } else {
     card = `<div class="qpos"><span class="pos">${esc(sense.p||'—')}</span></div><div class="qmean">${esc(sense.m)}</div>`;
   }
@@ -2454,18 +2742,20 @@ function renderQ(){
     else if (type !== 'odd' && type !== 'ctx' && type !== 'use') Q.choices = pickChoices(c, type === 'snew' || type === 'lis' ? 'e2j' : type, it.si, type === 'lis');
     const en = type === 'j2e' || type === 'dform' || type === 'use';
     const veiled = S.settings.veil && type !== 'odd';
-    body = `<div class="choices${veiled ? ' veiled' : ''}" id="choices">${veiled ? '<button class="veil" data-act="unveil">答えを思い浮かべたらタップ<small>選択肢を表示<span class="kbd">（Space）</span></small></button>' : ''}${Q.choices.map((o,i) => `<button class="choice" data-act="choose" data-i="${i}"><span class="key">${i+1}</span><span class="ctext ${en?'en':''}">${esc(o.text)}<span class="csub" hidden>${esc(o.sub)}</span></span></button>`).join('')}</div>
+    body = `<div class="choices${veiled ? ' veiled' : ''}" id="choices">${veiled ? '<button class="veil" data-act="unveil">答えを思い浮かべたらタップ<small>選択肢を表示<span class="kbd">（Space）</span></small></button>' : ''}${Q.choices.map((o,i) => `<button class="choice" data-act="choose" data-i="${i}"><span class="key">${i+1}</span><span class="ctext ${en?'en':''}"${en ? ' lang="en"' : ''}>${esc(o.text)}<span class="csub" hidden${en ? ' lang="ja"' : ''}>${esc(o.sub)}</span></span></button>`).join('')}</div>
       ${type === 'lis' ? '<div class="dunrow">' : ''}<button class="dunno" data-act="dunno">わからない<span class="kbd">（0）</span></button>${type === 'lis' ? '<button class="nosound" data-act="noSound">音が出せない</button></div>' : ''}`;
   } else if (isSpell(type)) {
+    // every button above the field, so the keyboard covers none; inputmode=url opens the English keyboard
     body = `<div class="spell"><div><div class="hint" id="hint">${hintText(c.w, 1)}</div><div class="hint-n">${c.w.replace(/[^a-z]/gi,'').length}文字</div></div>
-      <input id="spellin" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="英単語を入力" placeholder="英単語を入力">
-      <div class="spell-btns"><button class="btn btn-ghost" data-act="hint">ヒント</button><button class="btn btn-ghost" data-act="dunno">わからない</button><button class="btn btn-primary" data-act="spellGo">答える</button></div></div>`;
+      <div class="spell-btns"><button class="btn btn-ghost" data-act="hint">ヒント</button><button class="btn btn-ghost" data-act="dunno">わからない</button></div>
+      <div class="spell-row"><input id="spellin" type="text" inputmode="url" enterkeyhint="done" lang="en" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="英単語を入力" placeholder="英単語を入力"><button class="btn btn-primary" data-act="spellGo">答える</button></div></div>`;
   } else {
-    body = `<div class="reveal"><button class="btn btn-primary btn-block" data-act="reveal">答えを見る<span class="kbd">（Space）</span></button></div>`;
+    // a word seen for the first time has no "answer" yet
+    body = `<div class="reveal"><button class="btn btn-primary btn-block" data-act="reveal">${fresh ? (it.flip ? '英単語を見る' : '意味を見る') : '答えを見る'}<span class="kbd">（Space）</span></button></div>`;
   }
   $('#screen').innerHTML = `<div class="screen-in study">${qHeader()}
     ${live ? rateHTML() : clock ? TIMER_HTML : ''}
-    <div class="qstage">${behind}<div class="tcard holed qcard" id="qcard"><span class="ring"></span><span class="qtype">${Q.opts.practice ? '練習 ・ ' : ''}${fresh ? '新しい単語' : TYPE_LABEL[type]}${it.tries ? ' ・ もう一度' : ''}</span><div class="qcard-in">${card}</div></div></div>
+    <div class="qstage">${behind}<div class="tcard holed qcard${type === 'flash' ? ' flashc' : ''}" id="qcard"${type === 'flash' ? ' data-act="reveal"' : ''}><span class="ring"></span>${Q.combo >= 3 ? `<span class="qcombo">${Q.combo} 連続正解</span>` : ''}<span class="qtype">${Q.opts.practice ? '練習 ・ ' : ''}${fresh ? '新しい単語' : TYPE_LABEL[type]}${it.tries ? ' ・ もう一度' : ''}</span><div class="qcard-in">${card}</div></div></div>
     <div id="qbody">${body}</div></div><div id="fb"></div>`;
   Q.t0 = performance.now(); Q.lockUntil = Q.t0 + 250; Q.timedOut = false;
   if (clock) countdown(type === 'flash' ? S.settings.timeLimit * 500 : slowMs(type), () => timeUp(it),
@@ -2474,7 +2764,7 @@ function renderQ(){
   if (type === 'lis') lisStart(it, sense.p, clock, live);
   if (live) showRate(speedTier(type, 0));
   if (S.settings.autoSpeak && (type === 'e2j' || type === 'snew' || (type === 'flash' && !it.flip) || type === 'odd' || type === 'ctx')) playWord(c.w, sense.p);
-  if (isSpell(type)) setTimeout(() => $('#spellin')?.focus(), 30);
+  if (isSpell(type)) $('#spellin')?.focus();   // at once, inside the tap that led here: only then does iPhone open the keyboard
   prefetchAudio(Q.queue.slice(1, 3).map(i => Q.items[i].c));
 }
 /* 聞き取り: now and then a review hides the word; you hear it and pick its meaning, then see the spelling.
@@ -2512,7 +2802,7 @@ function lisStart(it, pos, clock, live, tap=false){
 }
 function lisReveal(it, ok){
   const c = it.c, p = (c.s[it.si] || c.s[0]).p, box = $('#qcard .qcard-in');
-  if (box) box.innerHTML = `<div class="qpos"><span class="pos">${esc(p || '—')}</span></div><div class="qword">${esc(c.w)}</div>${ipaInline(c.w, p)}`;
+  if (box) box.innerHTML = `<div class="qpos"><span class="pos">${esc(p || '—')}</span></div><div class="qword" lang="en">${esc(c.w)}</div>${ipaInline(c.w, p)}`;
   if (ok) playWord(c.w, p);   // once more with the spelling in front of you (after a miss the feedback plays it)
 }
 function noSound(){
@@ -2599,13 +2889,13 @@ function answer(ok, grade){
   if (card && !Q.timedOut) {
     // a card you graded yourself already shows its answer: no sheet and no buzzer, it just slides away
     sfx(ok ? 'ok' : 'tick'); if (ok) haptic(true);
-    const el = $('#qcard'); if (el) { el.classList.add('away'); if (!ok) el.classList.add('back'); }
+    const el = $('#qcard'); if (el) { el.classList.add('away'); if (!ok) el.classList.add('drop'); }
     if (!ok && !isReview(it.p0) && !Q.flash) { it.type = 'e2j'; it.check = true; }   // a new word marked もう一度 returns as a 英→日 4択: can you recall it now?
     Q.timer = setTimeout(nextQ, 170);
     return;
   }
   sfx(ok ? 'ok' : 'ng');
-  showFeedback(it, ok, np);
+  if (ok && S.settings.autoNext && quickOK(it, np)) inlineOK(it, np); else showFeedback(it, ok, np, back);
   // right back (few questions left): ask it another way, so it isn't the same four options again
   if (back >= 0 && back < 3 && !it.check) {
     const d = S.settings.dir || 'auto';
@@ -2613,53 +2903,94 @@ function answer(ok, grade){
     else if (it.type === 'use' || it.type === 'ctx') it.type = d === 'j2e' ? 'j2e' : 'e2j';
   }
 }
-function showFeedback(it, ok, np){
+/* a right 4択 answer that opens nothing new stays on the question (inlineOK). The sheet is for a miss, spelling, 語法, a new
+   meaning, and a right answer that opens the next meaning or a derivative (the sheet says what comes next) */
+const opensNext = (it, np) => { const c = it.c;
+  return !!np && !settled(it.p0) && settled(np) && (c.isS ? c.si + 1 < c.parent.s.length
+    : !c.isD && ((S.settings.senseCards && c.s.length > 1) || (S.settings.deriv && !!c.fam?.some(f => f.card)))); };
+const quickOK = (it, np) => !!Q.choices && !isSpell(it.type) && it.type !== 'use' && it.type !== 'snew' && !opensNext(it, np);
+/* VoiceOver hears one short line per answer, not the whole sheet (cut off when it moves on) */
+function srSay(t){ const r = $('#sr'); if (!r) return; r.textContent = ''; setTimeout(() => { r.textContent = t; }, 50); }
+/* 正解 on the question itself: the green ○ and the grade stay on the chosen line, the next review shows where わからない was,
+   then on. A tap anywhere goes on at once (answered choices let taps through); 詳しく opens the sheet (fbOpen) */
+function inlineOK(it, np){
+  const c = it.c, p = (c.s[it.si] || c.s[0]).p, qb = $('#qbody');
+  qb.classList.add('answered'); qb.querySelectorAll('.csub').forEach(e => e.hidden = false);
+  if (it.tier > 0) qb.querySelector('.choice.ok')?.insertAdjacentHTML('beforeend', `<b class="rate crate t${it.tier}">${RATE_NAME[it.tier]}</b>`);
+  const dn = qb.querySelector('.dunrow') || qb.querySelector('.dunno');
+  if (dn) dn.outerHTML = `<div class="inl-fb" id="inlfb">${np ? `<span class="ivl">次は ${ivlText(np.due - dayIdx())}</span>` : ''}<button class="fb-more" data-act="fbOpen">詳しく</button></div>`;
+  const sc = $('.screen-in.study'); if (sc) sc.dataset.act = 'fbTap';
+  if (it.type === 'j2e' || it.type === 'dform') playWord(c.w, p); else if (it.type === 'lis') lisReveal(it, true);
+  let stay = {4: 600, 3: 600, 2: 750, 1: 1100}[it.tier || 2];
+  if (['j2e', 'dform', 'lis'].includes(it.type)) stay = Math.max(stay, Math.min(1500, (AUD_A[audioKey(c.w, p)]?.[2] || 600) + 150));   // the word it plays finishes first
+  Q.inl = {it, np}; Q.lockUntil = performance.now() + 250; Q.timer = setTimeout(nextQ, stay); haptic(true);
+  srSay(`正解。${RATE_NAME[it.tier] || ''}`);
+}
+/* the full explanation: the meanings met so far, 語源・コア, 派生語 (the sheet's 詳しく, and a word tapped on the results).
+   noProg: without the 覚えた意味 line */
+function detailHTML(it, noProg = false){
+  const c = it.c, hit = (it.type === 'odd' || isSpell(it.type) || it.type === 'flash' || c.isD) ? -1 : it.si;
+  const use = it.type === 'use' ? useNoteHTML(c, it.si) : '';
+  return use + (c.isD ? affixHTML(c) + familyHTML(c.parent, c.w, true)
+    : c.isS ? sensesGated(c.parent, c.si, false, noProg) + linkHTML(c)
+    : S.settings.senseCards ? sensesGated(c, 0, false, noProg) + etyHTML(c) + familyHTML(c, null)
+    : sensesHTML(c, hit, 'hit', false, 3) + etyHTML(c) + familyHTML(c, null));
+}
+/* back: where a miss went back in the queue (0 = next). opt.full: opened with 詳しく after an inline 正解;
+   opt.quiet: the word has already played and the tap been felt */
+function showFeedback(it, ok, np, back = -1, opt = {}){
   const c = it.c, today = dayIdx();
   const hit = (it.type === 'odd' || isSpell(it.type) || it.type === 'flash' || c.isD) ? -1 : it.si;
-  const when = np ? `<span class="ivl">次は ${ivlText(np.due - today)}</span>` : '';
+  // when it comes back: a right answer on its review day, a miss later in this set (its review day is in 詳しく)
+  const when = ok ? (np ? `<span class="ivl">次は ${ivlText(np.due - today)}</span>` : '')
+    : back >= 0 ? `<span class="ivl again">${back === 0 ? 'すぐにもう一度' : `${back}問あとにもう一度`}</span>` : '';
   const qb = $('#qbody'); qb.classList.add('answered');
-  if (it.type === 'lis') lisReveal(it, ok);
+  if (it.type === 'lis' && !opt.quiet) lisReveal(it, ok);
   qb.querySelectorAll('.csub').forEach(e => e.hidden = false);
-  const head = `<div class="fb-word"><b>${esc(c.w)}</b>${ipaHTML(c)}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc((c.s[it.si] || c.s[0]).p)}" aria-label="発音">${I.say}</button>${c.n && !c.isD ? `<span class="no">No.${c.n}</span>` : ''}</div>`;
-  const auto = ok && S.settings.autoNext;
+  const head = `<div class="fb-word"><b lang="en">${esc(c.w)}</b>${ipaHTML(c)}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc((c.s[it.si] || c.s[0]).p)}" aria-label="発音">${I.say}</button>${c.n && !c.isD ? `<span class="no">No.${c.n}</span>` : ''}</div>`;
+  const auto = ok && S.settings.autoNext && !opt.full;
   const canUndo = !ok && np && it.type !== 'flash' && !Q.gaveUp;
   const tn = it.tier || ({4: 3, 3: 2, 2: 1})[it.grade];   // spelling has no tier: 簡単 reads as Excellent
   const rating = ok && (np || Q.opts.practice) && it.first !== null && RATE_NAME[tn] ? `<span class="rate t${tn}">${RATE_NAME[tn]}</span>` : '';
-  const title = ok ? `<span class="mk o">○</span>正解${rating}` : `<span class="mk x">×</span>${Q.timedOut ? '時間切れ' : np ? '不正解' : 'まだ覚えていない'}`;
-  // what you answered vs what was right, so the wrong option is corrected explicitly
+  const title = ok ? `<span class="mk o">○</span>正解${rating}` : `<span class="mk x">×</span>${Q.timedOut ? '時間切れ' : Q.gaveUp ? '答えはこれ' : np ? '不正解' : 'まだ覚えていない'}`;
+  // what you answered vs what was right, so the wrong option is corrected explicitly; 押し間違えた sits on your answer
+  const right = it.type !== 'flash' && !isSpell(it.type) ? Q.choices?.find(o => o.ok) : null;
   let cmp = '';
   if (!ok && it.type !== 'flash') {
-    const right = Q.choices?.find(o => o.ok);
     const mine = isSpell(it.type) ? (Q.typed ? {text:Q.typed, sub:''} : null) : Q.picked;
-    cmp = `<div class="cmp">${mine ? `<div class="cmp-row ng"><span class="cmp-l">あなた</span><s>${esc(mine.text)}</s>${mine.sub ? `<small>${esc(mine.sub)}</small>` : ''}</div>` : ''}
+    cmp = `<div class="cmp">${mine ? `<div class="cmp-row ng"><span class="cmp-l">あなた</span><s>${esc(mine.text)}</s>${mine.sub ? `<small>${esc(mine.sub)}</small>` : ''}${canUndo ? '<button class="cmp-undo" data-act="mistap">押し間違えた</button>' : ''}</div>` : ''}
       <div class="cmp-row ok"><span class="cmp-l">正解</span><b>${esc(isSpell(it.type) ? c.w : right ? right.text : c.w)}</b>${it.type === 'odd' && right ? `<small>${esc(right.sub)}</small>` : ''}</div></div>`;
   }
   const gated = S.settings.senseCards;
   // after the answer: the 語法 point, a derivative's affix, and in the details 語源・コアイメージ
   const use = it.type === 'use' ? useNoteHTML(c, it.si) : '', aff = c.isD ? affixHTML(c) : '';
-  const detail = use + (c.isD ? aff + familyHTML(c.parent, c.w)
-    : c.isS ? sensesGated(c.parent, c.si) + linkHTML(c)
-    : gated ? sensesGated(c, 0) + etyHTML(c) + familyHTML(c, null)
-    : sensesHTML(c, hit, 'hit', false, 3) + etyHTML(c) + familyHTML(c, null));
   const short = use + (c.isD ? `<div class="fb-mean">${esc(c.m)}<span class="muted"> ← ${esc(c.parent.w)}</span></div>${aff}`
     : c.isS ? `<div class="fb-mean">${esc(c.m)}<span class="muted">（${c.si + 1}つ目の意味）</span></div>${sensesProgress(c.parent)}`
     : gated ? sensesGated(c, 0, true)
     : sensesHTML(c, hit, 'none', true));
+  // a miss: after the right meaning (above), one example and how the word is built; the rest behind 詳しく
+  const s0 = c.s?.[it.si] || c.s?.[0], ex = s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null;
+  const exLine = ex ? `<div class="fb-ex" lang="en">${markWord(ex.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${I.say}</button></div><div class="fb-ja">${esc(ex.j)}</div>` : '';
+  const shortNg = use + (it.type === 'flash' ? '' : exLine) + (c.isD ? aff : c.isS ? linkHTML(c) : etyHTML(c));
+  const fold = auto || !ok;   // the short version first, 詳しく for the rest
   // a look-alike picked by mistake: how to tell the two apart
   const pk = Q.picked, tip = !ok && pk?.tip && !tipLeaks(pk.tip, [c.isS ? c.parent : c, pk.card]) ? `<div class="ctip"><span class="ety-k">見分け方</span>${esc(pk.tip)}</div>` : '';
-  $('#fb').innerHTML = `<div class="fb ${ok ? 'ok' : 'ng'}" role="status" ${auto ? 'data-act="fbTap"' : ''}><div class="fb-in">
-    <div class="fb-head">${title}<span class="sp"></span>${when}${auto ? '<button class="fb-more" data-act="fbMore">詳しく</button>' : ''}</div>
+  $('#fb').innerHTML = `<div class="fb ${ok ? 'ok' : 'ng'}" ${auto ? 'data-act="fbTap"' : ''}><div class="fb-in">
+    <div class="fb-head">${title}<span class="sp"></span>${when}${fold ? '<button class="fb-more" data-act="fbMore">詳しく</button>' : ''}</div>
     ${cmp}${tip}${head}
-    <div class="fb-body" id="fbshort" ${auto ? '' : 'hidden'}>${short}</div>
-    <div class="fb-body" id="fbmore" ${auto ? 'hidden' : ''}>${detail}${ok ? '' : '<div class="small muted">このセットの最後までに、もう一度出します。</div>'}</div>
-    <div class="fb-actions" id="fbact" ${auto ? 'hidden' : ''}>${canUndo ? '<button class="btn btn-ghost" data-act="mistap">押し間違えた</button>' : ''}<button class="btn btn-primary" data-act="next">次へ</button></div>
+    <div class="fb-body" id="fbshort" ${fold ? '' : 'hidden'}>${ok ? short : shortNg}</div>
+    <div class="fb-body" id="fbmore" ${fold ? 'hidden' : ''}>${detailHTML(it, !ok)}${!ok && np ? `<div class="small muted">次の復習日：${ivlText(np.due - today)}</div>` : ''}</div>
+    <div class="fb-actions" id="fbact" ${auto ? 'hidden' : ''}><button class="btn btn-primary" data-act="next">次へ</button></div>
   </div></div>`;
   Q.lockUntil = performance.now() + 250;
-  const stay = it.type === 'flash' ? 350 : it.grade === 4 ? 700 : it.grade === 2 ? 2000 : Math.min(1400, 850 + 200 * (c.s.length - 1));
+  // a sheet that says the next meaning or derivative opens stays up a little longer
+  const stay = opensNext(it, np) ? 1600 : it.type === 'flash' ? 350 : it.grade === 4 ? 700 : it.grade === 2 ? 2000 : Math.min(1400, 850 + 200 * (c.s.length - 1));
   if (auto) Q.timer = setTimeout(nextQ, stay);
+  if (opt.quiet) return;
   // let the error tone finish before the word plays
   if (!ok || isSpell(it.type) || it.type === 'dform' || it.type === 'j2e' || it.type === 'use') setTimeout(() => { if (Q?.cur === it) playWord(c.w, (c.s[it.si] || c.s[0]).p); }, ok ? 0 : 230);
   haptic(ok);
+  srSay(ok ? `正解。${RATE_NAME[it.tier] || ''}` : `不正解。正解は ${right ? right.text : c.w}`);
 }
 let hapEl = null;
 function haptic(ok){
@@ -2675,33 +3006,27 @@ function haptic(ok){
     hapEl.click(); if (!ok) setTimeout(() => hapEl.click(), 110);
   } catch(e) {}
 }
-/* 派生語: the studied derivative opens with its example; the rest are chips that open on tap. */
-function familyHTML(c, hit){
+/* 派生語: the studied derivative opens with its example; the rest are chips that open on tap.
+   withHead: a derivative's screen also has a chip for its headword (a headword's own list doesn't name itself) */
+function familyHTML(c, hit, withHead = false){
   if (!c.fam || !c.fam.length) return '';
   const tag = f => !f ? '見出し語' : !f.card ? '別の見出し語' : ({master:'習得', learn:'学習中'})[status(prog(f.card))] || '';
-  const chip = (w, p, f) => `<button class="fchip${w === hit ? ' on' : ''}" data-act="famchip" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}" data-w="${esc(w)}"><b>${esc(w)}</b><span class="pos">${esc(p)}</span></button>`;
+  const chip = (w, p, f) => `<button class="fchip${w === hit ? ' on' : ''}" data-act="famchip" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}" data-w="${esc(w)}"><b lang="en">${esc(w)}</b><span class="pos">${esc(p)}</span></button>`;
   const open = hit ? famDetail(c, hit) : '';
-  return `<div class="fam"><div class="fam-h">派生語</div><div class="fchips">${chip(c.w, c.p, null)}${c.fam.map(f => chip(f.w, f.p, f)).join('')}</div>
+  return `<div class="fam"><div class="fam-h">派生語<span class="fam-sub">タップで意味・例文</span></div><div class="fchips">${withHead ? chip(c.w, c.p, null) : ''}${c.fam.map(f => chip(f.w, f.p, f)).join('')}</div>
     <div class="fdetail" id="fdetail">${open}</div></div>`;
 }
 function famDetail(c, w){
   const f = c.fam.find(x => x.w === w);
   const p = f ? f.p : c.p, m = f ? f.m : allMeanings(c), e = f ? f.e : c.e, j = f ? f.j : c.j;
   const t = !f ? '見出し語' : !f.card ? '別の見出し語' : ({master:'習得', learn:'学習中'})[status(prog(f.card))] || '';
-  return `<div class="frow1"><span class="pos">${esc(p)}</span><b class="fw">${esc(w)}</b>${ipaInline(w, p)}<button class="sayex" data-act="say" data-w="${esc(w)}" data-p="${esc(p)}" aria-label="発音">${I.say}</button>${t ? `<span class="ftag">${t}</span>` : ''}</div>
-    <div class="sm">${esc(m)}</div>${e ? `<div class="sex">${markWord(e, w)}<button class="sayex" data-act="sayex" data-w="${esc(e)}" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(j)}</div>` : ''}`;
+  return `<div class="frow1"><span class="pos">${esc(p)}</span><b class="fw" lang="en">${esc(w)}</b>${ipaInline(w, p)}<button class="sayex" data-act="say" data-w="${esc(w)}" data-p="${esc(p)}" aria-label="発音">${I.say}</button>${t ? `<span class="ftag">${t}</span>` : ''}</div>
+    <div class="sm">${esc(m)}</div>${e ? `<div class="sex" lang="en">${markWord(e, w)}<button class="sayex" data-act="sayex" data-w="${esc(e)}" lang="ja" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(j)}</div>` : ''}`;
 }
 function nextQ(){
   if (!Q) return;
   clearTimeout(Q.timer); Q.timer = null;
-  const prev = Q.cur;
-  renderQ();
-  // a wrong answer can still be taken back for a few seconds after moving on (only the answer that set the review date, not a retry)
-  const last = Q.hist?.[Q.hist.length - 1];
-  if (prev && prev !== Q.cur && last?.it === prev && last.bump && last.type !== 'flash' && !prev.ok && prev.after && !prev.gaveUp && !Q.done) {
-    toast(`× ${prev.c.w}`, {label:'押し間違えた', act:'mistapPrev'}, 3200);
-    Q.undoable = prev;
-  } else if (Q) Q.undoable = null;
+  renderQ();   // a miss noticed only later is taken back with 1問もどす (the old 押し間違えた notice hid the clock and the grade)
 }
 /* 1問もどす: take back the latest answer (also from the next question or the results) and ask it again */
 function undoAnswer(){
@@ -2715,12 +3040,12 @@ function undoAnswer(){
     if (h.rt && RT[h.rt]?.length) { RT[h.rt].pop(); try { localStorage.setItem('tangoloop.rt', JSON.stringify(RT)); } catch(e) {} }
   }
   Object.assign(it, {first: h.first, ok: h.ok, ms: h.ms, after: h.after, grade: h.grade, tier: h.tier, tries: h.tries, gaveUp: h.gaveUp, type: h.type, check: h.check});
-  Object.assign(Q, {queue: h.queue, cleared: h.cleared, combo: h.combo, maxCombo: h.maxCombo, done: false, undoable: null, revealed: null});
+  Object.assign(Q, {queue: h.queue, cleared: h.cleared, combo: h.combo, maxCombo: h.maxCombo, done: false, revealed: null});
   if (Q.won && !h.practice && todayStat().g && !goalReached()) { bumpDaily({g: -1}); Q.won = false; }   // only this set's goal, and only if the undone answer un-reaches it
   renderQ();
   toast(`「${it.c.w}」をやり直します`);
 }
-function mistap(it = Q?.cur, advance = true){
+function mistap(it = Q?.cur){
   if (!it || !it.after || it.ok) return;
   const np = nextState(it.p0, 3); setProg(it.c, np); it.after = np; it.first = 3; it.ok = true;
   const h = Q.hist?.findLast(x => x.it === it && x.bump), kh = h?.bump.kc ? 1 : 0;   // a 知ってる check that was really right
@@ -2728,8 +3053,7 @@ function mistap(it = Q?.cur, advance = true){
   if (h) { h.bump.c++; if (isReview(it.p0)) h.bump.rc++; if (kh) h.bump.kh = (h.bump.kh || 0) + 1; }
   const qi = Q.items.indexOf(it), pos = Q.queue.indexOf(qi); if (pos >= 0) Q.queue.splice(pos, 1);
   Q.cleared++;
-  if (advance) nextQ();
-  else { const sg = $('.segs'); if (sg) sg.innerHTML = segsInner(); const qc = $('.qcount'); if (qc) qc.textContent = `${Q.cleared}/${Q.items.length}`; toast('正解に直しました'); }
+  nextQ(); toast('正解に直しました');
 }
 function markChoices(picked){
   document.querySelectorAll('.choice').forEach((b, j) => {
@@ -2765,7 +3089,7 @@ function spellGo(){
   if (!Q || Q.answered) return;
   const inp = $('#spellin'); const raw = inp.value || '', v = spellNorm(raw); if (!v) { inp.focus(); return; }
   if (KANA.test(raw)) {   // typed on the Japanese keyboard: not graded, just a hint
-    if (!$('#spellnote')) inp.insertAdjacentHTML('afterend', '<p class="spell-note" id="spellnote" role="alert">英字キーボードに切り替えてね（🌐 キー）</p>');
+    if (!$('#spellnote')) inp.closest('.spell-row').insertAdjacentHTML('afterend', '<p class="spell-note" id="spellnote" role="alert">英字キーボードに切り替えてね（🌐 キー）</p>');
     inp.focus(); return;
   }
   const ok = v === spellNorm(Q.cur.c.w); Q.typed = raw.trim();
@@ -2773,14 +3097,16 @@ function spellGo(){
   answer(ok);
 }
 function hint(){ if (!Q || Q.answered) return; Q.hint = Math.max(2, Q.hint + 1); $('#hint').textContent = hintText(Q.cur.c.w, Q.hint); $('#spellin')?.focus(); }
-function reveal(){
+function reveal(noProg = false){
   if (!Q || Q.answered || Q.revealed === Q.cur || locked()) return; Q.revealed = Q.cur; stopCountdown();
+  $('#qcard')?.removeAttribute('data-act');   // the back doesn't turn over again
   Q.lockUntil = performance.now() + 200;   // a double tap on 答えを見る doesn't grade the card
   const it = Q.cur, c = it.c, today = dayIdx(), isNew = !isReview(it.p0);
-  const prev = g => it.first !== null ? '' : isNew && g === 1 ? '<small class="jp">このあと<wbr>また出る</small>'
-    : `<small>${ivlShort(nextState(it.p0, g, Date.now(), false).due - today)}</small>`;
-  const front = it.flip ? `<div class="qword">${esc(c.w)}</div>${ipaHTML(c)}` : '';
-  const back = c.isD || !S.settings.senseCards ? sensesHTML(c, -1, 'all') : c.isS ? sensesGated(c.parent, c.si) : sensesGated(c, 0);
+  // under each grade, when the word comes back: もう一度 always returns in this set, the rest as 明日 / 4日後 / 約1ヶ月後
+  const prev = g => it.first !== null ? '' : g === 1 ? '<small class="jp">このあと<wbr>また出る</small>'
+    : `<small class="jp">${ivlText(nextState(it.p0, g, Date.now(), false).due - today)}</small>`;
+  const front = it.flip ? `<div class="qword" lang="en">${esc(c.w)}</div>${ipaHTML(c)}` : '';
+  const back = c.isD || !S.settings.senseCards ? sensesHTML(c, -1, 'all') : c.isS ? sensesGated(c.parent, c.si, false, noProg) : sensesGated(c, 0, false, noProg);
   // a new word's back: 成り立ち・コア (a new meaning: how it links to the ones learned; a derivative: its affix)
   const ety = isNew && it.first === null ? (c.isD ? affixHTML(c) : c.isS ? linkHTML(c) : etyHTML(c)) : '';
   $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `<div class="back-face">${front}${back}${ety}</div>`);
@@ -2803,34 +3129,52 @@ function renderResults(){
   const learned = its.filter(x => !isReview(x.p0)).length, reviewed = n - learned;
   const before = streakInfo(), won = checkGoal(), st = won ? streakInfo() : before;
   if (won) { Q.won = true; haptic(true); }
-  const win = won ? `<div class="stk-win" role="status"><span class="stk-flame">${I.flame}</span><div><b>連続 <span class="num">${st.n}</span>日！</b>
-    <span>${milestoneText(st.n) || '今日の目標を達成しました'}${st.freeze > before.freeze ? '・お休みチケットを1枚もらいました' : ''}</span></div></div>` : '';
-  const more = counts(Q.opts.deckIds || activeIds());
-  const rows = its.map(x => `<div class="rrow"><span class="mk ${x.ok?'o':'x'}">${x.ok?'○':'×'}</span>
-    <div class="rword"><b>${esc(x.c.w)}</b><span>${x.c.isD ? `← ${esc(x.c.parent.w)}　` : ''}${studyMeaningHTML(x.c)}</span></div><span class="ivl">${x.after ? ivlText(x.after.due - today) : ''}</span></div>`).join('');
-  const hasMore = more.due + more.newToday > 0;
-  const nd = Q.opts.practice || hasMore ? null : nextDeck(Q.opts.deckIds || activeIds(), more);
-  const pct = Math.round(ok / n * 100), prac = !!Q.opts.practice;
+  // the day's goal reached: the streak in big type, counting up by one (no extra screen, no extra tap)
+  const win = won ? `<div class="stk-win stk-big" role="status"><span class="stk-flame">${I.flame}</span>
+    <div class="stk-nrow"><b class="stk-n num" id="stkn">${st.n - 1}</b><span>日 連続</span></div>
+    <div class="stk-msg">${milestoneText(st.n) || '今日の目標を達成！'}</div>${weekRow(st)}${st.freeze > before.freeze ? '<span>お休みチケットを1枚もらいました</span>' : ''}</div>` : '';
+  const prac = !!Q.opts.practice, pct = Math.round(ok / n * 100);
+  const more = counts(Q.opts.deckIds || activeIds()), rem = more.due + more.newToday, hasMore = rem > 0;
+  const nd = prac || hasMore ? null : nextDeck(Q.opts.deckIds || activeIds(), more);
+  const dl = Q.opts.drill ? drillCards(Q.opts.drill, Q.opts.deckIds || activeIds()) : null;   // 苦手を特訓: what one more drill set would hold
+  const missed = its.filter(x => x.first === 1);
+  // the words, the ones missed at first on top; a tap opens the explanation (resWord)
+  const order = [...its.keys()].sort((a, b) => (its[a].first === 1 ? 0 : 1) - (its[b].first === 1 ? 0 : 1) || a - b);
+  const rows = order.map(i => { const x = its[i]; return `<button class="rrow" data-act="resWord" data-i="${i}"><span class="mk ${x.ok?'o':'x'}">${x.ok?'○':'×'}</span>
+    <span class="rword"><b lang="en">${esc(x.c.w)}</b><span>${x.c.isD ? `← ${esc(x.c.parent.w)}　` : ''}${studyMeaningHTML(x.c)}</span></span><span class="ivl">${x.after ? ivlText(x.after.due - today) : ''}</span>${I.right}</button>`; }).join('');
+  // the speed grades this set earned, and once ever what they mean
+  const tiers = !prac && its.some(x => x.tier > 0), miss = missed.filter(x => isReview(x.p0)).length;
+  const tierRow = tiers ? `<div class="tierrow">${[4, 3, 2, 1].map(t => [t, its.filter(x => x.tier === t).length]).filter(([, k]) => k).map(([t, k]) => `<span class="rate t${t}">${RATE_NAME[t]} <b class="num">${k}</b></span>`).join('')}${miss ? `<span class="rate tx">× <b class="num">${miss}</b></span>` : ''}</div>` : '';
+  const tierHint = tiers && !lsGet('tangoloop.tierhint') ? '<div class="res-note">Perfect・Excellent・Great・Good は答えの速さの評価です。速く正解するほど、次の復習が先にのびます</div>' : '';
+  if (tierHint) lsSet('tangoloop.tierhint', '1');
+  // the last tile: how far today's goal still is, or the streak once it is reached
+  const goalTile = !won && !before.done && rem > 0 ? `<div><b><small class="pre">あと</small>${rem}<small>語</small></b><span>今日の目標まで</span></div>`
+    : `<div><b>${st.n}<small>日</small></b><span>連続学習</span></div>`;
+  const sets = Math.ceil(rem / S.settings.setSize);
+  const nextBtn = hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}次の${Math.min(S.settings.setSize, rem)}問<small>${before.done ? `今日あと${rem}問` : sets <= 1 ? `終えると連続${before.n + 1}日` : `目標まで あと${sets}セット`}</small></button>`
+    : `<div class="res-done">${I.check}今日の目標は達成</div>${nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>新しい単語</small></button>` : ''}`;
+  const home = '<button class="btn btn-ghost btn-block" data-act="quitQuiz">ホームへ</button>';
+  // 練習 keeps its two buttons; 苦手を特訓 offers one more drill set (or the usual set) and no 練習
+  const btns = prac ? `<button class="btn btn-primary btn-block btn-big" data-act="practiceAgain">${I.play}もう一度<small>${Q.opts.practice === 'today' && todayCards().length > n ? `今日の単語から${n}問` : `同じ${n}語で練習`}</small></button>${home}`
+    : dl?.length ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}苦手をもう1セット<small>${Math.min(S.settings.setSize, dl.length)}語</small></button>${hasMore ? '<div class="btn-row"><button class="btn btn-ghost" data-act="againNormal">ふつうの学習へ</button><button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>' : home}`
+    : dl ? `<div class="res-done">${I.check}苦手はぜんぶ終わり</div>${nextBtn}${home}`
+    : `${nextBtn}<div class="btn-row">${missed.length ? `<button class="btn btn-ghost" data-act="practiceMiss">まちがえた${missed.length}語を練習</button>` : '<button class="btn btn-ghost" data-act="practiceSet">同じ単語で練習</button>'}<button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>`;
   $('#screen').innerHTML = `<div class="screen-in res">
-    <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span></div>
+    <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span><button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>1問もどす</span></button></div>
     <div class="res-h">${win}<div class="eyebrow">${prac ? '練習おわり' : 'セット完了'}</div>
       <div class="ring-score" style="--p:${pct}"><div><b class="big">${pct}<small>%</small></b><span>1回目で正解</span></div></div>
       <div class="res-tiles">
         ${prac ? `<div><b>${n}</b><span>練習した</span></div><div><b>${ok}</b><span>1回目で正解</span></div>`
-          : `<div><b>+${learned}</b><span>新しく覚えた</span></div><div><b>${reviewed}</b><span>復習した</span></div>`}
-        <div><b>${st.n}<small>日</small></b><span>連続学習</span></div>
+          : `${learned ? `<div><b>+${learned}</b><span>新しく覚えた</span></div>` : ''}${reviewed ? `<div><b>${reviewed}</b><span>復習した</span></div>` : ''}`}
+        ${goalTile}
       </div>
-      <div class="res-meta"><span>${fmtMs(dur)}</span><span>最大 ${Q.maxCombo} 連続正解</span></div>
+      ${tierRow}${tierHint}
+      <div class="res-meta"><span>かかった時間 ${fmtMs(dur)}</span>${Q.maxCombo >= 2 ? `<span>最大 ${Q.maxCombo} 連続正解</span>` : ''}</div>
       ${prac ? '<div class="res-note">練習なので、復習日と学習の記録は変わりません</div>' : ''}</div>
     ${nudgeHTML()}<div class="words rlist">${rows}</div>
-    <div class="res-undo"><button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）">${I.undo}<span>1問もどす</span></button></div>
-    <div class="res-btns">
-      ${prac ? `<button class="btn btn-primary btn-block btn-big" data-act="practiceAgain">${I.play}もう一度<small>${Q.opts.practice === 'today' && todayCards().length > n ? `今日の単語から${n}問` : `同じ${n}語で練習`}</small></button>`
-      : hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}次の${Math.min(S.settings.setSize, more.due + more.newToday)}問<small>復習${more.due}・新規${more.newToday}</small></button>`
-        : `<div class="res-done">${I.check}今日の目標は達成</div>${nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>新しい単語</small></button>` : ''}`}
-      ${prac ? '' : '<button class="btn btn-ghost btn-block" data-act="practiceSet">同じ単語でもう一度<small>練習・復習日は変わりません</small></button>'}
-      <button class="btn btn-ghost btn-block" data-act="quitQuiz">ホームへ</button></div></div>`;
+    <div class="res-btns">${btns}</div></div>`;
   Q.done = true; Q.lockUntil = performance.now() + 400;
+  if (won) setTimeout(() => { const el = $('#stkn'); if (el) { el.textContent = st.n; el.classList.add('pop'); } }, 400);
   flush();                                         // set end: save to the cloud now
 }
 
@@ -2853,31 +3197,34 @@ function startSwipe(deckIds=activeIds()){
   if (S.settings.order === 'rand') pool = shuffle(pool);
   if (!pool.length) { toast('仕分けできる未学習の単語がありません'); return; }
   SW = {cards:pool.slice(0, 50), i:0, hist:[], shown:false, deckIds};   // 続けて仕分ける stays in these decks
+  SW.calm = Object.values(S.daily).some(d => d?.sw) ? 0 : 3;   // sorting for the first time: three cards without the clock
   audioCtx(); prefetchAudio(SW.cards);
   openScreen(); renderSwipe();
 }
 function swCardHTML(c, cls){
   return `<div class="tcard holed swcard ${cls}" ${cls ? '' : 'id="swcard"'}><span class="ring"></span><span class="swlab l">知らない</span><span class="swlab r">知ってる</span>
-    <div class="qpos"><span class="pos">${esc(c.p||'—')}</span>${c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : ''}</div><div class="qword">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}${ipaHTML(c)}
-    <div class="swmean hide" ${cls ? '' : 'id="swmean"'}>${esc(studyMain(c))}</div>${studyNote(c) ? `<div class="swnote">${studyNote(c)}</div>` : ''}</div>`;
+    <div class="qpos"><span class="pos">${esc(c.p||'—')}</span>${c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : ''}</div><div class="qword" lang="en">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}${ipaHTML(c)}
+    <div class="swmean hide" ${cls ? '' : 'id="swmean"'} aria-hidden="true">${esc(studyMain(c))}</div>${studyNote(c) ? `<div class="swnote">${studyNote(c)}</div>` : ''}</div>`;
 }
 function renderSwipe(){
   if (SW.i >= SW.cards.length) return renderSwipeDone();
+  fitCheck();
   const c = SW.cards[SW.i], nx = SW.cards[SW.i+1];
   SW.shown = false;
   const known = SW.hist.filter(h => h.known).length, unk = SW.hist.length - known;
-  $('#screen').innerHTML = `<div class="screen-in">
+  const timed = S.settings.timeLimit > 0 && SW.i >= (SW.calm || 0);
+  // the buttons stay at the bottom edge (.swfoot) with the counts inside; the how-to shows on the first three cards (three more for a first-time sorter, so the clock gets explained)
+  $('#screen').innerHTML = `<div class="screen-in sw">
     <div class="qtop"><button class="iconbtn" data-act="quitSwipe" aria-label="やめる">${I.close}</button>
       <div class="prog"><i style="width:${SW.i/SW.cards.length*100}%;background:var(--accent)"></i></div><span class="qcount num">${SW.i}/${SW.cards.length}</span></div>
-    <div class="combo" style="color:var(--muted)">知ってる ${known} ・ 知らない ${unk}</div>
-    ${S.settings.timeLimit > 0 ? TIMER_HTML : ''}
+    ${timed ? TIMER_HTML : ''}
     <div class="swarea" id="swarea">${nx ? swCardHTML(nx, 'next') : ''}${swCardHTML(c, '')}</div>
-    <div class="swbtns"><button class="btn sw-no" data-act="swNo">← 知らない</button>
+    <div class="swfoot">${SW.i < 3 + (S.settings.timeLimit > 0 ? SW.calm || 0 : 0) ? `<div class="swhelp">左右にスワイプで仕分け${timed ? '・時間切れは「知らない」' : ''}<br>「知ってる」は${swEarly() ? '3日〜1週間' : '1〜3週間'}後に4択で確認します</div>` : ''}
+      <div class="swbtns"><button class="btn sw-no" data-act="swNo">← 知らない<b class="num swn">${unk}</b></button>
       <button class="qundo col" data-act="swUndo" aria-label="1枚もどす（最後の仕分けを取り消す）" ${SW.hist.length ? '' : 'disabled'}>${I.undo}<span>1枚もどす</span></button>
-      <button class="btn sw-yes" data-act="swYes">知ってる →</button></div>
-    <div class="swhelp">カードをタップで意味を確認 ・ 左右にスワイプで仕分け<br>「知ってる」は${swEarly() ? '3日〜1週間' : '1〜3週間'}のうちに4択で確認、「知らない」は次のセットで学習します</div></div>`;
+      <button class="btn sw-yes" data-act="swYes">知ってる<b class="num swn">${known}</b> →</button></div></div></div>`;
   bindDrag($('#swcard'));
-  if (S.settings.timeLimit > 0) countdown(S.settings.timeLimit * 500, swTimeUp); else stopCountdown();
+  if (timed) countdown(S.settings.timeLimit * 500, swTimeUp); else stopCountdown();
   if (S.settings.autoSpeak) playWord(c.w, c.p);
   prefetchAudio(SW.cards.slice(SW.i + 1, SW.i + 3));
 }
@@ -2885,12 +3232,12 @@ function renderSwipe(){
 function swTimeUp(){
   if (!SW || SW.busy || SW.i >= SW.cards.length) return;
   const i = SW.i; SW.busy = true;
-  $('#swmean')?.classList.remove('hide');
+  const m = $('#swmean'); if (m) { m.classList.remove('hide'); m.removeAttribute('aria-hidden'); }
   const lab = $('#swcard .swlab.l'); if (lab) { lab.textContent = '時間切れ'; lab.style.opacity = 1; }
   haptic(false);
   setTimeout(() => { if (!SW || SW.i !== i) return; SW.busy = false; swDecide(false); }, 1100);
 }
-function swFlip(){ const m = $('#swmean'); if (m && !SW.busy) { m.classList.toggle('hide'); SW.shown = true; stopCountdown(); } }
+function swFlip(){ const m = $('#swmean'); if (m && !SW.busy) { if (m.classList.toggle('hide')) m.setAttribute('aria-hidden', 'true'); else m.removeAttribute('aria-hidden'); SW.shown = true; stopCountdown(); } }
 function swDecide(known){
   if (!SW || SW.busy || SW.i >= SW.cards.length) return;
   stopCountdown();
@@ -2924,18 +3271,19 @@ function renderSwipeDone(){
   stopCountdown();
   const unk = SW.hist.filter(h => !h.known).map(h => h.c), known = SW.hist.length - unk.length;
   const ks = swStats();
-  const rate = ks.n >= 5 ? `<div class="swrate">これまでの「知ってる」の的中率 <b>${Math.round(ks.hit / ks.n * 100)}%</b>${swEarly(ks) ? '<br><span class="small">はずれが多めなので、確認の4択を早めに出します</span>' : ''}</div>` : '';
+  // laid out like a set's results: the two counts as tiles, when 知ってる is checked, the hit rate so far
+  const lines = [known ? `「知ってる」の単語は${swEarly(ks) ? '3日〜1週間' : '1〜3週間'}後に4択で確認します` : '',
+    ks.n >= 5 ? `これまでの「知ってる」の的中率 <b>${Math.round(ks.hit / ks.n * 100)}%</b>${swEarly(ks) ? '<br><span class="small">はずれが多めなので、確認の4択を早めに出します</span>' : ''}` : ''].filter(Boolean);
+  const rate = lines.length ? `<div class="swrate">${lines.join('<br>')}</div>` : '';
   sfx('done');
-  $('#screen').innerHTML = `<div class="screen-in">
-    <div class="qtop"><button class="iconbtn" data-act="quitSwipe" aria-label="閉じる">${I.close}</button><span style="flex:1"></span></div>
-    <div class="res-h"><div class="muted small" style="font-weight:700;letter-spacing:.08em">仕分け完了</div>
-      <div class="res-meta" style="font-size:15px;margin-top:8px"><span>知ってる <b class="num" style="color:var(--easy)">${known}</b></span><span>知らない <b class="num" style="color:var(--again)">${unk.length}</b></span></div>${rate}</div>
-    ${nudgeHTML()}<div class="words rlist">${unk.slice(0,30).map(c => `<div class="rrow"><span class="mk x">×</span><div class="rword"><b>${esc(c.w)}</b><span>${esc(allMeanings(c))}</span></div><span></span></div>`).join('') || '<div class="empty">知らない単語はありませんでした。</div>'}</div>
-    ${SW.hist.length ? `<div class="res-undo"><button class="qundo" data-act="swUndo" aria-label="1枚もどす（最後の仕分けを取り消す）">${I.undo}<span>1枚もどす</span></button></div>` : ''}
+  $('#screen').innerHTML = `<div class="screen-in res">
+    <div class="qtop"><button class="iconbtn" data-act="quitSwipe" aria-label="閉じる">${I.close}</button><span style="flex:1"></span><button class="qundo" data-act="swUndo" aria-label="1枚もどす（最後の仕分けを取り消す）" ${SW.hist.length ? '' : 'disabled'}>${I.undo}<span>1枚もどす</span></button></div>
+    <div class="res-h"><div class="eyebrow">仕分け完了</div>
+      <div class="res-tiles"><div><b style="color:var(--easy)">${known}</b><span>知ってる</span></div><div><b style="color:var(--again-t,var(--again))">${unk.length}</b><span>知らない</span></div></div>${rate}</div>
+    ${nudgeHTML()}<div class="words rlist">${unk.slice(0,30).map(c => `<div class="rrow"><span class="mk x">×</span><div class="rword"><b lang="en">${esc(c.w)}</b><span>${studyMeaningHTML(c)}</span></div><span></span></div>`).join('') || '<div class="empty">知らない単語はありませんでした。</div>'}</div>
     <div class="res-btns">
-      ${unk.length ? `<button class="btn btn-primary btn-block" data-act="learnUnknown">${I.play}知らない単語を覚える（${Math.min(unk.length, S.settings.setSize)}語ずつ）</button>` : ''}
-      <button class="btn btn-ghost btn-block" data-act="swipeMore">続けて仕分ける</button>
-      <button class="btn btn-ghost btn-block" data-act="quitSwipe">ホームに戻る</button></div></div>`;
+      ${unk.length ? `<button class="btn btn-primary btn-block btn-big" data-act="learnUnknown">${I.play}${unk.length <= S.settings.setSize ? `知らない${unk.length}語を覚える` : `知らない単語から${S.settings.setSize}語を覚える`}</button>` : ''}
+      <div class="btn-row"><button class="btn btn-ghost" data-act="swipeMore">続けて仕分ける</button><button class="btn btn-ghost" data-act="quitSwipe">ホームへ</button></div></div></div>`;
   SW.unknown = unk;
   flush();
 }
@@ -3127,7 +3475,7 @@ function aiDeckSheet(){
 async function aiDeckGo(){
   const text = ($('#aitext').value || '').trim(); const level = $('#ailevel').value;
   const out = $('#aideckout'), btn = document.querySelector('[data-act="aiDeckGo"]');
-  if (text.length < 40) { out.innerHTML = '<p class="small" style="color:var(--again)">もう少し長い英文を貼り付けてください。</p>'; return; }
+  if (text.length < 40) { out.innerHTML = '<p class="small" style="color:var(--again-t)">もう少し長い英文を貼り付けてください。</p>'; return; }
   aiCtl?.abort(); aiCtl = new AbortController(); btn.disabled = true;
   out.innerHTML = '<div class="ai-box">英文を読んでいます…（20秒ほどかかることがあります）</div>';
   const prompt = `次の英文から、日本人の英語学習者（レベル: ${level}）が覚えるべき重要な英単語・熟語を最大20個選び、JSON配列だけを返してください。
@@ -3171,7 +3519,7 @@ function newDeckSheet(){
       <span class="small faint">写真の文字はライブテキストでコピーして貼れます</span></div>
     <div id="impinfo" class="small muted"></div>
     <button class="btn btn-primary" type="submit" id="impgo" data-label="つくる">つくる</button></form>`);
-  setTimeout(() => $('#dname')?.focus(), 50);
+  $('#dname')?.focus();
 }
 function cardForm(deckId, c){
   openSheet(`<div class="sheet-h"><h3>${c ? '単語を編集' : '単語を追加'}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
@@ -3185,7 +3533,7 @@ function cardForm(deckId, c){
       ${c && !c.m ? `<button class="btn btn-ghost" type="button" data-act="delCard" data-deck="${esc(deckId)}" data-k="${esc(c.k)}">この単語を外す</button>` : ''}
       ${c ? '' : '<p class="small faint">追加すると、続けて次の単語を入力できます。</p>'}
     </form>`);
-  setTimeout(() => $('#cw')?.focus(), 50);
+  $('#cw')?.focus();
 }
 function importSheet(deckId){
   const custom = decks().filter(d => !d.builtin);
@@ -3203,9 +3551,14 @@ function importSheet(deckId){
 function backupJSON(){ return JSON.stringify({app:'tangoloop', v:1, at:new Date().toISOString(), data:S}); }
 
 /* ---------- events ---------- */
+let RESET_UNDO = null;   // 記録をリセット's 「元に戻す」: the card and its record before the reset
 const ACT = {
-  tab: t => { route.tab = t.dataset.tab; if (route.tab !== 'decks') route.deck = null; render(); scrollTo(0,0); },
-  openDeck: t => { PEEK.clear(); route.tab = 'decks'; route.deck = t.dataset.id; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; render(); scrollTo(0,0); },
+  // a tab comes back as it was left (the deck page with its filter, search and scroll); the tab you are on, tapped again, goes to the top
+  // (for 単語帳: back to the list, as does すべて見る)
+  tab: t => { const to = t.dataset.tab, same = to === route.tab; SCROLL[route.tab] = same ? 0 : scrollY;
+    if (to === 'decks' && (same || !t.classList.contains('tab'))) { PEEK.clear(); route.deck = null; SCROLL.decks = 0; }
+    route.tab = to; render(); scrollTo(0, SCROLL[to] || 0); },
+  openDeck: t => { if (route.tab !== 'decks') SCROLL[route.tab] = scrollY; PEEK.clear(); route.tab = 'decks'; route.deck = t.dataset.id; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; render(); scrollTo(0,0); },
   backDecks: () => { PEEK.clear(); route.deck = null; render(); },
   paceSheet: () => paceSheet(),
   paceStep: t => { const [lo, hi] = STEP_RANGE.newPerDay; setSetting('newPerDay', clamp(S.settings.newPerDay + (+t.dataset.d), lo, hi)); render(); const b = $('#pacebox'); if (b) b.innerHTML = paceBody(); },
@@ -3217,6 +3570,7 @@ const ACT = {
   again: () => { if (locked()) return; ACT.againGo(); },
   againGo: () => {
     if (Q?.opts?.drill) { const cards = drillCards(Q.opts.drill); if (cards.length) return startQuiz({cards: cards.slice(0, S.settings.setSize), drill: Q.opts.drill}); } const ids = Q?.opts?.deckIds; const flash = Q?.opts?.flash; startQuiz(ids ? {deckIds:ids, flash} : {flash}); },
+  againNormal: () => { if (locked()) return; const ids = Q?.opts?.deckIds; startQuiz(ids ? {deckIds: ids} : {}); },   // after 苦手を特訓: the usual set
   // past today's goal: keep going with new words (and whatever reviews are left)
   studyMore: () => { if (locked()) return; startQuiz({extraNew: true, deckIds: Q?.opts?.deckIds, flash: Q?.opts?.flash}); },
   flash: () => startQuiz({flash:true}),
@@ -3230,11 +3584,13 @@ const ACT = {
   next: () => { if (!locked()) nextQ(); },
   fbTap: () => { if (!locked()) nextQ(); },
   fbMore: () => { if (!Q) return; clearTimeout(Q.timer); Q.timer = null; $('#fbmore').hidden = false; $('#fbshort').hidden = true; $('#fbact').hidden = false; $('.fb-more')?.remove(); $('.fb')?.removeAttribute('data-act'); },
-  mistapPrev: () => { if (Q?.undoable) { mistap(Q.undoable, false); Q.undoable = null; $('#toastroot').innerHTML = ''; } },
+  // 詳しく after an inline 正解: the sheet, without the word or the buzz again
+  fbOpen: () => { if (!Q?.inl) return; const {it, np} = Q.inl; Q.inl = null; clearTimeout(Q.timer); Q.timer = null;
+    $('.screen-in.study')?.removeAttribute('data-act'); $('#inlfb')?.remove(); showFeedback(it, true, np, -1, {full: true, quiet: true}); },
   moreSenses: t => { t.previousElementSibling?.classList.add('all'); t.remove(); },
   famchip: t => { const c = findCard(t.dataset.deck, t.dataset.k); const box = t.closest('.fam')?.querySelector('.fdetail'); if (!c || !box) return;
     t.parentElement.querySelectorAll('.fchip').forEach(x => x.classList.toggle('on', x === t)); box.innerHTML = famDetail(c, t.dataset.w); playWord(t.dataset.w, (c.fam.find(f => f.w === t.dataset.w) || c).p, true); },
-  mistap: () => mistap(),
+  mistap: () => { if (Q && performance.now() > (Q.lockUntil || 0) + 250) mistap(); },
   undoAnswer: () => undoAnswer(),
   spellGo: () => spellGo(),
   hint: () => hint(),
@@ -3246,6 +3602,11 @@ const ACT = {
   practiceSet: () => { if (!Q || locked()) return; startQuiz({cards: shuffle(Q.items.map(x => x.c)), practice: 'set', deckIds: Q.opts.deckIds}); },
   practiceAgain: () => { if (!Q || locked()) return; if (Q.opts.practice === 'today') return ACT.practiceToday();
     startQuiz({cards: shuffle(Q.items.map(x => x.c)), practice: 'set', deckIds: Q.opts.deckIds}); },
+  practiceMiss: () => { if (!Q || locked()) return; startQuiz({cards: shuffle(Q.items.filter(x => x.first === 1).map(x => x.c)), practice: 'set', deckIds: Q.opts.deckIds}); },
+  // a word on the results: its explanation as in study (meanings not met yet stay ？？？)
+  resWord: t => { const it = Q?.items[+t.dataset.i]; if (!it) return;
+    openSheet(`<div class="sheet-h"><h3 lang="en">${esc(it.c.w)}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+      <div class="fb-word">${ipaHTML(it.c)}<button class="say" data-act="say" data-w="${esc(it.c.w)}" data-p="${esc((it.c.s[it.si] || it.c.s[0]).p)}" aria-label="発音">${I.say}</button></div>${detailHTML(it)}`); },
   streakSheet: () => streakSheet(),
   drill: t => { const cards = drillCards(t.dataset.kind); if (!cards.length) return toast('対象の単語はありません');
     startQuiz({cards: cards.slice(0, S.settings.setSize), drill: t.dataset.kind}); },
@@ -3253,7 +3614,8 @@ const ACT = {
     if (!cards.length) return toast('対象の単語はありません'); startQuiz({cards: shuffle(cards).slice(0, S.settings.setSize)}); },
   studyPeeked: () => { const cards = [...PEEK].map(x => findCard(...x.split('\t'))).filter(c => c && !prog(c)?.sus); PEEK.clear();
     if (!cards.length) { render(); return toast('対象の単語はありません'); } startQuiz({cards: shuffle(cards).slice(0, STEP_RANGE.setSize[1])}); },
-  say: t => playWord(t.dataset.w, t.dataset.p, true),
+  say: t => { playWord(t.dataset.w, t.dataset.p, true);   // 🔊 after an answer: it moves on once the word has finished
+    if (Q?.answered && Q.timer) { clearTimeout(Q.timer); Q.timer = setTimeout(nextQ, (AUD_A[audioKey(t.dataset.w, t.dataset.p)]?.[2] || 800) + 300); } },
   sayex: t => playExample(t.dataset.w),
   lisPlay: () => { const it = Q?.cur; if (it?.type === 'lis' && !Q.answered && Q.lisArgs) lisStart(it, ...Q.lisArgs, true); },
   noSound: () => noSound(),
@@ -3261,7 +3623,7 @@ const ACT = {
   swYes: () => swDecide(true),
   swNo: () => swDecide(false),
   swUndo: () => swUndo(),
-  swipeMore: () => { const ids = SW?.deckIds || activeIds(); SW = null; startSwipe(ids); },
+  swipeMore: () => { const prev = SW; SW = null; startSwipe(prev?.deckIds || activeIds()); if (!SW) SW = prev; },
   learnUnknown: () => { const u = SW.unknown.slice(0, S.settings.setSize); SW = null; startQuiz({cards:u}); },
   filter: t => { route.filter = t.dataset.f; route.limit = 150; render(); },
   cat: t => { route.cat = route.cat === t.dataset.c ? '' : t.dataset.c; route.limit = 150; render(); },
@@ -3269,15 +3631,20 @@ const ACT = {
   more: () => { route.limit += 300; $('#wordlist').innerHTML = wordRows(deckById(route.deck)); },
   card: (t, e) => {
     if (route.red && !t.classList.contains('peek')) { t.classList.add('peek'); setTimeout(() => t.classList.remove('peek'), 1800);
-      PEEK.add(t.dataset.deck + '\t' + t.dataset.k); const b = $('#peekbar');
-      if (b) { const y = t.getBoundingClientRect().top; b.innerHTML = peekBtn(); scrollBy(0, t.getBoundingClientRect().top - y); } return; }   // keep the row under the finger
+      PEEK.add(t.dataset.deck + '\t' + t.dataset.k); const dk = $('#deckdock'); if (dk) dk.innerHTML = deckDock(deckById(route.deck)); return; }
     const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c);
   },
   closeSheet: () => { aiCtl?.abort(); closeSheet(); },
-  suspend: t => { const c = findCard(t.dataset.deck, t.dataset.k); const p = clone(prog(c)) || {st:0}; p.sus = !p.sus; p.last = Date.now(); setProg(c, p); cardSheet(c); render(); },
-  resetCard: t => { const c = findCard(t.dataset.deck, t.dataset.k); setProg(c, {st:0, last:Date.now()}); cardSheet(c); render(); toast('記録をリセットしました'); },
+  suspend: t => { const c = findCard(t.dataset.deck, t.dataset.k); const p = clone(prog(c)) || {st:0}; p.sus = !p.sus; p.last = Date.now(); setProg(c, p); cardSheet(c, true); render(); },
+  resetCard: t => { const c = findCard(t.dataset.deck, t.dataset.k); if (!c) return; RESET_UNDO = {c, prev: clone(prog(c))};
+    setProg(c, {st:0, last:Date.now()}); cardSheet(c, true); render(); toast('記録をリセットしました', {label:'元に戻す', act:'undoReset'}, 5000); },
+  // u: newer than the reset, so a sync doesn't bring the reset back (as in undoAnswer)
+  undoReset: () => { const u = RESET_UNDO; if (!u) return; RESET_UNDO = null;
+    setProg(u.c, u.prev ? {...u.prev, u: Date.now()} : {st:0, last: Date.now()}); $('#toastroot').innerHTML = '';
+    const open = $('#sheetroot [data-act="suspend"]'); if (open && open.dataset.deck === u.c.deck && open.dataset.k === u.c.k) cardSheet(u.c, true);
+    render(); toast('元に戻しました'); },
   aiMnemonic: t => { const c = findCard(t.dataset.deck, t.dataset.k); if (c) aiMnemonic(c); },
-  saveMemo: t => { const txt = $('#aiout')?.dataset.text; if (!txt) return; (S.notes[t.dataset.deck] ||= {})[t.dataset.k] = txt; save(); markDirty('note_' + t.dataset.deck, true); const c = findCard(t.dataset.deck, t.dataset.k); cardSheet(c); toast('メモを保存しました'); },
+  saveMemo: t => { const txt = $('#aiout')?.dataset.text; if (!txt) return; (S.notes[t.dataset.deck] ||= {})[t.dataset.k] = txt; save(); markDirty('note_' + t.dataset.deck, true); const c = findCard(t.dataset.deck, t.dataset.k); cardSheet(c, true); toast('メモを保存しました'); },
   newDeck: () => newDeckSheet(),
   addCard: t => cardForm(t.dataset.id, null),
   editCard: t => cardForm(t.dataset.deck, findCard(t.dataset.deck, t.dataset.k)),
@@ -3297,7 +3664,7 @@ const ACT = {
     if (f) { try { text = (text ? text + '\n' : '') + (IMP.file || await f.text()); } catch(e) {} }
     const target = $('#imptarget').value;
     const items = importItems(analyzeImport(text || '', target === '__new' ? null : target));
-    if (!items.length) { $('#impinfo').innerHTML = '<span style="color:var(--again)">取り込める単語がありませんでした。英単語を1行に1語ずつ貼るか、「英単語, 意味」の形にしてください。</span>'; return; }
+    if (!items.length) { $('#impinfo').innerHTML = '<span style="color:var(--again-t)">取り込める単語がありませんでした。英単語を1行に1語ずつ貼るか、「英単語, 意味」の形にしてください。</span>'; return; }
     let id;
     if (target === '__new') id = createDeck(($('#impname').value || '取り込んだ単語帳').slice(0,40), items);
     else { id = target; S.custom[id].cards.push(...items.map(storeCard)); touchDeck(id); }
@@ -3315,9 +3682,10 @@ const ACT = {
     const id = createDeck(($('#ainame').value || '英文から').slice(0,40), picked);
     closeSheet(); route.tab = 'decks'; route.deck = id; render(); toast(`${picked.length}語の単語帳をつくりました`);
   },
-  set: t => { const k = t.dataset.k; let v = t.dataset.v; if (['setSize','rate','zoom','drillMin','timeLimit','retention'].includes(k)) v = +v; setSetting(k, v); applyZoom(); render(); },
+  set: t => { const k = t.dataset.k; let v = t.dataset.v; if (['setSize','rate','zoom','drillMin','timeLimit','retention'].includes(k)) v = +v; setSetting(k, v); applyZoom(); render(); refreshOpts(); },
   toggle: t => { setSetting(t.dataset.k, !S.settings[t.dataset.k]); render(); },
-  step: t => { const k = t.dataset.k, [lo, hi] = STEP_RANGE[k] || [0, 200]; setSetting(k, clamp(S.settings[k] + (+t.dataset.d), lo, hi)); render(); },
+  step: t => { const k = t.dataset.k, [lo, hi] = STEP_RANGE[k] || [0, 200]; setSetting(k, clamp(S.settings[k] + (+t.dataset.d), lo, hi)); render(); refreshOpts(); },
+  studyOpts: () => studyOpts(),
   install: async () => { if (!installEvt) return; installEvt.prompt(); try { await installEvt.userChoice; } catch(e) {} installEvt = null; render(); },
   dlAudio: t => downloadAllAudio(t),
   signIn: t => t.dataset.kind ? signIn(t.dataset.kind) : loginSheet(),
@@ -3340,7 +3708,7 @@ const ACT = {
     closeSheet(); render();
     if (t.dataset.mode === 'swipe') startSwipe([deck]); else startQuiz({});
   },
-  showOnboard: () => onboard(),
+  showOnboard: () => howSheet(),
   obSkip: () => { setSetting('onboarded', true); closeSheet(); render(); },
   backup: () => offerFile(`kyokutan-backup-${dayKey(dayIdx())}.json`, backupJSON()),
   restoreSheet: () => openSheet(`<div class="sheet-h"><h3>バックアップから戻す</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
@@ -3356,7 +3724,7 @@ const ACT = {
       for (const id of Object.keys(S.custom)) { S.custom[id].upd = now; markDirty('deck_'+id); }
       for (const deck of Object.keys(S.notes)) markDirty('note_'+deck);
       markDirty('meta', true); invalidateDecks(); saveNow(); closeSheet(); render(); toast('バックアップから戻しました');
-    } catch(e) { $('#rinfo').innerHTML = '<span style="color:var(--again)">極単のバックアップとして読み取れませんでした。</span>'; }
+    } catch(e) { $('#rinfo').innerHTML = '<span style="color:var(--again-t)">極単のバックアップとして読み取れませんでした。</span>'; }
   },
   resetSheet: () => openSheet(`<div class="sheet-h"><h3>学習記録をリセット</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="confirm"><b>すべての単語の学習記録と、毎日の記録を消します。</b><span class="small">自作の単語帳と設定は残ります。元に戻せないので、先にバックアップを書き出すと安心です。</span>
@@ -3366,11 +3734,14 @@ const ACT = {
     S.daily = {}; S.settings.upd = now; markDirty('meta', true); saveNow(); closeSheet(); render(); toast('リセットしました'); },
 };
 document.addEventListener('click', e => {
+  // a settings row flips its switch wherever it is tapped, as in the iPhone's Settings
+  if (!e.target.closest('[data-act],a,input,select,textarea,label,summary')) { const s = e.target.closest('.frow')?.querySelector('.switch'); if (s) { s.click(); return; } }
   const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
   const fn = ACT[t.dataset.act]; if (fn) { e.preventDefault(); fn(t, e); }
 });
 document.addEventListener('contextmenu', e => { const t = e.target.closest('.wrow'); if (!t) return; e.preventDefault(); const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c); });
 document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.id === 'q' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); e.target.blur(); return; }   // not while a Japanese word is being converted
   if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229 && e.target.tagName === 'INPUT' && e.target.closest?.('#newdeckform')) {   // not a submit: on to the next field
     e.preventDefault(); const n = e.target.id === 'dname' ? $('#imptext') : e.target.closest('.impx-row')?.nextElementSibling?.querySelector('.impx-m'); n ? n.focus() : e.target.blur(); return; }
   if (e.target.matches?.('.deck,[role="button"]') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); return; }
@@ -3396,7 +3767,7 @@ document.addEventListener('keydown', e => {
   } else if (e.key === 'Escape') closeScreen();
 });
 document.addEventListener('input', e => {
-  if (e.target.id === 'q') { route.q = e.target.value; route.limit = 150; const d = deckById(route.deck); if (d) $('#wordlist').innerHTML = wordRows(d); }
+  if (e.target.id === 'q') { route.q = e.target.value; route.limit = 150; const d = deckById(route.deck); if (d) { $('#wordlist').innerHTML = wordRows(d); const dk = $('#deckdock'); if (dk) dk.innerHTML = deckDock(d); } }
   if (e.target.id === 'imptext') { clearTimeout(impT); impT = setTimeout(() => { impT = null; impPreview(); }, 250); }
   if (e.target.classList?.contains('impx-m')) {   // a meaning typed for a word 極単 doesn't have: add that word
     const k = e.target.dataset.w, v = e.target.value; IMP.mean.set(k, v);
@@ -3468,30 +3839,39 @@ function forgetChart(){
   </svg>`;
 }
 const hasProgress = () => Object.values(S.prog).some(d => d && Object.keys(d).length);
+/* the first run: only what to choose, with the start buttons stuck to the bottom of the sheet (the longer story is 「アプリのしくみ」) */
 function onboard(){
-  const opts = [['j1','受験英単語 基礎（No.1–750）','高校の基本〜共通テスト'], ['j2','受験英単語 標準（No.751–1700）','共通テスト〜中堅大'], ['j3','受験英単語 発展（No.1701–2500）','難関大・英検準1級'], ['toeic','TOEIC頻出','ビジネス・オフィス'], ['theme','テーマ別 長文頻出語','環境・医療・経済などの専門語']]
+  const opts = [['j1','受験英単語 基礎','高校の基本〜共通テスト'], ['j2','受験英単語 標準','共通テスト〜中堅大'], ['j3','受験英単語 発展','難関大・英検準1級'], ['toeic','TOEIC頻出','ビジネス・オフィス'], ['theme','テーマ別 長文頻出語','環境・医療・経済などの専門語']]
     .filter(([id]) => deckById(id));
+  const main = opts.filter(([id]) => /^j\d$/.test(id)), more = opts.filter(([id]) => !/^j\d$/.test(id));
+  const opt = ([id, name, sub], i) => `<label class="ob-opt"><input type="radio" name="obdeck" value="${id}" ${i === 0 ? 'checked' : ''}><b>${name}</b><small>${sub}</small></label>`;
   openSheet(`<div class="ob">
-    <div class="ob-logo" aria-hidden="true">極</div>
-    <h3>極単へようこそ</h3>${iabNote()}
-    <ul class="ob-points">
-      <li><b>覚えるのはカード、復習は4択</b><span>新しい単語はカードで覚えて自分で評価。復習は4択でサクサク、速く正解した単語ほど次の復習は先になります。押し間違えたら「1問もどす」でやり直せます。</span></li>
-      <li class="ob-curve"><b>忘却曲線に沿って設計</b><span>人は覚えたことを時間とともに忘れていきます（エビングハウスの忘却曲線）。極単は単語ごとの忘れ方を計算して、記憶が薄れかけた頃に復習を出すので、少ない回数で長く覚えていられます。</span>
-        ${forgetChart()}
-        <span class="fc-cap">復習するたびに忘れにくくなり、次の復習までの間隔が「1日 → 3日 → 8日 → 20日」と伸びていきます。</span></li>
-      <li><b>意味も派生語も1つずつ</b><span>覚えた意味を後日の復習で正解すると、次の意味や派生語が1つずつ出てきます。発音は AI 音声つき。</span></li>
-    </ul>
+    <div class="ob-hd"><span class="ob-logo" aria-hidden="true">極</span><h3>極単へようこそ</h3></div>${iabNote()}
+    <p class="ob-lead">新しい単語はカードで覚えて、復習は4択でサクサク。忘れかけたころに復習が出るので、少ない回数で長く覚えられます。</p>
+    ${forgetChart()}
     <fieldset class="ob-f"><legend>どこから始める？</legend>
-      ${opts.map(([id, name, sub], i) => `<label class="ob-opt"><input type="radio" name="obdeck" value="${id}" ${i === 0 ? 'checked' : ''}><span><b>${name}</b><small>${sub}</small></span></label>`).join('')}
+      ${main.map(opt).join('')}
+      ${more.length ? `<details class="ob-more"><summary>ほかの単語帳（TOEIC・テーマ別）</summary>${more.map((o, i) => opt(o, main.length + i)).join('')}</details>` : ''}
     </fieldset>
     <fieldset class="ob-f"><legend>1日の目標（新しい単語）</legend><div class="ob-row">
-      ${[10, 20, 30].map(n => `<label class="ob-chip"><input type="radio" name="obnew" value="${n}" ${n === 20 ? 'checked' : ''}><span>${n}語</span></label>`).join('')}
-    </div><p class="ob-note">毎日の目標を達成すると連続記録がのびます。達成したあとも続けて学習できます</p></fieldset>
-    <button class="btn btn-primary btn-big btn-block" data-act="obStart" data-mode="swipe">知っている単語を仕分けてから始める</button>
-    <button class="btn btn-ghost btn-block" data-act="obStart" data-mode="study">すぐに学習をはじめる</button>
-    ${FIREBASE ? '<button class="btn btn-ghost btn-block" data-act="signIn">ほかの端末やブラウザで使っていた人：ログイン</button>' : ''}
-    <button class="link ob-skip" data-act="obSkip">あとで決める</button>
+      ${[10, 20, 30].map(n => `<label class="ob-chip"><input type="radio" name="obnew" value="${n}" ${n === 20 ? 'checked' : ''}><span>${n}語<small>${{10: 'ゆったり', 20: 'ふつう', 30: 'がっつり'}[n]}</small></span></label>`).join('')}
+    </div></fieldset>
+    <div class="ob-go"><button class="btn btn-primary btn-big btn-block" data-act="obStart" data-mode="swipe">知ってる単語を仕分けて始める<small>50語・約2分</small></button>
+      <button class="btn btn-ghost btn-block" data-act="obStart" data-mode="study">仕分けずに、すぐ覚えはじめる</button>
+      <div class="ob-links">${FIREBASE ? '<button class="link" data-act="signIn">前に使っていた人はログイン</button>' : ''}<button class="link" data-act="obSkip">あとで決める</button></div></div>
   </div>`, true);
+}
+/* 設定 →「アプリのしくみ」: the same ideas in a plain sheet (it sets nothing, so the choices made on the first run stay) */
+function howSheet(){
+  openSheet(`<div class="sheet-h"><h3>極単のしくみ</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <ul class="ob-points">
+      <li><b>覚えるのはカード、復習は4択</b><span>新しい単語はカードで覚えて、復習は4択。速く正解した単語ほど、次の復習は先になります。</span></li>
+      <li class="ob-curve"><b>忘却曲線に沿って設計</b><span>忘れかけたころに復習が出るので、少ない回数で長く覚えられます。</span>
+        ${forgetChart()}
+        <span class="fc-cap">復習のたびに間隔がのびます：1日 → 3日 → 8日 → 20日</span></li>
+      <li><b>意味も派生語も1つずつ</b><span>覚えた意味を後日の復習で正解すると、次の意味や派生語が出てきます。</span></li>
+    </ul>
+    <button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
 }
 
 /* ---------- boot ---------- */
