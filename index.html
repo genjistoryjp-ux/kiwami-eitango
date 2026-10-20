@@ -2490,8 +2490,7 @@ function viewHome(){
   const newLane = `<div class="lane new ${!c.due && c.newToday ? 'now' : !c.newToday && (td.nw || 0) > 0 ? 'done' : ''}">
     <div class="lane-h">新しい単語${where ? `<span>${esc(where)}</span>` : ''}</div>
     ${c.newToday ? `<div class="lane-n"><b class="num">${c.newToday}</b><small>語</small></div>
-      <button class="btn ${c.due ? 'btn-ghost' : 'btn-primary'} lane-btn" data-act="studyNew">${I.play}覚える</button>
-      ${c.due ? '<div class="lane-note">復習のあとがおすすめ</div>' : ''}`
+      <button class="btn ${c.due ? 'btn-ghost' : 'btn-primary'} lane-btn" data-act="studyNew">${I.play}覚える</button>`
     : nd ? `<div class="lane-n"><span class="lane-ok">${I.check}今日の分は完了</span></div><div class="lane-wide">${nextDeckBtn(nd, 'btn-soft')}</div>`
     : moreNew ? `<div class="lane-n"><span class="lane-ok">${(td.nw || 0) > 0 ? `${I.check}今日の分は完了` : '今日の新しい単語は0語の設定'}</span></div><button class="btn btn-ghost lane-btn" data-act="studyNew">もっと覚える</button>`
     : '<div class="lane-n"><span class="lane-none">新しい単語はありません</span></div>'}
