@@ -883,6 +883,10 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .rv-done .rv-ico .ico{width:24px;height:24px;stroke-width:3}
 .rv-done b{display:block;font-size:17px}
 .rv-done div span{font-size:13px;font-weight:600}
+.parent-line{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:14px}
+.parent-line .pl-k{font-size:12px;font-weight:700;color:var(--muted)}
+.parent-line b{font-family:var(--f-word);font-size:16px}
+.parent-line .pl-m{color:var(--ink)}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -3521,6 +3525,8 @@ function spellGo(){
   answer(ok);
 }
 function hint(){ if (!Q || Q.answered) return; Q.hint = Math.max(2, Q.hint + 1); $('#hint').textContent = hintText(Q.cur.c.w, Q.hint); $('#spellin')?.focus(); }
+/* a derivative's card, answer side: the word it comes from, with that word's meaning, under the explanation */
+const parentLine = c => c.isD && c.parent ? `<div class="parent-line"><span class="pl-k">元の単語</span><b lang="en">${esc(c.parent.w)}</b>${c.parent.p ? `<span class="pos">${esc(c.parent.p)}</span>` : ''}<span class="pl-m">${esc(c.parent.m)}</span></div>` : '';
 function reveal(noProg = false){
   if (!Q || Q.answered || Q.revealed === Q.cur || locked()) return; Q.revealed = Q.cur; stopCountdown();
   $('#qcard')?.removeAttribute('data-act');   // the back doesn't turn over again
@@ -3533,7 +3539,7 @@ function reveal(noProg = false){
   const back = c.isD || !S.settings.senseCards ? sensesHTML(c, -1, 'all') : c.isS ? sensesGated(c.parent, c.si, false, noProg) : sensesGated(c, 0, false, noProg);
   // a new word's back: 成り立ち・コア (a new meaning: how it links to the ones learned; a derivative: its affix)
   const ety = isNew && it.first === null ? (c.isD ? affixHTML(c) : c.isS ? linkHTML(c) : etyHTML(c)) : '';
-  $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `<div class="back-face">${front}${back}${ety}</div>`);
+  $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `<div class="back-face">${front}${back}${parentLine(c)}${ety}</div>`);
   if (it.flip) playWord(c.w, c.p);
   if (it.first !== null || it.sameDay) {
     // second look in this set (or today's check): the review date is already set, so only "again or got it" matters here
