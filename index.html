@@ -1411,11 +1411,14 @@ const isReview = p => p && p.st === 2;
    two answers, the last one right or two right in all. */
 const settled = p => isReview(p) && !!(p.sd || (p.f == null && (p.r || 0) >= 2 && (p.lg >= 2 || p.r - (p.w || 0) >= 2)));
 function retr(p, today=dayIdx()){ return isReview(p) ? fR(Math.max(0, today - dayIdx(p.last)), p.s) : 0; }
+/* a new word's starting stability: もう一度 / 難しい as FSRS-4.5 (tomorrow), 正解 / 簡単 nearer FSRS-6 (2 and 7 days at 90%):
+   a word got right was first recalled again only after 4 days, too late for many (initial-interval study, 2026-10) */
+const S0 = [W[0], W[1], 2.3, 7.0];
 /** g: 1 もう一度 / 2 難しい / 3 正解 / 4 簡単 */
 function nextState(p, g, now=Date.now(), fuzz=true){
   const today = dayIdx(now);
   let s, d, l = p?.l || 0;
-  if (!isReview(p)) { s = W[g-1]; d = fD0(g); }
+  if (!isReview(p)) { s = S0[g-1]; d = fD0(g); }
   else {
     const t = Math.max(0, today - dayIdx(p.last));
     const r = fR(t, p.s);
@@ -1430,6 +1433,7 @@ function nextState(p, g, now=Date.now(), fuzz=true){
   ivl = clamp(ivl, 1, 36500);
   const out = {...(p||{}), st:2, s:+s.toFixed(3), d:+d.toFixed(3), due:today+ivl, last:now, r:(p?.r||0)+1, l};
   if (g === 1) delete out.k;
+  delete out.tc;   // a same-day check still waiting is replaced by this answer
   out.w = (p?.w || 0) + (g === 1 ? 1 : 0); out.lg = g;
   // f: the day it was first learned; sd: the first later day it was answered right
   if (!isReview(p)) { out.f = today; delete out.sd; }
@@ -2745,6 +2749,13 @@ function startQuiz(opts={}){
   Q = {items: cards.map(c => ({c, p0:clone(prog(c)), type:null, first:null, tries:0})), queue:[], cleared:0, combo:0, maxCombo:0, due0, day0,
        flash: opts.flash || S.settings.mode === 'flash', start:Date.now(), opts};
   Q.queue = Q.items.map((_,i) => i);
+  if (!opts.practice) {
+    const have = new Set(cards), sd = cardsOf(opts.deckIds || activeIds(), true)
+      .filter(c => { const p = prog(c); return p?.tc && !p.sus && !have.has(c) && dayIdx(p.tc) === day0 && (!opts.only || opts.only.has(c)); })
+      .sort((a, b) => prog(a).tc - prog(b).tc).slice(0, 5);
+    for (const c of sd) { Q.items.push({c, p0: clone(prog(c)), type: Q.flash ? null : 'e2j', first: null, tries: 0, check: true, sameDay: true}); Q.queue.push(Q.items.length - 1); }
+    if (sd.length) prefetchAudio(sd);
+  }
   audioCtx(); prefetchAudio(cards);
   if (IOS && !lsGet(SILENT_KEY)) { lsSet(SILENT_KEY, '1'); setTimeout(() => { if (Q) toast('マナーモード中は🔊をもう一度押すと鳴ります', null, 3500); }, 600); }
   openScreen(); renderQ();
@@ -3262,16 +3273,25 @@ function answer(ok, grade){
   const ms = Math.min(60000, performance.now() - Q.t0);
   const g = grade ?? gradeFrom(it.type, ok, ms, Q.hint > 1, isReview(it.p0));
   const practice = !!Q.opts.practice; snap.practice = practice;
-  if (it.first === null && ok && grade == null && !practice) { noteRT(it.type, ms); snap.rt = it.type; }
+  if (it.first === null && ok && grade == null && !practice && !it.sameDay) { noteRT(it.type, ms); snap.rt = it.type; }
   if (grade != null) ok = grade > 1;
-  const tier = ok && grade == null && it.first === null && it.type in SLOW_DEF ? speedTier(it.type, ms) : 0;
+  const tier = ok && grade == null && it.first === null && !it.sameDay && it.type in SLOW_DEF ? speedTier(it.type, ms) : 0;
   showRate(tier, true);   // the tier it earned pops; a miss clears it
   let np = null;
   if (it.first === null && practice) { it.first = g; it.ok = ok; it.ms = ms; it.grade = g; it.tier = tier; }   // 練習: nothing is saved
+  else if (it.first === null && it.sameDay) {
+    // 今日のうちの確認: not a review — the schedule stays (tomorrow), nothing is counted; a 難しい word missed here
+    // falls back to もう一度's stability. A miss still comes back in this set like any other.
+    const p = {...prog(it.c)}; delete p.tc;
+    if (!ok && p.lg === 2) { p.s = Math.min(p.s, W[0]); p.due = Math.min(p.due, dayIdx() + 1); }
+    p.u = Date.now(); setProg(it.c, p);
+    it.first = g; it.ok = ok; it.ms = ms; it.after = p; it.grade = g; it.tier = 0;
+  }
   else if (it.first === null) {
     const wasNew = !isReview(it.p0);
     it.first = g; it.ok = ok; it.ms = ms;
     np = nextState(it.p0, g);
+    if (wasNew && g <= 2) np.tc = Date.now();   // 今日のうちにもう1回: it comes back once at the end of the next set today
     const boost = tier ? tierBoost(it.type, tier) : 1, today = dayIdx();
     if (boost > 1 && np.due > today) np.due = today + Math.round((np.due - today) * boost);
     setProg(it.c, np); it.after = np; it.grade = g; it.tier = tier;
@@ -3502,8 +3522,8 @@ function reveal(noProg = false){
   $('#qcard')?.removeAttribute('data-act');   // the back doesn't turn over again
   Q.lockUntil = performance.now() + 200;   // a double tap on 答えを見る doesn't grade the card
   const it = Q.cur, c = it.c, today = dayIdx(), isNew = !isReview(it.p0);
-  // under each grade, when the word comes back: もう一度 always returns in this set, the rest as 明日 / 4日後 / 約1ヶ月後
-  const prev = g => it.first !== null ? '' : g === 1 ? '<small class="jp">このあと<wbr>また出る</small>'
+  // under each grade, when the word comes back: もう一度 returns in this set, 難しい later today, the rest as 2日後 / 7日後 …
+  const prev = g => it.first !== null ? '' : g === 1 ? '<small class="jp">このあと<wbr>また出る</small>' : g === 2 && isNew ? '<small class="jp">あとで<wbr>もう1回</small>'
     : `<small class="jp">${ivlText(nextState(it.p0, g, Date.now(), false).due - today)}</small>`;
   const front = it.flip ? `<div class="qword" lang="en">${esc(c.w)}</div>${ipaHTML(c)}` : '';
   const back = c.isD || !S.settings.senseCards ? sensesHTML(c, -1, 'all') : c.isS ? sensesGated(c.parent, c.si, false, noProg) : sensesGated(c, 0, false, noProg);
@@ -3511,12 +3531,12 @@ function reveal(noProg = false){
   const ety = isNew && it.first === null ? (c.isD ? affixHTML(c) : c.isS ? linkHTML(c) : etyHTML(c)) : '';
   $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `<div class="back-face">${front}${back}${ety}</div>`);
   if (it.flip) playWord(c.w, c.p);
-  if (it.first !== null) {
-    // second look in this set: the review date came from the first answer, so only "again or got it" matters here
+  if (it.first !== null || it.sameDay) {
+    // second look in this set (or today's check): the review date is already set, so only "again or got it" matters here
     $('#qbody').innerHTML = `<div class="grades two">
       <button class="grade g1" data-act="grade" data-g="1">もう一度<small>このセットでまた出す</small></button>
       <button class="grade g3" data-act="grade" data-g="3">覚えた<small>次へ進む</small></button></div>
-      <p class="grade-note">次の復習は${it.after ? ivlText(it.after.due - today) : '明日'}（1回目の答えで決まっています）</p>`;
+      <p class="grade-note">${it.sameDay ? `今日のうちの確認です。次の復習は${ivlText(it.p0.due - today)}` : `次の復習は${it.after ? ivlText(it.after.due - today) : '明日'}（1回目の答えで決まっています）`}</p>`;
     return;
   }
   $('#qbody').innerHTML = `<div class="grades">
@@ -3526,7 +3546,7 @@ function reveal(noProg = false){
 function renderResults(){
   const its = Q.items, n = its.length, ok = its.filter(x => x.ok).length, today = dayIdx();
   const dur = Date.now() - Q.start; sfx('done'); haptic(true);
-  const learned = its.filter(x => !isReview(x.p0)).length, reviewed = n - learned;
+  const learned = its.filter(x => !isReview(x.p0)).length, reviewed = its.filter(x => isReview(x.p0) && !x.sameDay).length;
   const before = streakInfo(), won = checkGoal(), st = won ? streakInfo() : before;
   if (won) { Q.won = true; haptic(true); }
   // the day's goal reached: the streak in big type, counting up by one (no extra screen, no extra tap)
@@ -3600,6 +3620,7 @@ const swEarly = (st = swStats()) => st.n >= 10 && st.hit / st.n < 0.7;
 const swCheck = p => isReview(p) && !!p.k && (p.r || 0) === 1;   // not answered since it was sorted as 知ってる
 function swKnown(prev, c, now){
   const early = swEarly(), np = {...nextState(prev, early ? 3 : 4, now, false), k:1};
+  np.s = early ? W[2] : W[3];   // the sort's 知ってる keeps its stability as before (S0 is for words actually learned)
   np.due = dayIdx(now) + (early ? 3 + keyHash(c.k) % 5 : 7 + keyHash(c.k) % 15);
   return np;
 }
@@ -4170,7 +4191,7 @@ document.addEventListener('keydown', e => {
     if (isSpell(it.type)) { if (inInput && e.key === 'Enter') { e.preventDefault(); spellGo(); } return; }
     if (it.type === 'flash') {
       if (Q.revealed !== it) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); reveal(); } }
-      else if (it.first !== null && (e.key === '1' || e.key === '2')) answer(null, e.key === '1' ? 1 : 3);
+      else if ((it.first !== null || it.sameDay) && (e.key === '1' || e.key === '2')) answer(null, e.key === '1' ? 1 : 3);
       else if (it.first === null && /^[1-4]$/.test(e.key)) answer(null, +e.key);
       return;
     }
