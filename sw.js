@@ -5,13 +5,13 @@
      A sprite file never changes (tools/pack_*.py put new audio in new files), so this cache keeps one name and is never cleared
    - the login / sync library (Firebase, one fixed version): cached on first use, so an offline start still syncs later
    - Google Fonts: served from cache, refreshed in the background */
-const APP = 'kyokutan-app-7e3b2943c4';
+const APP = 'kyokutan-app-696b3a6302';
 const AUDIO = 'kyokutan-audio';
 const AUDIO_OLD = 'kyokutan-audio-f026ca2bc4';   // the last name that changed with the audio set: the same files, so they move over
 const FONTS = 'kyokutan-fonts-v1';
 const LIB = 'kyokutan-lib-10.12.2';
 const PAGE_WAIT = 3000;
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
+const SHELL = ['./', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(APP).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -50,7 +50,7 @@ function fetchPage(e) {
 
 async function networkFirst(req, net) {
   const c = await caches.open(APP);
-  const hit = (await c.match(req)) || (await c.match('./index.html'));
+  const hit = (await c.match(req)) || (await c.match('./')) || (await c.match('./index.html'));
   if (!hit) return net.catch(() => Response.error());
   const late = new Promise(r => setTimeout(r, PAGE_WAIT, null));
   try {

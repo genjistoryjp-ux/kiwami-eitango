@@ -2081,8 +2081,28 @@ const inApp = !!IAB;   // inside an app's browser (LINE too, in case it stays op
 function iabNote(){
   return inApp ? `<div class="iab" role="note"><span>アプリ内ブラウザでは記録が別になります。メニューの「ブラウザで開く」で開いてね</span><button class="link" data-act="copyUrl">URLをコピー</button></div>` : '';
 }
+/* 新しい版: a home-screen app comes back from the background without loading the page again, so it would keep the old
+   version until fully closed. When it comes back (at most every 30 min, online) it asks for a new service worker; once
+   that has taken over, the page reloads at a quiet moment — never in the middle of a set or with a sheet open (then it
+   waits for closeScreen / closeSheet) — after saving, and says so once. */
+let swNew = false;
+function reloadIfQuiet(){
+  if (!swNew || !$('#screen').hidden || sheetOpen()) return;
+  swNew = false; saveNow();
+  Promise.race([flush(true).catch(() => {}), new Promise(r => setTimeout(r, 3000))]).then(() => { lsSet('kiwami.updated', '1'); location.reload(); });
+}
 if (IS_WEB) {
-  if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  if ('serviceWorker' in navigator) {
+    const hadSW = !!navigator.serviceWorker.controller;   // the first visit's takeover is not an update
+    addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    let lastCheck = Date.now();
+    const checkUpdate = () => {
+      if (document.visibilityState === 'hidden' || !navigator.onLine || Date.now() - lastCheck < 30 * 60000) return;
+      lastCheck = Date.now(); navigator.serviceWorker.getRegistration().then(r => r?.update()).catch(() => {});
+    };
+    document.addEventListener('visibilitychange', checkUpdate); addEventListener('pageshow', checkUpdate);
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadSW) { swNew = true; reloadIfQuiet(); } });
+  }
   try { navigator.storage?.persist?.(); } catch(e) {}
   addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; if (route.tab === 'settings') render(); });
   addEventListener('appinstalled', () => { installEvt = null; toast('ホーム画面に追加しました'); });
@@ -2148,10 +2168,10 @@ function bindSheetDrag(sh){
   };
   sh.addEventListener('pointerup', end); sh.addEventListener('pointercancel', end);
 }
-function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); }
+function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); reloadIfQuiet(); }
 const sheetOpen = () => !!$('#sheetroot').firstChild;
 function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); viewKey = ''; guard(); }   // viewKey: the home dock rises again when this closes
-function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); Q = null; SW = null; const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); }
+function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); Q = null; SW = null; const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); reloadIfQuiet(); }
 const layerOpen = () => sheetOpen() || !$('#screen').hidden || (route.tab === 'decks' && !!route.deck);
 addEventListener('popstate', e => {
   if (!IS_WEB) return;
@@ -4227,6 +4247,7 @@ function start(data){
   if (!S.settings.onboarded && hasProgress()) S.settings.onboarded = true;   // people who already study skip the welcome
   applyZoom(); render(); initSync(); initFirebase();
   if (!S.settings.onboarded) onboard();
+  if (lsGet('kiwami.updated')) { lsSet('kiwami.updated', ''); setTimeout(() => toast('新しい版になりました'), 600); }
 }
 try { window.claude?.hot?.snapshot?.(() => ({tab:route.tab, deck:route.deck})); } catch(e) {}
 try { window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {}); } catch(e) { start({}); }
