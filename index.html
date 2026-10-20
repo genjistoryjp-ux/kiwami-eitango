@@ -870,6 +870,8 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .res-mk .mekuru{width:72px;height:72px}
 .res-mk span{font-size:13.5px;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:7px 12px;text-align:left;max-width:15em}
 @keyframes mkin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.homemode{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap}
+.homemode .dirrow{flex:none}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -2325,17 +2327,18 @@ const dirRow = () => `<div class="dirrow"><span>出題</span><div class="seg seg
    段階式 or 4択だけ, whichever was set in くわしい設定 */
 const isCardMode = () => S.settings.mode === 'flash';
 const modeRow = () => `<div class="dirrow"><span>復習</span><div class="seg seg-sm" role="group" aria-label="復習のしかた">${[[S.settings.mode === 'choice' ? 'choice' : 'auto', '4択'], ['flash', 'カード']].map(([v, l]) => `<button aria-pressed="${isCardMode() === (v === 'flash')}" data-act="set" data-k="mode" data-v="${v}">${l}</button>`).join('')}</div></div>`;
-const modeNote = () => `<p class="small muted" id="modenote">${isCardMode() ? 'カード：意味を思い出してからめくって、覚えてたかどうかを自分で選びます' : '4択：正解と答えの速さ（Perfect など）で、次の復習日が決まります'}</p>`;
-/* 復習のしかた・出題の向き・1セットの問題数 on the home hero: one chip with the current values; a tap opens them in a sheet */
-const optChip = () => `<button class="optchip" data-act="studyOpts" aria-label="復習のしかた・出題の向き・1セットの問題数を変える">復習 ${isCardMode() ? 'カード' : '4択'} ・ ${DIR_LABEL[S.settings.dir || 'auto']} ・ ${S.settings.setSize}問${I.right}</button>`;
+/* on the home card: 復習 [4択｜カード] — the pressed one is how reviews are asked, with what it means beside it */
+const homeMode = () => `<div class="homemode">${modeRow()}<span class="small muted">${isCardMode() ? 'めくって、覚えてたか自分で選ぶ' : '選んで答える・速いほど高評価'}</span></div>`;
+/* 出題の向き・1セットの問題数 on the home hero: one chip with the current values; a tap opens them in a sheet */
+const optChip = () => `<button class="optchip" data-act="studyOpts" aria-label="出題の向きと1セットの問題数を変える">出題 ${DIR_LABEL[S.settings.dir || 'auto']} ・ 1セット ${S.settings.setSize}問${I.right}</button>`;
 function studyOpts(){
-  openSheet(`<div class="sheet-h"><h3>出題のしかた</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="stk" id="optbox">${modeRow()}${modeNote()}${dirRow()}${sizeRow()}</div><button class="btn btn-primary btn-block" data-act="closeSheet">これでOK</button>`);
+  openSheet(`<div class="sheet-h"><h3>出題のしかた</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="stk" id="optbox">${dirRow()}${sizeRow()}</div><button class="btn btn-primary btn-block" data-act="closeSheet">これでOK</button>`);
 }
 /* after a change: the sheet's rows drawn again (like #pacebox), the focus kept on the same control */
 function refreshOpts(){
   const ob = $('#optbox'); if (!ob) return;
   const a = document.activeElement, sel = ob.contains(a) && a.dataset.k ? `[data-k="${a.dataset.k}"]` + (a.dataset.v != null ? `[data-v="${a.dataset.v}"]` : `[data-d="${a.dataset.d}"]`) : '';
-  ob.innerHTML = modeRow() + modeNote() + dirRow() + sizeRow();
+  ob.innerHTML = dirRow() + sizeRow();
   if (sel) (ob.querySelector(sel + ':not([disabled])') || ob.querySelector(`[data-k="${a.dataset.k}"]:not([disabled])`))?.focus();   // at 5 or 50 the pressed one is disabled: the other one
 }
 function viewHome(){
@@ -2362,19 +2365,17 @@ function viewHome(){
     </div>${c.dueAll > c.due ? `<div class="today-note">ほかの復習${c.dueAll - c.due}語は明日にまわします</div>` : ''}`}
     <div class="hero-lines"><div class="goal-line ${stk.done ? 'done' : ''}">${I.flame}<span>${stk.done ? `<b>連続 ${stk.n}日</b> ・ 今日の分は記録ずみ` : stk.n === 0 && stk.prev > 1 ? `前回は${stk.prev}日続きました。今日の目標を終えて、また1日目から！` : `今日の目標を全部終えると <b>連続 ${stk.n + 1}日</b>`}</span></div>${tail}</div>
     ${nd ? nextDeckBtn(nd, 'btn-soft') : ''}
-    ${optChip()}`
+    ${homeMode()}${optChip()}`
   : `
     ${mkBtn('happy') || `<div class="done-badge">${I.check}</div>`}
     <div class="today-k">今日の目標は達成</div>
     ${stk.done || tail ? `<div class="hero-lines">${stk.done ? `<div class="goal-line done">${I.flame}<span><b>連続 ${stk.n}日</b>${milestoneText(stk.n) ? ` ・ ${milestoneText(stk.n)}` : ''}</span></div>` : ''}${tail}</div>` : ''}
     <div class="today-meta">${act.length ? (c.dueAll ? `のこりの復習${c.dueAll}語は、明日から少しずつ出します。` : `明日の復習は ${tomorrow}語。`) : '単語帳タブで、使う単語帳を選んでください。'}${td.n ? `今日は ${td.n}問 解きました。` : ''}${canMore && !nd && !c.dueAll ? 'このまま新しい単語を続けられます。' : ''}</div>
-    ${optChip()}`;
+    ${homeMode()}${optChip()}`;
   return `${topbar()}
   <section class="tcard holed today ${total ? '' : 'is-done'}" aria-label="今日の学習"><span class="ring"></span>${hero}
-    ${c.fresh || total ? `<div class="btn-row alt">
-      ${c.fresh ? `<button class="btn btn-ghost" data-act="swipe"><span class="bt">${I.swipe}高速仕分け</span><small>知ってる単語をよける</small></button>` : ''}
-      ${!total ? '' : isCardMode() ? `<button class="btn btn-ghost" data-act="useChoice"><span class="bt">${I.play}4択で復習</span><small>選んで答える・速さで評価</small></button>`
-        : `<button class="btn btn-ghost" data-act="useCards"><span class="bt">${I.flash}カードで復習</span><small>4択なしでめくる</small></button>`}
+    ${c.fresh ? `<div class="btn-row alt">
+      <button class="btn btn-ghost" data-act="swipe"><span class="bt">${I.swipe}高速仕分け</span><small>知ってる単語をよける</small></button>
     </div>` : ''}
   </section>
   ${td.n ? `<div class="sec"><div class="statline">
@@ -3940,9 +3941,6 @@ const ACT = {
   againNormal: () => { if (locked()) return; const ids = Q?.opts?.deckIds; startQuiz(ids ? {deckIds: ids} : {}); },   // after 苦手を特訓: the usual set
   // past today's goal: keep going with new words (and whatever reviews are left)
   studyMore: () => { if (locked()) return; startQuiz({extraNew: true, deckIds: Q?.opts?.deckIds, flash: Q?.opts?.flash}); },
-  // the second button switches 復習のしかた for good (same as the options sheet) and starts right away
-  useCards: () => { if (!isCardMode()) setSetting('mode4', S.settings.mode); setSetting('mode', 'flash'); render(); toast('復習をカードにしました'); startQuiz({}); },
-  useChoice: () => { setSetting('mode', S.settings.mode4 === 'choice' ? 'choice' : 'auto'); render(); toast('復習を4択にしました'); startQuiz({}); },
   swipe: () => startSwipe(),
   studyDeck: t => startQuiz({deckIds:[t.dataset.id], extraNew: counts([t.dataset.id]).due === 0 && counts([t.dataset.id]).newToday === 0}),
   swipeDeck: t => startSwipe([t.dataset.id]),
