@@ -1538,8 +1538,28 @@ function senseDots(c){
   const lab = {m:'習得', l:'学習中', n:'次に出題', x:'まだ先'};
   return `<span class="sdots" role="img" aria-label="意味 ${learnedSenses(c)}/${c.s.length}">${c.s.map((_, i) => { const st = senseState(c, i); return `<i class="${st}" title="${i + 1}つ目の意味：${lab[st]}"></i>`; }).join('')}</span>`;
 }
-const revLeft = () => Math.max(0, (S.settings.maxRev || 9999) - (todayStat().rn || 0));
-const newLeftToday = () => Math.max(0, S.settings.newPerDay - (todayStat().nw||0));
+/* 休み明け・復習がたまった日: that day's review limit drops to about a usual day's (at least 2 sets), decided once when the
+   day starts and kept all day, so the goal — and the 🔥 — stays within reach; the rest keeps coming a little each day and
+   can still be done after the goal (のこりの復習). After 2+ days away, no new words are added to that day's goal. */
+function studyMedian(){
+  const today = dayIdx(), rn = []; let last = -1;
+  for (let d = today - 14; d < today; d++) { const x = S.daily[dayKey(d)]; if (x?.n) { rn.push(x.rn || 0); last = d; } }
+  rn.sort((a, b) => a - b); return {med: rn.length ? rn[rn.length >> 1] : 0, last};
+}
+function dayCap(){
+  const td = todayStat(); if ('cap' in td) return td.cap > 0 ? td.cap : Infinity;
+  if (!S.settings.onboarded || !activeIds().length) return Infinity;
+  const today = dayIdx(), dueAll = pools(activeIds()).due.length, max = S.settings.maxRev || 9999, {med, last} = studyMedian();
+  let cap = 0, aw = 0;
+  if (dueAll >= 30 && (dueAll >= max || dueAll > 2 * med)) {
+    cap = Math.min(max, Math.max(2 * S.settings.setSize, Math.round(med * 1.5)));
+    if (cap >= dueAll) cap = 0; else aw = !td.n && last >= 0 && last < today - 1 ? 1 : 0;
+  }
+  const d = S.daily[dayKey(today)] ||= {}; d.cap = cap; if (aw) d.aw = 1; save(); markDirty('meta');
+  return cap > 0 ? cap : Infinity;
+}
+const revLeft = () => Math.max(0, Math.min(S.settings.maxRev || 9999, dayCap()) - (todayStat().rn || 0));
+function newLeftToday(){ dayCap(); return todayStat().aw ? 0 : Math.max(0, S.settings.newPerDay - (todayStat().nw||0)); }
 function counts(ids=activeIds(), only){
   const P = pools(ids, only);
   const newLeft = newLeftToday();
@@ -2224,9 +2244,8 @@ const aboutMin = q => `約${Math.max(1, Math.round(q * secPerQ() / 60))}分`;
 /* 休み明け: more reviews than usual (the daily limit, or twice a usual day's) are shown as time, not as a big number.
    'away' when the last study day before today is 2+ days back and nothing is done yet today */
 function backlog(c, td = todayStat()){
-  const today = dayIdx(), rn = []; let last = -1;
-  for (let d = today - 14; d < today; d++) { const x = S.daily[dayKey(d)]; if (x?.n) { rn.push(x.rn || 0); last = d; } }
-  rn.sort((a, b) => a - b); const med = rn.length ? rn[rn.length >> 1] : 0;
+  if (td.cap > 0) return c.due ? (!td.n && td.aw ? 'away' : 'heavy') : '';   // a lighter day was set: say so, with its small number
+  const today = dayIdx(), {med, last} = studyMedian();
   if (c.due < 30 || !(c.dueAll >= (S.settings.maxRev || 9999) || (c.dueAll >= 30 && c.dueAll > 2 * med))) return '';   // c.due: what today's limit still lets in
   return !td.n && last < today - 1 ? 'away' : 'heavy';
 }
@@ -2308,7 +2327,7 @@ function viewHome(){
   const today = dayIdx();
   const tomorrow = cardsOf(act, true).filter(x => { const p = prog(x); return isReview(p) && !p.sus && p.due === today + 1; }).length;
   const n = Math.min(S.settings.setSize, total);
-  const canMore = act.length > 0 && c.fresh + c.queued + c.dnew > 0;
+  const canMore = act.length > 0 && c.fresh + c.queued + c.dnew + c.dueAll > 0;   // after the goal: the rest of a heavy day's reviews, or new words
   const nRecent = drillCards('recent', act).length, nMany = drillCards('many', act).length, nToday = todayCards(act).length;
   const nd = act.length ? nextDeck(act, c) : null, heavy = total ? backlog(c, td) : '';
   const tail = nd ? nextDeckLine(nd) : paceHTML(act);   // the finish line, or (deck done) the way to the next deck
@@ -2316,7 +2335,7 @@ function viewHome(){
   const hero = total ? `${mkBtn(heavy === 'away' ? 'cheer' : 'normal')}
     ${heavy ? `<div class="today-k">今日の学習</div>
     <div class="back-h">${heavy === 'away' ? '<b>おかえり！</b>' : ''}<span class="nw">忘れかけの単語から</span><span class="nw">出します・<span class="num">${aboutMin(c.due)}</span></span></div>
-    ${c.newToday ? '<div class="today-meta">新しい単語は復習のあとで</div>' : ''}` : `<div class="today-k">今日の目標 のこり</div>
+    ${c.dueAll > c.due ? `<div class="today-meta">ほかの${c.dueAll - c.due}語は、明日から少しずつ出します</div>` : c.newToday ? '<div class="today-meta">新しい単語は復習のあとで</div>' : ''}` : `<div class="today-k">今日の目標 のこり</div>
     <div class="today-nums">
       <div class="bignum due${c.due ? '' : ' zero'}"><b>${c.due}</b><span>復習</span></div>
       <div class="bignum"><b>${c.newToday}</b><span>新しい単語</span></div>
@@ -2328,7 +2347,7 @@ function viewHome(){
     ${mkBtn('happy') || `<div class="done-badge">${I.check}</div>`}
     <div class="today-k">今日の目標は達成</div>
     ${stk.done || tail ? `<div class="hero-lines">${stk.done ? `<div class="goal-line done">${I.flame}<span><b>連続 ${stk.n}日</b>${milestoneText(stk.n) ? ` ・ ${milestoneText(stk.n)}` : ''}</span></div>` : ''}${tail}</div>` : ''}
-    <div class="today-meta">${act.length ? `明日の復習は ${tomorrow}語。` : '単語帳タブで、使う単語帳を選んでください。'}${td.n ? `今日は ${td.n}問 解きました。` : ''}${canMore && !nd ? 'このまま新しい単語を続けられます。' : ''}</div>
+    <div class="today-meta">${act.length ? (c.dueAll ? `のこりの復習${c.dueAll}語は、明日から少しずつ出します。` : `明日の復習は ${tomorrow}語。`) : '単語帳タブで、使う単語帳を選んでください。'}${td.n ? `今日は ${td.n}問 解きました。` : ''}${canMore && !nd && !c.dueAll ? 'このまま新しい単語を続けられます。' : ''}</div>
     ${optChip()}`;
   return `${topbar()}
   <section class="tcard holed today ${total ? '' : 'is-done'}" aria-label="今日の学習"><span class="ring"></span>${hero}
@@ -2355,7 +2374,7 @@ function viewHome(){
   </div>
   ${total ? `<div class="dock-space"></div><div class="ctadock" id="ctadock"><button class="btn btn-primary btn-block btn-big" data-act="study">${I.play}学習をはじめる<small>${n}問・${aboutMin(n)}</small></button></div>`
     : nd ? `<div class="dock-space"></div><div class="ctadock" id="ctadock">${nextDeckBtn(nd, 'btn-primary btn-big')}</div>`
-    : canMore ? `<div class="dock-space"></div><div class="ctadock" id="ctadock"><button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}続けて学習する<small>新しい単語 ${S.settings.setSize}問</small></button></div>` : ''}`;
+    : canMore ? `<div class="dock-space"></div><div class="ctadock" id="ctadock"><button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}続けて学習する<small>${c.dueAll ? `のこりの復習 ${c.dueAll}語` : `新しい単語 ${S.settings.setSize}問`}</small></button></div>` : ''}`;
 }
 function heatmap(){
   const today = dayIdx(); const dow = new Date(today*DAY).getUTCDay();
@@ -3472,7 +3491,7 @@ function renderResults(){
     : `<div><b>${st.n}<small>日</small></b><span>連続学習</span></div>`;
   const sets = Math.ceil(rem / S.settings.setSize);
   const nextBtn = hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}次の${Math.min(S.settings.setSize, rem)}問<small>${before.done ? `今日あと${rem}問` : sets <= 1 ? `終えると連続${before.n + 1}日` : `目標まで あと${sets}セット`}</small></button>`
-    : `<div class="res-done">${I.check}今日の目標は達成</div>${nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>新しい単語</small></button>` : ''}`;
+    : `<div class="res-done">${I.check}今日の目標は達成</div>${nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.dueAll || more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>${more.dueAll ? `のこりの復習 ${more.dueAll}語` : '新しい単語'}</small></button>` : ''}`;
   const home = '<button class="btn btn-ghost btn-block" data-act="quitQuiz">ホームへ</button>';
   const secRem = Q.opts.only && !prac ? secLeft(Q.opts.deckIds, Q.opts.only) : 0;
   const mainBtn = !Q.opts.only || prac ? nextBtn
