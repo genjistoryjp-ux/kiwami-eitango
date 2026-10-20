@@ -1555,11 +1555,19 @@ function pools(ids, only){
     if (only && !only.has(c)) continue;
     const p = prog(c); if (p?.sus) continue;
     if (isReview(p)) { if (p.due <= today) due.push(c); continue; }
-    if (c.isD && !direct.has(c)) { if (settled(prog(c.parent))) dnew.push(c); continue; }
+    if (c.isD && !direct.has(c)) { if (derivUnlocked(c)) dnew.push(c); continue; }
     if (c.isS) { if (senseUnlocked(c)) dnew.push(c); continue; }
     if (p?.st === 1) queued.push(c); else fresh.push(c);
   }
   return {today, due, queued, fresh, dnew};
+}
+/* derivatives come one at a time, like meanings: the first once its headword is settled (right again on a later day),
+   each next one once the one before it is settled (or set to 出題しない) — never several of one word together */
+function derivUnlocked(c){
+  if (!settled(prog(c.parent))) return false;
+  const sib = (c.parent.fam || []).map(f => f.card).filter(Boolean);
+  for (const x of sib.slice(0, Math.max(0, sib.indexOf(c)))) { const p = prog(x); if (!p?.sus && !settled(p)) return false; }
+  return true;
 }
 function senseUnlocked(x){ const prev = x.si === 1 ? x.parent : x.parent.sc[x.si - 2]; return settled(prog(prev)); }
 const senseProg = (c, i) => i === 0 ? prog(c) : prog(c.sc?.[i - 1]);
@@ -2504,7 +2512,7 @@ function wordRows(d){
     const p = prog(c), s = status(p);
     const due = p?.sus ? '出題しない' : isReview(p) ? (p.due <= today ? '復習' : `次 ${mdLabel(p.due)}`) : s === 'learn' ? '学習待ち' : '';
     return `<button class="wrow" data-act="card" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">
-      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword" lang="en">${c.n && !c.isD ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD && c.s.length > 1 ? `<span class="wsn" lang="ja">意味${learnedSenses(c)}/${c.s.length}</span>` : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean"${route.red ? ' aria-hidden="true"' : ''}>${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !settled(prog(c.parent)) ? (isReview(prog(c.parent)) ? '見出し語の復習後' : '見出し語の後') : '')}</span></button>`;
+      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword" lang="en">${c.n && !c.isD ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD && c.s.length > 1 ? `<span class="wsn" lang="ja">意味${learnedSenses(c)}/${c.s.length}</span>` : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean"${route.red ? ' aria-hidden="true"' : ''}>${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !derivUnlocked(c) ? (!isReview(prog(c.parent)) ? '見出し語の後' : !settled(prog(c.parent)) ? '見出し語の復習後' : '前の派生語の後') : '')}</span></button>`;
   }).join('');
   return rows + (list.length > route.limit ? `<div class="more"><button class="link" data-act="more">さらに表示（残り${list.length - route.limit}語）</button></div>` : '');
 }
@@ -2634,7 +2642,7 @@ function viewSettings(){
     <div class="frow"><div class="lab"><b>選択肢をタップで表示</b><span>4択の選択肢を隠しておき、答えを思い浮かべてからタップで表示（仲間はずれ問題は除く）</span></div>${sw('veil', '選択肢をタップで表示')}</div>
     <div class="frow"><div class="lab"><b>スペル入力を出す</b><span>段階式で、しっかり覚えた単語に出題</span></div>${sw('spell', 'スペル入力を出す')}</div>
     <div class="frow"><div class="lab"><b>意味を1つずつ覚える</b><span><span class="rec">おすすめ：オン。</span>最初はメインの意味だけを出題し、後日の復習で正解したら2つ目・3つ目の意味を新しいカードとして1つずつ出題。オフにすると毎回すべての意味を表示</span></div>${sw('senseCards', '意味を1つずつ覚える')}</div>
-    <div class="frow"><div class="lab"><b>派生語も出題する</b><span><span class="rec">おすすめ：オン。</span>見出し語を後日の復習で正解したら、派生語（decide → decision など）を別のカードとして出題</span></div>${sw('deriv', '派生語も出題する')}</div>
+    <div class="frow"><div class="lab"><b>派生語も出題する</b><span><span class="rec">おすすめ：オン。</span>見出し語を後日の復習で正解したら、派生語（decide → decision など）を別のカードとして1つずつ出題</span></div>${sw('deriv', '派生語も出題する')}</div>
     <div class="frow"><div class="lab"><b>新しい単語の順番</b></div>${seg('order',[['seq','単語帳の順'],['rand','ランダム']], '新しい単語の順番')}</div>
     <div class="frow wrap"><div class="lab"><b>苦手を特訓の対象</b><span>この回数以上まちがえた単語を集めます</span></div>${seg('drillMin', [[1,'1回以上'],[2,'2回以上'],[3,'3回以上'],[5,'5回以上']], '苦手を特訓の対象')}</div>
     <div class="frow"><div class="lab"><b>正解したら自動で次へ</b><span>正解したら答えを一瞬見せて、すぐ次の問題へ。「詳しく」で説明も見られます</span></div>${sw('autoNext', '正解したら自動で次へ')}</div>
