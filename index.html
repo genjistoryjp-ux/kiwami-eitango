@@ -3556,7 +3556,7 @@ function reveal(noProg = false){
   const back = c.isD || !S.settings.senseCards ? sensesHTML(c, -1, 'all') : c.isS ? sensesGated(c.parent, c.si, false, noProg) : sensesGated(c, 0, false, noProg);
   // a new word's back: 成り立ち・コア (a new meaning: how it links to the ones learned; a derivative: its affix)
   const ety = isNew && it.first === null ? (c.isD ? affixHTML(c) : c.isS ? linkHTML(c) : etyHTML(c)) : '';
-  const pron = !it.flip && isNew ? `<div class="back-pron">${ipaHTML(c)}</div>` : '';
+  const pron = !it.flip ? `<div class="back-pron">${ipaHTML(c)}</div>` : '';   // every card's answer side: how it sounds
   $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `<div class="back-face">${front}${pron}${back}${parentLine(c)}${ety}</div>`);
   if (it.flip) playWord(c.w, c.p);
   if (it.first !== null || it.sameDay) {
