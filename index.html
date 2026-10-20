@@ -896,6 +896,26 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .kana{display:block;margin-top:2px;font-size:13px;color:var(--muted);letter-spacing:.02em}
 .kana b,.fb-word .kana b{color:var(--ink);font-weight:800;font-size:inherit;font-family:inherit;letter-spacing:inherit}
 .back-pron{text-align:center;margin:-4px 0 10px}
+.today .mk-btn ~ .hero-head .today-k,.today .mk-btn ~ .hero-head .goal-line{margin-right:62px}
+.today:has(.lanes) .mk-btn,.today:has(.lanes) .hero-mk{width:72px;height:72px}
+.lanes{display:flex;flex-direction:column;gap:10px}
+.lane{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:2px 12px;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface-2)}
+.lane.now{border-color:var(--accent);background:var(--surface)}
+.lane-h{grid-column:1/-1;display:flex;align-items:baseline;gap:8px;font-size:12.5px;font-weight:800;color:var(--ink);letter-spacing:.04em}
+.lane-h span{font-weight:600;color:var(--muted);letter-spacing:0;font-size:12px}
+.lane-h em{font-style:normal;font-size:12px;color:var(--accent)}
+.lane-n{display:flex;align-items:baseline;gap:4px;min-height:40px}
+.lane-n b{font-family:var(--f-word);font-size:32px;font-weight:600;line-height:1}
+.lane.rev.now .lane-n b{color:var(--red)}
+.lane-n small{font-size:12.5px;color:var(--muted);font-weight:700}
+.lane-ok{display:inline-flex;align-items:center;gap:4px;font-size:15px;font-weight:800;color:var(--good-t)}
+.lane-ok .ico{width:20px;height:20px;stroke-width:3}
+.lane-none{font-size:14px;font-weight:700;color:var(--muted)}
+.lane-btn{grid-column:2;grid-row:2;min-height:44px;padding:0 16px;white-space:nowrap}
+.lane-note{grid-column:1/-1;font-size:12px;color:var(--muted)}
+.lane-note.sd{color:var(--good-t);font-weight:700}
+.lane-wide{grid-column:1/-1;margin-top:6px}
+.ask-p{margin:4px 0 14px;font-size:15px;line-height:1.7}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -1635,12 +1655,17 @@ function counts(ids=activeIds(), only){
 /* one set out of `left` questions: a remainder of 1–3 joins it (12 left at 10 a set → one set of 12, never a set of 2) */
 const setN = (left, size = S.settings.setSize) => left - size > 0 && left - size <= 3 ? left : Math.min(size, left);
 const setsFor = (left, size = S.settings.setSize) => { let k = 0; while (left > 0) { left -= setN(left, Math.max(1, size)); k++; } return k; };
-function pickSet({deckIds=activeIds(), size=S.settings.setSize, extraNew=false, only}={}){
+function pickSet({deckIds=activeIds(), size=S.settings.setSize, extraNew=false, only, kind}={}){
+  // kind: 'review' = reviews only, 'new' = new words only, 'check' = nothing here (today's おさらい are added by startQuiz);
+  // none = reviews while any are left, then new words
+  if (kind === 'check') return [];
   const P = pools(deckIds, only);
-  P.due.sort((a,b) => retr(prog(b),P.today) - retr(prog(a),P.today));
-  const lim = Math.min(P.due.length, extraNew ? Infinity : revLeft());
-  const out = P.due.slice(0, setN(lim, size));
-  if (out.length) return shuffle(out);   // 復習が先: while reviews are left, a set holds only reviews; new words come after, on their own
+  if (kind !== 'new') {
+    P.due.sort((a,b) => retr(prog(b),P.today) - retr(prog(a),P.today));
+    const lim = Math.min(P.due.length, extraNew ? Infinity : revLeft());
+    const out = P.due.slice(0, setN(lim, size));
+    if (out.length || kind === 'review') return shuffle(out);   // 復習が先: while reviews are left, a set holds only reviews
+  }
   const fresh = S.settings.order === 'rand' ? shuffle(P.fresh) : P.fresh;
   const mixed = []; // derivatives and new headwords alternate so neither crowds out the other
   for (let i = 0; i < Math.max(fresh.length, P.dnew.length); i++) { if (P.dnew[i]) mixed.push(P.dnew[i]); if (fresh[i]) mixed.push(fresh[i]); }
@@ -2434,39 +2459,48 @@ function viewHome(){
   const total = c.due + c.newToday;
   const act = activeIds();
   const today = dayIdx();
-  // today's checks still waiting (words given もう一度 / 難しい earlier today): they come at the end of the next set
-  const sdWait = cardsOf(act, true).filter(x => { const q = prog(x); return q?.tc && !q.sus && dayIdx(q.tc) === today; }).length;
-  const sdNote = sdWait ? `<div class="today-note">次のセットの最後に、今日のおさらい ${sdWait}語</div>` : '';
+  const sdWait = sameDayWaiting(act).length;   // today's おさらい still waiting
   const tomorrow = cardsOf(act, true).filter(x => { const p = prog(x); return isReview(p) && !p.sus && p.due === today + 1; }).length;
-  const n = Math.min(S.settings.setSize, total);
-  const canMore = act.length > 0 && c.fresh + c.queued + c.dnew + c.dueAll > 0;   // after the goal: the rest of a heavy day's reviews, or new words
   const nRecent = drillCards('recent', act).length, nMany = drillCards('many', act).length, nToday = todayCards(act).length;
   const nd = act.length ? nextDeck(act, c) : null, heavy = total ? backlog(c, td) : '';
   const tail = nd ? nextDeckLine(nd) : paceHTML(act);   // the finish line, or (deck done) the way to the next deck
-  // how long the goal still takes, once it is more than one set (a 休み明け day already shows its time above, unless new words follow)
+  // how long the goal still takes, once it is more than one set (a 休み明け day already shows its time in the 復習 lane)
   const mins = total && setsFor(c.due) + setsFor(c.newToday) > 1 && (!heavy || c.newToday) ? `<span class="nw">（あと${aboutMin(total)}）</span>` : '';
   const mkBtn = mood => MEKURU[mood] ? `<button class="mk-btn" data-act="mkTalk" aria-label="めくるに話しかける">${mekuru(mood, 'hero-mk')}</button><div id="mkbubble" class="mkbubble" role="status" hidden></div>` : '';
-  const hero = total ? `${mkBtn(heavy === 'away' ? 'cheer' : 'normal')}
-    ${heavy ? `<div class="today-k">今日の学習</div>
-    <div class="back-h">${heavy === 'away' ? '<b>おかえり！</b>' : ''}<span class="nw">忘れかけの単語から</span><span class="nw">出します・<span class="num">${aboutMin(c.due)}</span></span></div>
-    ${c.dueAll > c.due ? `<div class="today-meta">ほかの${c.dueAll - c.due}語は、明日から少しずつ出します</div>` : c.newToday ? '<div class="today-meta">新しい単語は復習のあとで</div>' : ''}${sdNote}` : `<div class="today-k">今日の目標 のこり</div>
-    <div class="today-nums steps">
-      ${c.due ? `<div class="bignum due now"><b>${c.due}</b><span class="nw">① 復習</span><em>いまここ</em></div>`
-        : td.rv || td.d0 > 0 ? `<div class="bignum done"><b>${I.check}</b><span class="nw">① 復習 完了</span></div>`
-        : `<div class="bignum due zero"><b>0</b><span class="nw">① 復習 なし</span></div>`}
-      <div class="bignum${c.due ? ' later' : ' now'}"><b>${c.newToday}</b><span class="nw">② 新しい単語</span>${c.due ? '' : '<em>いまここ</em>'}</div>
-    </div>${sdNote}${c.dueAll > c.due ? `<div class="today-note">ほかの復習${c.dueAll - c.due}語は明日にまわします</div>` : ''}`}
-    <div class="hero-lines"><div class="goal-line ${stk.done ? 'done' : ''}">${I.flame}<span>${stk.done ? `<b>連続 ${stk.n}日</b> ・ 今日の分は記録ずみ` : stk.n === 0 && stk.prev > 1 ? `前回は${stk.prev}日続きました。今日の目標を終えて、また1日目から！` : `今日の目標を全部終えると <b>連続 ${stk.n + 1}日</b>${mins}`}</span></div>${tail}</div>
-    ${nd && !c.due ? nextDeckBtn(nd, 'btn-soft') : ''}
-    ${homeMode()}${optChip()}`
-  : `
-    ${mkBtn('happy') || `<div class="done-badge">${I.check}</div>`}
-    <div class="today-k">今日の目標は達成</div>
-    ${stk.done || tail ? `<div class="hero-lines">${stk.done ? `<div class="goal-line done">${I.flame}<span><b>連続 ${stk.n}日</b>${milestoneText(stk.n) ? ` ・ ${milestoneText(stk.n)}` : ''}</span></div>` : ''}${tail}</div>` : ''}
-    <div class="today-meta">${act.length ? (c.dueAll ? `のこりの復習${c.dueAll}語は、明日から少しずつ出します。` : `明日の復習は ${tomorrow}語。`) : '単語帳タブで、使う単語帳を選んでください。'}${td.n ? `今日は ${td.n}問 解きました。` : ''}${canMore && !nd && !c.dueAll ? 'このまま新しい単語を続けられます。' : ''}</div>
-    ${homeMode()}${optChip()}`;
+  const head = total ? `<div class="today-k">今日の学習</div>
+    <div class="hero-lines"><div class="goal-line ${stk.done ? 'done' : ''}">${I.flame}<span>${stk.done ? `<b>連続 ${stk.n}日</b> ・ 今日の分は記録ずみ` : stk.n === 0 && stk.prev > 1 ? `前回は${stk.prev}日続きました。今日の目標を終えて、また1日目から！` : `今日の目標を全部終えると <b class="nw">連続 ${stk.n + 1}日</b>${mins}`}</span></div>${tail}</div>`
+    : `<div class="today-k">今日の目標は達成</div>
+    ${stk.done || tail ? `<div class="hero-lines">${stk.done ? `<div class="goal-line done">${I.flame}<span><b>連続 ${stk.n}日</b>${milestoneText(stk.n) ? ` ・ ${milestoneText(stk.n)}` : ''}</span></div>` : ''}${tail}</div>` : ''}`;
+  // 復習 lane: today's reviews (and today's おさらい), with their own button
+  const revDone = !c.due && (td.rv || td.d0 > 0);
+  const revLane = `<div class="lane rev ${c.due ? 'now' : revDone ? 'done' : 'none'}">
+    <div class="lane-h">復習${heavy === 'away' ? '<em>おかえり！</em>' : ''}</div>
+    ${c.due ? `<div class="lane-n"><b class="num">${c.due}</b><small>語・${aboutMin(c.due)}</small></div>
+      <button class="btn btn-primary lane-btn" data-act="studyReview">${I.play}復習する</button>
+      ${heavy ? '<div class="lane-note">忘れかけの単語から出します</div>' : ''}${c.dueAll > c.due ? `<div class="lane-note">ほかの${c.dueAll - c.due}語は明日から少しずつ</div>` : ''}`
+    : `<div class="lane-n">${revDone ? `<span class="lane-ok">${I.check}完了</span>` : '<span class="lane-none">今日の復習はなし</span>'}</div>
+      ${sdWait ? '<button class="btn btn-ghost lane-btn" data-act="studyCheck">おさらい</button>' : c.dueAll ? '<button class="btn btn-ghost lane-btn" data-act="studyReview">続ける</button>' : ''}
+      <div class="lane-note">${c.dueAll && !sdWait ? `のこり${c.dueAll}語は明日から少しずつ（続けてもOK）` : `明日の復習は ${tomorrow}語`}</div>`}
+    ${sdWait ? `<div class="lane-note sd">＋今日のおさらい ${sdWait}語${c.due ? '（復習のあとに出ます）' : ''}</div>` : ''}
+  </div>`;
+  // 新しい単語 lane: today's new words, from where you are in the deck
+  const deck0 = act.map(deckById).find(Boolean), cur = deck0 ? curSection(deck0) : null;
+  const where = deck0 ? `${shortName(deck0)}${cur && deckSections(deck0).length > 1 ? ` ${secLabel(cur)}` : ''}` : '';
+  const moreNew = c.fresh + c.queued + c.dnew;
+  const newLane = `<div class="lane new ${!c.due && c.newToday ? 'now' : !c.newToday && (td.nw || 0) > 0 ? 'done' : ''}">
+    <div class="lane-h">新しい単語${where ? `<span>${esc(where)}</span>` : ''}</div>
+    ${c.newToday ? `<div class="lane-n"><b class="num">${c.newToday}</b><small>語</small></div>
+      <button class="btn ${c.due ? 'btn-ghost' : 'btn-primary'} lane-btn" data-act="studyNew">${I.play}覚える</button>
+      ${c.due ? '<div class="lane-note">復習のあとがおすすめ</div>' : ''}`
+    : nd ? `<div class="lane-n"><span class="lane-ok">${I.check}今日の分は完了</span></div><div class="lane-wide">${nextDeckBtn(nd, 'btn-soft')}</div>`
+    : moreNew ? `<div class="lane-n"><span class="lane-ok">${(td.nw || 0) > 0 ? `${I.check}今日の分は完了` : '今日の新しい単語は0語の設定'}</span></div><button class="btn btn-ghost lane-btn" data-act="studyNew">もっと覚える</button>`
+    : '<div class="lane-n"><span class="lane-none">新しい単語はありません</span></div>'}
+  </div>`;
   return `${topbar()}
-  <section class="tcard holed today ${total ? '' : 'is-done'}" aria-label="今日の学習"><span class="ring"></span>${hero}
+  <section class="tcard holed today ${total ? '' : 'is-done'}" aria-label="今日の学習"><span class="ring"></span>${mkBtn(heavy === 'away' ? 'cheer' : total ? 'normal' : 'happy')}
+    <div class="hero-head">${head}</div>
+    ${act.length ? `<div class="lanes">${revLane}${newLane}</div>` : '<div class="today-meta">単語帳タブで、使う単語帳を選んでください。</div>'}
+    ${homeMode()}${optChip()}
     ${c.fresh ? `<div class="btn-row alt">
       <button class="btn btn-ghost" data-act="swipe"><span class="bt">${I.swipe}高速仕分け</span><small>知ってる単語をよける</small></button>
     </div>` : ''}
@@ -2480,10 +2514,7 @@ function viewHome(){
   <div class="sec"><div class="sec-h"><h2>使っている単語帳</h2><span class="sp"></span><button class="link" data-act="tab" data-tab="decks">すべて見る</button></div>
     <div class="decks">${act.length ? act.map(id => deckRow(deckById(id), false)).join('') : `<div class="empty">単語帳タブで、使う単語帳の右のスイッチをオンにしてください。</div>`}</div>
     ${act.length ? legendHTML() : ''}
-  </div>
-  ${total ? `<div class="dock-space"></div><div class="ctadock" id="ctadock"><button class="btn btn-primary btn-block btn-big" data-act="study">${I.play}${c.due ? '復習をはじめる' : '新しい単語をはじめる'}<small>${setN(c.due || c.newToday)}問・${aboutMin(setN(c.due || c.newToday))}</small></button></div>`
-    : nd ? `<div class="dock-space"></div><div class="ctadock" id="ctadock">${nextDeckBtn(nd, 'btn-primary btn-big')}</div>`
-    : canMore ? `<div class="dock-space"></div><div class="ctadock" id="ctadock"><button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}続けて学習する<small>${c.dueAll ? `のこりの復習 ${c.dueAll}語` : `新しい単語 ${S.settings.setSize}問`}</small></button></div>` : ''}`;
+  </div>`;
 }
 function heatmap(){
   const today = dayIdx(); const dow = new Date(today*DAY).getUTCDay();
@@ -2810,20 +2841,22 @@ function blankWord(sentence, word){
 
 /* ---------- quiz ---------- */
 let Q = null;
+/* 今日のおさらい: new words given もう一度 / 難しい earlier today, waiting for their one check today (oldest first) */
+const sameDayWaiting = (ids = activeIds(), only) => cardsOf(ids, true)
+  .filter(c => { const p = prog(c); return p?.tc && !p.sus && dayIdx(p.tc) === dayIdx() && (!only || only.has(c)); })
+  .sort((a, b) => prog(a).tc - prog(b).tc);
 function startQuiz(opts={}){
   const cards = opts.cards || pickSet(opts);
-  if (!cards.length) { toast('今出題できる単語はありません'); return; }
+  // today's おさらい ride along with reviews (or make a set of their own), never with a set of new words
+  const withChecks = !opts.practice && opts.kind !== 'new' && (opts.kind === 'check' || cards.some(c => isReview(prog(c))));
+  const have = new Set(cards), sd = withChecks ? sameDayWaiting(opts.deckIds || activeIds(), opts.only).filter(c => !have.has(c)).slice(0, opts.kind === 'check' ? 10 : 5) : [];
+  if (!cards.length && !sd.length) { toast('今出題できる単語はありません'); return; }
   const due0 = opts.practice ? 0 : counts().due, day0 = dayIdx();   // today's reviews left when the set starts
   Q = {items: cards.map(c => ({c, p0:clone(prog(c)), type:null, first:null, tries:0})), queue:[], cleared:0, combo:0, maxCombo:0, due0, day0,
        flash: opts.flash || S.settings.mode === 'flash', start:Date.now(), opts};
   Q.queue = Q.items.map((_,i) => i);
-  if (!opts.practice) {
-    const have = new Set(cards), sd = cardsOf(opts.deckIds || activeIds(), true)
-      .filter(c => { const p = prog(c); return p?.tc && !p.sus && !have.has(c) && dayIdx(p.tc) === day0 && (!opts.only || opts.only.has(c)); })
-      .sort((a, b) => prog(a).tc - prog(b).tc).slice(0, 5);
-    for (const c of sd) { Q.items.push({c, p0: clone(prog(c)), type: Q.flash ? null : 'e2j', first: null, tries: 0, check: true, sameDay: true}); Q.queue.push(Q.items.length - 1); }
-    if (sd.length) prefetchAudio(sd);
-  }
+  for (const c of sd) { Q.items.push({c, p0: clone(prog(c)), type: Q.flash ? null : 'e2j', first: null, tries: 0, check: true, sameDay: true}); Q.queue.push(Q.items.length - 1); }
+  if (sd.length) prefetchAudio(sd);
   audioCtx(); prefetchAudio(cards);
   if (IOS && !lsGet(SILENT_KEY)) { lsSet(SILENT_KEY, '1'); setTimeout(() => { if (Q) toast('マナーモード中は🔊をもう一度押すと鳴ります', null, 3500); }, 600); }
   openScreen(); renderQ();
@@ -3665,7 +3698,7 @@ function renderResults(){
   const goalTile = !won && !before.done && rem > 0 ? `<div><b><small class="pre">あと</small>${rem}<small>語</small></b><span>今日の目標まで</span></div>`
     : `<div><b>${st.n}<small>日</small></b><span>連続学習</span></div>`;
   const sets = setsFor(more.due) + setsFor(more.newToday), nextN = setN(more.due || more.newToday);
-  const nextBtn = hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問<small>${before.done ? `今日あと${rem}問` : sets <= 1 ? `終えると連続${before.n + 1}日` : `目標まで あと${sets}セット`}</small></button>`
+  const nextBtn = hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="${more.due ? 'studyReview' : 'goNew'}">${I.play}${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問<small>${before.done ? `今日あと${rem}問` : sets <= 1 ? `終えると連続${before.n + 1}日` : `目標まで あと${sets}セット`}</small></button>`
     : `<div class="res-done">${I.check}今日の目標は達成</div>${nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.dueAll || more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>${more.dueAll ? `のこりの復習 ${more.dueAll}語` : '新しい単語'}</small></button>` : ''}`;
   const home = '<button class="btn btn-ghost btn-block" data-act="quitQuiz">ホームへ</button>';
   // 復習 完了: today's reviews (all decks in use) were left when this set started and none are left now — any kind of set,
@@ -3683,7 +3716,7 @@ function renderResults(){
   const btns = prac ? `<button class="btn btn-primary btn-block btn-big" data-act="practiceAgain">${I.play}もう一度<small>${Q.opts.practice === 'today' && todayCards().length > n ? `今日の単語から${n}問` : `同じ${n}語で練習`}</small></button>${home}`
     : dl?.length ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}苦手をもう1セット<small>${Math.min(S.settings.setSize, dl.length)}語</small></button>${hasMore ? '<div class="btn-row"><button class="btn btn-ghost" data-act="againNormal">ふつうの学習へ</button><button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>' : home}`
     : dl ? `<div class="res-done">${I.check}苦手はぜんぶ終わり</div>${nextBtn}${home}`
-    : `${mainBtn}<div class="btn-row">${missed.length ? `<button class="btn btn-ghost" data-act="practiceMiss">まちがえた${missed.length}語を練習</button>` : '<button class="btn btn-ghost" data-act="practiceSet">同じ単語で練習</button>'}<button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>`;
+    : `${mainBtn}${(k => k && Q.opts.kind !== 'check' ? `<button class="btn btn-ghost btn-block" data-act="studyCheck">${I.play}今日のおさらい ${k}語</button>` : '')(sameDayWaiting(Q.opts.deckIds || activeIds()).length)}<div class="btn-row">${missed.length ? `<button class="btn btn-ghost" data-act="practiceMiss">まちがえた${missed.length}語を練習</button>` : '<button class="btn btn-ghost" data-act="practiceSet">同じ単語で練習</button>'}<button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>`;
   $('#screen').innerHTML = `<div class="screen-in res">
     <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span><button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>1問もどす</span></button></div>
     <div class="res-h">${win}${rvBanner}${prac ? '' : (sc => `<div class="res-mk">${mekuru(sc === 'res_low' ? 'cheer' : sc === 'res_ok' ? 'normal' : 'happy')}<span>${esc(mkSay(sc, {n: st.n, pct, w: comeback}) || (sc === 'res_low' ? 'まちがえた単語は、また出すから大丈夫' : 'さ、次めくろ！'))}</span></div>`)(won ? 'res_goal' : pct >= 50 && rvDone && allDue.newToday && MK_LINES.res_review_done ? 'res_review_done' : pct >= 50 && comeback && MK_LINES.res_comeback ? 'res_comeback' : pct === 100 ? 'res_perfect' : pct >= 80 ? 'res_great' : pct >= 50 ? 'res_ok' : 'res_low')}<div class="eyebrow">${prac ? '練習おわり' : 'セット完了'}</div>
@@ -4098,10 +4131,22 @@ const ACT = {
     if (!$('#screen').hidden) closeScreen(); else render(); startQuiz({deckIds: [id], extraNew: true}); },
   toggleDeck: t => { const id = t.dataset.id; const a = S.settings.active.includes(id) ? S.settings.active.filter(x => x !== id) : [...S.settings.active, id]; setSetting('active', a); render(); },
   study: () => startQuiz({}),
+  // the home lanes: 復習 (reviews, then today's おさらい, then a lighter day's rest) and 新しい単語
+  studyReview: () => { closeSheet(); const c = counts(); if (c.due) return startQuiz({kind: 'review'}); if (sameDayWaiting().length) return startQuiz({kind: 'check'}); if (c.dueAll) return startQuiz({kind: 'review', extraNew: true}); toast('今日の復習はもう終わっています'); },
+  studyCheck: () => { closeSheet(); startQuiz({kind: 'check'}); },
+  studyNew: () => {
+    const c = counts();
+    if (!c.due) return ACT.goNew();
+    openSheet(`<div class="sheet-h"><h3>まだ復習が終わっていません</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+      <p class="ask-p">復習があと <b class="num">${c.due}語</b> あります。先に復習からやりますか？</p>
+      <button class="btn btn-primary btn-block btn-big" data-act="studyReview">${I.play}復習からやる</button>
+      <button class="btn btn-ghost btn-block" data-act="goNew">このまま新しい単語</button>`);
+  },
+  goNew: () => { closeSheet(); const c = counts(); startQuiz({kind: 'new', extraNew: !c.newToday, flash: Q?.opts?.flash}); },
   again: () => { if (locked()) return; ACT.againGo(); },
   againGo: () => {
     if (Q?.opts?.only) { const o = {deckIds: Q.opts.deckIds, extraNew: true, only: Q.opts.only, sec: Q.opts.sec}, cards = pickSet(o); if (cards.length) return startQuiz({...o, cards}); }
-    if (Q?.opts?.drill) { const cards = drillCards(Q.opts.drill); if (cards.length) return startQuiz({cards: cards.slice(0, S.settings.setSize), drill: Q.opts.drill}); } const ids = Q?.opts?.deckIds; const flash = Q?.opts?.flash; startQuiz(ids ? {deckIds:ids, flash} : {flash}); },
+    if (Q?.opts?.drill) { const cards = drillCards(Q.opts.drill); if (cards.length) return startQuiz({cards: cards.slice(0, S.settings.setSize), drill: Q.opts.drill}); } const ids = Q?.opts?.deckIds, flash = Q?.opts?.flash, kind = Q?.opts?.kind === 'check' ? 'review' : Q?.opts?.kind; startQuiz(ids ? {deckIds:ids, flash, kind} : {flash, kind}); },
   againNormal: () => { if (locked()) return; const ids = Q?.opts?.deckIds; startQuiz(ids ? {deckIds: ids} : {}); },   // after 苦手を特訓: the usual set
   // past today's goal: keep going with new words (and whatever reviews are left)
   studyMore: () => { if (locked()) return; startQuiz({extraNew: true, deckIds: Q?.opts?.deckIds, flash: Q?.opts?.flash}); },
