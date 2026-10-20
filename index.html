@@ -2373,8 +2373,8 @@ function viewHome(){
   <section class="tcard holed today ${total ? '' : 'is-done'}" aria-label="今日の学習"><span class="ring"></span>${hero}
     ${c.fresh || total ? `<div class="btn-row alt">
       ${c.fresh ? `<button class="btn btn-ghost" data-act="swipe"><span class="bt">${I.swipe}高速仕分け</span><small>知ってる単語をよける</small></button>` : ''}
-      ${!total ? '' : isCardMode() ? `<button class="btn btn-ghost" data-act="choiceSet"><span class="bt">${I.play}4択で復習</span><small>この1回だけ4択で答える</small></button>`
-        : `<button class="btn btn-ghost" data-act="flash"><span class="bt">${I.flash}カードで復習</span><small>4択なしでめくる</small></button>`}
+      ${!total ? '' : isCardMode() ? `<button class="btn btn-ghost" data-act="useChoice"><span class="bt">${I.play}4択で復習</span><small>選んで答える・速さで評価</small></button>`
+        : `<button class="btn btn-ghost" data-act="useCards"><span class="bt">${I.flash}カードで復習</span><small>4択なしでめくる</small></button>`}
     </div>` : ''}
   </section>
   ${td.n ? `<div class="sec"><div class="statline">
@@ -2703,7 +2703,7 @@ function startQuiz(opts={}){
   const cards = opts.cards || pickSet(opts);
   if (!cards.length) { toast('今出題できる単語はありません'); return; }
   Q = {items: cards.map(c => ({c, p0:clone(prog(c)), type:null, first:null, tries:0})), queue:[], cleared:0, combo:0, maxCombo:0,
-       flash: !opts.choice && (opts.flash || S.settings.mode === 'flash'), start:Date.now(), opts};   // choice: one 4択 set while reviews are cards
+       flash: opts.flash || S.settings.mode === 'flash', start:Date.now(), opts};
   Q.queue = Q.items.map((_,i) => i);
   audioCtx(); prefetchAudio(cards);
   if (IOS && !lsGet(SILENT_KEY)) { lsSet(SILENT_KEY, '1'); setTimeout(() => { if (Q) toast('マナーモード中は🔊をもう一度押すと鳴ります', null, 3500); }, 600); }
@@ -3936,12 +3936,13 @@ const ACT = {
   again: () => { if (locked()) return; ACT.againGo(); },
   againGo: () => {
     if (Q?.opts?.only) { const o = {deckIds: Q.opts.deckIds, extraNew: true, only: Q.opts.only, sec: Q.opts.sec}, cards = pickSet(o); if (cards.length) return startQuiz({...o, cards}); }
-    if (Q?.opts?.drill) { const cards = drillCards(Q.opts.drill); if (cards.length) return startQuiz({cards: cards.slice(0, S.settings.setSize), drill: Q.opts.drill}); } const ids = Q?.opts?.deckIds; const flash = Q?.opts?.flash, choice = Q?.opts?.choice; startQuiz(ids ? {deckIds:ids, flash, choice} : {flash, choice}); },
+    if (Q?.opts?.drill) { const cards = drillCards(Q.opts.drill); if (cards.length) return startQuiz({cards: cards.slice(0, S.settings.setSize), drill: Q.opts.drill}); } const ids = Q?.opts?.deckIds; const flash = Q?.opts?.flash; startQuiz(ids ? {deckIds:ids, flash} : {flash}); },
   againNormal: () => { if (locked()) return; const ids = Q?.opts?.deckIds; startQuiz(ids ? {deckIds: ids} : {}); },   // after 苦手を特訓: the usual set
   // past today's goal: keep going with new words (and whatever reviews are left)
-  studyMore: () => { if (locked()) return; startQuiz({extraNew: true, deckIds: Q?.opts?.deckIds, flash: Q?.opts?.flash, choice: Q?.opts?.choice}); },
-  flash: () => startQuiz({flash:true}),
-  choiceSet: () => startQuiz({choice:true}),
+  studyMore: () => { if (locked()) return; startQuiz({extraNew: true, deckIds: Q?.opts?.deckIds, flash: Q?.opts?.flash}); },
+  // the second button switches 復習のしかた for good (same as the options sheet) and starts right away
+  useCards: () => { if (!isCardMode()) setSetting('mode4', S.settings.mode); setSetting('mode', 'flash'); render(); toast('復習をカードにしました'); startQuiz({}); },
+  useChoice: () => { setSetting('mode', S.settings.mode4 === 'choice' ? 'choice' : 'auto'); render(); toast('復習を4択にしました'); startQuiz({}); },
   swipe: () => startSwipe(),
   studyDeck: t => startQuiz({deckIds:[t.dataset.id], extraNew: counts([t.dataset.id]).due === 0 && counts([t.dataset.id]).newToday === 0}),
   swipeDeck: t => startSwipe([t.dataset.id]),
