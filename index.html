@@ -3044,7 +3044,7 @@ function sensesGated(c, hit, compact=false, noProg=false){
   return (noProg ? '' : sensesProgress(c)) + `<ol class="senses">${c.s.map((x, i) => !open(i) ? ''
     : `<li class="${i === hit ? 'hit' : ''}"><span class="pos">${esc(x.p || '—')}</span><div class="sbody">${patHTML(x.pat)}<span class="sm">${esc(x.m)}</span>${i === hit && x.e
         ? `<div class="sex" lang="en">${markWord(x.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(x.e)}" lang="ja" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(x.j)}</div>` : ''}</div></li>`).join('')}${locked
-    ? `<li class="locked"><span class="pos">？</span><div class="sbody"><span class="sm">？？？</span><span class="lk">ほかの意味 あと${locked}つ</span><div class="lkn">${lockNote(c, nx)}</div></div></li>` : ''}</ol>`;
+    ? `<li class="locked"><span class="pos" title="次に出る意味の品詞">${esc(c.s[nx]?.p || '？')}</span><div class="sbody"><span class="sm">？？？</span><span class="lk">ほかの意味 あと${locked}つ</span><div class="lkn">${lockNote(c, nx)}</div></div></li>` : ''}</ol>`;
 }
 function sensesHTML(c, hit=-1, ex='hit', compact=false, limit=0){
   // limit: show the first N meanings (plus the tested one) and fold the rest behind 「＋N」
