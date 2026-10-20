@@ -53,7 +53,7 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 html,body{height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-wrap:break-word}
 body.locked{overflow:hidden}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none;padding:0}
@@ -154,7 +154,7 @@ p{margin:0}
 .deck-ico::after{content:"";position:absolute;left:5px;top:5px;width:5px;height:5px;border-radius:50%;border:1.5px solid var(--ring)}
 .deck-ico.on{background:var(--accent-soft);border-color:var(--accent-2)}
 .deck-main{min-width:0;display:flex;flex-direction:column;gap:6px}
-.deck-name{font-weight:700;font-size:15px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.deck-name{font-weight:700;font-size:15px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;overflow-wrap:anywhere}
 .deck-tag{font-family:var(--f-mono);font-size:11px;color:var(--muted);font-weight:500}
 .deck-sub{font-size:12px;color:var(--muted)}
 .stack{display:flex;gap:2px;height:8px;border-radius:4px;overflow:hidden}
@@ -902,9 +902,9 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .lane{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:2px 12px;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface-2)}
 .lane.now{border-color:var(--accent);background:var(--surface)}
 .lane-h{grid-column:1/-1;display:flex;align-items:baseline;gap:8px;font-size:12.5px;font-weight:800;color:var(--ink);letter-spacing:.04em}
-.lane-h span{font-weight:600;color:var(--muted);letter-spacing:0;font-size:12px}
+.lane-h span{flex:1;min-width:0;overflow-wrap:anywhere;font-weight:600;color:var(--muted);letter-spacing:0;font-size:12px}
 .lane-h em{font-style:normal;font-size:12px;color:var(--accent)}
-.lane-n{display:flex;align-items:baseline;gap:4px;min-height:40px}
+.lane-n{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 4px;min-height:40px}
 .lane-n b{font-family:var(--f-word);font-size:32px;font-weight:600;line-height:1}
 .lane.rev.now .lane-n b{color:var(--red)}
 .lane-n small{font-size:12.5px;color:var(--muted);font-weight:700}
@@ -2475,7 +2475,7 @@ function viewHome(){
   const revDone = !c.due && (td.rv || td.d0 > 0);
   const revLane = `<div class="lane rev ${c.due ? 'now' : revDone ? 'done' : 'none'}">
     <div class="lane-h">復習${heavy === 'away' ? '<em>おかえり！</em>' : ''}</div>
-    ${c.due ? `<div class="lane-n"><b class="num">${c.due}</b><small>語・${aboutMin(c.due)}</small></div>
+    ${c.due ? `<div class="lane-n"><b class="num">${c.due}</b><small>語・<span class="nw">${aboutMin(c.due)}</span></small></div>
       <button class="btn btn-primary lane-btn" data-act="studyReview">${I.play}復習する</button>
       ${heavy ? '<div class="lane-note">忘れかけの単語から出します</div>' : ''}${c.dueAll > c.due ? `<div class="lane-note">ほかの${c.dueAll - c.due}語は明日から少しずつ</div>` : ''}`
     : `<div class="lane-n">${revDone ? `<span class="lane-ok">${I.check}完了</span>` : '<span class="lane-none">今日の復習はなし</span>'}</div>
@@ -2492,7 +2492,7 @@ function viewHome(){
     ${c.newToday ? `<div class="lane-n"><b class="num">${c.newToday}</b><small>語</small></div>
       <button class="btn ${c.due ? 'btn-ghost' : 'btn-primary'} lane-btn" data-act="studyNew">${I.play}覚える</button>`
     : nd ? `<div class="lane-n"><span class="lane-ok">${I.check}今日の分は完了</span></div><div class="lane-wide">${nextDeckBtn(nd, 'btn-soft')}</div>`
-    : moreNew ? `<div class="lane-n"><span class="lane-ok">${(td.nw || 0) > 0 ? `${I.check}今日の分は完了` : '今日の新しい単語は0語の設定'}</span></div><button class="btn btn-ghost lane-btn" data-act="studyNew">もっと覚える</button>`
+    : moreNew ? `<div class="lane-n"><span class="lane-ok">${(td.nw || 0) > 0 ? `${I.check}今日の分は完了` : td.aw ? '休み明けなので今日は復習を優先' : '今日の新しい単語は0語の設定'}</span></div><button class="btn btn-ghost lane-btn" data-act="studyNew">もっと覚える</button>`
     : '<div class="lane-n"><span class="lane-none">新しい単語はありません</span></div>'}
   </div>`;
   return `${topbar()}
@@ -3202,6 +3202,7 @@ function qHeader(){
 }
 /* ignore taps for a moment after the screen changes, so a fast double tap can't answer the next card */
 const locked = () => !!Q && performance.now() < (Q.lockUntil || 0);
+const nextOpts = () => Q?.done ? {deckIds: Q.opts.deckIds, flash: Q.opts.flash} : {};
 /* a short screen (iPhone SE (Safari / home screen), 文字「大」) packs the study screens tighter (.short), so わからない stays in view */
 function fitCheck(){ document.documentElement.classList.toggle('short', innerHeight / (S.settings.zoom || 1) < 660); }
 addEventListener('resize', () => { if (!$('#screen').hidden) fitCheck(); });
@@ -3715,7 +3716,7 @@ function renderResults(){
   const btns = prac ? `<button class="btn btn-primary btn-block btn-big" data-act="practiceAgain">${I.play}もう一度<small>${Q.opts.practice === 'today' && todayCards().length > n ? `今日の単語から${n}問` : `同じ${n}語で練習`}</small></button>${home}`
     : dl?.length ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}苦手をもう1セット<small>${Math.min(S.settings.setSize, dl.length)}語</small></button>${hasMore ? '<div class="btn-row"><button class="btn btn-ghost" data-act="againNormal">ふつうの学習へ</button><button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>' : home}`
     : dl ? `<div class="res-done">${I.check}苦手はぜんぶ終わり</div>${nextBtn}${home}`
-    : `${mainBtn}${(k => k && Q.opts.kind !== 'check' ? `<button class="btn btn-ghost btn-block" data-act="studyCheck">${I.play}今日のおさらい ${k}語</button>` : '')(sameDayWaiting(Q.opts.deckIds || activeIds()).length)}<div class="btn-row">${missed.length ? `<button class="btn btn-ghost" data-act="practiceMiss">まちがえた${missed.length}語を練習</button>` : '<button class="btn btn-ghost" data-act="practiceSet">同じ単語で練習</button>'}<button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>`;
+    : `${mainBtn}${(k => k ? `<button class="btn btn-ghost btn-block" data-act="studyCheck">${I.play}今日のおさらい ${k}語</button>` : '')(sameDayWaiting(Q.opts.deckIds || activeIds()).length)}<div class="btn-row">${missed.length ? `<button class="btn btn-ghost" data-act="practiceMiss">まちがえた${missed.length}語を練習</button>` : '<button class="btn btn-ghost" data-act="practiceSet">同じ単語で練習</button>'}<button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>`;
   $('#screen').innerHTML = `<div class="screen-in res">
     <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span><button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>1問もどす</span></button></div>
     <div class="res-h">${win}${rvBanner}${prac ? '' : (sc => `<div class="res-mk">${mekuru(sc === 'res_low' ? 'cheer' : sc === 'res_ok' ? 'normal' : 'happy')}<span>${esc(mkSay(sc, {n: st.n, pct, w: comeback}) || (sc === 'res_low' ? 'まちがえた単語は、また出すから大丈夫' : 'さ、次めくろ！'))}</span></div>`)(won ? 'res_goal' : pct >= 50 && rvDone && allDue.newToday && MK_LINES.res_review_done ? 'res_review_done' : pct >= 50 && comeback && MK_LINES.res_comeback ? 'res_comeback' : pct === 100 ? 'res_perfect' : pct >= 80 ? 'res_great' : pct >= 50 ? 'res_ok' : 'res_low')}<div class="eyebrow">${prac ? '練習おわり' : 'セット完了'}</div>
@@ -4127,12 +4128,15 @@ const ACT = {
   paceStep: t => { const [lo, hi] = STEP_RANGE.newPerDay; setSetting('newPerDay', clamp(S.settings.newPerDay + (+t.dataset.d), lo, hi)); render(); const b = $('#pacebox'); if (b) b.innerHTML = paceBody(); },
   // the deck is done: add the next one and start on it right away
   nextDeck: t => { if (locked()) return; const id = t.dataset.id; if (!S.settings.active.includes(id)) setSetting('active', [...S.settings.active, id]);
-    if (!$('#screen').hidden) closeScreen(); else render(); startQuiz({deckIds: [id], extraNew: true}); },
+    clearTimeout(Q?.timer); stopCountdown(); render(); startQuiz({deckIds: [id], extraNew: true}); },
   toggleDeck: t => { const id = t.dataset.id; const a = S.settings.active.includes(id) ? S.settings.active.filter(x => x !== id) : [...S.settings.active, id]; setSetting('active', a); render(); },
   study: () => startQuiz({}),
-  // the home lanes: 復習 (reviews, then today's おさらい, then a lighter day's rest) and 新しい単語
-  studyReview: () => { closeSheet(); const c = counts(); if (c.due) return startQuiz({kind: 'review'}); if (sameDayWaiting().length) return startQuiz({kind: 'check'}); if (c.dueAll) return startQuiz({kind: 'review', extraNew: true}); toast('今日の復習はもう終わっています'); },
-  studyCheck: () => { closeSheet(); startQuiz({kind: 'check'}); },
+  // the home lanes: 復習 (reviews, then today's おさらい, then a lighter day's rest) and 新しい単語. From a results screen
+  // (Q is kept only there) the next set stays on that set's decks, e.g. a deck studied from its page that isn't in use
+  studyReview: () => { if (locked()) return; const o = nextOpts(), c = counts(o.deckIds);
+    const go = c.due ? {kind: 'review'} : sameDayWaiting(o.deckIds).length ? {kind: 'check'} : c.dueAll ? {kind: 'review', extraNew: true} : null;
+    if (go) startQuiz({...o, ...go}); else toast('今日の復習はもう終わっています'); closeSheet(); },
+  studyCheck: () => { if (locked()) return; startQuiz({...nextOpts(), kind: 'check'}); closeSheet(); },
   studyNew: () => {
     const c = counts();
     if (!c.due) return ACT.goNew();
@@ -4141,7 +4145,7 @@ const ACT = {
       <button class="btn btn-primary btn-block btn-big" data-act="studyReview">${I.play}復習からやる</button>
       <button class="btn btn-ghost btn-block" data-act="goNew">このまま新しい単語</button>`);
   },
-  goNew: () => { closeSheet(); const c = counts(); startQuiz({kind: 'new', extraNew: !c.newToday, flash: Q?.opts?.flash}); },
+  goNew: () => { if (locked()) return; const o = nextOpts(); startQuiz({...o, kind: 'new', extraNew: !counts(o.deckIds).newToday}); closeSheet(); },
   again: () => { if (locked()) return; ACT.againGo(); },
   againGo: () => {
     if (Q?.opts?.only) { const o = {deckIds: Q.opts.deckIds, extraNew: true, only: Q.opts.only, sec: Q.opts.sec}, cards = pickSet(o); if (cards.length) return startQuiz({...o, cards}); }
