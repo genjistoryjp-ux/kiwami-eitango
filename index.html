@@ -2805,11 +2805,11 @@ function viewHome(){
   // ① 復習: today's reviews with the main button; then today's おさらい, or a lighter day's rest (続ける), still reachable here
   const revDone = !c.due && (td.rv || td.d0 > 0), revSt = c.due ? 'now' : revDone ? 'done' : 'skip';
   const revStep = `<li class="step rev ${revSt}">${node(1, revSt)}<div class="sb${!c.due && (sdWait || c.dueAll) ? ' two' : ''}">
-    ${c.due ? `<div class="sh"><b>復習</b><span class="sn"><b class="num">${c.due}</b>語 ・ ${aboutMin(c.due)}</span>${heavy === 'away' ? '<em class="st-tag">おかえり！</em>' : ''}</div>
+    ${c.due ? `<div class="sh"><b>復習</b><span class="sn"><b class="num">${c.dueAll > c.due ? c.dueAll : c.due}</b>語${c.dueAll > c.due ? '' : ` ・ ${aboutMin(c.due)}`}</span>${heavy === 'away' ? '<em class="st-tag">おかえり！</em>' : ''}</div>
       <button class="btn btn-main" data-act="studyReview">${I.play}復習する</button>
-      ${c.dueAll > c.due ? `<p class="sub">ほかの${c.dueAll - c.due}語は明日から少しずつ</p>` : ''}${sdWait ? `<p class="sub sd">＋今日のおさらい ${sdWait}語（復習のあとに出ます）</p>` : ''}`
+      ${c.dueAll > c.due ? `<p class="sub">今日の目標は <b class="num">${c.due}</b>語（${aboutMin(c.due)}）。多い日は少しずつでOK、続けてもOK</p>` : ''}${sdWait ? `<p class="sub sd">＋今日のおさらい ${sdWait}語（復習のあとに出ます）</p>` : ''}`
     : `<div><div class="sh"><b>復習</b>${revDone ? `<span class="okt">${td.rn ? `${td.rn}語 ` : ''}完了</span>` : '<span class="nonet">今日はなし</span>'}</div>
-      ${(t => t ? `<p class="sub">${t}</p>` : '')(sdWait ? `<span class="sd">今日のおさらい ${sdWait}語</span>` : c.dueAll ? `のこり${c.dueAll}語は明日から少しずつ（続けてもOK）` : tomorrow ? `明日の復習は <b class="num">${tomorrow}</b>語` : '')}</div>
+      ${(t => t ? `<p class="sub">${t}</p>` : '')(sdWait ? `<span class="sd">今日のおさらい ${sdWait}語</span>` : c.dueAll ? `今日の目標分はおわり。まだ <b class="num">${c.dueAll}</b>語あるので、続けてもOK` : tomorrow ? `明日の復習は <b class="num">${tomorrow}</b>語` : '')}</div>
       ${sdWait ? '<button class="btn btn-sub sm" data-act="studyCheck">おさらい</button>' : c.dueAll ? '<button class="btn btn-sub sm" data-act="studyReview">続ける</button>' : ''}`}</div></li>`;
   // ② 新しい単語: today's new words from where each deck is; the main button once the reviews are done
   const nwSt = c.newToday ? (c.due ? 'next' : 'now') : (td.nw || 0) > 0 ? 'done' : 'skip';
