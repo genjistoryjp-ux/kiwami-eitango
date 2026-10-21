@@ -580,9 +580,8 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .segs{flex:1;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:3px;height:8px}
 .segs i{display:block;border-radius:3px;background:var(--line)}
 .segs i.cur{background:transparent;box-shadow:inset 0 0 0 1.5px var(--accent-2)}   /* outlined: not another bar like the timer */
-.segs i.ok{background:var(--good)}
-.segs i.ng{background:var(--again)}
-.segs i.fix{background:var(--hard)}
+.segs i.g1{background:var(--again)} .segs i.g2{background:var(--hard)} .segs i.g3{background:var(--good)} .segs i.g4{background:var(--easy)}
+.segs i.g1.fix{opacity:.45}
 .fb-head .mk{width:26px;height:26px;margin-right:6px;font-size:14px}
 .fb-more{font-size:12.5px;font-weight:700;color:var(--muted);padding:4px 10px;border-radius:999px;border:1px solid var(--line);margin-left:8px}
 .cmp{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border-radius:10px;background:var(--surface-2)}
@@ -4129,7 +4128,7 @@ const TYPE_LABEL = {e2j:'英 → 日', j2e:'日 → 英', spell:'スペル', fla
 function segsInner(){
   return Q.items.map((it, i) => {
     const waiting = Q.queue.includes(i);
-    const cls = it.first === null ? (it === Q.cur ? 'cur' : '') : it.ok ? 'ok' : waiting ? 'ng' : 'fix';
+    const cls = it.first === null ? (it === Q.cur ? 'cur' : '') : `g${it.grade || (it.ok ? 3 : 1)}${!it.ok && !waiting ? ' fix' : ''}`;   // fix: missed, then right on its retry
     return `<i class="${cls}"></i>`;
   }).join('');
 }
