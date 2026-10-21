@@ -19,7 +19,7 @@
   --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F6F8FB; --pop:#FFFFFF; --ink:#17202E; --muted:#58657A; --faint:#5C687D; --line:#D8DEE7;
   --accent:#2B45D3; --accent-ink:#FFFFFF; --accent-soft:#E2E7FF; --accent-2:#8D9CF0;
   --red:#D2363C; --red-soft:#FBE3E3; --sheet:#E04A50; --marker:#FFE45C; --hit:color-mix(in srgb,var(--marker) 42%,transparent); --ring:#A9B1BE;
-  --good:#167F56; --good-soft:#DCF2E8; --hard:#A8650C; --hard-soft:#FAEBD4; --again:#D9480F; --again-soft:#FDE6DC; --easy:#2259B8; --perfect:#8A3FD1; --easy-soft:#DEE8FA;
+  --good:#167F56; --good-soft:#DCF2E8; --sg1:#F4A58A; --sg2:#EFC27A; --sg3:#7FCFA9; --sg4:#8FB1EE; --sg1f:#FBD3C4; --hard:#A8650C; --hard-soft:#FAEBD4; --again:#D9480F; --again-soft:#FDE6DC; --easy:#2259B8; --perfect:#8A3FD1; --easy-soft:#DEE8FA;
   --again-t:#B93E0C; --hard-t:#8A5208; --good-t:#126B48; --memo-ink:#2b2508; --streak:#F2701F; --streak-ink:#3B1A05; --streak-t:#A84A0B; --sw-off:var(--line);
   --streak-soft:#FFF0E4; --accent-edge:color-mix(in srgb,var(--accent) 68%,#0A1240); --ghost-edge:#CBD2DD;   /* the goal band; the edge under the home's buttons */
   --heat0:#E1E6EE; --heat1:#C9D1FA; --heat2:#97A6F2; --heat3:#5D73E4; --heat4:#2B45D3;
@@ -38,7 +38,7 @@
   --bg:#0F131A; --surface:#181E28; --surface-2:#131922; --pop:#1F2633; --ink:#E7ECF3; --muted:#9AA6B9; --faint:#8592A5; --line:#2A3341;
   --accent:#7F94FF; --accent-ink:#0F131A; --accent-soft:#232C4D; --accent-2:#4C5DAE;
   --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hit:color-mix(in srgb,var(--marker) 28%,transparent); --ring:#59616E;
-  --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
+  --good:#4FD39B; --good-soft:#163428; --sg1:#B3644A; --sg2:#B08A45; --sg3:#3E9A74; --sg4:#5679B5; --sg1f:#5A3A30; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
   --again-t:#FF8A5C; --hard-t:#F0B35A; --good-t:#4FD39B; --memo-ink:var(--ink); --streak-t:var(--streak); --sw-off:var(--ring);
   --streak-soft:#3A2414; --accent-edge:color-mix(in srgb,var(--accent) 52%,#000); --ghost-edge:#0A0D12;
   --heat0:#1F2633; --heat1:#27325C; --heat2:#3A4A92; --heat3:#5B70D4; --heat4:#8FA2FF;
@@ -50,7 +50,7 @@
   --bg:#0F131A; --surface:#181E28; --surface-2:#131922; --pop:#1F2633; --ink:#E7ECF3; --muted:#9AA6B9; --faint:#8592A5; --line:#2A3341;
   --accent:#7F94FF; --accent-ink:#0F131A; --accent-soft:#232C4D; --accent-2:#4C5DAE;
   --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hit:color-mix(in srgb,var(--marker) 28%,transparent); --ring:#59616E;
-  --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
+  --good:#4FD39B; --good-soft:#163428; --sg1:#B3644A; --sg2:#B08A45; --sg3:#3E9A74; --sg4:#5679B5; --sg1f:#5A3A30; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
   --again-t:#FF8A5C; --hard-t:#F0B35A; --good-t:#4FD39B; --memo-ink:var(--ink); --streak-t:var(--streak); --sw-off:var(--ring);
   --streak-soft:#3A2414; --accent-edge:color-mix(in srgb,var(--accent) 52%,#000); --ghost-edge:#0A0D12;
   --heat0:#1F2633; --heat1:#27325C; --heat2:#3A4A92; --heat3:#5B70D4; --heat4:#8FA2FF;
@@ -580,8 +580,8 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .segs{flex:1;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:3px;height:8px}
 .segs i{display:block;border-radius:3px;background:var(--line)}
 .segs i.cur{background:transparent;box-shadow:inset 0 0 0 1.5px var(--accent-2)}   /* outlined: not another bar like the timer */
-.segs i.g1{background:var(--again)} .segs i.g2{background:var(--hard)} .segs i.g3{background:var(--good)} .segs i.g4{background:var(--easy)}
-.segs i.g1.fix{opacity:.45}
+.segs i.g1{background:var(--sg1)} .segs i.g2{background:var(--sg2)} .segs i.g3{background:var(--sg3)} .segs i.g4{background:var(--sg4)}
+.segs i.g1.fix{background:var(--sg1f)}
 .fb-head .mk{width:26px;height:26px;margin-right:6px;font-size:14px}
 .fb-more{font-size:12.5px;font-weight:700;color:var(--muted);padding:4px 10px;border-radius:999px;border:1px solid var(--line);margin-left:8px}
 .cmp{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border-radius:10px;background:var(--surface-2)}
