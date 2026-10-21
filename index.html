@@ -1817,11 +1817,10 @@ function todayCards(ids=activeIds()){
   return cardsOf(ids, true).filter(c => { const p = prog(c); return p && isReview(p) && !p.sus && dayIdx(p.last) === t && !(p.k && (p.r || 0) <= 1); });
 }
 /* 苦手を特訓: 前回まちがえた (newest first) / 3回以上まちがえた (most missed first, not yet answered today) */
-function drillCards(kind, ids=activeIds()){
+function drillCards(kind, ids=activeIds(), min = S.settings.drillMin || 2){
   const today = dayIdx();
   const all = cardsOf(ids, true).filter(c => { const p = prog(c); return p && !p.sus; });
   if (kind === 'recent') return all.filter(c => missedLast(prog(c))).sort((a, b) => prog(b).last - prog(a).last);
-  const min = S.settings.drillMin || 2;
   return all.filter(c => wrongCount(prog(c)) >= min && (dayIdx(prog(c).last) < today || missedLast(prog(c))))
     .sort((a, b) => wrongCount(prog(b)) - wrongCount(prog(a)));
 }
@@ -2791,7 +2790,7 @@ function viewHome(){
   const total = c.due + c.newToday;
   const sdWait = sameDayWaiting(act).length;   // today's おさらい still waiting
   const tomorrow = cardsOf(act, true).filter(x => { const p = prog(x); return isReview(p) && !p.sus && p.due === today + 1; }).length;
-  const nRecent = drillCards('recent', act).length, nMany = drillCards('many', act).length, nToday = todayCards(act).length;
+  const nRecent = drillCards('recent', act).length, nMany = drillCards('many', act).length, nToday = todayCards(act).length, nMiss = nMany || drillCards('many', act, 1).length;
   const nd = act.length ? nextDeck(act, c) : null, heavy = total ? backlog(c, td) : '';
   const where = placesText(deckPlaces(act)), moreNew = c.fresh + c.queued + c.dnew;   // 「基礎 No.101–200」, or 「基礎・熟語」 with several decks on
   const hit = stk.done, done = (td.rn || 0) + (td.nw || 0), mins = q => Math.max(1, Math.round(q * secPerQ() / 60));
@@ -2830,7 +2829,7 @@ function viewHome(){
   const how = act.length ? `<button class="howto" data-act="studyOpts" aria-label="出題のしかたを変える（復習は${isCardMode() ? 'カード' : '4択'}、1セット${S.settings.setSize}問）">${I.tune}<span class="dots"><span class="nw">復習は <b>${isCardMode() ? 'カード' : '4択'}</b></span>${(S.settings.dir || 'auto') !== 'auto' ? `<span class="nw">${DIR_LABEL[S.settings.dir]}</span>` : ''}<span class="nw">1セット <b class="num">${S.settings.setSize}問</b></span></span><span class="link">変える${I.right}</span></button>` : '';
   const row = (a, ico, label, n, kind) => `<button class="hrow" data-act="${a}"${kind ? ` data-kind="${kind}"` : ''}><span class="rico">${ico}</span><span class="rt"><b>${label}</b></span><span class="cnt"><b class="num">${n}</b>語</span>${I.right}</button>`;
   const others = [nToday && row('practiceToday', I.redo, '今日の単語をもう一度', nToday), nRecent && row('drill', I.target, '前回まちがえた単語', nRecent, 'recent'),
-    nMany && row('drill', I.target, `${S.settings.drillMin || 2}回以上まちがえた単語`, nMany, 'many'),
+    nMiss && row('manySheet', I.target, `${S.settings.drillMin || 2}回以上まちがえた単語`, nMany),
     `<button class="hrow" data-act="swipe"><span class="rico">${I.swipe}</span><span class="rt"><b>高速仕分け</b><small>知ってる単語をよけて、覚える単語だけに</small></span>${I.right}</button>`].filter(Boolean);
   return `${topbar()}
   <section class="tcard holed today${mk ? ' has-mk' : ''}" aria-label="今日の学習"><span class="ring"></span>
@@ -3047,6 +3046,15 @@ function secSheet(d, i){
     <div class="chs" role="radiogroup" aria-label="どの単語をやる？">${ch('auto', 'おまかせ', !left ? '覚えた単語で練習' : !nx.rev ? '新しい単語から' : nNew ? '復習 → 新しい単語' : '復習から', auto, '問', !!auto)}${ch('new', 'まだの単語', '新しく覚える', nNew, '語', !auto)}${ch('learn', '学習中', 'おさらいの練習', nLearn, '語', false)}${ch('weak', '苦手', `${S.settings.drillMin || 2}回以上まちがえた`, nWeak, '語', false, ' weak')}</div>
     <button class="btn btn-primary btn-block btn-go" data-act="secGo" data-i="${i}">${I.play}スタート</button>
     <button class="link bs-list" data-act="secList" data-i="${i}">この${t}語を一覧で見る${I.right}</button>`);
+}
+/* 何回以上まちがえた単語を特訓するか、その場で選ぶ (counts for each, 0 can't be picked; the choice is remembered) */
+function manySheet(){
+  const act = activeIds(), cur = S.settings.drillMin || 2, ns = [1, 2, 3, 5].map(n => [n, drillCards('many', act, n).length]);
+  const pick = ns.some(([n, k]) => n === cur && k) ? cur : (ns.find(([, k]) => k) || [cur])[0];
+  openSheet(`<div class="sheet-h"><h3>まちがえた単語を特訓</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="bs-q">何回以上まちがえた単語？</div>
+    <div class="chs" role="radiogroup" aria-label="何回以上まちがえた単語？">${ns.map(([n, k]) => `<button class="ch" role="radio" aria-checked="${n === pick}" data-act="secPick" data-c="${n}" ${k ? '' : 'disabled'}><span>${n}回以上</span><b class="num">${k}<small>語</small></b><small>${k ? ({1: '一度でもまちがえた', 2: 'くり返しまちがえた', 3: 'かなり苦手', 5: 'とくに苦手'})[n] : 'まだありません'}</small></button>`).join('')}</div>
+    <button class="btn btn-primary btn-block btn-go" data-act="manyGo">${I.play}スタート</button>`);
 }
 function secStart(d, x, c){
   if (c === 'new') return startQuiz({deckIds: [d.id], extraNew: true, only: x.all, sec: secLabel(x), kind: 'new'});
@@ -4658,6 +4666,9 @@ const ACT = {
   dtab: t => { const tb = $('.dtabs'), y = tb ? tb.getBoundingClientRect().top + scrollY - 8 : 0; route.dtab = t.dataset.t; if (route.dtab === 'path') route.sec = null;
     render(); if (scrollY > y) scrollTo(0, y); },
   secSheet: t => { const d = deckById(route.deck); if (d) secSheet(d, +t.dataset.i); },
+  manySheet: () => manySheet(),
+  manyGo: () => { if (locked()) return; const n = +($('#sheetroot .ch[aria-checked="true"]')?.dataset.c || S.settings.drillMin || 2);
+    if (n !== S.settings.drillMin) setSetting('drillMin', n); closeSheet(); render(); ACT.drill({dataset: {kind: 'many'}}); },
   secPick: t => { if (!t.disabled) t.parentElement.querySelectorAll('.ch').forEach(b => b.setAttribute('aria-checked', String(b === t))); },
   secGo: t => { if (locked()) return; const d = deckById(route.deck), x = d && deckSections(d)[+t.dataset.i]; if (!x) return;
     secStart(d, x, $('#sheetroot .ch[aria-checked="true"]')?.dataset.c || 'auto'); closeSheet(); },
