@@ -325,6 +325,11 @@ p{margin:0}
 .bs-top .bnd{width:64px;height:64px;font-size:24px;color:var(--ink);background:var(--surface-2)}
 .bs-top .ndr{-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 calc(100% - 7.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 calc(100% - 7.5px))}
 .bs-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bs-more{font-size:12px;font-weight:700;color:var(--muted)} .xn{color:var(--ink);margin-left:2px}
+.bs-more.all{background:linear-gradient(90deg,#e8505b,#e98a15,#3aa655,#3b7ddd,#8b4fd6);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* every card of a block learned (headwords, derivatives, other meanings): its ring turns 虹色 and ✓ becomes ★ */
+.bnode.all .ndr,.bs-top.all .ndr{background:conic-gradient(from 0deg,#ff6b6b,#ffb84d,#ffe066,#6bcb77,#4d96ff,#9b5de5,#ff6b6b)}
+.bnode.all .bnd .ok{background:conic-gradient(from 0deg,#ff6b6b,#ffb84d,#ffe066,#6bcb77,#4d96ff,#9b5de5,#ff6b6b);color:#fff}
 .bs-t h3{font-size:20px;line-height:1.3}
 .bs-top > .iconbtn{align-self:flex-start;margin:-6px -8px 0 0;width:44px;height:44px}
 .bs-q{margin:4px 0 -6px;font-size:12.5px;font-weight:700;color:var(--muted)}
@@ -1707,7 +1712,15 @@ const learnedIn = cards => cards.reduce((n, c) => n + (isReview(prog(c)) ? 1 : 0
 const pctOf = (k, t) => !t || !k ? 0 : k >= t ? 100 : clamp(Math.round(k / t * 100), 1, 99);
 const deckLearned = d => learnedIn(d.cards);
 const deckPct = d => pctOf(deckLearned(d), d.cards.length);
-const secStudied = x => learnedIn(x.heads);   // 学習ずみ, as a deck's % (a word sorted as まだ still waits in its block)
+const secStudied = x => learnedIn(x.heads);
+function secExtra(x){
+  const live = c => !prog(c)?.sus, d = [], s = [];
+  for (const c of x.heads) { if (S.settings.deriv) (c.fam || []).forEach(f => f.card && live(f.card) && d.push(f.card)); if (S.settings.senseCards) (c.sc || []).forEach(m => live(m) && s.push(m)); }
+  const dk = learnedIn(d), sk = learnedIn(s);
+  return {dLeft: d.length - dk, sLeft: s.length - sk, dT: d.length, sT: s.length, all: dk === d.length && sk === s.length};
+}
+/* the rest of a block once its headwords are learned: 派生語 あと N ・ ほかの意味 あと N (or both done) */
+const extraParts = e => [e.dT ? (e.dLeft ? `派生語 あと<span class="num xn">${e.dLeft}</span>` : '派生語 ✓') : '', e.sT ? (e.sLeft ? `ほかの意味 あと<span class="num xn">${e.sLeft}</span>` : 'ほかの意味 ✓') : ''].filter(Boolean);   // 学習ずみ, as a deck's % (a word sorted as まだ still waits in its block)
 const curSection = d => deckSections(d).find(x => secStudied(x) < x.heads.length) || null;
 /* where each active deck is: its current 100語 block (sec null once every headword is learned; label '' for a deck of one block) */
 function deckPlaces(act = activeIds()){
@@ -2961,10 +2974,10 @@ const blockRing = (x, k = secStudied(x), m = secMastered(x)) => { const t = x.he
   return `<span class="ndr" style="--m:${pm};--l:${Math.max(0, Math.round(k / t * 100) - pm)}"></span>`; };
 function pathTab(d, xs, cur){
   const nodes = xs.map(x => {
-    const t = x.heads.length, k = secStudied(x), m = secMastered(x), full = k === t, here = x === cur, later = !k && !here;
-    const nums = [m ? `覚えた ${m}` : '', k - m ? `学習中 ${k - m}` : '', here && t - k ? `まだ ${t - k}` : ''].filter(Boolean).map(s => `<span class="nw">${s}</span>`).join(' ・ ');
-    return `<li><button class="bnode${full ? ' done' : ''}${here ? ' cur' : ''}${later ? ' later' : ''}" data-act="secSheet" data-i="${x.i}" aria-label="${secSay(x)}、${t}語中${k}語学習ずみ${here ? '、いまここ' : ''}">${here ? '<span class="curbg"></span>' : ''}
-      <span class="bnd num">${blockRing(x, k, m)}${x.i + 1}${full ? `<span class="ok">${I.check}</span>` : ''}</span>
+    const t = x.heads.length, k = secStudied(x), m = secMastered(x), full = k === t, here = x === cur, later = !k && !here, ex = full ? secExtra(x) : null, all = ex?.all;
+    const nums = (all ? ['派生語・ほかの意味まで <span class="nw">ぜんぶ学習ずみ</span>'] : [m ? `覚えた ${m}` : '', k - m ? `学習中 ${k - m}` : '', here && t - k ? `まだ ${t - k}` : '', ...(ex ? extraParts(ex) : [])]).filter(Boolean).map(s => `<span class="nw">${s}</span>`).join(' ・ ');
+    return `<li><button class="bnode${full ? ' done' : ''}${all ? ' all' : ''}${here ? ' cur' : ''}${later ? ' later' : ''}" data-act="secSheet" data-i="${x.i}" aria-label="${secSay(x)}、${t}語中${k}語学習ずみ${all ? '、派生語と意味までぜんぶ学習ずみ' : ''}${here ? '、いまここ' : ''}">${here ? '<span class="curbg"></span>' : ''}
+      <span class="bnd num">${blockRing(x, k, m)}${x.i + 1}${full ? `<span class="ok">${all ? I.star : I.check}</span>` : ''}</span>
       <span class="nt"><b class="num">${secLabel(x)}${here ? '<em class="here">いまここ</em>' : ''}</b>${here ? learnBar(m, k, t) : ''}${nums ? `<small>${nums}</small>` : ''}</span>
       <span class="np num">${t}語</span>${here ? mekuru('normal', 'mkpeek') : ''}</button></li>`;
   }).join('');
@@ -3022,12 +3035,13 @@ const secWeak = (d, x) => drillCards('many', [d.id]).filter(c => x.all.has(c));
 function secSheet(d, i){
   const x = deckSections(d)[i]; if (!x) return;
   const t = x.heads.length, k = secStudied(x), m = secMastered(x), left = secLeft([d.id], x.all), nx = secNext([d.id], x.all);
-  const nNew = t - k, nLearn = secLearning(x).length, nWeak = secWeak(d, x).length;
+  const nNew = t - k, nLearn = secLearning(x).length, nWeak = secWeak(d, x).length, ex = secExtra(x), done = !nNew && ex.all, more = extraParts(ex);
   const ch = (c, label, sub, n, unit, on, cls = '') => `<button class="ch${cls}" role="radio" aria-checked="${on}" data-act="secPick" data-c="${c}" ${n ? '' : 'disabled'}><span>${label}</span><b class="num">${n}<small>${unit}</small></b><small>${n ? sub : c === 'new' ? 'ぜんぶ学習ずみ' : 'まだありません'}</small></button>`;
   const auto = left ? nx.n : Math.min(S.settings.setSize, learnedIn(x.heads));
-  openSheet(`<div class="bs-top"><span class="bnd num">${blockRing(x, k, m)}${i + 1}</span>
+  openSheet(`<div class="bs-top${done ? ' all' : ''}"><span class="bnd num">${blockRing(x, k, m)}${i + 1}</span>
       <div class="bs-t"><span class="dk-pre">${esc(d.name)}</span><h3 class="num">${secLabel(x)}</h3>
-        <div class="dk-dots">${m ? `<span><i class="m"></i>覚えた <b class="num">${m}</b></span>` : ''}${k - m ? `<span><i class="l"></i>学習中 <b class="num">${k - m}</b></span>` : ''}${nNew ? `<span><i></i>まだ <b class="num">${nNew}</b></span>` : ''}</div></div>
+        <div class="dk-dots">${m ? `<span><i class="m"></i>覚えた <b class="num">${m}</b></span>` : ''}${k - m ? `<span><i class="l"></i>学習中 <b class="num">${k - m}</b></span>` : ''}${nNew ? `<span><i></i>まだ <b class="num">${nNew}</b></span>` : ''}</div>
+        ${done ? '<div class="bs-more all">派生語・ほかの意味まで <span class="nw">ぜんぶ学習ずみ</span></div>' : more.length ? `<div class="bs-more dots">${more.map(s => `<span class="nw">${s}</span>`).join('')}</div>` : ''}</div>
       <button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="bs-q">どの単語をやる？</div>
     <div class="chs" role="radiogroup" aria-label="どの単語をやる？">${ch('auto', 'おまかせ', !left ? '覚えた単語で練習' : !nx.rev ? '新しい単語から' : nNew ? '復習 → 新しい単語' : '復習から', auto, '問', !!auto)}${ch('new', 'まだの単語', '新しく覚える', nNew, '語', !auto)}${ch('learn', '学習中', 'おさらいの練習', nLearn, '語', false)}${ch('weak', '苦手', `${S.settings.drillMin || 2}回以上まちがえた`, nWeak, '語', false, ' weak')}</div>
