@@ -3478,13 +3478,24 @@ function viewDeck(){
 }
 /* a block's sheet: its ring and counts, then which words — おまかせ (the block's next set: its reviews, then new words, as
    before), まだの単語, 学習中 (a 練習: schedules stay), 苦手 — a choice with nothing in it can't be picked; one スタート */
+/* a block whose headwords are all learned: its 派生語・ほかの意味 can be done right away, without waiting for each headword to
+   settle in a review — still one card per headword (its next meaning, else its next derivative), in their order */
+function secExtraCards(x){
+  const out = [], live = y => !prog(y)?.sus, todo = y => live(y) && !isReview(prog(y));
+  for (const c of x.heads) {
+    if (!isReview(prog(c))) continue;
+    const m = S.settings.senseCards ? (c.sc || []).find(todo) : null, dv = S.settings.deriv ? (c.fam || []).map(f => f.card).filter(Boolean).find(todo) : null;
+    if (m || dv) out.push(m || dv);
+  }
+  return out;
+}
 const secLearning = x => x.heads.filter(c => { const p = prog(c); return isReview(p) && !p.sus && status(p) !== 'master'; });
 const secWeak = (d, x) => drillCards('many', [d.id]).filter(c => x.all.has(c));
 function secSheet(d, i){
   const x = deckSections(d)[i]; if (!x) return;
   const t = x.heads.length, k = secStudied(x), m = secMastered(x), left = secLeft([d.id], x.all), nx = secNext([d.id], x.all);
-  const nNew = t - k, nLearn = secLearning(x).length, nWeak = secWeak(d, x).length, ex = secExtra(x), done = !nNew && ex.all, more = extraParts(ex);
-  const ch = (c, label, sub, n, unit, on, cls = '') => `<button class="ch${cls}" role="radio" aria-checked="${on}" data-act="secPick" data-c="${c}" ${n ? '' : 'disabled'}><span>${label}</span><b class="num">${n}<small>${unit}</small></b><small>${n ? sub : c === 'new' ? 'ぜんぶ学習ずみ' : 'まだありません'}</small></button>`;
+  const nNew = t - k, nLearn = secLearning(x).length, nWeak = secWeak(d, x).length, ex = secExtra(x), done = !nNew && ex.all, more = extraParts(ex), nExtra = nNew ? 0 : secExtraCards(x).length;
+  const ch = (c, label, sub, n, unit, on, cls = '') => `<button class="ch${cls}" role="radio" aria-checked="${on}" data-act="secPick" data-c="${c}" ${n ? '' : 'disabled'}><span>${label}</span><b class="num">${n}<small>${unit}</small></b><small>${n ? sub : c === 'new' || c === 'extra' ? 'ぜんぶ学習ずみ' : 'まだありません'}</small></button>`;
   const auto = left ? nx.n : Math.min(S.settings.setSize, learnedIn(x.heads));
   openSheet(`<div class="bs-top${done ? ' all' : ''}"><span class="bnd num">${blockRing(x, k, m)}${i + 1}</span>
       <div class="bs-t"><span class="dk-pre">${esc(d.name)}</span><h3 class="num">${secLabel(x)}</h3>
@@ -3492,7 +3503,7 @@ function secSheet(d, i){
         ${done ? '<div class="bs-more all">派生語・ほかの意味まで <span class="nw">ぜんぶ学習ずみ</span></div>' : more.length ? `<div class="bs-more dots">${more.map(s => `<span class="nw">${s}</span>`).join('')}</div>` : ''}</div>
       <button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="bs-q">どの単語をやる？</div>
-    <div class="chs" role="radiogroup" aria-label="どの単語をやる？">${ch('auto', 'おまかせ', !left ? '覚えた単語で練習' : !nx.rev ? '新しい単語から' : nNew ? '復習 → 新しい単語' : '復習から', auto, '問', !!auto)}${ch('new', 'まだの単語', '新しく覚える', nNew, '語', !auto)}${ch('learn', '学習中', '覚えかけを練習', nLearn, '語', false)}${ch('weak', '苦手', `${S.settings.drillMin || 2}回以上まちがえた`, nWeak, '語', false, ' weak')}</div>
+    <div class="chs" role="radiogroup" aria-label="どの単語をやる？">${ch('auto', 'おまかせ', !left ? '覚えた単語で練習' : !nx.rev ? '新しい単語から' : nNew ? '復習 → 新しい単語' : '復習から', auto, '問', !!auto && (!!left || !nExtra))}${nNew || done ? ch('new', 'まだの単語', '新しく覚える', nNew, '語', !auto) : ch('extra', '派生語・意味', '1語に1つずつ', nExtra, '語', !!nExtra && (!left || !auto))}${ch('learn', '学習中', '覚えかけを練習', nLearn, '語', false)}${ch('weak', '苦手', `${S.settings.drillMin || 2}回以上まちがえた`, nWeak, '語', false, ' weak')}</div>
     <button class="btn btn-primary btn-block btn-go" data-act="secGo" data-i="${i}">${I.play}スタート</button>
     <button class="link bs-list" data-act="secList" data-i="${i}">この${t}語を一覧で見る${I.right}</button>`);
 }
@@ -3508,6 +3519,7 @@ function manySheet(){
 }
 function secStart(d, x, c){
   if (c === 'new') return startQuiz({deckIds: [d.id], extraNew: true, only: x.all, sec: secLabel(x), kind: 'new'});
+  if (c === 'extra') return startQuiz({cards: secExtraCards(x).slice(0, S.settings.setSize), deckIds: [d.id], kind: 'new'});
   if (c === 'learn') return startQuiz({cards: shuffle(secLearning(x)).slice(0, S.settings.setSize), practice: 'set', deckIds: [d.id]});
   if (c === 'weak') return startQuiz({cards: secWeak(d, x).slice(0, S.settings.setSize), drill: 'many', deckIds: [d.id]});
   studySection(d, x);
