@@ -20,9 +20,12 @@
   --accent:#2B45D3; --accent-ink:#FFFFFF; --accent-soft:#E2E7FF; --accent-2:#8D9CF0;
   --red:#D2363C; --red-soft:#FBE3E3; --sheet:#E04A50; --marker:#FFE45C; --hit:color-mix(in srgb,var(--marker) 42%,transparent); --ring:#A9B1BE;
   --good:#167F56; --good-soft:#DCF2E8; --hard:#A8650C; --hard-soft:#FAEBD4; --again:#D9480F; --again-soft:#FDE6DC; --easy:#2259B8; --perfect:#8A3FD1; --easy-soft:#DEE8FA;
-  --again-t:#B93E0C; --hard-t:#8A5208; --good-t:#126B48; --memo-ink:#2b2508; --streak:#F2701F; --streak-ink:#3B1A05; --streak-t:#B9520E; --sw-off:var(--line);
+  --again-t:#B93E0C; --hard-t:#8A5208; --good-t:#126B48; --memo-ink:#2b2508; --streak:#F2701F; --streak-ink:#3B1A05; --streak-t:#A84A0B; --sw-off:var(--line);
+  --streak-soft:#FFF0E4; --accent-edge:color-mix(in srgb,var(--accent) 68%,#0A1240); --ghost-edge:#CBD2DD;   /* the goal band; the edge under the home's buttons */
   --heat0:#E1E6EE; --heat1:#C9D1FA; --heat2:#97A6F2; --heat3:#5D73E4; --heat4:#2B45D3;
   --st-new:#D6DCE6; --st-learn:#8D9CF0; --st-master:#2B45D3;
+  /* 表紙 (deck covers): white letters on each (4.5:1+); blue → indigo → purple along the 受験英単語 series, never orange (the 連続記録's) */
+  --cv-junior:#167F56; --cv-j1:#2B45D3; --cv-j2:#4F3BC9; --cv-j3:#7E36C2; --cv-idioms:#5E6B1E; --cv-tagi:#16708A; --cv-theme:#4A5D78; --cv-toeic:#8A3A73; --cv-my:#5F646C;
   --shadow:0 1px 2px rgba(23,32,46,.06),0 8px 22px rgba(23,32,46,.07);
   --f-word:"Literata",Georgia,"Times New Roman",serif;
   --f-ui:"BIZ UDPGothic","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
@@ -37,8 +40,10 @@
   --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hit:color-mix(in srgb,var(--marker) 28%,transparent); --ring:#59616E;
   --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
   --again-t:#FF8A5C; --hard-t:#F0B35A; --good-t:#4FD39B; --memo-ink:var(--ink); --streak-t:var(--streak); --sw-off:var(--ring);
+  --streak-soft:#3A2414; --accent-edge:color-mix(in srgb,var(--accent) 52%,#000); --ghost-edge:#0A0D12;
   --heat0:#1F2633; --heat1:#27325C; --heat2:#3A4A92; --heat3:#5B70D4; --heat4:#8FA2FF;
   --st-new:#2C3544; --st-learn:#4C5DAE; --st-master:#8FA2FF;
+  --cv-junior:#1B6A4C; --cv-j1:#3145AF; --cv-j2:#4C3EA8; --cv-j3:#6E3AA2; --cv-idioms:#505A22; --cv-tagi:#1C6073; --cv-theme:#445468; --cv-toeic:#743A65; --cv-my:#555960;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
 }}
 :root[data-theme="dark"]{
@@ -47,8 +52,10 @@
   --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hit:color-mix(in srgb,var(--marker) 28%,transparent); --ring:#59616E;
   --good:#4FD39B; --good-soft:#163428; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
   --again-t:#FF8A5C; --hard-t:#F0B35A; --good-t:#4FD39B; --memo-ink:var(--ink); --streak-t:var(--streak); --sw-off:var(--ring);
+  --streak-soft:#3A2414; --accent-edge:color-mix(in srgb,var(--accent) 52%,#000); --ghost-edge:#0A0D12;
   --heat0:#1F2633; --heat1:#27325C; --heat2:#3A4A92; --heat3:#5B70D4; --heat4:#8FA2FF;
   --st-new:#2C3544; --st-learn:#4C5DAE; --st-master:#8FA2FF;
+  --cv-junior:#1B6A4C; --cv-j1:#3145AF; --cv-j2:#4C3EA8; --cv-j3:#6E3AA2; --cv-idioms:#505A22; --cv-tagi:#1C6073; --cv-theme:#445468; --cv-toeic:#743A65; --cv-my:#555960;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -110,8 +117,6 @@ p{margin:0}
 .tcard.holed::before{content:"";position:absolute;left:16px;top:16px;width:13px;height:13px;border-radius:50%;background:var(--bg);box-shadow:inset 0 1px 2px rgba(0,0,0,.18);border:1px solid var(--line)}
 .ring{position:absolute;left:9px;top:-15px;width:24px;height:40px;border:3px solid var(--ring);border-bottom-color:transparent;border-radius:50%;transform:rotate(-18deg);pointer-events:none;z-index:2}
 
-.today{padding:22px 20px 18px 44px;display:flex;flex-direction:column;gap:16px}
-.today-k{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em}
 .today-nums{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}
 .bignum{display:flex;flex-direction:column;gap:0}
 .bignum b{font-size:44px;line-height:1;font-weight:700;letter-spacing:-.01em}
@@ -146,25 +151,10 @@ p{margin:0}
 .heat-foot .sp{flex:1}
 .heat-key{display:inline-flex;gap:3px}
 .heat-key i{width:10px;height:10px;border-radius:2px;display:block}
-
-/* deck rows */
-.decks{display:flex;flex-direction:column;gap:10px}
-.deck{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);text-align:left;width:100%}
-.deck-ico{width:34px;height:26px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);position:relative}
-.deck-ico::after{content:"";position:absolute;left:5px;top:5px;width:5px;height:5px;border-radius:50%;border:1.5px solid var(--ring)}
-.deck-ico.on{background:var(--accent-soft);border-color:var(--accent-2)}
-.deck-main{min-width:0;display:flex;flex-direction:column;gap:6px}
-.deck-name{font-weight:700;font-size:15px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;overflow-wrap:anywhere}
-.deck-tag{font-family:var(--f-mono);font-size:11px;color:var(--muted);font-weight:500}
-.deck-sub{font-size:12px;color:var(--muted)}
-.stack{display:flex;gap:2px;height:8px;border-radius:4px;overflow:hidden}
-.stack i{display:block;height:100%}
-.stack .m{background:var(--st-master)} .stack .l{background:var(--st-learn)} .stack .n{background:var(--st-new)}
+/* a key for the coloured marks (記録's donuts, 単語一覧's dots) */
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:5px}
 .legend i{width:9px;height:9px;border-radius:2px;display:block}
-.deck-count{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-align:right;line-height:1.35}
-.deck-count b{display:block;font-size:15px;color:var(--ink);font-family:var(--f-ui)}
 
 .switch{position:relative;width:44px;height:26px;border-radius:999px;background:var(--sw-off);flex:none;transition:background .15s}
 .switch::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .15s}
@@ -179,9 +169,6 @@ p{margin:0}
 
 /* deck detail */
 .back{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-weight:700;font-size:13px;padding:6px 0}
-.dhead{display:flex;flex-direction:column;gap:10px;padding:18px 18px 16px 44px;margin-top:18px}
-.today{margin-top:10px}
-.dhead h1{font-size:22px}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chip{padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:12.5px;font-weight:700;color:var(--muted)}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -204,6 +191,169 @@ p{margin:0}
 .redsheet .wrow.peek .wmean{color:var(--red);background:transparent}
 .more{padding:12px;text-align:center;border-top:1px solid var(--line)}
 .empty{padding:28px 18px;text-align:center;color:var(--muted);font-size:13.5px}
+/* 単語帳 tab: the decks in use as cards, the shelves of covers (受験英単語シリーズ with arrows, the ＋α decks), 自分でつくる */
+.pg-h{font-size:22px;letter-spacing:.02em;margin:6px 0 0}
+.blk{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+.pg-h + .blk{margin-top:14px}
+.blk-h{display:flex;flex-direction:column}
+.blk-h small{font-size:12px;font-weight:700;color:var(--muted);line-height:1.5}
+.blk-h h2{font-size:17px;letter-spacing:.02em;line-height:1.4}
+.ucards{display:flex;flex-direction:column;gap:12px}
+.ucard{display:flex;align-items:center;gap:16px;width:100%;min-height:96px;padding:16px 10px 16px 16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);text-align:left}
+.ucard .cover{--cw:56px;--chh:74px;--holebg:var(--surface);margin:4px 6px 0 0}
+.ucard .cv-pct{min-width:30px;height:20px;padding:0 5px;right:-10px;top:-9px;font-size:11.5px}
+.ucard.my{min-height:76px;padding-block:12px;box-shadow:none;gap:14px}
+.ucard.my .cover{--cw:44px;--chh:58px;margin:2px 4px 0 0}
+.u-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+.u-name{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:16px;font-weight:700;line-height:1.35;overflow-wrap:anywhere}
+.u-tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:700;white-space:nowrap}
+.u-sub{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px;font-size:12px;font-weight:700;color:var(--muted)}
+.u-sub b{font-size:15px;color:var(--ink)}
+.u-sub .cur{margin-left:auto;color:var(--accent);font-size:13px}
+.u-sub .cur.done{color:var(--good-t)}
+.ucard:not(.my) .u-sub .cur{flex-basis:100%;margin-left:0}
+.ucard > .ico{width:18px;height:18px;color:var(--faint)}
+.u-none{padding:18px 16px;border-radius:var(--r);border:2px dashed var(--line);color:var(--muted);font-size:13.5px;line-height:1.6}
+.lbar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--st-new)}
+.lbar i{display:block;height:100%;flex:none}
+.lbar .m{background:var(--st-master)} .lbar .l{background:var(--st-learn)}
+.shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 6px}
+.shelf.series{grid-template-columns:minmax(0,1fr) 12px minmax(0,1fr) 12px minmax(0,1fr) 12px minmax(0,1fr);gap:12px 3px}
+.arw{display:grid;place-items:center;height:85px;margin-top:10px;color:var(--faint)}
+.arw .ico{width:14px;height:14px;stroke-width:2.4}
+.sbook{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0;padding:10px 0 4px;text-align:center}
+.sbook .cover{--cw:64px;--chh:85px;margin-bottom:9px}
+.sb-n{font-size:13px;font-weight:700;line-height:1.35}
+.sb-s{font-size:12px;font-weight:700;color:var(--muted);line-height:1.35}
+.sb-s.use{color:var(--accent)}
+.mk-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mk-t{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:84px;padding:12px 14px;border-radius:var(--r);border:2px dashed var(--line);font-size:14px;font-weight:700;line-height:1.4;text-align:left}
+.mk-t .ico{width:22px;height:22px;color:var(--accent)}
+.mk-t small{font-size:12px;font-weight:700;color:var(--muted)}
+.has-ai .mk-t.ai-only{grid-column:1 / -1;flex-direction:row;align-items:center;gap:10px;min-height:52px}
+/* the deck page: its face on a band of its own colour, one wide 続きから, then 100語ずつ (a path of blocks) | 単語一覧 */
+.dk-nav{display:flex;align-items:center;margin:-8px -6px 0}
+.dk-nav .back{padding:11px 6px;font-size:13.5px}
+.dk-nav .back .ico{width:18px;height:18px}
+.dk-nav .iconbtn{width:44px;height:44px;margin-left:auto}
+.dk-head{--tint:color-mix(in srgb,var(--cv) 13%,var(--bg));display:flex;gap:18px;align-items:center;margin:0 -16px;padding:20px 16px 18px;background:linear-gradient(180deg,var(--tint),var(--bg))}
+.dk-head .cover{--holebg:var(--tint);margin:10px 4px 0 0}
+.dk-head .cv-pct{display:none}   /* the % sits beside 学習ずみ; on a narrow phone it moves onto the cover */
+.dk-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.dk-pre{font-size:12px;font-weight:700;color:var(--muted);line-height:1.4}
+.dk-info h1{font-size:21px;line-height:1.3;letter-spacing:.02em;margin-top:-4px;overflow-wrap:anywhere}
+.dk-n{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 4px;font-size:12.5px;font-weight:700;color:var(--muted)}
+.dk-n b{font-size:20px;color:var(--ink);line-height:1.1}
+.dk-n .pc{margin-left:auto;font-size:15px;color:var(--ink)}
+.dk-dots{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:12px;font-weight:700;color:var(--muted)}
+.dk-dots span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.dk-dots i{width:9px;height:9px;border-radius:50%;background:var(--st-new)}
+.dk-dots i.m{background:var(--st-master)} .dk-dots i.l{background:var(--st-learn)}
+.dk-dots b{color:var(--ink)}
+.dk-desc{margin:2px 0 0;font-size:12.5px;color:var(--muted);line-height:1.6}
+.dk-go{margin-top:12px}
+.btn-go{min-height:56px;border-radius:14px;font-size:17px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2)}
+.btn-go .ico{width:16px;height:16px;fill:currentColor;stroke:none}
+.btn-go small{margin-left:6px;font-size:14px;font-weight:700;opacity:.92}
+.dk-acts{display:flex;gap:8px;margin-top:10px}
+.dk-acts .btn{flex:1;min-width:0;min-height:46px;border-radius:999px;font-size:14px;padding:0 12px;white-space:nowrap}
+.dk-acts .btn-use[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-2);color:var(--accent)}
+.dk-my{margin-top:12px}
+.dk-my .mk-t{min-height:72px}
+.dtabs{display:grid;grid-template-columns:1fr 1fr;margin-top:22px;border-bottom:1.5px solid var(--line)}
+.dtabs button{position:relative;min-height:46px;font-size:14px;font-weight:700;color:var(--muted)}
+.dtabs button small{margin-left:4px;font-size:12px;color:var(--faint)}
+.dtabs button[aria-selected="true"]{color:var(--ink)}
+.dtabs button[aria-selected="true"]::after{content:"";position:absolute;left:22%;right:22%;bottom:-1.5px;height:3px;border-radius:3px;background:var(--accent)}
+.dk-list{margin-top:14px}
+.dk-quit{display:flex;justify-content:center;margin-top:30px}
+.dk-quit button{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:44px;padding:4px 10px;font-size:13px;font-weight:700;color:var(--muted);line-height:1.5}
+.dk-quit button span{text-decoration:underline;text-underline-offset:3px}
+.dk-quit small{font-size:12px;font-weight:400;color:var(--faint)}
+.mrows{display:flex;flex-direction:column;margin:0 -4px}
+.mrow{display:flex;align-items:center;min-height:50px;padding:0 6px;border-top:1px solid var(--line);font-size:15px;font-weight:700;text-align:left}
+.mrow:first-child{border-top:0}
+.mrow.danger{color:var(--again-t)}
+/* the path: numbered circles on a line, each ringed by its block's 覚えた / 学習中; the block you are on raised as a card */
+.bpath{list-style:none;margin:0;padding:10px 0 0}
+.bnode{position:relative;display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:14px;min-height:68px;padding:6px 0;width:100%;text-align:left}
+.bnode::before,.bnode::after{content:"";position:absolute;left:22.5px;width:3px;background:var(--line)}
+.bnode::before{top:0;height:50%} .bnode::after{top:50%;bottom:0}
+.bpath > li:first-child .bnode::before,.bpath > li:last-child .bnode::after{display:none}
+.bnode.done::after,.bpath > li:has(> .bnode.done) + li > .bnode::before{background:var(--accent-2)}
+.bnd{position:relative;z-index:1;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--surface);font-weight:700;font-size:17px;color:var(--muted)}
+.ndr{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--st-master) 0 calc(var(--m,0) * 1%),var(--st-learn) 0 calc((var(--m,0) + var(--l,0)) * 1%),var(--st-new) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 6px),#000 calc(100% - 5.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 6px),#000 calc(100% - 5.5px))}
+.bnd .ok{position:absolute;right:-4px;bottom:-3px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--good);color:var(--bg);box-shadow:0 0 0 2.5px var(--bg)}
+.bnd .ok .ico{width:13px;height:13px;stroke-width:3}
+.bnode:not(.later) .bnd{color:var(--ink)}
+.nt{display:flex;flex-direction:column;gap:2px;min-width:0;line-height:1.35}
+.nt b{font-size:15.5px}
+.nt small{font-size:12px;font-weight:700;color:var(--muted)}
+.np{display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:999px;box-shadow:inset 0 0 0 1.5px var(--line);font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.bnode.later .nt{color:var(--muted)}
+.bnode.later .bnd{color:var(--faint)}
+.bnode.cur{margin:30px 0 8px;padding:12px 12px 12px 0}   /* room above for めくる */
+.bnode.cur::before{top:-30px;height:calc(50% + 30px)} .bnode.cur::after{bottom:-8px}
+.bnode .curbg{position:absolute;inset:0 -8px;border-radius:18px;background:var(--surface);box-shadow:var(--shadow),inset 0 0 0 2px var(--accent-2)}
+.bnode.cur > :not(.curbg){position:relative;z-index:1}
+.bnode.cur .bnd{color:var(--accent);font-size:19px;box-shadow:0 0 0 4px var(--accent-soft)}
+.bnode.cur .nt b{font-size:16.5px}
+.bnode.cur .lbar{height:6px;margin:4px 0 2px}
+.bnode.cur .np{box-shadow:inset 0 0 0 1.5px var(--accent-2);color:var(--accent)}
+.here{display:inline-flex;align-items:center;height:20px;padding:0 7px;margin-left:6px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-size:11.5px;font-style:normal;font-weight:700;vertical-align:2px}
+.bnode.cur > .mkpeek{position:absolute;right:-6px;top:-34px;width:52px;height:52px;z-index:2;transform:rotate(10deg)}
+.bnode.stage{align-items:start;padding-top:12px}
+.bnode.stage::before{height:36px}
+.bnode.stage .bnd{box-shadow:inset 0 0 0 2px var(--line);color:var(--accent)}
+.bnode.stage .bnd .ico{width:22px;height:22px}
+.stg{grid-column:2 / -1;display:flex;flex-direction:column;gap:2px;padding-top:4px}
+.stg b{font-size:15.5px}
+.stg small{font-size:12px;font-weight:700;color:var(--muted)}
+.stg-ch{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pbtn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:999px;background:var(--surface);border:1.5px solid var(--line);font-size:13.5px;font-weight:700}
+.pbtn b{font-size:15px;color:var(--accent)}
+.pbtn.weak{background:var(--hard-soft);border-color:color-mix(in srgb,var(--hard) 35%,transparent);color:var(--hard-t)}
+.pbtn.weak b{color:var(--hard-t)}
+.pbtn[disabled]{opacity:.5;pointer-events:none}
+/* 単語一覧 narrowed to one block (from its sheet): the block as a chip that undoes it */
+.blkrow{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--muted)}
+.blkchip{position:relative;display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 10px 0 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:13.5px;font-weight:700}
+.blkchip .ico{width:15px;height:15px}
+.blkchip::after{content:"";position:absolute;inset:-4px -2px}
+/* a block's sheet */
+.bs-top{display:flex;align-items:center;gap:14px}
+.bs-top .bnd{width:64px;height:64px;font-size:24px;color:var(--ink);background:var(--surface-2)}
+.bs-top .ndr{-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 calc(100% - 7.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 calc(100% - 7.5px))}
+.bs-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bs-t h3{font-size:20px;line-height:1.3}
+.bs-top > .iconbtn{align-self:flex-start;margin:-6px -8px 0 0;width:44px;height:44px}
+.bs-q{margin:4px 0 -6px;font-size:12.5px;font-weight:700;color:var(--muted)}
+.chs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ch{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:2px 6px;min-height:62px;padding:9px 12px;border-radius:14px;background:var(--surface-2);border:1.5px solid var(--line);text-align:left}
+.ch > span{min-width:0;font-size:14px;font-weight:700;line-height:1.35;white-space:nowrap}
+.ch > small{grid-column:1 / -1;font-size:11.5px;font-weight:700;color:var(--muted);line-height:1.35}
+.ch > b{font-size:20px;line-height:1;white-space:nowrap}
+.ch > b small{margin-left:1px;font-size:11.5px;color:var(--muted)}
+.ch[aria-checked="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.ch[aria-checked="true"] > small,.ch[aria-checked="true"] > b small{color:var(--accent)}
+.ch.weak:not([aria-checked="true"]) > b{color:var(--hard-t)}
+.ch[disabled]{opacity:.5}
+.ch[disabled] > b{color:var(--muted)}
+.bs-list{display:flex;align-items:center;justify-content:center;gap:2px;min-height:44px;margin-top:-6px}
+.bs-list .ico{width:16px;height:16px}
+/* 320–360px: smaller covers, the choices' numbers and tiles a little tighter */
+@media (max-width:360px){
+  .sbook .cover{--cw:54px;--chh:72px}
+  .arw{height:72px}
+  .shelf.series{grid-template-columns:minmax(0,1fr) 10px minmax(0,1fr) 10px minmax(0,1fr) 10px minmax(0,1fr);gap:12px 2px}
+  .sb-n{font-size:12.5px} .sb-s{font-size:11.5px}
+  .ucard{gap:14px;padding-left:14px}
+  .dk-head{gap:14px} .dk-head .cover.cv-hero{--cw:80px;--chh:104px}
+  .dk-head .cv-pct{display:grid} .dk-n .pc{display:none}
+  .ch{padding-inline:10px} .ch > b{font-size:18px}
+  .mk-t{padding-inline:12px;font-size:13.5px}
+  .bnode.cur .np{display:none}   /* 「No.101-200 いまここ」 on one line; the other rows show the 100語 */
+}
 
 /* stats */
 .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -458,7 +608,6 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .pill.streak.done{border-color:color-mix(in srgb,var(--streak) 40%,var(--line))}
 .btn-big{min-height:54px;font-size:16px}
 .btn-big small,.btn small{font-weight:400;font-size:12px;opacity:.85;margin-left:4px}
-.today.is-done{align-items:flex-start}
 .done-badge{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--good-soft);color:var(--good)}
 .done-badge .ico{width:26px;height:26px;stroke-width:2.4}
 .dock-space{height:64px}
@@ -593,8 +742,6 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .qrate.pop{animation:ratepop .35s cubic-bezier(.2,.9,.3,1.4)}
 @keyframes ratepop{from{transform:scale(.7)}50%{transform:scale(1.25)}to{transform:none}}
 
-.today-again{margin-top:10px;justify-content:space-between;min-height:50px}
-.today-again b{font-size:16px;font-family:var(--f-word);font-variant-numeric:lining-nums tabular-nums}
 .res-note{margin-top:8px;font-size:12.5px;color:var(--muted);text-align:center}
 .res-btns .btn-ghost small{margin-left:6px;font-size:11.5px;font-weight:400;color:var(--muted)}
 
@@ -606,17 +753,6 @@ input[type=range]{accent-color:var(--accent);width:130px}
 
 .pill.streak:not(.done) .ico{color:var(--faint)}
 .pill.streak.done .ico{color:var(--streak)}
-.goal-line{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:13px;color:var(--muted)}
-.goal-line .ico{width:16px;height:16px;flex:none;color:var(--faint)}
-.goal-line b{color:var(--ink)}
-.goal-line.done .ico{color:var(--streak)}
-/* the hero's one-line hints: goal / streak, and the finish line (tap: change the daily goal) */
-.hero-lines{display:flex;flex-direction:column;gap:2px;align-self:stretch}
-.hero-lines .goal-line{margin-top:0}
-.goal-line.pace{width:100%;min-height:34px;text-align:left}
-.goal-line.pace>span{flex:1;min-width:0}
-.goal-line.pace .ico:last-child{width:14px;height:14px}
-.goal-line.nd .ico{color:var(--good)}
 .back-h{font-size:17px;font-weight:700;line-height:1.5}
 .back-h b:first-child{color:var(--accent);margin-right:4px}
 .pace-step{display:flex;align-items:center;gap:12px;font-weight:700;color:var(--muted);font-size:13.5px}
@@ -799,24 +935,16 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 /* home hero: what is left of today's goal, side by side; the number is red only while reviews are due */
 .bignum.due.zero b{color:var(--faint)}
 .today-note{font-size:12px;color:var(--muted);margin-top:-8px}
-/* 出題の向き・1セットの問題数: one chip with the current values, changed in a sheet */
-.optchip{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;min-height:40px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);font-size:12.5px;font-weight:700;color:var(--muted)}
-.optchip .ico{width:14px;height:14px}
+/* 出題のしかた (the sheet behind the home card's 「変える ›」): 復習 [4択｜カード] with a line on what it means, 出題, 1セット */
 #optbox .dirrow{justify-content:space-between;font-size:13.5px;color:var(--ink)}
-/* the hero's other ways to study: only the ones that can start, a one-line hint each, quieter than the dock */
-.today .btn-row.alt{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:1fr}
-.today .btn-row.alt .btn{flex-direction:column;gap:1px;min-height:52px;line-height:1.25;font-size:14px;background:var(--surface-2);border-color:transparent}
-.today .btn-row.alt .btn small{margin-left:0;font-size:11.5px;color:var(--muted);opacity:1}
-.today .btn-row.alt .bt{display:inline-flex;align-items:center;gap:6px}
-/* deck rows: a letter on the card icon; the counts never break inside a word */
-.deck-ico{display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--accent)}
-.deck-ico::after{content:none}   /* the letter tells the decks apart; the punched hole beside it read as °基 */
+#optbox .opt-hint{margin-top:-6px;font-size:12.5px;color:var(--muted)}
+/* the counts never break inside a word */
 .nw{white-space:nowrap}
-/* deck rows and the 記録 notes: each item brings its own ・; the row sits 1.2em further left and that strip is clipped,
+.goal-line .ib,.pace-res .ib{display:inline-block}   /* 「基礎 を一周」 never splits as 「を一 / 周」 */
+/* the 記録 notes: each item brings its own ・; the row sits 1.2em further left and that strip is clipped,
    so no line starts or ends with a lone ・ */
-.deck-sub,.dots{display:flex;flex-wrap:wrap;margin-left:-1.2em;clip-path:inset(0 0 0 1.2em)}
-.deck-sub .nw::before,.dots .nw::before{content:"・";display:inline-block;width:1.2em;text-align:center}
-.deck-sub .nw::before{color:var(--muted)}   /* not red before 復習待ち */
+.dots{display:flex;flex-wrap:wrap;margin-left:-1.2em;clip-path:inset(0 0 0 1.2em)}
+.dots .nw::before{content:"・";display:inline-block;width:1.2em;text-align:center}
 /* first run: the logo beside the title, a short lead, the curve kept small; the start buttons stay in view */
 .ob-hd{display:flex;align-items:center;justify-content:center;gap:10px}
 .ob-hd .ob-logo{width:40px;height:40px;border-radius:11px;font-size:24px}
@@ -844,26 +972,17 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .chips.filter::-webkit-scrollbar{display:none}
 .chips.filter .chip{flex:none;white-space:nowrap}
 .legend i.wdot{width:8px;height:8px;border-radius:50%}
-.wsn{margin-left:6px;font-family:var(--f-ui);font-size:11.5px;font-weight:700;color:var(--muted)}
+.wsn{margin-left:6px;font-family:var(--f-ui);font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+@media (max-width:360px){   /* 320px: the word gets the row's width, its meaning (and the 赤シート band) under it */
+  .wrow{grid-template-columns:10px minmax(0,1fr) auto;row-gap:3px}
+  .wrow .wdot{grid-row:1 / span 2} .wrow .wmean{grid-column:2;grid-row:2;justify-self:start} .wrow .wdue{grid-column:3;grid-row:1 / span 2}
+}
 /* card sheet: the reset is a small text button, away from 出題しない (it can be undone from the notice) */
 .reset-link{align-self:center;min-height:40px;font-size:12.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 /* settings: a segmented control under its label spans the row */
 .frow.wrap>.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;width:100%}
 .frow.wrap>.seg button{padding:9px 4px}
 .pat .pg{margin-left:.5em;font-family:var(--f-ui);font-weight:500;font-size:.86em;color:var(--muted)}
-.secs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.secbtn{display:flex;flex-direction:column;gap:6px;min-height:66px;padding:10px 10px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);text-align:left}
-.secbtn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
-.sech{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2px 4px;min-width:0}
-.sech b{font-family:var(--f-word);font-size:14px;white-space:nowrap}
-.sech .ico{width:15px;height:15px;color:var(--good-t,var(--good));flex:none}
-.sech em{font-style:normal;font-size:11.5px;font-weight:700;color:var(--accent);white-space:nowrap}
-.secbar{display:block;height:5px;border-radius:3px;background:var(--line);overflow:hidden}
-.secbar i{display:block;height:100%;border-radius:3px;background:var(--accent)}
-.secbtn.full .secbar i{background:var(--good)}
-.secbtn small{font-size:12px;color:var(--muted)}
-.deck-cur{margin-top:4px;font-size:12px;color:var(--muted)}
-.deck-cur b{color:var(--ink)}
 .donut{position:relative;width:var(--ds);height:var(--ds);flex:none}
 .donut svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
 .donut circle{fill:none;stroke-width:4.2}
@@ -882,20 +1001,33 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .dnums i{width:10px;height:10px;border-radius:3px;flex:none}
 .dnums i.m{background:var(--st-master)} .dnums i.l{background:var(--st-learn)} .dnums i.n{background:var(--st-new)}
 .dnums b{margin-left:auto;color:var(--ink);font-size:15px}
+/* 表紙 (deckCover): the top card of a ring-bound 単語カード stack, a second card peeking out behind it. 72×96 on a shelf,
+   92×120 as the hero (cv-hero), 44×58 in a list (cv-sm). The hole shows what it sits on: --holebg (the page; a card's surface inside one) */
+.cover{--cw:72px;--chh:96px;--cv:var(--cv-my);--holebg:var(--bg);position:relative;display:block;width:var(--cw);height:var(--chh);flex:none;color:#fff}
+.cover.cv-hero{--cw:92px;--chh:120px}
+.cover.cv-sm{--cw:44px;--chh:58px}
+.tcard .cover,.sheet .cover,.hdeck .cover{--holebg:var(--surface)}
+.cover::before{content:"";position:absolute;inset:0;border-radius:calc(var(--cw) * .07) calc(var(--cw) * .16) calc(var(--cw) * .16) calc(var(--cw) * .07);background:color-mix(in srgb,var(--cv) 28%,var(--surface));transform:translate(calc(var(--cw) * .05),calc(var(--cw) * .04)) rotate(3.2deg);transform-origin:20% 90%}
+.cv-face{position:absolute;inset:0;border-radius:calc(var(--cw) * .07) calc(var(--cw) * .16) calc(var(--cw) * .16) calc(var(--cw) * .07);background:var(--cv);box-shadow:inset calc(var(--cw) * .08) 0 0 rgba(0,0,0,.16),inset 0 -3px 0 rgba(0,0,0,.12)}
+.cv-face::after{content:"";position:absolute;left:calc(var(--cw) * .13);top:calc(var(--cw) * .13);width:calc(var(--cw) * .13);height:calc(var(--cw) * .13);border-radius:50%;background:var(--holebg);box-shadow:inset 0 1px 2px rgba(0,0,0,.35)}
+.cv-kj{position:absolute;inset:0;display:grid;place-items:center;padding-top:calc(var(--cw) * .06);font-size:calc(var(--cw) * .42);font-weight:700;line-height:1}
+.cv-kj.lat{font-family:var(--f-word);font-weight:600}
+.cv-mk{position:absolute;right:calc(var(--cw) * .09);bottom:calc(var(--cw) * .1);width:calc(var(--cw) * .2);height:calc(var(--cw) * .2);background:currentColor;opacity:.85;-webkit-mask:var(--brand) center/100% 100% no-repeat;mask:var(--brand) center/100% 100% no-repeat}
+.cv-sm .cv-mk{display:none}   /* a speck at 44px */
+.cv-pct{position:absolute;right:-8px;top:-8px;z-index:2;min-width:34px;height:22px;padding:0 7px;display:grid;place-items:center;border-radius:999px;background:var(--surface);color:var(--ink);font-size:12px;font-weight:700;line-height:1;box-shadow:0 1px 3px rgba(0,0,0,.18),0 0 0 1.5px var(--cv)}
+.cv-hero .cv-pct{height:24px;font-size:13px}
+.cv-sm .cv-pct{min-width:30px;height:20px;padding:0 5px;right:-10px;top:-9px}
+.cv-tag{position:absolute;left:50%;bottom:-9px;z-index:2;transform:translateX(-50%);padding:2px 7px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-style:normal;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap}
+.cover.on::after{content:"";position:absolute;inset:-6px -7px -6px -6px;border-radius:calc(var(--cw) * .12) calc(var(--cw) * .22) calc(var(--cw) * .22) calc(var(--cw) * .12);box-shadow:0 0 0 2.5px var(--accent);pointer-events:none}   /* 使用中 */
+.cv-ring{position:absolute;left:calc(var(--cw) * .06);top:calc(var(--cw) * -.2);z-index:2;width:calc(var(--cw) * .26);height:calc(var(--cw) * .44);border:3px solid var(--ring);border-bottom-color:transparent;border-left-color:transparent;border-radius:50%;transform:rotate(-24deg);pointer-events:none}
 .mekuru{display:block;flex:none;pointer-events:none;user-select:none}
-.mk-btn{position:absolute;top:-2px;right:2px;width:92px;height:92px;padding:0;border:0;background:none;z-index:2;-webkit-tap-highlight-color:transparent}
-.today .hero-mk{width:92px;height:92px}
 .hero-mk.wig{animation:mkwig .45s ease-out}
 @keyframes mkwig{0%{transform:rotate(0)}30%{transform:rotate(-9deg) translateY(-3px)}60%{transform:rotate(6deg)}100%{transform:none}}
-.mkbubble{position:absolute;top:84px;right:12px;z-index:3;max-width:min(17em,calc(100% - 60px));font-size:13.5px;font-weight:600;line-height:1.5;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px 4px 14px 14px;padding:8px 12px;box-shadow:var(--shadow)}
-.mkbubble.pop{animation:mkin .2s ease-out both}
-.today .mk-btn ~ .today-k,.today .mk-btn ~ .back-h,.today .mk-btn ~ .today-nums{margin-right:74px}
 .res-mk{display:flex;align-items:center;gap:6px;margin-bottom:4px;animation:mkin .2s ease-out both}
 .res-mk .mekuru{width:72px;height:72px}
-.res-mk span{font-size:13.5px;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:7px 12px;text-align:left;max-width:15em}
+.res-btns .btn-big{flex-wrap:wrap;row-gap:0} .res-btns .btn-big small{white-space:nowrap}
+.res-mk span{word-break:auto-phrase;overflow-wrap:anywhere;font-size:13.5px;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:7px 12px;text-align:left;max-width:15em}
 @keyframes mkin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.homemode{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap}
-.homemode .dirrow{flex:none}
 .today-nums.steps{align-items:start}
 .today-nums.steps em{align-self:flex-start;margin-top:5px;font-style:normal;font-size:11.5px;font-weight:700;color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:1px 8px}
 .bignum.later b{color:var(--faint)}
@@ -914,26 +1046,147 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .kana{display:block;margin-top:2px;font-size:13px;color:var(--muted);letter-spacing:.02em}
 .kana b,.fb-word .kana b{color:var(--ink);font-weight:800;font-size:inherit;font-family:inherit;letter-spacing:inherit}
 .back-pron{text-align:center;margin:-4px 0 10px}
-.today .mk-btn ~ .hero-head .today-k,.today .mk-btn ~ .hero-head .goal-line{margin-right:62px}
-.today:has(.lanes) .mk-btn,.today:has(.lanes) .hero-mk{width:72px;height:72px}
-.lanes{display:flex;flex-direction:column;gap:10px}
-.lane{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:2px 12px;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface-2)}
-.lane.now{border-color:var(--accent);background:var(--surface)}
-.lane-h{grid-column:1/-1;display:flex;align-items:baseline;gap:8px;font-size:12.5px;font-weight:800;color:var(--ink);letter-spacing:.04em}
-.lane-h span{flex:1;min-width:0;overflow-wrap:anywhere;font-weight:600;color:var(--muted);letter-spacing:0;font-size:12px}
-.lane-h em{font-style:normal;font-size:12px;color:var(--accent)}
-.lane-n{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 4px;min-height:40px}
-.lane-n b{font-family:var(--f-word);font-size:32px;font-weight:600;line-height:1}
-.lane.rev.now .lane-n b{color:var(--red)}
-.lane-n small{font-size:12.5px;color:var(--muted);font-weight:700}
-.lane-ok{display:inline-flex;align-items:center;gap:4px;font-size:15px;font-weight:800;color:var(--good-t)}
-.lane-ok .ico{width:20px;height:20px;stroke-width:3}
-.lane-none{font-size:14px;font-weight:700;color:var(--muted)}
-.lane-btn{grid-column:2;grid-row:2;min-height:44px;padding:0 16px;white-space:nowrap}
-.lane-note{grid-column:1/-1;font-size:12px;color:var(--muted)}
-.lane-note.sd{color:var(--good-t);font-weight:700}
-.lane-wide{grid-column:1/-1;margin-top:6px}
 .ask-p{margin:4px 0 14px;font-size:15px;line-height:1.7}
+/* ===== ホーム: 今日の学習 — a short road ① 復習 → ② 新しい単語 → ゴール. The punched hole and its ring sit in the corner, so the
+   road has the card's full width; one main button (復習する, then 覚える) with an edge under it ===== */
+.today{margin-top:10px;padding:16px 16px 0}
+.th{display:flex;align-items:flex-end;gap:10px;padding-left:24px;min-height:44px}
+.th-t{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.th-t small{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.th-big{margin-top:3px;font-size:15px;font-weight:700;white-space:nowrap}
+.th-big b{font-size:30px;line-height:1;letter-spacing:-.01em;margin:0 2px}
+.th-big.hit{font-size:24px;color:var(--streak-t);letter-spacing:.02em}
+.th-side{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;padding-bottom:1px;font-size:12px;font-weight:700;color:var(--muted);line-height:1.35;white-space:nowrap}
+.th-side b{font-size:22px;color:var(--ink);line-height:1.1}
+.th-none{margin:10px 0 14px 24px;font-size:13.5px;color:var(--muted)}
+.today > .btn-main{margin-bottom:18px}
+/* under the head: the finish line 「12/28 に 基礎 を一周」 (a tap: 1日の目標), or how far the deck is */
+.today .goal-line{display:flex;align-items:center;gap:6px;width:calc(100% - 24px);min-height:44px;margin:0 0 -8px 24px;font-size:12.5px;color:var(--muted);text-align:left}
+.today .goal-line .ico{width:15px;height:15px;flex:none;color:var(--faint)}
+.today .goal-line > span{flex:1;min-width:0}
+.today .goal-line b{color:var(--ink)}
+.today .goal-line.nd .ico{color:var(--good)}
+.path{list-style:none;margin:14px 0 0;padding:0}
+.step{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:12px;padding-bottom:16px}
+.step::before{content:"";position:absolute;left:19px;top:46px;bottom:6px;width:2px;border-radius:2px;background:var(--line)}
+.step.goal::before{content:none}
+.step.done::before{background:color-mix(in srgb,var(--good) 55%,var(--line))}
+.node{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:700;color:var(--muted);background:var(--surface);border:2px solid var(--line)}
+.node .ico{width:20px;height:20px;stroke-width:3}
+.step.now .node{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 5px var(--accent-soft)}
+.step.done .node{background:var(--good);border-color:var(--good);color:var(--surface)}
+.step.skip .node{border-style:dashed;color:var(--faint)}
+.sb{min-width:0}
+.sh{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 8px;min-height:40px;padding-top:5px}
+.sh > b{font-size:18px;line-height:1.5;letter-spacing:.02em}
+.step.done .sh > b,.step.skip .sh > b{font-size:16px;color:var(--muted)}
+.sn{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+.sn b{font-size:24px;line-height:1;color:var(--ink);margin-right:1px}
+.okt{font-size:14px;font-weight:700;color:var(--good-t);white-space:nowrap}
+.nonet{font-size:13.5px;font-weight:700;color:var(--muted)}
+.st-tag{font-style:normal;font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap}
+.step .sub{margin-top:-4px;font-size:12.5px;line-height:1.45;color:var(--muted);word-break:auto-phrase;overflow-wrap:anywhere}
+.step .sub b{color:var(--ink)}
+.step .sub.sd,.step .sub .sd{color:var(--good-t);font-weight:700}
+.sb > .btn-main{margin-top:4px}
+.sb > .btn-main ~ .sub{margin-top:8px}
+.sb.two{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:10px}
+.nd-go{margin-top:8px}
+/* the main button and the quieter one beside it: a bottom edge, pressed down on tap */
+.btn-main{width:100%;min-height:54px;margin-bottom:4px;font-size:17px;letter-spacing:.02em;background:var(--accent);color:var(--accent-ink);box-shadow:0 4px 0 var(--accent-edge)}
+.btn-main .ico{width:15px;height:15px;fill:currentColor;stroke:none}
+.btn-main:active{transform:translateY(3px);box-shadow:0 1px 0 var(--accent-edge)}
+.btn-sub{background:var(--surface);color:var(--ink);border:1.5px solid var(--line);box-shadow:0 3px 0 var(--ghost-edge);margin-bottom:3px}
+.btn-sub:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ghost-edge)}
+.btn-sub.sm{min-height:44px;padding:0 16px;border-radius:12px;font-size:15px;white-space:nowrap}
+/* ゴール: 連続 N日 → N+1日, めくる waits at the end of the road (a tap: it talks); reached, a warm band */
+.step.goal{align-items:center;padding-bottom:14px}
+.step.goal .node{border:2px dashed color-mix(in srgb,var(--streak) 70%,transparent);background:var(--streak-soft);color:var(--streak)}
+.step.goal .node .ico{width:21px;height:21px;stroke-width:1.9}
+.step.goal .sb{display:flex;flex-direction:column;align-items:flex-start;line-height:1.3}
+.today.has-mk .step.goal .sb{padding-right:80px}
+.today.has-mk .step.goal:not(.hit){min-height:76px}   /* めくる spans h/2−46 … h/2+38; the reached band has its own margin */
+.step.goal .sb small{font-size:12px;font-weight:700;color:var(--muted)}
+.gl{display:flex;align-items:center;flex-wrap:wrap;gap:4px 6px;margin-top:3px;font-size:15px;font-weight:700}
+.dpill{display:inline-flex;align-items:baseline;gap:1px;padding:1px 9px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);font-size:12px;color:var(--muted)}
+.dpill b{font-size:15px;color:var(--ink)}
+.dpill.lit{background:var(--streak-soft);border-color:color-mix(in srgb,var(--streak) 45%,transparent);color:var(--streak-t)}
+.dpill.lit b{color:var(--streak-t)}
+.gl .arrow{color:var(--faint);font-size:13px}
+.gsub{margin-top:2px;font-size:12px;color:var(--muted)}
+.step.goal.hit{margin:6px -8px 12px;padding:10px 8px;border-radius:16px;background:var(--streak-soft)}
+.step.goal.hit .node{border:2px solid var(--streak);background:var(--streak);color:#fff}
+.step.goal.hit .node .ico{fill:currentColor}
+.step.goal.hit .gl{font-size:20px;color:var(--streak-t)}
+.today .mk-btn{position:absolute;right:-6px;top:50%;width:84px;height:84px;margin-top:-46px;padding:0;z-index:2;-webkit-tap-highlight-color:transparent}
+.today .hero-mk{width:84px;height:84px}
+.step.goal.hit .mk-btn{right:0}
+/* what めくる says when tapped: beside it, over the goal line (never over a button; taps go through); やったね！ on the band sits above it */
+.mkbubble{position:absolute;right:82px;bottom:2px;z-index:3;max-width:calc(100% - 134px);padding:6px 11px;border-radius:14px;background:var(--surface);color:var(--ink);border:1.5px solid var(--line);box-shadow:var(--shadow);font-size:13px;font-weight:700;line-height:1.5;pointer-events:none}
+.mkbubble::after{content:"";position:absolute;right:-7px;bottom:14px;width:11px;height:11px;background:var(--surface);border-top:1.5px solid var(--line);border-right:1.5px solid var(--line);transform:rotate(45deg)}
+.step.goal.hit .mkbubble:not([data-tap]){right:6px;bottom:calc(50% + 34px);max-width:calc(100% - 52px)}
+.step.goal.hit .mkbubble:not([data-tap])::after{right:32px;bottom:-7px;border-top:0;border-bottom:1.5px solid var(--line)}
+.mkbubble.pop{animation:mkin .2s ease-out both}
+/* past the goal: more new words, saying which; then how reviews are asked, one quiet line (opens 出題のしかた) */
+.more-new{display:flex;flex-direction:column;gap:0;width:100%;min-height:56px;margin:0 0 16px;padding:6px 14px;line-height:1.35}
+.more-new > span{display:inline-flex;align-items:center;gap:6px;font-size:15px}
+.btn.more-new small{margin:0;font-size:12px;font-weight:700;color:var(--muted);opacity:1;white-space:normal}
+.howto{display:flex;align-items:center;gap:8px;width:calc(100% + 32px);min-height:48px;margin:0 -16px;padding:0 16px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted);text-align:left}
+.howto > .ico{width:17px;height:17px;color:var(--faint)}
+.howto > span:not(.link){flex:1;min-width:0}
+.howto b{color:var(--ink)}
+.howto .link{display:inline-flex;align-items:center;white-space:nowrap}
+.howto .link .ico{width:15px;height:15px;stroke-width:2.2}
+/* the decks in use: 表紙, name, 学習ずみ %, where you are, one bar; a tap opens the deck */
+.sec-h .hsw{display:inline-flex;align-items:center;align-self:center}
+.hsw .ico{width:15px;height:15px;stroke-width:2.2}
+.hdecks{display:flex;flex-direction:column;gap:10px}
+.hdeck{display:flex;align-items:center;gap:14px;width:100%;padding:14px 14px 14px 12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);text-align:left}
+.hd-m{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.hd-n{display:flex;align-items:baseline;gap:8px}
+.hd-n > b{flex:1;min-width:0;font-size:15px;line-height:1.35;word-break:auto-phrase}
+.hd-p{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.hd-p small{font-size:12px;margin-right:3px}
+.hd-p b{font-size:18px;color:var(--ink);margin-right:1px}
+.hd-w{font-size:12.5px;line-height:1.35;color:var(--muted)}
+.hd-w b{font-size:13.5px;color:var(--ink)}
+.hbar{display:flex;height:8px;border-radius:999px;background:var(--st-new);overflow:hidden}
+.hbar i{display:block;height:100%}
+.hbar .m{background:var(--st-master)} .hbar .l{background:var(--st-learn)}
+/* ほかの練習: compact rows, only the ones that can start */
+.hlist{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.hrow{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:10px 14px;border-top:1px solid var(--line);text-align:left}
+.hrow:first-child{border-top:0}
+.hrow .rt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}
+.hrow .rt b{font-size:15px}
+.hrow .rt small{font-size:12.5px;color:var(--muted)}
+.hrow .rt b,.hrow .rt small,.mkbubble{word-break:auto-phrase;overflow-wrap:anywhere}
+.hrow > .ico:last-child{width:18px;height:18px;color:var(--faint)}
+.rico{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;flex:none;background:var(--accent-soft);color:var(--accent)}
+.cnt{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+.cnt b{font-size:17px;color:var(--ink);margin-right:1px}
+/* the streak pill once today's goal is reached: warm, as the goal band */
+.pill.streak.done{background:var(--streak-soft);border-color:color-mix(in srgb,var(--streak) 45%,transparent);color:var(--streak-t)}
+.pill.streak.done .ico{fill:var(--streak)}
+/* a narrow phone (320–360px): a smaller road, so 「新しい単語 15語」 and 「連続 4日 → 5日」 stay on one line */
+@media (max-width:360px){
+  .step{grid-template-columns:36px minmax(0,1fr);column-gap:10px}
+  .node{width:36px;height:36px}
+  .step::before{left:17px;top:42px}
+  .sh{min-height:36px;padding-top:3px;gap:0 6px}
+  .sh > b{font-size:16px}
+  .sn b{font-size:20px}
+  .btn-sub.sm{padding:0 11px}
+  .th-big b{font-size:26px}
+  .th-side b{font-size:20px}
+  .today.has-mk .step.goal .sb{padding-right:66px}
+  .today .mk-btn,.today .hero-mk{width:72px;height:72px}
+  .today .mk-btn{margin-top:-40px}
+  .today.has-mk .step.goal:not(.hit){min-height:64px}
+  .gl{gap:4px}
+  .dpill{padding:1px 7px}
+  .mkbubble{right:70px;max-width:calc(100% - 116px)}
+}
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up .2s ease-out;overscroll-behavior:contain}
@@ -968,8 +1221,6 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .btn-row .btn{white-space:nowrap;padding:0 10px}
 .btn small{font-weight:400;font-size:12px;opacity:.85}
 @media (max-width:400px){
-  .today{padding-left:36px;padding-right:16px}
-  .dhead{padding-left:36px;padding-right:16px}
   .tcard.holed::before{left:12px;top:14px}
   .ring{left:5px}
   .bignum b{font-size:38px}.statline b{font-size:17px}
@@ -1052,6 +1303,7 @@ const EXI = {"g":250,"s":["70035655987f7049473a1b4e7a64983e2d17717f5f70aee2d15f1
 /* true in the standalone web build (own site, installable, offline); false inside a claude.ai artifact */
 const IS_WEB = true;
 const BRAND = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAONklEQVR42u1ce7Bd0xn/fedx5XUlkUSUEG8JJcEExWCa6EzUFFXTJBgJoqpK9DFaZkrbGdNiWhRB6v1IRzxCpqGIakMqpUHFq5GkgiAiCXnee87Zv/5xv6Vfv659zgn3cXLtb2bPPo+19177e7/WAjLIIIMMMsgggwwyyCCDDDLIIIMMMsgggwy+CCBd8VCSnz5XRJiRoQuBZI5kPpOAzkX6IAAFACtFpKS/5QEkmUR0IKfr+SaSa0h+THIRycdIjvXjMmh/AuT1/GfG4TqVjP+xERm0HwEKeh6nCC+RrJAs65kk3yS5N0nJJKGDvB+SeZKvK8IrRgI26fmpzlBFOpeCzke+aFJwviK7bAiQKEFKJHfuKCIExMdUZLf3xowh3o5kiyI9MUQIBDnVEsy6q3qWzZS4gkcuya1InkTyMJJbO0LkvgjG+JcRKSjp+TZPgBSODSrEHlKNQCR3IjmJ5ELz3HdJTiU5utt7YwFBJHuSXG7UjyXGHEss/TyU5CiS+9WLHJKDlMPPInkvyRdJrnMSlzhv7CaSu3aWN9ZVgVheRCokpwE4E0BZA7MKgDyAeSJymCKaAB4CMAZAT73FGwBeALAGwCAAJQA99L/BABIA/QBsD6B/ZAoVffdASOpvOT0+AjBeRB4Pc+0oXBS6KgJX7lqa8v8GPedFpERyhSK/FUATgL30qIveitzAcDS/J4YJRb9vAjAAwFSSewFISEpHReiFLsuBiJDkcieJ4SXfcrr4bAD7ADgEQAuAoiKrmlSLOQp6b9kMnCzujIRhVxEgvNCiFFX4qh0nImWSkwA8AmBno6rEcXO+yvMEwGoALwJYCWA5gN4A9gCwUdXYMgDPAVgCYL6qSenOntDBKUb4eDcuuK/bk7zBGdGS+77WGdWKHm+Q3DELh/8foesMEQIhDvSuoPs8ieR7BsnrSE4kuSfJk12UHYg6Xq9tMi5sQeOKnPute0fH4eXUFX3LcSrVdRSSxVhgpZ+3IXkiyV+RPNiM+ZGJKQLynzJBWbdUKaJcVKjnBQ3HNblYICBsmldXMRXmI1s9P2g4PxB0dFoKottGuybgypkoteCCq5FaF7DqJyBtZrWckEszFPW3/iRXOWK+alSedMt8D8kBJPcgOYFknzrG70hyGslPnBGmI8JHJL9VgwhF8/mhiDqbT/JLJPs5Ccx1F0M6hOQHxhtZSHIMyT6qYoaSPJTkWJJTSN6uXF8LbI7oGos4z8kkB5K8L3JdgLUk3yf5bDDGaapsSzSkg0mud8m0kOBaQnJjFQQnNYiwiWQryQ9T9P4Omtr+dxXkx55xS3BJayTuZHOyr11JhAWuupVEkBBy/aU6EO/hRvPMq0nOU2O7KkVivFubmDmUjXr7aVr1LZK+zjecF2VcwglGAhKnh5M6ODLt/5kkz7XGm+SjEUmqOPtRqvE8+/9I45EVrCenbvLuwcNqyFS1QczFVVRLEkFUGvIrWqw5LsXm7Kr/t5i6csV8tsHZh1WeFa7ZNeW9JqoKbSG5mORtJL9t5pFvRCJMMS/X6oKhAB9XIUTgzJtN1Go5Mjzn0iqIfYHk2SR3JtmP5PUpKipI510kj9FmgXNJXkbyuSr3n0fy0EaUhFDv/U5EAtaozj5Wy5E/i6gC+31c8PGrEPs8LbC8oAi7guQBkfH7VVFFSQ0JqTj7VTb/ndMeRJAOKrQcCuDrWthYAuDvIrLcjLsTwCmmEBMgfL9KRC5Q3Vt2eXxpS5C2ddQFbwjACQB20zTyPSKySom1G4DXTPHFQ6vJotKkuXMu4xor5kwRkas7umjzmdRR5Pcmo1uTFDUUOPIDkr1qPKenxiDHkXzH3edlknvouD4k3460wZRJrtwM58BCi17/iXkvaZiSpBLB5upFc/p7A1igVa205yfKXXcD+D2AbXXcBs3Zb6vFmRMBbKc5fRhJSbRg8z6Ar4nIyyTnAzjIce8yAIcBuAbAMQCCp/M2gGf1PBlAc5VizjQA52hPa9LI3c+i6YpYQxY3UzczxZhaaNXz4zqH+w3XBz3+iJnjEJKHkNyXZE/z+xI33xBP3BAM8ZZQEQtlwdvQVsct1/FcMdzKSHUr/JY3YyyHhpLlGJIDALxrrg22YADJ3XUui0TkHZew2wfAjuaaUIW7UEQuD2M/b7myo9v/Cmqcvgrg2AjyKykIrhjC0RjEvF5f1CPnuhu8GlsEYD2AvpF3HgXgXwD+CWBx8GoMDDOdGtRnJwDuVQ+t2B614lxHpilU7xcA/NYgxSI65mWI/p4zBXVx3L8YwGkAjlTd/gdHUAGwCsDxIrJJ7YGHknppRQBDAVxH8gEAA5VpBkdq2MsArNB3KTd6gaagnsr9KXqUJO82ibQQAzxJ8hSSyzR+mGEad0u2ddE8b3SkRjzD/H95pEr2oKapl5jom/r9QJIPu3smJK+t1bHXKBKQF5EygKkAvqncknN+9I9F5GQAc40XAwB/FJG7AOwP4MsicpJKEEx/T6IE7hVW1kS8qiYTJG0T4eYVIvIegFP1t6LOYRcAz6vKhJPG2e4ejUcA1Y1l7Ww4TUW94AKtX4vIlYq8ng55O6jt+EhE3tExj7gxo5XAFVUXfVz7CQAMNq7hDhECiarJZ5QI1n74XqWcqp6/uTGNRQBFXInk/gDu1Il65M8DcDHJJkVe0d2mpxKwaIz4RsONADBKA58gEb0jHtKr5p7Nkemu1+awHiIyHcD3TAMXnaMAALNFZLXOqfEkgGROEbcvgFmGK8UQYgOA013Yvs6JdSEi5iMd5/VXyQmNUxudywsA95kItUdkyiHwKqvUTlWmyTsOD/2pM/Re7doll2vn8uRIAE+qyCdm8jl1B08UkTdUrVQcwgPi+kQIcLiXEj1yyo0HGSnLA3gFwGMG0YMjKmi95XJF7ndV1eSNJORUjb7U3vq/PSVAVN/+BsBAnXDOJLc+ATBWRB41iavAZUPcvVZGkLXGjSnqQysk+6uht/r/+aDG1A19uwbywrVFF6cENdcE4HAldq6hCGAyoEcAOEInXHQceYWIzA16P0SQmsga4ubyl8hjnnLqoBnALJL3oa1NfZizEbNcF/bayD1bnNeWALhIPaZKJD6ZYjwwaaTm3DCZCxUBFWO8ipp8u1J951JED2/l7rMmYlBfUoTZ0uBXXBobpsf/0/SyErpXyhoBACiIyCZth7zAtKyXzb0qAA4hebOInOFUaNdJgHE5z9eMYsUYMdFI8zhVA7FV8BbJ4XxwpJf/faOaaAxyyTBSQQkkQb+rRzZSbQRd9/QA5eRW7RmablIPOf2cM9eVAZxO8ocqxflGqYD1Nd1oietKO6FW/VSrWjSR6AxX+cqbjGbF5OJDZL2K5BySvyP5A5IHmUhcSP7CRdHhfL/etwfJx90c3iV5iTYF0FXGVmsfknRZh4TxeobrVgN+kiR5VpU+TokUSwJiFqSUII+OpKJv12xntTr1HFcTDs+Zrkm1OS6FfY9ZsT9Ia9ih0SBce157pyQ+C/KPNK2FFcf5k6pN0NxjX9cNQZJLbbuhG3+JVrseVsL9g2Qz/rvstIcGcKFKtb82hlUivacLSM529eiJkWbf693K/kQ7uvt1uhSY4spupinKi/bkYB/q6KI4MtLLuYJkX1/m8y9KchdlgEUkx0SesR3J11IKQP77wrBENdJYvLU2+NK0wpDksZ3enmI4cZhOJrSfhGzl9FrIr7JvRGLaVrZNQXre1ZfHGSTOIvl9kkeRvMjUiZMqdeeZJMcbicunvO8+JDe4+5zZJWrITOobbkKLdNFEzc5jg8gxkbLihzEJSEl3C8lnapQrY+XLp0kOqafbzbzvKJK3qlQ9aVrnpSvtwFEkryV5FcnBEbURFm3k6lgjVqmXAE4d7qndDWUjlaUaXRcjgqTW0+/plkc1RkdcWr9+DYQV7EoVkhdGVNCaNBVURZKOVlVYreO6YgouPW3Xs9P5tgVerCNgnicN0aTrFrZJREIOUH083PcI6TVPR/pJ12ulqmAIJlW2PPD2IKnRkHuLmUOuziVVebOgr/HXmBkOP8342LN0z4a+ZjlRi0NaomOHIb1Xv1pQd5ZRQ2kEuDLl3v3Vuxuui0q2USJJR25r01GNWTkRSdRQvQLA5mKWArgDwE4AJrlifchKLkJb09N8/bxORNZG1F2zZiqbTBZ2OoARkSaAAJvQtlj7Y51XXusLgwFsrd9L+v8GPV7Ta2aKyMvt1ZLSoZt1GM5ZCGC49mAWqqxmT4O1WrRZpom69Wir2/ZC24YcPfS+vTtBuDdopvUOEZkdGK1RCRDS1GNNMbtiKmRSBzHYAXNkSk03V2VLhZA0tD7/z0Xk0oZqzK3irk7QJFasJT3mKo7TlvOKMdBlc/jW8Yr5r2TO9ihHxiaRbQ/suEpkqZO9/4iG39zJuG57kZxbhQjhJVt1/PEm/E8iq21KKYvyNhda6mAKujVw4bkPf95oWDrLK9K6QTOAGwGMN3l3MeopD+AJLV+WSd4KYKIruviXLaOtjrsabTugrEJbXXmFGtKVan+W6ve8Kd5/oOPzAPYDMFbPA7UA1KwVspwr7G9C264qlwH4kynJNuZ2NYrMvHoyE0i+BeAnrl086Nu/hnougDO0qDNZPZRglJ8A8Lp6SHMBvCci6z/nNN8E8IApNJVI9kZbX2kRwJ7qbZUALBGRNyO2YsvYN9RFwXQ6eURkv7ghJCfr2q+d6tiDwgaIBbcLij1ybreU/GbuyLjlrbZ3qYgTjHGmJrqKLqrO14jAc+2dGrBpiAiBuse2loYIoxTxL+kKGkSSdzmLcGTQ7h5S0VfBMuiCrGrG3V28mWuGiQwyyCCDDDLIIIMMMsgggwwyyCCDDDLIIIPuCv8BjSzXJjxg5LsAAAAASUVORK5CYII=';
+if (BRAND) document.documentElement.style.setProperty('--brand', `url(${BRAND})`);   // once, for the small 極 on every 表紙 (deckCover)
 /* めくる, the app's character: a vocab card on its ring, doodled in a notebook margin. normal / happy (a good set) / cheer (after misses, back after a break) */
 const MEKURU = {"normal": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+DQogIDxkZWZzPg0KICAgIDxmaWx0ZXIgaWQ9Im5tLWRyaWZ0IiB4PSItMjAlIiB5PSItMzAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNjAlIj4NCiAgICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjAyMiIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iNyIgcmVzdWx0PSJ0Ii8+DQogICAgICA8ZmVEaXNwbGFjZW1lbnRNYXAgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0idCIgc2NhbGU9IjIuNiIgeENoYW5uZWxTZWxlY3Rvcj0iUiIgeUNoYW5uZWxTZWxlY3Rvcj0iRyIvPg0KICAgIDwvZmlsdGVyPjxmaWx0ZXIgaWQ9Im5tLW1rIiB4PSItMjAlIiB5PSItMzAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNjAlIj4NCiAgICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjAzIiBudW1PY3RhdmVzPSIxIiBzZWVkPSIxMCIgcmVzdWx0PSJ0Ii8+DQogICAgICA8ZmVEaXNwbGFjZW1lbnRNYXAgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0idCIgc2NhbGU9IjIuNCIgeENoYW5uZWxTZWxlY3Rvcj0iUiIgeUNoYW5uZWxTZWxlY3Rvcj0iRyIgcmVzdWx0PSJkIi8+DQogICAgICA8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIxIiBzZWVkPSIxMiIgcmVzdWx0PSJnIi8+DQogICAgICA8ZmVEaXNwbGFjZW1lbnRNYXAgaW49ImQiIGluMj0iZyIgc2NhbGU9IjAuOSIgeENoYW5uZWxTZWxlY3Rvcj0iUiIgeUNoYW5uZWxTZWxlY3Rvcj0iRyIvPg0KICAgIDwvZmlsdGVyPjxtYXNrIGlkPSJubS1ob2xlIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSItODAiIHk9Ii04MCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyNDAiPg0KICAgICAgPHJlY3QgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjZmZmIi8+DQogICAgICA8Y2lyY2xlIGN4PSIxMi42IiBjeT0iMTIuOSIgcj0iNC4xIiBmaWxsPSIjMDAwIi8+DQogICAgPC9tYXNrPjxtYXNrIGlkPSJubS1za2lwIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSItODAiIHk9Ii04MCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyNDAiPg0KICAgICAgPHJlY3QgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjZmZmIi8+DQogICAgICA8cGF0aCBkPSJNNS42IDkuOCBDNi44IDUgMTQgNCAxOC4yIDcgQzIxLjggOS44IDIxLjIgMTcgMTcuNiAxOS42IEMxMy42IDIyLjIgNy40IDIxLjQgNS42IDE3LjYgQzQuOCAxNS40IDUgMTIgNS42IDkuOCBaIiBmaWxsPSIjMDAwIi8+DQogICAgPC9tYXNrPjxtYXNrIGlkPSJubS1mcm9udCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxwYXRoIGQ9Ik04LjYgLTIuNyAyMCA0MS45IDI0LjEgNDAuNiAyOC4xIDM5IDMxLjkgMzcgMzUuNSAzNC42IDM4LjggMzIgNDEuOSAyOSA0NC43IDI1LjggNDcuMiAyMi4zIDQ5LjQgMTguNiA1MS4yIDE0LjcgNTIuNiAxMC43IDUzLjcgNi42IFoiIGZpbGw9IiNmZmYiLz4NCiAgICA8L21hc2s+PHBhdGggaWQ9Im5tLXJpbmciIGQ9Ik0tNS45IC0xMS4xIEMtNi4yIC05LjcgLTcuOCAtNS4zIC03LjYgLTIuNiBDLTcuNCAwLjIgLTYuNCAzLjEgLTUgNS40IEMtMy42IDcuNyAtMS41IDEwIDAuOCAxMS40IEMzLjIgMTIuOCA2LjIgMTMuOSA5IDE0IEMxMS44IDE0LjEgMTUuMiAxMy4zIDE3LjYgMTEuOCBDMjAuMSAxMC4zIDIyLjMgNy43IDIzLjYgNS4yIEMyNC44IDIuNiAyNS4yIC0wLjcgMjUgLTMuNSBDMjQuNyAtNi4yIDIzLjYgLTkuMiAyMi4xIC0xMS41IEMyMC42IC0xMy44IDE4LjMgLTE1LjkgMTUuOSAtMTcuMyBDMTMuNCAtMTguNiAxMC4zIC0xOS42IDcuNSAtMTkuNiBDNC42IC0xOS42IDEuMyAtMTguOCAtMS4zIC0xNy4zIEMtMy45IC0xNS43IC02LjQgLTEzLjIgLTcuOSAtMTAuNSBDLTkuNCAtNy44IC05LjggLTIuNiAtMTAuMiAtMS4xIi8+PHBhdGggaWQ9Im5tLW0wIiBkPSJNMjMgNS4yIFE3Mi4zIDIuMSAxMjEuNiAxLjgiLz48cGF0aCBpZD0ibm0tbTEiIGQ9Ik0xMjEuNiAxLjggUTYxLjYgOCAxLjggMTYuNCIvPjxwYXRoIGlkPSJubS1tMiIgZD0iTTEuOCAxNi40IFE2NC41IDEzLjkgMTI3LjIgMTMuMiIvPjxwYXRoIGlkPSJubS1tMyIgZD0iTTEyNy4yIDEzLjIgUTY2LjggMTkuNiA2LjggMjkuMiIvPjxwYXRoIGlkPSJubS1tNCIgZD0iTTYuOCAyOS4yIFE2My43IDI2LjQgMTIwLjYgMjYuNCIvPjxwYXRoIGlkPSJubS1tNSIgZD0iTTEyMC42IDI2LjQgUTU4LjkgMzIuOCAtMi42IDQxLjQiLz48cGF0aCBpZD0ibm0tbTYiIGQ9Ik0tMi42IDQxLjQgUTYzLjQgMzkuMSAxMjkuNCAzOC42Ii8+PHBhdGggaWQ9Im5tLW03IiBkPSJNMTI5LjQgMzguNiBRNjYuMyA0My43IDMuNiA1MiIvPjxwYXRoIGlkPSJubS1tOCIgZD0iTTMuNiA1MiBRNjMuNSA0OS4xIDEyMy40IDQ5Ii8+PHBhdGggaWQ9Im5tLW05IiBkPSJNMTIzLjQgNDkgUTYxLjggNTYgMC40IDY1LjIiLz48cGF0aCBpZD0ibm0tbTEwIiBkPSJNMC40IDY1LjIgUTU5LjYgNjIuNyAxMTguOCA2MiIvPjxwYXRoIGlkPSJubS1tMTEiIGQ9Ik0xMTguOCA2MiBRNjIuOSA2Ny4zIDcuNCA3NS44Ii8+PHBhdGggaWQ9Im5tLW0xMiIgZD0iTTcuNCA3NS44IFE1NS41IDczLjIgMTAzLjYgNzMuNCIvPg0KICA8L2RlZnM+DQogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI5LjAzIDYxLjQwKSBzY2FsZSgxLjIpIHJvdGF0ZSgtMyA2MyA0MCkiPg0KICAgIDwhLS0gcmluZywgdGhlIHN0cmV0Y2ggYmVoaW5kIHRoZSBjYXJkIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YyNzAxRiIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTEuOTkiIHk9Ii0xLjY3Ii8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTEuMjAiIHk9Ii0xLjAwIi8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTAuNDAiIHk9Ii0wLjMzIi8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iMC40MCIgeT0iMC4zMyIvPjx1c2UgaHJlZj0iI25tLXJpbmciIHg9IjEuMjAiIHk9IjEuMDAiLz48dXNlIGhyZWY9IiNubS1yaW5nIiB4PSIxLjk5IiB5PSIxLjY3Ii8+PC9nPjwvZz4NCg0KICAgIDwhLS0gdGhlIGNhcmQ6IG5vdGVib29rIHBhcGVyIGluc2lkZSB0aGUgcGVuIGxpbmUsIHdpdGggdGhlIHB1bmNoZWQgaG9sZSAtLT4NCiAgICA8ZyBtYXNrPSJ1cmwoI25tLWhvbGUpIiBmaWx0ZXI9InVybCgjbm0tZHJpZnQpIj4NCiAgICAgIDxwYXRoIGZpbGw9IiNGQUY3RUUiIGQ9Ik0yIDEuMiBDNDAgLTAuMiA5MCAtMiAxMjIuNCAtMy4zIEMxMjYgLTMuNCAxMjcuMyAtMS42IDEyNy40IDIuNCBMMTI3LjYgNTkuNSBMMTA4LjYgNzguNSBDODAgNzguOSA0MCA3OS40IDUuNCA3OS42IEMyLjIgNzkuNiAxIDc4IDAuOSA3NSBDMC4zIDU1IC0wLjIgMjUgLTAuMSA1IEMtMC4xIDIuNiAwLjYgMS4zIDIgMS4yIFoiLz4NCiAgICA8L2c+DQoNCiAgICA8IS0tIGJsdWUgY2hpc2VsIG1hcmtlciwgemlnemFnOyB3aGVyZSBwYXNzZXMgb3ZlcmxhcCBpdCBnb2VzIGRhcmtlciAtLT4NCiAgICA8ZyBmaWx0ZXI9InVybCgjbm0tbWspIj48ZyBtYXNrPSJ1cmwoI25tLXNraXApIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQjQ1RDMiIHN0cm9rZS13aWR0aD0iMi42Ij4NCiAgICAgIDxnIG9wYWNpdHk9IjAuODYiPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItNC42OCIgeT0iNS45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMy45MCIgeT0iNC45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMy4xMiIgeT0iMy45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMi4zNCIgeT0iMi45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMS41NiIgeT0iMi4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMC43OCIgeT0iMS4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMC4wMCIgeT0iMC4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIwLjc4IiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIxLjU2IiB5PSItMi4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIyLjM0IiB5PSItMi45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIzLjEyIiB5PSItMy45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIzLjkwIiB5PSItNC45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSI0LjY4IiB5PSItNS45OSIvPjwvZz48ZyBvcGFjaXR5PSIwLjgyIj48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTMuOTMiIHk9IjYuODAiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTMuMjciIHk9IjUuNjciLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTIuNjIiIHk9IjQuNTMiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTEuOTYiIHk9IjMuNDAiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTEuMzEiIHk9IjIuMjciLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTAuNjUiIHk9IjEuMTMiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTAuMDAiIHk9IjAuMDAiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMC42NSIgeT0iLTEuMTMiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMS4zMSIgeT0iLTIuMjciLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMS45NiIgeT0iLTMuNDAiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMi42MiIgeT0iLTQuNTMiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMy4yNyIgeT0iLTUuNjciLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMy45MiIgeT0iLTYuODAiLz48L2c+PGcgb3BhY2l0eT0iMC44OCI+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii00LjQxIiB5PSI2Ljc5Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0zLjY4IiB5PSI1LjY2Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0yLjk0IiB5PSI0LjUzIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0yLjIxIiB5PSIzLjQwIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0xLjQ3IiB5PSIyLjI2Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0wLjc0IiB5PSIxLjEzIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjAuNzQiIHk9Ii0xLjEzIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjEuNDciIHk9Ii0yLjI2Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjIuMjEiIHk9Ii0zLjQwIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjIuOTQiIHk9Ii00LjUzIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjMuNjgiIHk9Ii01LjY2Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjQuNDEiIHk9Ii02Ljc5Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODMiPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMy40MCIgeT0iNi40MCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMi43OCIgeT0iNS4yNCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMi4xNyIgeT0iNC4wNyIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMS41NSIgeT0iMi45MSIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMC45MyIgeT0iMS43NSIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMC4zMSIgeT0iMC41OCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIwLjMxIiB5PSItMC41OCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIwLjkzIiB5PSItMS43NSIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIxLjU1IiB5PSItMi45MSIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIyLjE3IiB5PSItNC4wNyIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIyLjc4IiB5PSItNS4yNCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIzLjQwIiB5PSItNi40MCIvPjwvZz48ZyBvcGFjaXR5PSIwLjg1Ij48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTQuNzAiIHk9IjYuNzIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTMuOTgiIHk9IjUuNjgiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTMuMjYiIHk9IjQuNjUiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTIuNTMiIHk9IjMuNjIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTEuODEiIHk9IjIuNTgiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTEuMDkiIHk9IjEuNTUiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTAuMzYiIHk9IjAuNTIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMC4zNiIgeT0iLTAuNTIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMS4wOSIgeT0iLTEuNTUiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMS44MSIgeT0iLTIuNTgiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMi41MyIgeT0iLTMuNjIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMy4yNiIgeT0iLTQuNjUiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMy45OCIgeT0iLTUuNjgiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iNC43MCIgeT0iLTYuNzIiLz48L2c+PGcgb3BhY2l0eT0iMC44MSI+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii00LjExIiB5PSI2LjU3Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0zLjQyIiB5PSI1LjQ4Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0yLjc0IiB5PSI0LjM4Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0yLjA1IiB5PSIzLjI5Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0xLjM3IiB5PSIyLjE5Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0wLjY4IiB5PSIxLjEwIi8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjAuNjgiIHk9Ii0xLjEwIi8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjEuMzciIHk9Ii0yLjE5Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjIuMDUiIHk9Ii0zLjI5Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjIuNzQiIHk9Ii00LjM4Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjMuNDIiIHk9Ii01LjQ4Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjQuMTEiIHk9Ii02LjU3Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODciPjx1c2UgaHJlZj0iI25tLW02IiB4PSItNC41MSIgeT0iNS45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMy43NiIgeT0iNC45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMy4wMSIgeT0iMy45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMi4yNiIgeT0iMi45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMS41MCIgeT0iMi4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMC43NSIgeT0iMS4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIwLjAwIiB5PSItMC4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIwLjc1IiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIxLjUwIiB5PSItMi4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIyLjI2IiB5PSItMi45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIzLjAxIiB5PSItMy45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIzLjc2IiB5PSItNC45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSI0LjUxIiB5PSItNS45OSIvPjwvZz48ZyBvcGFjaXR5PSIwLjg2Ij48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTMuODgiIHk9IjcuMDAiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTMuMjMiIHk9IjUuODMiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTIuNTkiIHk9IjQuNjYiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTEuOTQiIHk9IjMuNTAiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTEuMjkiIHk9IjIuMzMiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTAuNjUiIHk9IjEuMTciLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMC4wMCIgeT0iLTAuMDAiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMC42NSIgeT0iLTEuMTciLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMS4yOSIgeT0iLTIuMzMiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMS45NCIgeT0iLTMuNTAiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMi41OSIgeT0iLTQuNjYiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMy4yMyIgeT0iLTUuODMiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMy44OCIgeT0iLTcuMDAiLz48L2c+PGcgb3BhY2l0eT0iMC44MiI+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0zLjk1IiB5PSI2LjMyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0zLjIzIiB5PSI1LjE3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0yLjUxIiB5PSI0LjAyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0xLjc5IiB5PSIyLjg3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0xLjA4IiB5PSIxLjcyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0wLjM2IiB5PSIwLjU3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjAuMzYiIHk9Ii0wLjU3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjEuMDgiIHk9Ii0xLjcyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjEuNzkiIHk9Ii0yLjg3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjIuNTEiIHk9Ii00LjAyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjMuMjMiIHk9Ii01LjE3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjMuOTUiIHk9Ii02LjMyIi8+PC9nPjxnIG9wYWNpdHk9IjAuODgiPjx1c2UgaHJlZj0iI25tLW05IiB4PSItNC4zNSIgeT0iNS45OSIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMy41NiIgeT0iNC45MCIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMi43NyIgeT0iMy44MSIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMS45OCIgeT0iMi43MiIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMS4xOSIgeT0iMS42MyIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMC40MCIgeT0iMC41NCIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIwLjQwIiB5PSItMC41NCIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIxLjE5IiB5PSItMS42MyIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIxLjk4IiB5PSItMi43MiIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIyLjc3IiB5PSItMy44MSIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIzLjU2IiB5PSItNC45MCIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSI0LjM1IiB5PSItNS45OSIvPjwvZz48ZyBvcGFjaXR5PSIwLjgzIj48dXNlIGhyZWY9IiNubS1tMTAiIHg9Ii0zLjgzIiB5PSI2LjkxIi8+PHVzZSBocmVmPSIjbm0tbTEwIiB4PSItMy4xOSIgeT0iNS43NiIvPjx1c2UgaHJlZj0iI25tLW0xMCIgeD0iLTIuNTUiIHk9IjQuNjEiLz48dXNlIGhyZWY9IiNubS1tMTAiIHg9Ii0xLjkxIiB5PSIzLjQ1Ii8+PHVzZSBocmVmPSIjbm0tbTEwIiB4PSItMS4yOCIgeT0iMi4zMCIvPjx1c2UgaHJlZj0iI25tLW0xMCIgeD0iLTAuNjQiIHk9IjEuMTUiLz48dXNlIGhyZWY9IiNubS1tMTAiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjbm0tbTEwIiB4PSIwLjY0IiB5PSItMS4xNSIvPjx1c2UgaHJlZj0iI25tLW0xMCIgeD0iMS4yOCIgeT0iLTIuMzAiLz48dXNlIGhyZWY9IiNubS1tMTAiIHg9IjEuOTEiIHk9Ii0zLjQ1Ii8+PHVzZSBocmVmPSIjbm0tbTEwIiB4PSIyLjU1IiB5PSItNC42MSIvPjx1c2UgaHJlZj0iI25tLW0xMCIgeD0iMy4xOSIgeT0iLTUuNzYiLz48dXNlIGhyZWY9IiNubS1tMTAiIHg9IjMuODMiIHk9Ii02LjkxIi8+PC9nPjxnIG9wYWNpdHk9IjAuODUiPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iLTQuMjUiIHk9IjYuMzAiLz48dXNlIGhyZWY9IiNubS1tMTEiIHg9Ii0zLjU0IiB5PSI1LjI1Ii8+PHVzZSBocmVmPSIjbm0tbTExIiB4PSItMi44MyIgeT0iNC4yMCIvPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iLTIuMTIiIHk9IjMuMTUiLz48dXNlIGhyZWY9IiNubS1tMTEiIHg9Ii0xLjQyIiB5PSIyLjEwIi8+PHVzZSBocmVmPSIjbm0tbTExIiB4PSItMC43MSIgeT0iMS4wNSIvPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iLTAuMDAiIHk9IjAuMDAiLz48dXNlIGhyZWY9IiNubS1tMTEiIHg9IjAuNzEiIHk9Ii0xLjA1Ii8+PHVzZSBocmVmPSIjbm0tbTExIiB4PSIxLjQyIiB5PSItMi4xMCIvPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iMi4xMiIgeT0iLTMuMTUiLz48dXNlIGhyZWY9IiNubS1tMTEiIHg9IjIuODMiIHk9Ii00LjIwIi8+PHVzZSBocmVmPSIjbm0tbTExIiB4PSIzLjU0IiB5PSItNS4yNSIvPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iNC4yNSIgeT0iLTYuMzAiLz48L2c+PGcgb3BhY2l0eT0iMC44MSI+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSItMy41NiIgeT0iNi45OSIvPjx1c2UgaHJlZj0iI25tLW0xMiIgeD0iLTIuOTciIHk9IjUuODMiLz48dXNlIGhyZWY9IiNubS1tMTIiIHg9Ii0yLjM4IiB5PSI0LjY2Ii8+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSItMS43OCIgeT0iMy41MCIvPjx1c2UgaHJlZj0iI25tLW0xMiIgeD0iLTEuMTkiIHk9IjIuMzMiLz48dXNlIGhyZWY9IiNubS1tMTIiIHg9Ii0wLjU5IiB5PSIxLjE3Ii8+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSItMC4wMCIgeT0iMC4wMCIvPjx1c2UgaHJlZj0iI25tLW0xMiIgeD0iMC41OSIgeT0iLTEuMTciLz48dXNlIGhyZWY9IiNubS1tMTIiIHg9IjEuMTkiIHk9Ii0yLjMzIi8+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSIxLjc4IiB5PSItMy41MCIvPjx1c2UgaHJlZj0iI25tLW0xMiIgeD0iMi4zOCIgeT0iLTQuNjYiLz48dXNlIGhyZWY9IiNubS1tMTIiIHg9IjIuOTciIHk9Ii01LjgzIi8+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSIzLjU2IiB5PSItNi45OSIvPjwvZz4NCiAgICA8L2c+PC9nPg0KDQogICAgPCEtLSB0aGUgYmVudCBjb3JuZXI6IGl0cyBiYWNrIGlzIHBsYWluIHBhcGVyIC0tPg0KICAgIDxwYXRoIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiIGZpbGw9IiNGQUY3RUUiIGQ9Ik0xMDguNiA3OC40IEMxMDkuMiA3Mi42IDExMi4yIDY5IDExNi44IDY3LjQgQzEyMC42IDY2LjIgMTI0LjQgNjMuNCAxMjcuNyA1OS42IEwxMjcuNiA1OS41IEwxMDguNiA3OC41IFoiLz4NCg0KICAgIDwhLS0gYmFsbHBvaW50IC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI0MjUyQyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMS45Ij48cGF0aCBkPSJNLTEuNiAxLjYgQzMwIDAuNCA4NSAtMS42IDEyMiAtMy40IEMxMjUuOCAtMy42IDEyNy41IC0xLjggMTI3LjUgMi40IEMxMjcuNyAyMiAxMjcuOSA0MiAxMjcuNiA2MC4xIi8+PHBhdGggZD0iTTEuMiAtMS40IEMwLjUgMTggMC4yIDUwIDAuOSA3NC42IEMxLjEgNzguNiAyLjkgNzkuOCA2LjggNzkuNyBDNDAgNzkuNCA4MCA3OC44IDEwOS4yIDc4LjQiLz48cGF0aCBkPSJNMTA4LjIgNzguOCBDMTE0IDczIDEyMC42IDY2LjQgMTI3LjkgNTkuMyIvPjxwYXRoIGQ9Ik0xMDguNiA3OC40IEMxMDkuMiA3Mi42IDExMi4yIDY5IDExNi44IDY3LjQgQzEyMC42IDY2LjIgMTI0LjQgNjMuNCAxMjcuNyA1OS42Ii8+PHBhdGggZD0iTTkgMTAuNiBDOS42IDcuNCAxNS4yIDYuOCAxNi45IDEwLjQgQzE4LjQgMTMuOCAxNS44IDE3LjUgMTIuMiAxNy4yIEM4LjggMTYuOSA3LjYgMTMuNCA5LjUgMTAuOCBDMTAuOSA5IDEzLjkgOC43IDE1LjcgOS44Ii8+PC9nPg0KICAgICAgPGcgc3Ryb2tlLXdpZHRoPSIyLjYiPjxwYXRoIGQ9Ik0tMS42IDEuNiBDMzAgMC40IDg1IC0xLjYgMTIyIC0zLjQgQzEyNS44IC0zLjYgMTI3LjUgLTEuOCAxMjcuNSAyLjQgQzEyNy43IDIyIDEyNy45IDQyIDEyNy42IDYwLjEiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTEuMiAtMS40IEMwLjUgMTggMC4yIDUwIDAuOSA3NC42IEMxLjEgNzguNiAyLjkgNzkuOCA2LjggNzkuNyBDNDAgNzkuNCA4MCA3OC44IDEwOS4yIDc4LjQiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTEwOC4yIDc4LjggQzExNCA3MyAxMjAuNiA2Ni40IDEyNy45IDU5LjMiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTEwOC42IDc4LjQgQzEwOS4yIDcyLjYgMTEyLjIgNjkgMTE2LjggNjcuNCBDMTIwLjYgNjYuMiAxMjQuNCA2My40IDEyNy43IDU5LjYiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTkgMTAuNiBDOS42IDcuNCAxNS4yIDYuOCAxNi45IDEwLjQgQzE4LjQgMTMuOCAxNS44IDE3LjUgMTIuMiAxNy4yIEM4LjggMTYuOSA3LjYgMTMuNCA5LjUgMTAuOCBDMTAuOSA5IDEzLjkgOC43IDE1LjcgOS44IiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjwvZz4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMS4yIj48cGF0aCBkPSJNMTE0LjYgNzMuNCBMMTEyLjggNzEuMiIvPjwvZz4NCiAgICA8L2c+DQoNCiAgICA8IS0tIGZhY2UsIHdoaXRlIGdlbCBwZW4gb3ZlciB0aGUgbWFya2VyIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkRGNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4NCiAgICAgIA0KICAgICAgPHBhdGggc3Ryb2tlLXdpZHRoPSI3LjQiIGQ9Ik03Mi4yIDI2LjggUTcyLjkgMjkuOCA3Mi42IDMzLjIiLz4NCiAgICAgIDxwYXRoIHN0cm9rZS13aWR0aD0iNi4yIiBkPSJNNzIuOSAyNy40IEw3My4zIDMwLjIiLz4NCiAgICAgIDxwYXRoIHN0cm9rZS13aWR0aD0iNi45IiBkPSJNOTEuNiAyNy42IFE5MiAyOS42IDkxLjggMzEuNiIvPg0KICAgICAgPHBhdGggc3Ryb2tlLXdpZHRoPSIzLjUiIGQ9Ik04MC40IDQ0LjQgQzgyLjggNDUuOCA4NS42IDQ1LjQgODcuNiA0My4yIEM4OC4xIDQyLjYgODguNSA0MS45IDg4LjcgNDEuMSIvPg0KICAgIA0KICAgIDwvZz4NCg0KICAgIDwhLS0gcmluZywgdGhlIHN0cmV0Y2ggdGhhdCBjb21lcyBvdXQgb2YgdGhlIGhvbGUgdG93YXJkcyB5b3UgLS0+DQogICAgPGcgbWFzaz0idXJsKCNubS1mcm9udCkiPjxnIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YyNzAxRiIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTEuOTkiIHk9Ii0xLjY3Ii8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTEuMjAiIHk9Ii0xLjAwIi8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTAuNDAiIHk9Ii0wLjMzIi8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iMC40MCIgeT0iMC4zMyIvPjx1c2UgaHJlZj0iI25tLXJpbmciIHg9IjEuMjAiIHk9IjEuMDAiLz48dXNlIGhyZWY9IiNubS1yaW5nIiB4PSIxLjk5IiB5PSIxLjY3Ii8+PC9nPjwvZz48L2c+DQogIDwvZz4NCjwvc3ZnPg0K", "happy": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+DQogIDxkZWZzPg0KICAgIDxmaWx0ZXIgaWQ9ImhwLWRyaWZ0IiB4PSItMjAlIiB5PSItMzAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNjAlIj4NCiAgICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjAyMiIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMTkiIHJlc3VsdD0idCIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9InQiIHNjYWxlPSIyLjYiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciLz4NCiAgICA8L2ZpbHRlcj48ZmlsdGVyIGlkPSJocC1tayIgeD0iLTIwJSIgeT0iLTMwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTYwJSI+DQogICAgICA8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMyIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMjIiIHJlc3VsdD0idCIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9InQiIHNjYWxlPSIyLjQiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciIHJlc3VsdD0iZCIvPg0KICAgICAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOSIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMjQiIHJlc3VsdD0iZyIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJkIiBpbjI9ImciIHNjYWxlPSIwLjkiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciLz4NCiAgICA8L2ZpbHRlcj48bWFzayBpZD0iaHAtaG9sZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxyZWN0IHg9Ii04MCIgeT0iLTgwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iI2ZmZiIvPg0KICAgICAgPGNpcmNsZSBjeD0iMTIuNCIgY3k9IjEzLjQiIHI9IjQuMSIgZmlsbD0iIzAwMCIvPg0KICAgIDwvbWFzaz48bWFzayBpZD0iaHAtc2tpcCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxyZWN0IHg9Ii04MCIgeT0iLTgwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iI2ZmZiIvPg0KICAgICAgPHBhdGggZD0iTTUuMiAxMC40IEM2LjQgNS4yIDE0IDQuMiAxOC40IDcuNCBDMjIuMiAxMC40IDIxLjYgMTggMTcuOCAyMC42IEMxMy42IDIzLjQgNyAyMi4yIDUuMiAxOC4yIEM0LjQgMTUuOCA0LjYgMTIuOCA1LjIgMTAuNCBaIiBmaWxsPSIjMDAwIi8+DQogICAgPC9tYXNrPjxtYXNrIGlkPSJocC1mcm9udCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxwYXRoIGQ9Ik0tMi40IDYuOSAzOS44IDI1LjQgNDEuMyAyMS40IDQyLjUgMTcuMyA0My4yIDEzIDQzLjYgOC44IDQzLjYgNC41IDQzLjIgMC4yIDQyLjMgLTQgNDEuMSAtOC4xIDM5LjUgLTEyIDM3LjYgLTE1LjkgMzUuMyAtMTkuNSAzMi43IC0yMi45IFoiIGZpbGw9IiNmZmYiLz4NCiAgICA8L21hc2s+PHBhdGggaWQ9ImhwLXJpbmciIGQ9Ik0tMTguMyAxMy40IEMtMTcuMyAxNC41IC0xNC42IDE4LjQgLTEyLjMgMjAgQy05LjkgMjEuNiAtNi45IDIyLjUgLTQuMSAyMi43IEMtMS40IDIzIDEuNyAyMi43IDQuMyAyMS43IEM2LjkgMjAuNyA5LjcgMTguOSAxMS41IDE2LjYgQzEzLjMgMTQuNCAxNC43IDExLjEgMTQuOSA4LjIgQzE1LjEgNS4zIDE0LjIgMS45IDEyLjggLTAuNyBDMTEuNCAtMy4yIDkgLTUuNSA2LjUgLTcgQzQuMSAtOC40IDEgLTkuMSAtMS44IC05LjEgQy00LjYgLTkuMiAtNy44IC04LjcgLTEwLjMgLTcuNSBDLTEyLjkgLTYuMyAtMTUuNiAtNC4yIC0xNy4yIC0xLjcgQy0xOC45IDAuNyAtMjAuMSA0IC0yMC4zIDcuMSBDLTIwLjQgMTAuMiAtMTkuOCAxMy44IC0xOC4zIDE2LjYgQy0xNi45IDE5LjUgLTEyLjYgMjIuOCAtMTEuNSAyNC4xIi8+PHBhdGggaWQ9ImhwLW0wIiBkPSJNMjMgNS42IFE3NS4yIDIuNiAxMjcuNCAyLjQiLz48cGF0aCBpZD0iaHAtbTEiIGQ9Ik0xMjcuNCAyLjQgUTY2LjggOC43IDYuNCAxNy4yIi8+PHBhdGggaWQ9ImhwLW0yIiBkPSJNNi40IDE3LjIgUTYzLjggMTQuOCAxMjEuMiAxNC4yIi8+PHBhdGggaWQ9ImhwLW0zIiBkPSJNMTIxLjIgMTQuMiBRNTkuMyAyMC4zIC0yLjIgMjkuNiIvPjxwYXRoIGlkPSJocC1tNCIgZD0iTS0yLjIgMjkuNiBRNjEuNCAyNi44IDEyNSAyNi44Ii8+PHBhdGggaWQ9ImhwLW01IiBkPSJNMTI1IDI2LjggUTYzLjcgMzMuMiAyLjYgNDEuOCIvPjxwYXRoIGlkPSJocC1tNiIgZD0iTTIuNiA0MS44IFE2MS4yIDM5LjUgMTE5LjggMzkiLz48cGF0aCBpZD0iaHAtbTciIGQ9Ik0xMTkuOCAzOSBRNTkuNCA0NC4xIC0wLjYgNTIuNCIvPjxwYXRoIGlkPSJocC1tOCIgZD0iTS0wLjYgNTIuNCBRNTUuOSA0OS41IDExMi40IDQ5LjQiLz48cGF0aCBpZD0iaHAtbTkiIGQ9Ik0xMTIuNCA0OS40IFE1OC45IDU2LjQgNS44IDY1LjYiLz48cGF0aCBpZD0iaHAtbTEwIiBkPSJNNS44IDY1LjYgUTUxLjkgNjMuMiA5OCA2Mi42Ii8+PHBhdGggaWQ9ImhwLW0xMSIgZD0iTTk4IDYyLjYgUTQ5LjYgNjggMS42IDc2LjYiLz48cGF0aCBpZD0iaHAtbTEyIiBkPSJNMS42IDc2LjYgUTQ0LjEgNzQgODYuNiA3NC4yIi8+DQogIDwvZGVmcz4NCiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzUuMzUgNTIuMTcpIHNjYWxlKDEuMTcpIHJvdGF0ZSgtMTMgNjMgNDApIj4NCiAgICA8IS0tIHJpbmcsIHRoZSBzdHJldGNoIGJlaGluZCB0aGUgY2FyZCAtLT4NCiAgICA8ZyBmaWx0ZXI9InVybCgjaHAtZHJpZnQpIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiNGMjcwMUYiIHN0cm9rZS13aWR0aD0iNC40IiBzdHJva2UtbGluZWNhcD0icm91bmQiPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0xLjk5IiB5PSItMS42NyIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0xLjIwIiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0wLjQwIiB5PSItMC4zMyIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9IjAuNDAiIHk9IjAuMzMiLz48dXNlIGhyZWY9IiNocC1yaW5nIiB4PSIxLjIwIiB5PSIxLjAwIi8+PHVzZSBocmVmPSIjaHAtcmluZyIgeD0iMS45OSIgeT0iMS42NyIvPjwvZz48L2c+DQoNCiAgICA8IS0tIHRoZSBjYXJkOiBub3RlYm9vayBwYXBlciBpbnNpZGUgdGhlIHBlbiBsaW5lLCB3aXRoIHRoZSBwdW5jaGVkIGhvbGUgLS0+DQogICAgPGcgbWFzaz0idXJsKCNocC1ob2xlKSIgZmlsdGVyPSJ1cmwoI2hwLWRyaWZ0KSI+DQogICAgICA8cGF0aCBmaWxsPSIjRkFGN0VFIiBkPSJNMi4yIDEuOCBDNDAgMC40IDkwIC0xLjQgMTIxLjYgLTIuNiBDMTI1LjQgLTIuNyAxMjcuMSAtMC44IDEyNy4yIDMgTDEyNy41IDQwIEw5MSA3OS40IEM3MCA3OS44IDQwIDgwLjIgNS42IDgwLjIgQzIuNCA4MC4yIDEuMSA3OC42IDEgNzUuNiBDMC40IDU1IC0wLjEgMjUgMCA1LjQgQzAgMyAwLjggMS45IDIuMiAxLjggWiIvPg0KICAgIDwvZz4NCg0KICAgIDwhLS0gYmx1ZSBjaGlzZWwgbWFya2VyLCB6aWd6YWc7IHdoZXJlIHBhc3NlcyBvdmVybGFwIGl0IGdvZXMgZGFya2VyIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNocC1taykiPjxnIG1hc2s9InVybCgjaHAtc2tpcCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJCNDVEMyIgc3Ryb2tlLXdpZHRoPSIyLjYiPg0KICAgICAgPGcgb3BhY2l0eT0iMC44NSI+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0zLjcyIiB5PSI3LjMxIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0zLjE1IiB5PSI2LjE4Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0yLjU4IiB5PSI1LjA2Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0yLjAwIiB5PSIzLjkzIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0xLjQzIiB5PSIyLjgxIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0wLjg2IiB5PSIxLjY5Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0wLjI5IiB5PSIwLjU2Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjAuMjkiIHk9Ii0wLjU2Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjAuODYiIHk9Ii0xLjY5Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjEuNDMiIHk9Ii0yLjgxIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjIuMDAiIHk9Ii0zLjkzIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjIuNTgiIHk9Ii01LjA2Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjMuMTUiIHk9Ii02LjE4Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjMuNzIiIHk9Ii03LjMxIi8+PC9nPjxnIG9wYWNpdHk9IjAuODMiPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItNC40NSIgeT0iNi4zNSIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMy43MCIgeT0iNS4yOSIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMi45NiIgeT0iNC4yMyIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMi4yMiIgeT0iMy4xNyIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMS40OCIgeT0iMi4xMiIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMC43NCIgeT0iMS4wNiIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIwLjAwIiB5PSItMC4wMCIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIwLjc0IiB5PSItMS4wNiIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIxLjQ4IiB5PSItMi4xMiIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIyLjIyIiB5PSItMy4xNyIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIyLjk2IiB5PSItNC4yMyIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIzLjcwIiB5PSItNS4yOSIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSI0LjQ1IiB5PSItNi4zNSIvPjwvZz48ZyBvcGFjaXR5PSIwLjg4Ij48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTMuODYiIHk9IjYuNDMiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTMuMjIiIHk9IjUuMzYiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTIuNTgiIHk9IjQuMjkiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTEuOTMiIHk9IjMuMjEiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTEuMjkiIHk9IjIuMTQiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTAuNjQiIHk9IjEuMDciLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMC4wMCIgeT0iLTAuMDAiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMC42NCIgeT0iLTEuMDciLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMS4yOSIgeT0iLTIuMTQiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMS45MyIgeT0iLTMuMjEiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMi41OCIgeT0iLTQuMjkiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMy4yMiIgeT0iLTUuMzYiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMy44NiIgeT0iLTYuNDMiLz48L2c+PGcgb3BhY2l0eT0iMC44MiI+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii00LjkzIiB5PSI2LjMwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii00LjEwIiB5PSI1LjI1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii0zLjI4IiB5PSI0LjIwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii0yLjQ2IiB5PSIzLjE1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii0xLjY0IiB5PSIyLjEwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii0wLjgyIiB5PSIxLjA1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjAuODIiIHk9Ii0xLjA1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjEuNjQiIHk9Ii0yLjEwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjIuNDYiIHk9Ii0zLjE1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjMuMjgiIHk9Ii00LjIwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjQuMTAiIHk9Ii01LjI1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjQuOTMiIHk9Ii02LjMwIi8+PC9nPjxnIG9wYWNpdHk9IjAuODYiPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMy43MyIgeT0iNi40NSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMy4wNSIgeT0iNS4yOCIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMi4zNyIgeT0iNC4xMSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMS42OSIgeT0iMi45MyIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMS4wMiIgeT0iMS43NiIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMC4zNCIgeT0iMC41OSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIwLjM0IiB5PSItMC41OSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIxLjAyIiB5PSItMS43NiIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIxLjY5IiB5PSItMi45MyIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIyLjM3IiB5PSItNC4xMSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIzLjA1IiB5PSItNS4yOCIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIzLjczIiB5PSItNi40NSIvPjwvZz48ZyBvcGFjaXR5PSIwLjgxIj48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTQuMDMiIHk9IjYuMjEiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTMuMzAiIHk9IjUuMDgiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTIuNTYiIHk9IjMuOTUiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTEuODMiIHk9IjIuODIiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTEuMTAiIHk9IjEuNjkiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTAuMzciIHk9IjAuNTYiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMC4zNyIgeT0iLTAuNTYiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMS4xMCIgeT0iLTEuNjkiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMS44MyIgeT0iLTIuODIiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMi41NiIgeT0iLTMuOTUiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMy4zMCIgeT0iLTUuMDgiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iNC4wMyIgeT0iLTYuMjEiLz48L2c+PGcgb3BhY2l0eT0iMC44NyI+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0zLjcxIiB5PSI2Ljk4Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0zLjA5IiB5PSI1LjgxIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0yLjQ3IiB5PSI0LjY1Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0xLjg1IiB5PSIzLjQ5Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0xLjI0IiB5PSIyLjMzIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0wLjYyIiB5PSIxLjE2Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjAuNjIiIHk9Ii0xLjE2Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjEuMjQiIHk9Ii0yLjMzIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjEuODUiIHk9Ii0zLjQ5Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjIuNDciIHk9Ii00LjY1Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjMuMDkiIHk9Ii01LjgxIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjMuNzEiIHk9Ii02Ljk4Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODUiPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItNC4zNiIgeT0iNi4yMyIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMy42MyIgeT0iNS4xOSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMi45MSIgeT0iNC4xNSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMi4xOCIgeT0iMy4xMSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMS40NSIgeT0iMi4wOCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMC43MyIgeT0iMS4wNCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMC4wMCIgeT0iMC4wMCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIwLjczIiB5PSItMS4wNCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIxLjQ1IiB5PSItMi4wOCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIyLjE4IiB5PSItMy4xMSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIyLjkxIiB5PSItNC4xNSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIzLjYzIiB5PSItNS4xOSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSI0LjM2IiB5PSItNi4yMyIvPjwvZz48ZyBvcGFjaXR5PSIwLjgzIj48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTQuMTYiIHk9IjYuNjYiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTMuNDciIHk9IjUuNTUiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTIuNzciIHk9IjQuNDQiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTIuMDgiIHk9IjMuMzMiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTEuMzkiIHk9IjIuMjIiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTAuNjkiIHk9IjEuMTEiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTAuMDAiIHk9IjAuMDAiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMC42OSIgeT0iLTEuMTEiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMS4zOSIgeT0iLTIuMjIiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMi4wOCIgeT0iLTMuMzMiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMi43NyIgeT0iLTQuNDQiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMy40NyIgeT0iLTUuNTUiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iNC4xNiIgeT0iLTYuNjYiLz48L2c+PGcgb3BhY2l0eT0iMC44OCI+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii00Ljg3IiB5PSI2LjQ3Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii00LjA2IiB5PSI1LjM5Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii0zLjI1IiB5PSI0LjMxIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii0yLjQ0IiB5PSIzLjIzIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii0xLjYyIiB5PSIyLjE2Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii0wLjgxIiB5PSIxLjA4Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjAuODEiIHk9Ii0xLjA4Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjEuNjIiIHk9Ii0yLjE2Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjIuNDQiIHk9Ii0zLjIzIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjMuMjUiIHk9Ii00LjMxIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjQuMDYiIHk9Ii01LjM5Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjQuODciIHk9Ii02LjQ3Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODIiPjx1c2UgaHJlZj0iI2hwLW0xMCIgeD0iLTMuNTEiIHk9IjYuMzQiLz48dXNlIGhyZWY9IiNocC1tMTAiIHg9Ii0yLjg4IiB5PSI1LjE5Ii8+PHVzZSBocmVmPSIjaHAtbTEwIiB4PSItMi4yNCIgeT0iNC4wNCIvPjx1c2UgaHJlZj0iI2hwLW0xMCIgeD0iLTEuNjAiIHk9IjIuODgiLz48dXNlIGhyZWY9IiNocC1tMTAiIHg9Ii0wLjk2IiB5PSIxLjczIi8+PHVzZSBocmVmPSIjaHAtbTEwIiB4PSItMC4zMiIgeT0iMC41OCIvPjx1c2UgaHJlZj0iI2hwLW0xMCIgeD0iMC4zMiIgeT0iLTAuNTgiLz48dXNlIGhyZWY9IiNocC1tMTAiIHg9IjAuOTYiIHk9Ii0xLjczIi8+PHVzZSBocmVmPSIjaHAtbTEwIiB4PSIxLjYwIiB5PSItMi44OCIvPjx1c2UgaHJlZj0iI2hwLW0xMCIgeD0iMi4yNCIgeT0iLTQuMDQiLz48dXNlIGhyZWY9IiNocC1tMTAiIHg9IjIuODgiIHk9Ii01LjE5Ii8+PHVzZSBocmVmPSIjaHAtbTEwIiB4PSIzLjUxIiB5PSItNi4zNCIvPjwvZz48ZyBvcGFjaXR5PSIwLjg2Ij48dXNlIGhyZWY9IiNocC1tMTEiIHg9Ii00LjM1IiB5PSI2Ljk1Ii8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSItMy42OCIgeT0iNS44OCIvPjx1c2UgaHJlZj0iI2hwLW0xMSIgeD0iLTMuMDEiIHk9IjQuODEiLz48dXNlIGhyZWY9IiNocC1tMTEiIHg9Ii0yLjM0IiB5PSIzLjc0Ii8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSItMS42NyIgeT0iMi42NyIvPjx1c2UgaHJlZj0iI2hwLW0xMSIgeD0iLTEuMDAiIHk9IjEuNjAiLz48dXNlIGhyZWY9IiNocC1tMTEiIHg9Ii0wLjMzIiB5PSIwLjUzIi8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSIwLjMzIiB5PSItMC41MyIvPjx1c2UgaHJlZj0iI2hwLW0xMSIgeD0iMS4wMCIgeT0iLTEuNjAiLz48dXNlIGhyZWY9IiNocC1tMTEiIHg9IjEuNjciIHk9Ii0yLjY3Ii8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSIyLjM0IiB5PSItMy43NCIvPjx1c2UgaHJlZj0iI2hwLW0xMSIgeD0iMy4wMSIgeT0iLTQuODEiLz48dXNlIGhyZWY9IiNocC1tMTEiIHg9IjMuNjgiIHk9Ii01Ljg4Ii8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSI0LjM1IiB5PSItNi45NSIvPjwvZz48ZyBvcGFjaXR5PSIwLjgxIj48dXNlIGhyZWY9IiNocC1tMTIiIHg9Ii00LjU2IiB5PSI2LjI3Ii8+PHVzZSBocmVmPSIjaHAtbTEyIiB4PSItMy44MCIgeT0iNS4yMiIvPjx1c2UgaHJlZj0iI2hwLW0xMiIgeD0iLTMuMDQiIHk9IjQuMTgiLz48dXNlIGhyZWY9IiNocC1tMTIiIHg9Ii0yLjI4IiB5PSIzLjEzIi8+PHVzZSBocmVmPSIjaHAtbTEyIiB4PSItMS41MiIgeT0iMi4wOSIvPjx1c2UgaHJlZj0iI2hwLW0xMiIgeD0iLTAuNzYiIHk9IjEuMDQiLz48dXNlIGhyZWY9IiNocC1tMTIiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjaHAtbTEyIiB4PSIwLjc2IiB5PSItMS4wNCIvPjx1c2UgaHJlZj0iI2hwLW0xMiIgeD0iMS41MiIgeT0iLTIuMDkiLz48dXNlIGhyZWY9IiNocC1tMTIiIHg9IjIuMjgiIHk9Ii0zLjEzIi8+PHVzZSBocmVmPSIjaHAtbTEyIiB4PSIzLjA0IiB5PSItNC4xOCIvPjx1c2UgaHJlZj0iI2hwLW0xMiIgeD0iMy44MCIgeT0iLTUuMjIiLz48dXNlIGhyZWY9IiNocC1tMTIiIHg9IjQuNTYiIHk9Ii02LjI3Ii8+PC9nPg0KICAgIDwvZz48L2c+DQoNCiAgICA8IS0tIHRoZSBiZW50IGNvcm5lcjogaXRzIGJhY2sgaXMgcGxhaW4gcGFwZXIgLS0+DQogICAgPHBhdGggZmlsdGVyPSJ1cmwoI2hwLWRyaWZ0KSIgZmlsbD0iI0ZBRjdFRSIgZD0iTTkxIDc5LjMgQzg4LjQgNzAgODkuNiA1OC40IDk2LjYgNTAuNiBDMTA0LjYgNDUuNCAxMTYgNDIuNiAxMjcuNiA0MC4yIEwxMjcuNSA0MCBMOTEgNzkuNCBaIi8+DQoNCiAgICA8IS0tIGJhbGxwb2ludCAtLT4NCiAgICA8ZyBmaWx0ZXI9InVybCgjaHAtZHJpZnQpIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNDI1MkMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+DQogICAgICA8ZyBzdHJva2Utd2lkdGg9IjEuOSI+PHBhdGggZD0iTS0xLjQgMi4yIEMzMCAxIDg1IC0wLjkgMTIxLjIgLTIuNyBDMTI1IC0yLjkgMTI3LjIgLTEgMTI3LjMgMyBDMTI3LjUgMTYgMTI3LjYgMjkgMTI3LjUgNDAuNiIvPjxwYXRoIGQ9Ik0xLjQgLTAuOCBDMC42IDE4IDAuMyA1MCAxIDc1LjIgQzEuMiA3OS4yIDMgODAuNCA3IDgwLjMgQzM1IDgwLjEgNjUgNzkuOCA5MS42IDc5LjQiLz48cGF0aCBkPSJNOTAuNiA3OS42IEMxMDMgNjYgMTE1IDUzIDEyNy44IDM5LjgiLz48cGF0aCBkPSJNOTEgNzkuMyBDODguNCA3MCA4OS42IDU4LjQgOTYuNiA1MC42IEMxMDQuNiA0NS40IDExNiA0Mi42IDEyNy42IDQwLjIiLz48cGF0aCBkPSJNOC44IDExIEM5LjQgNy44IDE1IDcuMiAxNi43IDEwLjggQzE4LjIgMTQuMiAxNS42IDE3LjkgMTIgMTcuNiBDOC42IDE3LjMgNy40IDEzLjggOS4zIDExLjIgQzEwLjcgOS40IDEzLjcgOS4xIDE1LjUgMTAuMiIvPjwvZz4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMi42Ij48cGF0aCBkPSJNLTEuNCAyLjIgQzMwIDEgODUgLTAuOSAxMjEuMiAtMi43IEMxMjUgLTIuOSAxMjcuMiAtMSAxMjcuMyAzIEMxMjcuNSAxNiAxMjcuNiAyOSAxMjcuNSA0MC42IiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik0xLjQgLTAuOCBDMC42IDE4IDAuMyA1MCAxIDc1LjIgQzEuMiA3OS4yIDMgODAuNCA3IDgwLjMgQzM1IDgwLjEgNjUgNzkuOCA5MS42IDc5LjQiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTkwLjYgNzkuNiBDMTAzIDY2IDExNSA1MyAxMjcuOCAzOS44IiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik05MSA3OS4zIEM4OC40IDcwIDg5LjYgNTguNCA5Ni42IDUwLjYgQzEwNC42IDQ1LjQgMTE2IDQyLjYgMTI3LjYgNDAuMiIgc3Ryb2tlLWRhc2hhcnJheT0iOSA5OTkiLz48cGF0aCBkPSJNOC44IDExIEM5LjQgNy44IDE1IDcuMiAxNi43IDEwLjggQzE4LjIgMTQuMiAxNS42IDE3LjkgMTIgMTcuNiBDOC42IDE3LjMgNy40IDEzLjggOS4zIDExLjIgQzEwLjcgOS40IDEzLjcgOS4xIDE1LjUgMTAuMiIgc3Ryb2tlLWRhc2hhcnJheT0iOSA5OTkiLz48L2c+DQogICAgICA8ZyBzdHJva2Utd2lkdGg9IjEuMiI+DQogICAgICAgIDxwYXRoIGQ9Ik05NS42IDcwLjIgTDkzLjQgNjcuNCIvPjxwYXRoIGQ9Ik0xMDEuOCA2My44IEw5OSA2MC40Ii8+PHBhdGggZD0iTTEwOC40IDU2LjYgTDEwNi40IDU0LjIiLz4NCiAgICAgIDwvZz4NCiAgICA8L2c+DQoNCiAgICA8IS0tIGZhY2UsIHdoaXRlIGdlbCBwZW4gb3ZlciB0aGUgbWFya2VyIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNocC1kcmlmdCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkRGNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4NCiAgICAgIA0KICAgICAgPHBhdGggc3Ryb2tlLXdpZHRoPSI3LjYiIGQ9Ik02MC42IDI0IFE2MS4yIDI3LjYgNjAuOCAzMS42Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjYuNCIgZD0iTTYxLjMgMjUgTDYxLjUgMjgiLz4NCiAgICAgIDxwYXRoIHN0cm9rZS13aWR0aD0iNy4yIiBkPSJNODAgMjMgUTgwLjYgMjYuNCA4MC4zIDMwIi8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjMuNiIgZD0iTTYxLjYgNDAuNCBDNjcuNiA0MyA3Ni4yIDQzIDgyLjYgMzguNiBDODQuMiAzNy40IDg1LjYgMzUuNiA4Ni4yIDMzLjQiLz4NCiAgICANCiAgICA8L2c+DQoNCiAgICA8IS0tIHJpbmcsIHRoZSBzdHJldGNoIHRoYXQgY29tZXMgb3V0IG9mIHRoZSBob2xlIHRvd2FyZHMgeW91IC0tPg0KICAgIDxnIG1hc2s9InVybCgjaHAtZnJvbnQpIj48ZyBmaWx0ZXI9InVybCgjaHAtZHJpZnQpIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiNGMjcwMUYiIHN0cm9rZS13aWR0aD0iNC40IiBzdHJva2UtbGluZWNhcD0icm91bmQiPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0xLjk5IiB5PSItMS42NyIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0xLjIwIiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0wLjQwIiB5PSItMC4zMyIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9IjAuNDAiIHk9IjAuMzMiLz48dXNlIGhyZWY9IiNocC1yaW5nIiB4PSIxLjIwIiB5PSIxLjAwIi8+PHVzZSBocmVmPSIjaHAtcmluZyIgeD0iMS45OSIgeT0iMS42NyIvPjwvZz48L2c+PC9nPg0KICA8L2c+DQo8L3N2Zz4NCg==", "cheer": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+DQogIDxkZWZzPg0KICAgIDxmaWx0ZXIgaWQ9ImNoLWRyaWZ0IiB4PSItMjAlIiB5PSItMzAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNjAlIj4NCiAgICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjAyMiIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMzEiIHJlc3VsdD0idCIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9InQiIHNjYWxlPSIyLjYiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciLz4NCiAgICA8L2ZpbHRlcj48ZmlsdGVyIGlkPSJjaC1tayIgeD0iLTIwJSIgeT0iLTMwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTYwJSI+DQogICAgICA8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMyIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMzQiIHJlc3VsdD0idCIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9InQiIHNjYWxlPSIyLjQiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciIHJlc3VsdD0iZCIvPg0KICAgICAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOSIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMzYiIHJlc3VsdD0iZyIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJkIiBpbjI9ImciIHNjYWxlPSIwLjkiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciLz4NCiAgICA8L2ZpbHRlcj48bWFzayBpZD0iY2gtaG9sZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxyZWN0IHg9Ii04MCIgeT0iLTgwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iI2ZmZiIvPg0KICAgICAgPGNpcmNsZSBjeD0iMTIuOCIgY3k9IjEyLjYiIHI9IjQuMSIgZmlsbD0iIzAwMCIvPg0KICAgIDwvbWFzaz48bWFzayBpZD0iY2gtc2tpcCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxyZWN0IHg9Ii04MCIgeT0iLTgwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iI2ZmZiIvPg0KICAgICAgPHBhdGggZD0iTTUuOCA5LjQgQzcgNC40IDE0LjYgMy40IDE4LjggNi42IEMyMi40IDkuNiAyMS44IDE3LjIgMTguMiAxOS44IEMxNCAyMi40IDcuNiAyMS40IDUuOCAxNy40IEM1IDE1LjIgNS4yIDExLjggNS44IDkuNCBaIiBmaWxsPSIjMDAwIi8+DQogICAgPC9tYXNrPjxtYXNrIGlkPSJjaC1mcm9udCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxwYXRoIGQ9Ik0xMS42IC0zLjUgMTUuMSA0Mi40IDE5LjMgNDEuOSAyMy41IDQxIDI3LjYgMzkuNyAzMS41IDM4IDM1LjMgMzYgMzguOSAzMy42IDQyLjIgMzAuOSA0NS4yIDI3LjkgNDggMjQuNiA1MC41IDIxLjEgNTIuNiAxNy40IDU0LjMgMTMuNSBaIiBmaWxsPSIjZmZmIi8+DQogICAgPC9tYXNrPjxwYXRoIGlkPSJjaC1yaW5nIiBkPSJNLTEuMSAtMTQuMSBDLTEuNyAtMTIuOCAtMy45IC04LjkgLTQuMyAtNi4yIEMtNC43IC0zLjUgLTQuMyAtMC41IC0zLjMgMi4xIEMtMi40IDQuNiAtMC44IDcuMiAxLjMgOSBDMy4zIDEwLjggNi4xIDEyLjQgOC45IDEyLjkgQzExLjYgMTMuNSAxNSAxMy4zIDE3LjYgMTIuMyBDMjAuMiAxMS40IDIyLjggOS4zIDI0LjUgNy4xIEMyNi4yIDQuOSAyNy4zIDEuOCAyNy43IC0wLjkgQzI4IC0zLjYgMjcuNSAtNi43IDI2LjUgLTkuMyBDMjUuNSAtMTEuOCAyMy45IC0xNC40IDIxLjggLTE2LjMgQzE5LjcgLTE4LjEgMTYuOSAtMTkuNyAxNC4xIC0yMC4zIEMxMS4zIC0yMC45IDcuOSAtMjAuOCA1IC0xOS45IEMyLjIgLTE5IC0wLjkgLTE3LjEgLTIuOSAtMTQuOCBDLTQuOSAtMTIuNSAtNi41IC03LjYgLTcuMiAtNi4xIi8+PHBhdGggaWQ9ImNoLW0wIiBkPSJNMjMgNC44IFE3Mi45IDEuOCAxMjIuOCAxLjYiLz48cGF0aCBpZD0iY2gtbTEiIGQ9Ik0xMjIuOCAxLjYgUTYxLjYgNy43IDAuNiAxNiIvPjxwYXRoIGlkPSJjaC1tMiIgZD0iTTAuNiAxNiBRNjAuNSAxMy42IDEyMC40IDEzIi8+PHBhdGggaWQ9ImNoLW0zIiBkPSJNMTIwLjQgMTMgUTYyLjkgMTkuMyA1LjggMjguOCIvPjxwYXRoIGlkPSJjaC1tNCIgZD0iTTUuOCAyOC44IFE2Ny4yIDI2IDEyOC42IDI2Ii8+PHBhdGggaWQ9ImNoLW01IiBkPSJNMTI4LjYgMjYgUTY1LjMgMzIuNCAyLjIgNDEiLz48cGF0aCBpZD0iY2gtbTYiIGQ9Ik0yLjIgNDEgUTYzLjQgMzguNyAxMjQuNiAzOC4yIi8+PHBhdGggaWQ9ImNoLW03IiBkPSJNMTI0LjYgMzguMiBRNjAuNyA0My4zIC0yLjggNTEuNiIvPjxwYXRoIGlkPSJjaC1tOCIgZD0iTS0yLjggNTEuNiBRNTguOSA0OC43IDEyMC42IDQ4LjYiLz48cGF0aCBpZD0iY2gtbTkiIGQ9Ik0xMjAuNiA0OC42IFE2My40IDU1LjYgNi42IDY0LjgiLz48cGF0aCBpZD0iY2gtbTEwIiBkPSJNNi42IDY0LjggUTYxLjQgNjIuMyAxMTYuMiA2MS42Ii8+PHBhdGggaWQ9ImNoLW0xMSIgZD0iTTExNi4yIDYxLjYgUTU5LjEgNjcgMi40IDc1LjYiLz48cGF0aCBpZD0iY2gtbTEyIiBkPSJNMi40IDc1LjYgUTUxLjUgNzMgMTAwLjYgNzMuMiIvPg0KICA8L2RlZnM+DQogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI0LjI1IDY2LjIzKSBzY2FsZSgxLjE4KSByb3RhdGUoOCA2MyA0MCkiPg0KICAgIDwhLS0gcmluZywgdGhlIHN0cmV0Y2ggYmVoaW5kIHRoZSBjYXJkIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNjaC1kcmlmdCkiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YyNzAxRiIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iLTEuOTkiIHk9Ii0xLjY3Ii8+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iLTEuMjAiIHk9Ii0xLjAwIi8+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iLTAuNDAiIHk9Ii0wLjMzIi8+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iMC40MCIgeT0iMC4zMyIvPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9IjEuMjAiIHk9IjEuMDAiLz48dXNlIGhyZWY9IiNjaC1yaW5nIiB4PSIxLjk5IiB5PSIxLjY3Ii8+PC9nPjwvZz4NCg0KICAgIDwhLS0gdGhlIGNhcmQ6IG5vdGVib29rIHBhcGVyIGluc2lkZSB0aGUgcGVuIGxpbmUsIHdpdGggdGhlIHB1bmNoZWQgaG9sZSAtLT4NCiAgICA8ZyBtYXNrPSJ1cmwoI2NoLWhvbGUpIiBmaWx0ZXI9InVybCgjY2gtZHJpZnQpIj4NCiAgICAgIDxwYXRoIGZpbGw9IiNGQUY3RUUiIGQ9Ik0yIDEgQzQwIC0wLjIgOTAgLTEuOCAxMjIuMiAtMi44IEMxMjUuOSAtMi45IDEyNy40IC0xLjIgMTI3LjUgMi44IEwxMjcuNyA1NiBMMTA0IDc5LjIgQzc1IDc5LjYgNDAgODAgNS40IDgwLjEgQzIuMiA4MC4xIDEgNzguNSAwLjkgNzUuNSBDMC4zIDU1IC0wLjIgMjUgLTAuMSA0LjggQy0wLjEgMi40IDAuNiAxLjEgMiAxIFoiLz4NCiAgICA8L2c+DQoNCiAgICA8IS0tIGJsdWUgY2hpc2VsIG1hcmtlciwgemlnemFnOyB3aGVyZSBwYXNzZXMgb3ZlcmxhcCBpdCBnb2VzIGRhcmtlciAtLT4NCiAgICA8ZyBmaWx0ZXI9InVybCgjY2gtbWspIj48ZyBtYXNrPSJ1cmwoI2NoLXNraXApIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQjQ1RDMiIHN0cm9rZS13aWR0aD0iMi42Ij4NCiAgICAgIDxnIG9wYWNpdHk9IjAuODQiPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItNC4zOCIgeT0iNi4wMyIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMy41OCIgeT0iNC45MyIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMi43OSIgeT0iMy44NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMS45OSIgeT0iMi43NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMS4xOSIgeT0iMS42NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMC40MCIgeT0iMC41NSIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIwLjQwIiB5PSItMC41NSIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIxLjE5IiB5PSItMS42NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIxLjk5IiB5PSItMi43NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIyLjc5IiB5PSItMy44NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIzLjU4IiB5PSItNC45MyIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSI0LjM4IiB5PSItNi4wMyIvPjwvZz48ZyBvcGFjaXR5PSIwLjg3Ij48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTMuNTkiIHk9IjYuNDciLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTIuOTQiIHk9IjUuMzAiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTIuMjgiIHk9IjQuMTIiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTEuNjMiIHk9IjIuOTQiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTAuOTgiIHk9IjEuNzciLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTAuMzMiIHk9IjAuNTkiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMC4zMyIgeT0iLTAuNTkiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMC45OCIgeT0iLTEuNzciLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMS42MyIgeT0iLTIuOTQiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMi4yOCIgeT0iLTQuMTIiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMi45NCIgeT0iLTUuMzAiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMy41OSIgeT0iLTYuNDciLz48L2c+PGcgb3BhY2l0eT0iMC44MiI+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii00LjQyIiB5PSI2LjU1Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0zLjY4IiB5PSI1LjQ2Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0yLjk1IiB5PSI0LjM3Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0yLjIxIiB5PSIzLjI3Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0xLjQ3IiB5PSIyLjE4Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0wLjc0IiB5PSIxLjA5Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjAuNzQiIHk9Ii0xLjA5Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjEuNDciIHk9Ii0yLjE4Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjIuMjEiIHk9Ii0zLjI3Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjIuOTUiIHk9Ii00LjM3Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjMuNjgiIHk9Ii01LjQ2Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjQuNDIiIHk9Ii02LjU1Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODYiPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMy40NSIgeT0iNi43NyIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMi44OCIgeT0iNS42NCIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMi4zMCIgeT0iNC41MSIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMS43MyIgeT0iMy4zOSIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMS4xNSIgeT0iMi4yNiIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMC41OCIgeT0iMS4xMyIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMC4wMCIgeT0iMC4wMCIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIwLjU4IiB5PSItMS4xMyIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIxLjE1IiB5PSItMi4yNiIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIxLjczIiB5PSItMy4zOSIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIyLjMwIiB5PSItNC41MSIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIyLjg4IiB5PSItNS42NCIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIzLjQ1IiB5PSItNi43NyIvPjwvZz48ZyBvcGFjaXR5PSIwLjgzIj48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTQuNTAiIHk9IjYuNDMiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTMuNzUiIHk9IjUuMzYiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTMuMDAiIHk9IjQuMjkiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTIuMjUiIHk9IjMuMjIiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTEuNTAiIHk9IjIuMTQiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTAuNzUiIHk9IjEuMDciLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTAuMDAiIHk9IjAuMDAiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMC43NSIgeT0iLTEuMDciLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMS41MCIgeT0iLTIuMTQiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMi4yNSIgeT0iLTMuMjIiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMy4wMCIgeT0iLTQuMjkiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMy43NSIgeT0iLTUuMzYiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iNC41MCIgeT0iLTYuNDMiLz48L2c+PGcgb3BhY2l0eT0iMC44OCI+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii00LjE3IiB5PSI2Ljk0Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0zLjQ4IiB5PSI1Ljc5Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0yLjc4IiB5PSI0LjYzIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0yLjA5IiB5PSIzLjQ3Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0xLjM5IiB5PSIyLjMxIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0wLjcwIiB5PSIxLjE2Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjAuNzAiIHk9Ii0xLjE2Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjEuMzkiIHk9Ii0yLjMxIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjIuMDkiIHk9Ii0zLjQ3Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjIuNzgiIHk9Ii00LjYzIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjMuNDgiIHk9Ii01Ljc5Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjQuMTciIHk9Ii02Ljk0Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODEiPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItNC40NiIgeT0iNS43MSIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMy42NSIgeT0iNC42NyIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMi44NCIgeT0iMy42NCIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMi4wMyIgeT0iMi42MCIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMS4yMiIgeT0iMS41NiIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMC40MSIgeT0iMC41MiIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIwLjQxIiB5PSItMC41MiIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIxLjIyIiB5PSItMS41NiIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIyLjAzIiB5PSItMi42MCIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIyLjg0IiB5PSItMy42NCIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIzLjY1IiB5PSItNC42NyIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSI0LjQ2IiB5PSItNS43MSIvPjwvZz48ZyBvcGFjaXR5PSIwLjg0Ij48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTQuMTAiIHk9IjcuMTAiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTMuNDciIHk9IjYuMDEiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTIuODQiIHk9IjQuOTIiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTIuMjEiIHk9IjMuODIiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTEuNTgiIHk9IjIuNzMiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTAuOTUiIHk9IjEuNjQiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTAuMzIiIHk9IjAuNTUiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMC4zMiIgeT0iLTAuNTUiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMC45NSIgeT0iLTEuNjQiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMS41OCIgeT0iLTIuNzMiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMi4yMSIgeT0iLTMuODIiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMi44NCIgeT0iLTQuOTIiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMy40NyIgeT0iLTYuMDEiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iNC4xMCIgeT0iLTcuMTAiLz48L2c+PGcgb3BhY2l0eT0iMC44NyI+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii00LjIyIiB5PSI2LjUwIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0zLjUyIiB5PSI1LjQyIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0yLjgxIiB5PSI0LjMzIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0yLjExIiB5PSIzLjI1Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0xLjQxIiB5PSIyLjE3Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0wLjcwIiB5PSIxLjA4Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjAuNzAiIHk9Ii0xLjA4Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjEuNDEiIHk9Ii0yLjE3Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjIuMTEiIHk9Ii0zLjI1Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjIuODEiIHk9Ii00LjMzIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjMuNTIiIHk9Ii01LjQyIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjQuMjIiIHk9Ii02LjUwIi8+PC9nPjxnIG9wYWNpdHk9IjAuODIiPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMy41MiIgeT0iNi42MiIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMi45MyIgeT0iNS41MiIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMi4zNSIgeT0iNC40MSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMS43NiIgeT0iMy4zMSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMS4xNyIgeT0iMi4yMSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMC41OSIgeT0iMS4xMCIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIwLjAwIiB5PSItMC4wMCIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIwLjU5IiB5PSItMS4xMCIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIxLjE3IiB5PSItMi4yMSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIxLjc2IiB5PSItMy4zMSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIyLjM1IiB5PSItNC40MSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIyLjkzIiB5PSItNS41MiIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIzLjUyIiB5PSItNi42MiIvPjwvZz48ZyBvcGFjaXR5PSIwLjg2Ij48dXNlIGhyZWY9IiNjaC1tMTAiIHg9Ii00LjU5IiB5PSI2LjU1Ii8+PHVzZSBocmVmPSIjY2gtbTEwIiB4PSItMy44MiIgeT0iNS40NiIvPjx1c2UgaHJlZj0iI2NoLW0xMCIgeD0iLTMuMDYiIHk9IjQuMzciLz48dXNlIGhyZWY9IiNjaC1tMTAiIHg9Ii0yLjI5IiB5PSIzLjI4Ii8+PHVzZSBocmVmPSIjY2gtbTEwIiB4PSItMS41MyIgeT0iMi4xOCIvPjx1c2UgaHJlZj0iI2NoLW0xMCIgeD0iLTAuNzYiIHk9IjEuMDkiLz48dXNlIGhyZWY9IiNjaC1tMTAiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjY2gtbTEwIiB4PSIwLjc2IiB5PSItMS4wOSIvPjx1c2UgaHJlZj0iI2NoLW0xMCIgeD0iMS41MyIgeT0iLTIuMTgiLz48dXNlIGhyZWY9IiNjaC1tMTAiIHg9IjIuMjkiIHk9Ii0zLjI4Ii8+PHVzZSBocmVmPSIjY2gtbTEwIiB4PSIzLjA2IiB5PSItNC4zNyIvPjx1c2UgaHJlZj0iI2NoLW0xMCIgeD0iMy44MiIgeT0iLTUuNDYiLz48dXNlIGhyZWY9IiNjaC1tMTAiIHg9IjQuNTkiIHk9Ii02LjU1Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODMiPjx1c2UgaHJlZj0iI2NoLW0xMSIgeD0iLTMuOTUiIHk9IjYuMzIiLz48dXNlIGhyZWY9IiNjaC1tMTEiIHg9Ii0zLjIzIiB5PSI1LjE3Ii8+PHVzZSBocmVmPSIjY2gtbTExIiB4PSItMi41MSIgeT0iNC4wMiIvPjx1c2UgaHJlZj0iI2NoLW0xMSIgeD0iLTEuNzkiIHk9IjIuODciLz48dXNlIGhyZWY9IiNjaC1tMTEiIHg9Ii0xLjA4IiB5PSIxLjcyIi8+PHVzZSBocmVmPSIjY2gtbTExIiB4PSItMC4zNiIgeT0iMC41NyIvPjx1c2UgaHJlZj0iI2NoLW0xMSIgeD0iMC4zNiIgeT0iLTAuNTciLz48dXNlIGhyZWY9IiNjaC1tMTEiIHg9IjEuMDgiIHk9Ii0xLjcyIi8+PHVzZSBocmVmPSIjY2gtbTExIiB4PSIxLjc5IiB5PSItMi44NyIvPjx1c2UgaHJlZj0iI2NoLW0xMSIgeD0iMi41MSIgeT0iLTQuMDIiLz48dXNlIGhyZWY9IiNjaC1tMTEiIHg9IjMuMjMiIHk9Ii01LjE3Ii8+PHVzZSBocmVmPSIjY2gtbTExIiB4PSIzLjk1IiB5PSItNi4zMiIvPjwvZz48ZyBvcGFjaXR5PSIwLjg4Ij48dXNlIGhyZWY9IiNjaC1tMTIiIHg9Ii00LjQ1IiB5PSI1LjkxIi8+PHVzZSBocmVmPSIjY2gtbTEyIiB4PSItMy42NCIgeT0iNC44NCIvPjx1c2UgaHJlZj0iI2NoLW0xMiIgeD0iLTIuODMiIHk9IjMuNzYiLz48dXNlIGhyZWY9IiNjaC1tMTIiIHg9Ii0yLjAyIiB5PSIyLjY5Ii8+PHVzZSBocmVmPSIjY2gtbTEyIiB4PSItMS4yMSIgeT0iMS42MSIvPjx1c2UgaHJlZj0iI2NoLW0xMiIgeD0iLTAuNDAiIHk9IjAuNTQiLz48dXNlIGhyZWY9IiNjaC1tMTIiIHg9IjAuNDAiIHk9Ii0wLjU0Ii8+PHVzZSBocmVmPSIjY2gtbTEyIiB4PSIxLjIxIiB5PSItMS42MSIvPjx1c2UgaHJlZj0iI2NoLW0xMiIgeD0iMi4wMiIgeT0iLTIuNjkiLz48dXNlIGhyZWY9IiNjaC1tMTIiIHg9IjIuODMiIHk9Ii0zLjc2Ii8+PHVzZSBocmVmPSIjY2gtbTEyIiB4PSIzLjY0IiB5PSItNC44NCIvPjx1c2UgaHJlZj0iI2NoLW0xMiIgeD0iNC40NSIgeT0iLTUuOTEiLz48L2c+DQogICAgPC9nPjwvZz4NCg0KICAgIDwhLS0gdGhlIGJlbnQgY29ybmVyOiBpdHMgYmFjayBpcyBwbGFpbiBwYXBlciAtLT4NCiAgICA8cGF0aCBmaWx0ZXI9InVybCgjY2gtZHJpZnQpIiBmaWxsPSIjRkFGN0VFIiBkPSJNMTA0IDc5LjEgQzEwMy42IDcyLjYgMTA2LjIgNjYuNiAxMTEuNCA2My40IEMxMTYuNiA2MS4yIDEyMi40IDU5LjIgMTI3LjggNTYuMiBMMTI3LjcgNTYgTDEwNCA3OS4yIFoiLz4NCg0KICAgIDwhLS0gYmFsbHBvaW50IC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNjaC1kcmlmdCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI0MjUyQyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMS45Ij48cGF0aCBkPSJNLTEuNSAxLjUgQzMwIDAuMyA4NSAtMS40IDEyMS44IC0yLjkgQzEyNS42IC0zLjEgMTI3LjYgLTEuMyAxMjcuNiAyLjggQzEyNy44IDIwIDEyNy45IDM4IDEyNy43IDU2LjYiLz48cGF0aCBkPSJNMS4xIC0xLjUgQzAuNSAxOCAwLjIgNTAgMC45IDc1LjIgQzEuMSA3OS4yIDIuOSA4MC4zIDYuOCA4MC4yIEM0MCA4MCA3NSA3OS42IDEwNC42IDc5LjEiLz48cGF0aCBkPSJNMTAzLjYgNzkuNCBDMTExIDcyIDExOSA2NCAxMjggNTUuOCIvPjxwYXRoIGQ9Ik0xMDQgNzkuMSBDMTAzLjYgNzIuNiAxMDYuMiA2Ni42IDExMS40IDYzLjQgQzExNi42IDYxLjIgMTIyLjQgNTkuMiAxMjcuOCA1Ni4yIi8+PHBhdGggZD0iTTkuMiAxMC40IEM5LjggNy4yIDE1LjQgNi42IDE3LjEgMTAuMiBDMTguNiAxMy42IDE2IDE3LjMgMTIuNCAxNyBDOSAxNi43IDcuOCAxMy4yIDkuNyAxMC42IEMxMS4xIDguOCAxNC4xIDguNSAxNS45IDkuNiIvPjwvZz4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMi42Ij48cGF0aCBkPSJNLTEuNSAxLjUgQzMwIDAuMyA4NSAtMS40IDEyMS44IC0yLjkgQzEyNS42IC0zLjEgMTI3LjYgLTEuMyAxMjcuNiAyLjggQzEyNy44IDIwIDEyNy45IDM4IDEyNy43IDU2LjYiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTEuMSAtMS41IEMwLjUgMTggMC4yIDUwIDAuOSA3NS4yIEMxLjEgNzkuMiAyLjkgODAuMyA2LjggODAuMiBDNDAgODAgNzUgNzkuNiAxMDQuNiA3OS4xIiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik0xMDMuNiA3OS40IEMxMTEgNzIgMTE5IDY0IDEyOCA1NS44IiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik0xMDQgNzkuMSBDMTAzLjYgNzIuNiAxMDYuMiA2Ni42IDExMS40IDYzLjQgQzExNi42IDYxLjIgMTIyLjQgNTkuMiAxMjcuOCA1Ni4yIiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik05LjIgMTAuNCBDOS44IDcuMiAxNS40IDYuNiAxNy4xIDEwLjIgQzE4LjYgMTMuNiAxNiAxNy4zIDEyLjQgMTcgQzkgMTYuNyA3LjggMTMuMiA5LjcgMTAuNiBDMTEuMSA4LjggMTQuMSA4LjUgMTUuOSA5LjYiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PC9nPg0KICAgICAgPGcgc3Ryb2tlLXdpZHRoPSIxLjQiPjxwYXRoIGQ9Ik0xMTAuNiA3Mi42IEwxMDguNiA3MC4yIi8+PHBhdGggZD0iTTExNi40IDY3LjIgTDExNC40IDY1Ii8+PC9nPg0KICAgIDwvZz4NCg0KICAgIDwhLS0gZmFjZSwgd2hpdGUgZ2VsIHBlbiBvdmVyIHRoZSBtYXJrZXIgLS0+DQogICAgPGcgZmlsdGVyPSJ1cmwoI2NoLWRyaWZ0KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGREY1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPg0KICAgICAgDQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjciIGQ9Ik02OC4yIDMzIFE2OC42IDM0LjggNjguNCAzNi42Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjYuNiIgZD0iTTg3LjQgMzIuMiBMODcuNiAzNS42Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjIuOCIgZD0iTTY0LjYgMjUuNiBMNzAuMiAyMy40Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjIuOCIgZD0iTTg1LjYgMjIuNCBMOTEuMiAyNC42Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjMuNCIgZD0iTTc0LjIgNDUuNiBDNzcgNDguNCA4MiA0OC42IDg1IDQ1LjYiLz4NCiAgICANCiAgICA8L2c+DQoNCiAgICA8IS0tIHJpbmcsIHRoZSBzdHJldGNoIHRoYXQgY29tZXMgb3V0IG9mIHRoZSBob2xlIHRvd2FyZHMgeW91IC0tPg0KICAgIDxnIG1hc2s9InVybCgjY2gtZnJvbnQpIj48ZyBmaWx0ZXI9InVybCgjY2gtZHJpZnQpIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiNGMjcwMUYiIHN0cm9rZS13aWR0aD0iNC40IiBzdHJva2UtbGluZWNhcD0icm91bmQiPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9Ii0xLjk5IiB5PSItMS42NyIvPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9Ii0xLjIwIiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9Ii0wLjQwIiB5PSItMC4zMyIvPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9IjAuNDAiIHk9IjAuMzMiLz48dXNlIGhyZWY9IiNjaC1yaW5nIiB4PSIxLjIwIiB5PSIxLjAwIi8+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iMS45OSIgeT0iMS42NyIvPjwvZz48L2c+PC9nPg0KICA8L2c+DQo8L3N2Zz4NCg=="};
 /* what めくる says: {scene: [line…]}; a line can hold {n} (streak days), {pct} or {w} (words, res_comeback). The last 40 shown are not repeated. */
@@ -1066,7 +1318,8 @@ const MK_LINES = {
   "Perfect が渋滞中。traffic jam",
   "完ぺきすぎて、ぼくの裏面の答えに出番なし",
   "ace it は「満点とる」って意味。まさに今",
-  "flawless＝傷なし。ぼくの角よりきれい"
+  "flawless＝傷なし。ぼくの角よりきれい",
+  "なん…だと…？ 全問正解…？"
  ],
  "res_great": [
   "まちがえたやつ、ぼくが職員室に呼び出しとく",
@@ -1082,7 +1335,8 @@ const MK_LINES = {
   "この正答率、休み時間に自慢していいやつ",
   "ほぼ満点！取りこぼしは、おかわりで出すね",
   "{pct}%！めくる手が速すぎて風きた",
-  "好プレー連発！ミスはリプレイ判定へ回します"
+  "好プレー連発！ミスはリプレイ判定へ回します",
+  "thrill＝ぞくぞく。今のセット、スリラー級"
  ],
  "res_ok": [
   "半分以上はもう友だち。残りは顔見知り",
@@ -1110,7 +1364,8 @@ const MK_LINES = {
   "めくり運が悪かっただけ。たぶんぼくのせい",
   "{pct}%。月曜1限の目覚めぐあいと同じ",
   "mistake の後は retake。また来るよ",
-  "大丈夫、ぼくも裏面たまに忘れる"
+  "大丈夫、ぼくも裏面たまに忘れる",
+  "あきらめたら、そこで単語帳終了ですよ"
  ],
  "res_goal": [
   "{n}日連続！夏休みの日記より続いてる",
@@ -1156,7 +1411,14 @@ const MK_LINES = {
   "授業中にめくるのは、ぼくじゃなくて教科書ね",
   "裏面は back。答えはいつも背中で語る",
   "角が丸くなってきた。めくられた勲章ね",
-  "過去問って、ぼくより分厚くてちょっと嫉妬"
+  "過去問って、ぼくより分厚くてちょっと嫉妬",
+  "だが断る。…今日の復習をサボるのはね",
+  "お前はもう、覚えている",
+  "この単語帳を一周したら、ぼく…告白するんだ",
+  "逃げちゃダメだ…復習から逃げちゃダメだ…",
+  "ムーンウォーク練習中。後ろに進む＝復習ね",
+  "Bad は昔のスラングで『最高』。きみは Bad",
+  "片手だけ白い手袋してみた。めくりやすい"
  ],
  "home_morning": [
   "おはよ。寝ぐせでちょっと反ってる",
@@ -1213,7 +1475,8 @@ const MK_LINES = {
   "復習コンプ！ここから新しいページめくろ",
   "古い友だちに挨拶完了。新入りが待ってる",
   "復習クリア。ぼくのリングもちょっと軽い",
-  "復習ぜんぶOK！新しい単語、もう並んでる"
+  "復習ぜんぶOK！新しい単語、もう並んでる",
+  "計画通り…忘れかけた子から出しといた"
  ]
 };
 function mkSay(scene, vars = {}){
@@ -1234,7 +1497,7 @@ function mkHomeScene(){
 function mkTalk(auto){
   const b = $('#mkbubble'); if (!b) return;
   const st = streakInfo(), t = mkSay(mkHomeScene(), {n: st.n}); if (!t) return;
-  b.textContent = t; b.hidden = false; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+  b.textContent = t; b.hidden = false; b.dataset.tap = 1; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
   const m = document.querySelector('.hero-mk'); if (m && !auto) { m.classList.remove('wig'); void m.offsetWidth; m.classList.add('wig'); }
   clearTimeout(mkTalk.t); mkTalk.t = setTimeout(() => { const x = $('#mkbubble'); if (x) x.hidden = true; }, Math.max(3200, t.length * 160));
 }
@@ -1243,14 +1506,14 @@ const mekuru = (mood, cls = '') => MEKURU[mood] ? `<img class="mekuru ${cls}" sr
 const FIREBASE = {"apiKey":"AIzaSyDo6nmhIEeA33nSWiv_1z0IUxpFHPhLq9M","authDomain":"kyokutan.firebaseapp.com","projectId":"kyokutan","storageBucket":"kyokutan.firebasestorage.app","messagingSenderId":"1048494403824","appId":"1:1048494403824:web:b5f7301b1e5e4541bf5235"};
 
 const DECK_META = [
-  {id:'junior', name:'中学基礎',       desc:'中学〜高校基礎の英単語（受験英単語とかぶる語は除く）', tag:'中学〜高1'},
-  {id:'j1',     name:'受験英単語 基礎', desc:'No.1〜750 ・ 高校の基本〜共通テスト',        tag:'No.1–750'},
-  {id:'j2',     name:'受験英単語 標準', desc:'No.751〜1700 ・ 共通テスト〜中堅大',        tag:'No.751–1700'},
-  {id:'j3',     name:'受験英単語 発展', desc:'No.1701〜2500 ・ 難関大・英検2級〜準1級の入口', tag:'No.1701–2500'},
-  {id:'idioms', name:'必修英熟語',     desc:'受験に出る句動詞・イディオム',                 tag:'PHRASE'},
-  {id:'tagi',   name:'必修多義語', desc:'知っている基本語の、入試で問われる意味と語法', tag:'意味＋語法'},   // its own cards: the same word in 中学基礎 is learned separately
-  {id:'theme',  name:'テーマ別 長文頻出語', desc:'環境・医療・経済などの専門用語と固有名詞', tag:'THEME'},
-  {id:'toeic',  name:'TOEIC頻出',      desc:'ビジネス・オフィスの定番語',         tag:'600–860'},
+  {id:'junior', name:'中学基礎', nick:'中学基礎', desc:'中学〜高校基礎の英単語（受験英単語とかぶる語は除く）', tag:'中学〜高1'},
+  {id:'j1',     name:'受験英単語 基礎', nick:'基礎', desc:'No.1〜750 ・ 高校の基本〜共通テスト',        tag:'No.1-750'},
+  {id:'j2',     name:'受験英単語 標準', nick:'標準', desc:'No.751〜1700 ・ 共通テスト〜中堅大',        tag:'No.751-1700'},
+  {id:'j3',     name:'受験英単語 発展', nick:'発展', desc:'No.1701〜2500 ・ 難関大・英検2級〜準1級の入口', tag:'No.1701-2500'},
+  {id:'idioms', name:'必修英熟語', nick:'熟語', desc:'受験に出る句動詞・イディオム',                 tag:'PHRASE'},
+  {id:'tagi',   name:'必修多義語', nick:'多義語', desc:'知っている基本語の、入試で問われる意味と語法', tag:'意味＋語法'},   // its own cards: the same word in 中学基礎 is learned separately
+  {id:'theme',  name:'テーマ別 長文頻出語', nick:'テーマ別', desc:'環境・医療・経済などの専門用語と固有名詞', tag:'THEME'},
+  {id:'toeic',  name:'TOEIC頻出', nick:'TOEIC', desc:'ビジネス・オフィスの定番語',         tag:'600-860'},
 ].filter(m => (RAW[m.id] || []).length || !Object.keys(RAW).length);
 const POS = ['名','動','形','副','前','接','熟'];
 const POS_NAME = {名:'名詞', 動:'動詞', 形:'形容詞', 副:'副詞', 前:'前置詞', 接:'接続詞', 熟:'熟語'};
@@ -1319,7 +1582,8 @@ function saveNow(){
   catch(e) { if (!saveWarned) { saveWarned = true; setTimeout(() => toast('この端末に保存できませんでした。空き容量やプライベートモードを確認してください', null, 6000), 0); } }   // full storage / private mode: say it once
 }
 function save(){ clearTimeout(saveT); saveT = setTimeout(saveNow, 300); }
-function setSetting(k, v){ S.settings[k] = v; S.settings.upd = Date.now(); save(); markDirty('meta', true); }
+function setSetting(k, v){ if (k === 'mode' && v === 'flash' && S.settings.mode !== 'flash') try { localStorage.setItem('tangoloop.mode4', S.settings.mode); } catch(e) {}   // for 出題のしかた's 4択
+  S.settings[k] = v; S.settings.upd = Date.now(); save(); markDirty('meta', true); }
 
 /* ---------- decks ---------- */
 /* A card holds every meaning of a word: s = [{p 品詞, m 意味, e 例文, j 訳}], most important first. */
@@ -1430,14 +1694,31 @@ function deckSections(d){
   for (let i = 0; i < d.cards.length; i += SEC_N) {
     const heads = d.cards.slice(i, i + SEC_N), all = new Set(heads);
     for (const c of heads) { (c.sc || []).forEach(x => all.add(x)); (c.fam || []).forEach(f => f.card && all.add(f.card)); }
-    const a = heads[0], z = heads[heads.length - 1], num = c => c.n && !c.isD ? c.n : 0;
+    const a = heads[0], z = heads[heads.length - 1], num = c => d.builtin && c.n && !c.isD ? c.n : 0;   // a deck you made counts its own words
     out.push({i: out.length, from: num(a) || i + 1, to: num(z) || i + heads.length, heads, all});
   }
   secCache.set(d, out); return out;
 }
-const secLabel = x => `No.${x.from}–${x.to}`;
-const secStudied = x => x.heads.filter(c => status(prog(c)) !== 'new').length;   // words learned at least once
+const secLabel = x => `No.${x.from}-${x.to}`;   // a hyphen: the font's en dash all but vanishes at 12–13px
+const secSay = x => `No.${x.from}から${x.to}`;   // for screen readers
+/* 学習ずみ: a deck's headwords learned at least once (in a set, or sorted as 知ってる) out of all of them — the one deck %
+   on the home, 単語帳, the deck page and 記録. Not 0% once a word is learned, nor 100% while one is left */
+const learnedIn = cards => cards.reduce((n, c) => n + (isReview(prog(c)) ? 1 : 0), 0);
+const pctOf = (k, t) => !t || !k ? 0 : k >= t ? 100 : clamp(Math.round(k / t * 100), 1, 99);
+const deckLearned = d => learnedIn(d.cards);
+const deckPct = d => pctOf(deckLearned(d), d.cards.length);
+const secStudied = x => learnedIn(x.heads);   // 学習ずみ, as a deck's % (a word sorted as まだ still waits in its block)
 const curSection = d => deckSections(d).find(x => secStudied(x) < x.heads.length) || null;
+/* where each active deck is: its current 100語 block (sec null once every headword is learned; label '' for a deck of one block) */
+function deckPlaces(act = activeIds()){
+  return act.map(deckById).filter(Boolean).map(d => { const sec = curSection(d); return {d, sec, label: sec && deckSections(d).length > 1 ? secLabel(sec) : '', done: !sec}; });
+}
+/* the same in words, for 「…の続きから」: one deck 「基礎 No.101–200」, several 「基礎・熟語」 (new words come from all of them, mixed).
+   A finished deck brings no new words and is left out (all finished: just the names) */
+function placesText(ps = deckPlaces()){
+  const go = ps.some(p => !p.done) ? ps.filter(p => !p.done) : ps;
+  return go.length === 1 ? `${shortName(go[0].d)}${go[0].label ? ` ${go[0].label}` : ''}` : go.map(p => deckNick(p.d)).join('・');
+}
 const secLeft = (ids, only) => { const P = pools(ids, only); return P.due.length + P.queued.length + P.fresh.length + P.dnew.length; };
 /* the block's next set: its reviews if any are due, else its new words (pickSet's order) — the number on the buttons */
 const secNext = (ids, only) => { const P = pools(ids, only); return P.due.length ? {n: setN(P.due.length), rev: true} : {n: setN(P.queued.length + P.fresh.length + P.dnew.length), rev: false}; };
@@ -2255,6 +2536,7 @@ if (IS_WEB) try { history.scrollRestoration = 'manual'; } catch(e) {}   // the m
 function guard(){ if (IS_WEB && !HG) { try { history.pushState({kt: 1}, ''); HG = true; } catch(e) {} } }
 function openSheet(html, modal=false, keep=false){
   const again = sheetOpen(), top = keep ? $('#sheetroot .sheet')?.scrollTop || 0 : 0;
+  if (!again && !$('#toastroot .toast-btn')) { clearTimeout(toastT); $('#toastroot').innerHTML = ''; }   // a plain notice would cover the new sheet's field; an undo one stays
   $('#sheetroot').innerHTML = `<div class="backdrop" ${modal ? '' : 'data-act="closeSheet"'}></div><div class="sheet" role="dialog" aria-modal="true"><div class="sheet-in">${modal ? '' : '<div class="grab"></div>'}${html}</div></div>`;
   if (again) $('#sheetroot').querySelectorAll('.sheet,.backdrop').forEach(e => e.style.animation = 'none');   // a sheet already up: a redraw never replays the slide-in / fade
   if (top) $('#sheetroot .sheet').scrollTop = top;   // the same sheet redrawn (出題しない, リセット, メモ): it stays where the user was
@@ -2295,6 +2577,8 @@ function bindSheetDrag(sh){
 function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); reloadIfQuiet(); }
 const sheetOpen = () => !!$('#sheetroot').firstChild;
 function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); viewKey = ''; guard(); }   // viewKey: the home dock rises again when this closes
+/* closing a set's results goes back to where it started: a deck page (route stays on it), else the home */
+const backLabel = () => route.tab === 'decks' && route.deck ? '単語帳へもどる' : 'ホームへ';
 function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); Q = null; SW = null; const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); reloadIfQuiet(); }
 const layerOpen = () => sheetOpen() || !$('#screen').hidden || (route.tab === 'decks' && !!route.deck);
 addEventListener('popstate', e => {
@@ -2315,7 +2599,7 @@ if (window.visualViewport) {
 }
 
 /* ---------- views ---------- */
-let route = {tab:'home', deck:null, filter:'all', cat:'', q:'', red:false, limit:150, sec:null};
+let route = {tab:'home', deck:null, filter:'all', cat:'', q:'', red:false, limit:150, sec:null, dtab:'path'};   // dtab: the deck page's tab, 100語ずつ (path) or 単語一覧 (list)
 const PEEK = new Set();   // 赤シートでのぞいた語 (deck \t key), only while this deck's page is open
 let shownDay = dayIdx();  // the day the view was drawn for
 let moreSetOpen = false;  // 設定の「くわしい設定」 stays open when the view is drawn again
@@ -2336,7 +2620,7 @@ function render(){
   // drawing the same page again: the dock doesn't rise again, and VoiceOver / the keyboard stay on the control they were on
   const a = document.activeElement, still = key === viewKey && !!v.querySelector('.ctadock');
   const sx = key === viewKey ? [...v.querySelectorAll('.chips.filter')].map(e => e.scrollLeft) : [];   // the chip rows keep their sideways scroll
-  const said = $('#mkbubble')?.hidden === false ? $('#mkbubble').textContent : '';   // めくる keeps talking through a redraw
+  const said = $('#mkbubble')?.hidden === false && $('#mkbubble').dataset.tap ? $('#mkbubble').textContent : '';   // めくる keeps talking through a redraw (what it was tapped to say)
   const sel = a && v.contains(a) && a.dataset?.act ? ['act','k','v','d','f','c','id','tab'].filter(n => a.dataset[n] != null).map(n => `[data-${n}="${CSS.escape(a.dataset[n])}"]`).join('') : '';
   v.innerHTML = route.tab === 'home' ? viewHome()
     : route.tab === 'decks' ? (route.deck && deckById(route.deck) ? viewDeck() : viewDecks())
@@ -2348,11 +2632,8 @@ function render(){
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false'));
   renderSync(); shownDay = dayIdx();
   if (route.tab === 'decks' && route.deck) guard();
-  if (said && $('#mkbubble')) { $('#mkbubble').textContent = said; $('#mkbubble').hidden = false; }
-  // めくる says one thing by itself on the first home screen of the day; after that only when tapped
-  if (route.tab === 'home' && $('#screen').hidden && S.settings.onboarded && $('#mkbubble') && lsGet('tangoloop.mkday') !== String(dayIdx())) {
-    lsSet('tangoloop.mkday', String(dayIdx())); setTimeout(() => mkTalk(true), 700);
-  }
+  if (said && $('#mkbubble')) { $('#mkbubble').textContent = said; $('#mkbubble').hidden = false; $('#mkbubble').dataset.tap = 1; }
+  // めくる waits at the home card's goal and talks only when tapped (a bubble of its own would cover the buttons above it)
 }
 /* a home-screen app resumes from memory: after 4:00 it would still show last night's 「今日の目標は達成」 */
 function dayCheck(){ if (document.visibilityState !== 'hidden' && dayIdx() !== shownDay && $('#screen').hidden && !sheetOpen()) render(); }
@@ -2362,25 +2643,24 @@ function topbar(){
   const st = streakInfo();
   const fz = st.freeze ? `<span class="fz" title="お休みチケット：1日休んでも連続記録が続きます（7日続けるごとに1枚、最大2枚）">${I.shield}${st.freeze}</span>` : '';
   return `<div class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span><span class="brand-name">極<small>きわみ</small></span></div><span class="sp"></span>
-    <button class="pill streak ${st.done ? 'done' : ''}" data-act="streakSheet" aria-label="連続 ${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}">${I.flame}<span class="num">${st.n}</span>日${fz}</button>${IS_WEB && FIREBASE ? `<button id="syncbtn" class="syncbtn" data-act="syncInfo"><span id="syncdot" class="syncdot ${Sync.state}"></span><span class="synclab">${syncShort()}</span></button>` : `<span id="syncdot" class="syncdot ${Sync.state}"></span>`}</div>${iabNote()}`;
+    <button class="pill streak ${st.done ? 'done' : ''}" data-act="streakSheet" aria-label="連続 ${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}">${I.flame}<span class="num">${st.n}</span>日${fz}</button>${IS_WEB && FIREBASE ? `<button id="syncbtn" class="syncbtn" data-act="syncInfo"><span id="syncdot" class="syncdot ${Sync.state}"></span><span class="synclab">${syncShort()}</span></button>` : ''}</div>${iabNote()}`;   // no login: where the record is saved is told in 設定 (保存先), not by a bare dot
 }
+/* n / l / m: 未学習・学習中・習得 by status(); r: 学習ずみ (learnedIn) and pct, the deck's % (deckPct); q: sorted as まだ, not
+   learned yet (status() counts them in l). So 習得 m + the rest of 学習ずみ r - m + not yet n + q = total */
 function deckStats(d){
-  let n=0,l=0,m=0,due=0; const today = dayIdx();
-  for (const c of d.cards) { const p = prog(c); const s = status(p); if (s==='new') n++; else if (s==='learn') l++; else m++; if (isReview(p) && !p.sus && p.due <= today) due++; }
-  return {n,l,m,due,total:d.cards.length};
+  let n=0,l=0,m=0,r=0,q=0,due=0; const today = dayIdx();
+  for (const c of d.cards) { const p = prog(c); const s = status(p); if (s==='new') n++; else if (s==='learn') l++; else m++; if (p?.st === 1) q++; if (isReview(p)) { r++; if (!p.sus && p.due <= today) due++; } }
+  return {n,l,m,r,q,due,total:d.cards.length,pct:pctOf(r, d.cards.length)};
 }
-function stackBar(st){
-  const t = st.total || 1, seg = (cls,v,label) => v ? `<i class="${cls}" style="width:${v/t*100}%" data-tip="${label} ${v}語"></i>` : '';
-  return `<div class="stack" role="img" aria-label="習得${st.m} 学習中${st.l} 未学習${st.n}">${seg('m',st.m,'習得')}${seg('l',st.l,'学習中')}${seg('n',st.n,'未学習')}</div>`;
-}
+/* the centre is the deck's 学習ずみ % (st.pct); the two arcs add up to it: 習得, then the rest of 学習ずみ */
 function donut(st, size = 88){
-  const t = st.total || 1, pct = v => v ? Math.max(1, v / t * 100) : 0, pm = pct(st.m), pl = Math.min(pct(st.l), 100 - pm);
-  const done = Math.round((st.m + st.l) / t * 100), r = 15.9155, arc = (cls, len, off) => len ? `<circle class="${cls}" cx="18" cy="18" r="${r}" pathLength="100" stroke-dasharray="${len.toFixed(2)} ${(100 - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>` : '';
-  return `<div class="donut" style="--ds:${size}px" role="img" aria-label="学習ずみ ${done}%（習得${st.m}語・学習中${st.l}語・未学習${st.n}語）">
+  const t = st.total || 1, pct = v => v ? Math.max(1, v / t * 100) : 0, pm = pct(st.m), pl = Math.min(pct(Math.max(0, st.r - st.m)), 100 - pm);
+  const done = st.pct, r = 15.9155, arc = (cls, len, off) => len ? `<circle class="${cls}" cx="18" cy="18" r="${r}" pathLength="100" stroke-dasharray="${len.toFixed(2)} ${(100 - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>` : '';
+  return `<div class="donut" style="--ds:${size}px" role="img" aria-label="学習ずみ ${done}%（覚えた${st.m}語・学習中${st.r - st.m}語）">
     <svg viewBox="0 0 36 36" aria-hidden="true"><circle class="n" cx="18" cy="18" r="${r}"/>${arc('m', pm, 0)}${arc('l', pl, pm)}</svg>
     <span class="dn"><b class="num">${done}<small>%</small></b><span>学習ずみ</span></span></div>`;
 }
-const legendHTML = () => `<div class="legend"><span><i style="background:var(--st-master)"></i>習得（3週間以上覚えていられる）</span><span><i style="background:var(--st-learn)"></i>学習中</span><span><i style="background:var(--st-new)"></i>未学習</span></div>`;
+const legendHTML = () => `<div class="legend"><span><i style="background:var(--st-master)"></i>覚えた（3週間以上覚えていられる）</span><span><i style="background:var(--st-learn)"></i>学習中</span><span><i style="background:var(--st-new)"></i>未学習</span></div>`;
 
 const STEP_RANGE = {maxRev: [50, 1000], setSize: [5, 50], newPerDay: [0, 200]};
 Object.assign(I, {
@@ -2423,15 +2703,17 @@ function paceInfo(act = activeIds()){
   return {left: byNo ? Math.min(2 * h, h + dd) : h + dd, avg, span, what};
 }
 const shortName = d => d.name.replace(/^受験英単語\s*/, '');
+const deckNick = d => d.nick || shortName(d);   // 「基礎」「熟語」: short enough to name several in a row
 function endLabel(idx){ const d = new Date(idx * DAY); return idx - dayIdx() > 300 ? `${d.getUTCFullYear()}/${d.getUTCMonth() + 1}/${d.getUTCDate()}` : mdLabel(idx); }
 function paceText(pi, perDay, lead){
   if (perDay <= 0) return '新しい単語は <b>1日0語</b> の設定です';
-  return `${lead} <b class="num">${endLabel(dayIdx() + Math.ceil(pi.left / perDay))}</b> に <b>${esc(pi.what[0])}</b>${pi.what[1]}`;
+  return `${lead} <b class="num">${endLabel(dayIdx() + Math.ceil(pi.left / perDay))}</b> に <span class="ib"><b>${esc(pi.what[0])}</b>${pi.what[1]}</span>`;
 }
 function paceHTML(act){
   const pi = paceInfo(act); if (!pi) return '';
   const n = S.settings.newPerDay;
-  return `<button class="goal-line pace" data-act="paceSheet" aria-label="終わる日の見込み（タップで1日の目標を変える）">${I.cal}<span>${pi.avg ? paceText(pi, pi.avg, '今のペースなら') : paceText(pi, n, `1日${n}語なら`)}</span>${I.right}</button>`;
+  // one short grey line on the home card: 「12/28 に 基礎 を一周」 at the recent pace (the sheet says so), 「1日20語なら …」 until there is one
+  return `<button class="goal-line pace" data-act="paceSheet" aria-label="終わる日の見込み${pi.avg ? '（今のペースなら）' : ''}。タップで1日の目標を変える">${I.cal}<span>${pi.avg ? paceText(pi, pi.avg, '') : paceText(pi, n, `1日${n}語なら`)}</span>${I.right}</button>`;
 }
 function paceBody(){
   const pi = paceInfo(), n = S.settings.newPerDay, [lo, hi] = STEP_RANGE.newPerDay;
@@ -2458,82 +2740,94 @@ const dirRow = () => `<div class="dirrow"><span>出題</span><div class="seg seg
 /* 復習のしかた: 4択 (graded by right/wrong and speed) or カード (you say yourself whether you remembered). 4択 keeps
    段階式 or 4択だけ, whichever was set in くわしい設定 */
 const isCardMode = () => S.settings.mode === 'flash';
-const modeRow = () => `<div class="dirrow"><span>復習</span><div class="seg seg-sm" role="group" aria-label="復習のしかた">${[[S.settings.mode === 'choice' ? 'choice' : 'auto', '4択'], ['flash', 'カード']].map(([v, l]) => `<button aria-pressed="${isCardMode() === (v === 'flash')}" data-act="set" data-k="mode" data-v="${v}">${l}</button>`).join('')}</div></div>`;
-/* on the home card: 復習 [4択｜カード] — the pressed one is how reviews are asked, with what it means beside it */
-const homeMode = () => `<div class="homemode">${modeRow()}<span class="small muted">${isCardMode() ? 'めくって、覚えてたか自分で選ぶ' : '選んで答える・速いほど高評価'}</span></div>`;
-/* 出題の向き・1セットの問題数 on the home hero: one chip with the current values; a tap opens them in a sheet */
-const optChip = () => `<button class="optchip" data-act="studyOpts" aria-label="出題の向きと1セットの問題数を変える">出題 ${DIR_LABEL[S.settings.dir || 'auto']} ・ 1セット ${S.settings.setSize}問${I.right}</button>`;
+const modeRow = () => `<div class="dirrow"><span>復習</span><div class="seg seg-sm" role="group" aria-label="復習のしかた">${[[(isCardMode() ? lsGet('tangoloop.mode4') : S.settings.mode) === 'choice' ? 'choice' : 'auto', '4択'], ['flash', 'カード']].map(([v, l]) => `<button aria-pressed="${isCardMode() === (v === 'flash')}" data-act="set" data-k="mode" data-v="${v}">${l}</button>`).join('')}</div></div>`;
+/* 出題のしかた (the home card's 「変える ›」): 復習 [4択｜カード] with what it means, 出題の向き, 1セットの問題数 */
+const optRows = () => `${modeRow()}<p class="opt-hint">${isCardMode() ? 'カード：めくって、覚えてたか自分で選ぶ' : '4択：選んで答える・速いほど高評価'}</p>${dirRow()}${sizeRow()}`;
 function studyOpts(){
-  openSheet(`<div class="sheet-h"><h3>出題のしかた</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="stk" id="optbox">${dirRow()}${sizeRow()}</div><button class="btn btn-primary btn-block" data-act="closeSheet">これでOK</button>`);
+  openSheet(`<div class="sheet-h"><h3>出題のしかた</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="stk" id="optbox">${optRows()}</div><button class="btn btn-primary btn-block" data-act="closeSheet">これでOK</button>`);
 }
 /* after a change: the sheet's rows drawn again (like #pacebox), the focus kept on the same control */
 function refreshOpts(){
   const ob = $('#optbox'); if (!ob) return;
   const a = document.activeElement, sel = ob.contains(a) && a.dataset.k ? `[data-k="${a.dataset.k}"]` + (a.dataset.v != null ? `[data-v="${a.dataset.v}"]` : `[data-d="${a.dataset.d}"]`) : '';
-  ob.innerHTML = dirRow() + sizeRow();
+  ob.innerHTML = optRows();
   if (sel) (ob.querySelector(sel + ':not([disabled])') || ob.querySelector(`[data-k="${a.dataset.k}"]:not([disabled])`))?.focus();   // at 5 or 50 the pressed one is disabled: the other one
 }
+Object.assign(I, {
+  target:'<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/></svg>',
+  tune:'<svg class="ico" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>',
+  redo:'<svg class="ico" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v4.2h-4.2"/></svg>',
+});
+/* a deck in use on the home: its 表紙, name, 学習ずみ %, where you are (「いま No.101–200（45 / 100）」) and one bar
+   (習得, then the rest of 学習ずみ, as the donut); a tap opens its page */
+function homeDeck(d){
+  const st = deckStats(d), x = curSection(d), t = st.total || 1;
+  const wl = st.r ? Math.max(1.5, st.r / t * 100) : 0, wm = Math.min(st.m / t * 100, wl);
+  const where = !st.total ? 'まだ単語がありません' : !x ? 'ぜんぶ学習ずみ' : deckSections(d).length > 1 ? `いま <b class="num">${secLabel(x)}</b><span class="nw">（${secStudied(x)} / ${x.heads.length}）</span>` : `あと <b class="num">${st.total - st.r}</b>語`;
+  return `<button class="hdeck" data-act="openDeck" data-id="${esc(d.id)}">${deckCover(d, {size: 'sm'})}
+    <span class="hd-m"><span class="hd-n"><b>${esc(d.name)}</b><span class="hd-p"><small>学習ずみ</small><b class="num">${st.pct}</b>%</span></span>
+      <span class="hd-w">${where}</span>
+      <span class="hbar" role="img" aria-label="学習ずみ ${st.pct}%（習得${st.m}語・全${st.total}語）"><i class="m" style="width:${wm.toFixed(1)}%"></i><i class="l" style="width:${(wl - wm).toFixed(1)}%"></i></span></span></button>`;
+}
+/* ホーム: the 今日の学習 card is a short road — ① 復習 → ② 新しい単語 → ゴール (連続 N日 → N+1日, めくる waits there; a tap
+   and it talks) — with one main button: 復習する while reviews are due, then 覚える. The parts keep their order in every
+   state: head, road, (もっと覚える), how reviews are asked; then the decks in use and ほかの練習 (only what can start) */
 function viewHome(){
   checkGoal();                                     // e.g. reached before this version, or via another screen
-  const c = counts(); const td = todayStat(); const stk = streakInfo();
+  const c = counts(), td = todayStat(), stk = streakInfo(), act = activeIds(), today = dayIdx();
   const total = c.due + c.newToday;
-  const act = activeIds();
-  const today = dayIdx();
   const sdWait = sameDayWaiting(act).length;   // today's おさらい still waiting
   const tomorrow = cardsOf(act, true).filter(x => { const p = prog(x); return isReview(p) && !p.sus && p.due === today + 1; }).length;
   const nRecent = drillCards('recent', act).length, nMany = drillCards('many', act).length, nToday = todayCards(act).length;
   const nd = act.length ? nextDeck(act, c) : null, heavy = total ? backlog(c, td) : '';
-  const tail = nd ? nextDeckLine(nd) : paceHTML(act);   // the finish line, or (deck done) the way to the next deck
-  // how long the goal still takes, once it is more than one set (a 休み明け day already shows its time in the 復習 lane)
-  const mins = total && setsFor(c.due) + setsFor(c.newToday) > 1 && (!heavy || c.newToday) ? `<span class="nw">（あと${aboutMin(total)}）</span>` : '';
-  const mkBtn = mood => MEKURU[mood] ? `<button class="mk-btn" data-act="mkTalk" aria-label="めくるに話しかける">${mekuru(mood, 'hero-mk')}</button><div id="mkbubble" class="mkbubble" role="status" hidden></div>` : '';
-  const head = total ? `<div class="today-k">今日の学習</div>
-    <div class="hero-lines"><div class="goal-line ${stk.done ? 'done' : ''}">${I.flame}<span>${stk.done ? `<b>連続 ${stk.n}日</b> ・ 今日の分は記録ずみ` : stk.n === 0 && stk.prev > 1 ? `前回は${stk.prev}日続きました。今日の目標を終えて、また1日目から！` : `今日の目標を全部終えると <b class="nw">連続 ${stk.n + 1}日</b>${mins}`}</span></div>${tail}</div>`
-    : `<div class="today-k">今日の目標は達成</div>
-    ${stk.done || tail ? `<div class="hero-lines">${stk.done ? `<div class="goal-line done">${I.flame}<span><b>連続 ${stk.n}日</b>${milestoneText(stk.n) ? ` ・ ${milestoneText(stk.n)}` : ''}</span></div>` : ''}${tail}</div>` : ''}`;
-  // 復習 lane: today's reviews (and today's おさらい), with their own button
-  const revDone = !c.due && (td.rv || td.d0 > 0);
-  const revLane = `<div class="lane rev ${c.due ? 'now' : revDone ? 'done' : 'none'}">
-    <div class="lane-h">復習${heavy === 'away' ? '<em>おかえり！</em>' : ''}</div>
-    ${c.due ? `<div class="lane-n"><b class="num">${c.due}</b><small>語・<span class="nw">${aboutMin(c.due)}</span></small></div>
-      <button class="btn btn-primary lane-btn" data-act="studyReview">${I.play}復習する</button>
-      ${heavy ? '<div class="lane-note">忘れかけの単語から出します</div>' : ''}${c.dueAll > c.due ? `<div class="lane-note">ほかの${c.dueAll - c.due}語は明日から少しずつ</div>` : ''}`
-    : `<div class="lane-n">${revDone ? `<span class="lane-ok">${I.check}完了</span>` : '<span class="lane-none">今日の復習はなし</span>'}</div>
-      ${sdWait ? '<button class="btn btn-ghost lane-btn" data-act="studyCheck">おさらい</button>' : c.dueAll ? '<button class="btn btn-ghost lane-btn" data-act="studyReview">続ける</button>' : ''}
-      <div class="lane-note">${c.dueAll && !sdWait ? `のこり${c.dueAll}語は明日から少しずつ（続けてもOK）` : `明日の復習は ${tomorrow}語`}</div>`}
-    ${sdWait ? `<div class="lane-note sd">＋今日のおさらい ${sdWait}語${c.due ? '（復習のあとに出ます）' : ''}</div>` : ''}
-  </div>`;
-  // 新しい単語 lane: today's new words, from where you are in the deck
-  const deck0 = act.map(deckById).find(Boolean), cur = deck0 ? curSection(deck0) : null;
-  const where = deck0 ? `${shortName(deck0)}${cur && deckSections(deck0).length > 1 ? ` ${secLabel(cur)}` : ''}` : '';
-  const moreNew = c.fresh + c.queued + c.dnew;
-  const newLane = `<div class="lane new ${!c.due && c.newToday ? 'now' : !c.newToday && (td.nw || 0) > 0 ? 'done' : ''}">
-    <div class="lane-h">新しい単語${where ? `<span>${esc(where)}</span>` : ''}</div>
-    ${c.newToday ? `<div class="lane-n"><b class="num">${c.newToday}</b><small>語</small></div>
-      <button class="btn ${c.due ? 'btn-ghost' : 'btn-primary'} lane-btn" data-act="studyNew">${I.play}覚える</button>`
-    : nd ? `<div class="lane-n"><span class="lane-ok">${I.check}今日の分は完了</span></div><div class="lane-wide">${nextDeckBtn(nd, 'btn-soft')}</div>`
-    : moreNew ? `<div class="lane-n"><span class="lane-ok">${(td.nw || 0) > 0 ? `${I.check}今日の分は完了` : td.aw ? '休み明けなので今日は復習を優先' : '今日の新しい単語は0語の設定'}</span></div><button class="btn btn-ghost lane-btn" data-act="studyNew">もっと覚える</button>`
-    : '<div class="lane-n"><span class="lane-none">新しい単語はありません</span></div>'}
-  </div>`;
+  const where = placesText(deckPlaces(act)), moreNew = c.fresh + c.queued + c.dnew;   // 「基礎 No.101–200」, or 「基礎・熟語」 with several decks on
+  const hit = stk.done, done = (td.rn || 0) + (td.nw || 0), mins = q => Math.max(1, Math.round(q * secPerQ() / 60));
+  const tmin = td.n ? Math.max(1, Math.round((td.wt || (td.t || 0) * 1.5) / 60000)) : 0;
+  // head: what is left (のこり 約7分 ・ 今日の目標 12 / 40語), or 目標達成！ with what today held; under it the finish line
+  const head = !act.length ? `<div class="th"><div class="th-t"><small>今日の学習</small><b class="th-big">単語帳を選ぼう</b></div></div>`
+    : `<div class="th"><div class="th-t"><small>今日の学習</small>${total ? `<span class="th-big">のこり 約<b class="num">${mins(total)}</b>分</span>` : '<b class="th-big hit">目標達成！</b>'}</div>
+      ${total ? `<div class="th-side">今日の目標<span><b class="num">${done}</b> / ${done + total}語</span></div>` : td.n ? `<div class="th-side">今日やった<span><b class="num">${td.n}</b>語 ・ <b class="num">${tmin}</b>分</span></div>` : ''}</div>
+    ${nd ? nextDeckLine(nd) : paceHTML(act)}`;
+  const node = (n, st) => `<span class="node" aria-hidden="true">${st === 'done' ? I.check : n}</span>`;
+  // ① 復習: today's reviews with the main button; then today's おさらい, or a lighter day's rest (続ける), still reachable here
+  const revDone = !c.due && (td.rv || td.d0 > 0), revSt = c.due ? 'now' : revDone ? 'done' : 'skip';
+  const revStep = `<li class="step rev ${revSt}">${node(1, revSt)}<div class="sb${!c.due && (sdWait || c.dueAll) ? ' two' : ''}">
+    ${c.due ? `<div class="sh"><b>復習</b><span class="sn"><b class="num">${c.due}</b>語 ・ ${aboutMin(c.due)}</span>${heavy === 'away' ? '<em class="st-tag">おかえり！</em>' : ''}</div>
+      <button class="btn btn-main" data-act="studyReview">${I.play}復習する</button>
+      ${c.dueAll > c.due ? `<p class="sub">ほかの${c.dueAll - c.due}語は明日から少しずつ</p>` : ''}${sdWait ? `<p class="sub sd">＋今日のおさらい ${sdWait}語（復習のあとに出ます）</p>` : ''}`
+    : `<div><div class="sh"><b>復習</b>${revDone ? `<span class="okt">${td.rn ? `${td.rn}語 ` : ''}完了</span>` : '<span class="nonet">今日はなし</span>'}</div>
+      ${(t => t ? `<p class="sub">${t}</p>` : '')(sdWait ? `<span class="sd">今日のおさらい ${sdWait}語</span>` : c.dueAll ? `のこり${c.dueAll}語は明日から少しずつ（続けてもOK）` : tomorrow ? `明日の復習は <b class="num">${tomorrow}</b>語` : '')}</div>
+      ${sdWait ? '<button class="btn btn-sub sm" data-act="studyCheck">おさらい</button>' : c.dueAll ? '<button class="btn btn-sub sm" data-act="studyReview">続ける</button>' : ''}`}</div></li>`;
+  // ② 新しい単語: today's new words from where each deck is; the main button once the reviews are done
+  const nwSt = c.newToday ? (c.due ? 'next' : 'now') : (td.nw || 0) > 0 ? 'done' : 'skip';
+  const from = moreNew ? (where ? `${esc(where)}の続きから` : '') : act.length ? 'ぜんぶ学習しました' : '';
+  const newStep = `<li class="step new ${nwSt}">${node(2, nwSt)}<div class="sb${c.newToday ? (c.due ? ' two' : '') : !nd && moreNew && total ? ' two' : ''}">
+    ${c.newToday ? `<div><div class="sh"><b>新しい単語</b><span class="sn"><b class="num">${c.newToday}</b>語</span></div>${from ? `<p class="sub">${from}</p>` : ''}</div>
+      <button class="btn ${c.due ? 'btn-sub sm' : 'btn-main'}" data-act="studyNew">${c.due ? '' : I.play}覚える</button>`
+    : `<div><div class="sh"><b>新しい単語</b>${(td.nw || 0) > 0 ? `<span class="okt">${td.nw}語 覚えた</span>` : !moreNew ? '<span class="nonet">ありません</span>' : ''}</div>
+      ${(t => t ? `<p class="sub">${t}</p>` : '')(!(td.nw > 0) && moreNew ? (td.aw ? '休み明けなので、今日は<span class="nw">復習を優先</span>' : '今日の新しい単語は0語の設定') : total || nd ? from : !moreNew ? from : '')}</div>
+      ${nd ? `<div class="nd-go">${nextDeckBtn(nd, 'btn-soft')}</div>` : moreNew && total ? '<button class="btn btn-sub sm" data-act="studyNew">覚える</button>' : ''}`}</div></li>`;
+  // ゴール: 連続 N日 → N+1日 (the pill above says N); reached: 連続 N日！ on a warm band, めくる says やったね！
+  const mk = MEKURU.normal ? `<button class="mk-btn" data-act="mkTalk" aria-label="めくるに話しかける">${mekuru(heavy === 'away' ? 'cheer' : hit ? 'happy' : 'normal', 'hero-mk')}</button><div id="mkbubble" class="mkbubble" role="status"${hit ? '' : ' hidden'}>${hit ? esc(milestoneText(stk.n) || 'やったね！') : ''}</div>` : '';
+  const goalStep = `<li class="step goal${hit ? ' hit' : ''}"><span class="node" aria-hidden="true">${I.flame}</span><div class="sb"><small>ゴール</small>
+    ${hit ? `<b class="gl">連続 ${stk.n}日！</b>` : stk.n ? `<b class="gl">連続 <span class="dpill"><b class="num">${stk.n}</b>日</span><span class="arrow" aria-label="から">→</span><span class="dpill lit"><b class="num">${stk.n + 1}</b>日</span></b>`
+      : `<b class="gl">${stk.prev > 1 ? 'また ' : '連続 '}<span class="dpill lit"><b class="num">1</b>日目</span></b>${stk.prev > 1 ? `<span class="gsub">前回は${stk.prev}日 続きました</span>` : ''}`}</div>${mk}</li>`;
+  // past today's goal: more new words, and what they are
+  const more = !total && act.length && moreNew && !nd ? `<button class="btn btn-sub more-new" data-act="studyNew"><span>${I.plus}もっと覚える</span><small>${esc(where)}の続きを${setN(moreNew)}語</small></button>` : '';
+  const how = act.length ? `<button class="howto" data-act="studyOpts" aria-label="出題のしかたを変える（復習は${isCardMode() ? 'カード' : '4択'}、1セット${S.settings.setSize}問）">${I.tune}<span class="dots"><span class="nw">復習は <b>${isCardMode() ? 'カード' : '4択'}</b></span>${(S.settings.dir || 'auto') !== 'auto' ? `<span class="nw">${DIR_LABEL[S.settings.dir]}</span>` : ''}<span class="nw">1セット <b class="num">${S.settings.setSize}問</b></span></span><span class="link">変える${I.right}</span></button>` : '';
+  const row = (a, ico, label, n, kind) => `<button class="hrow" data-act="${a}"${kind ? ` data-kind="${kind}"` : ''}><span class="rico">${ico}</span><span class="rt"><b>${label}</b></span><span class="cnt"><b class="num">${n}</b>語</span>${I.right}</button>`;
+  const others = [nToday && row('practiceToday', I.redo, '今日の単語をもう一度', nToday), nRecent && row('drill', I.target, '前回まちがえた単語', nRecent, 'recent'),
+    nMany && row('drill', I.target, `${S.settings.drillMin || 2}回以上まちがえた単語`, nMany, 'many'),
+    `<button class="hrow" data-act="swipe"><span class="rico">${I.swipe}</span><span class="rt"><b>高速仕分け</b><small>知ってる単語をよけて、覚える単語だけに</small></span>${I.right}</button>`].filter(Boolean);
   return `${topbar()}
-  <section class="tcard holed today ${total ? '' : 'is-done'}" aria-label="今日の学習"><span class="ring"></span>${mkBtn(heavy === 'away' ? 'cheer' : total ? 'normal' : 'happy')}
-    <div class="hero-head">${head}</div>
-    ${act.length ? `<div class="lanes">${revLane}${newLane}</div>` : '<div class="today-meta">単語帳タブで、使う単語帳を選んでください。</div>'}
-    ${homeMode()}${optChip()}
-    ${c.fresh ? `<div class="btn-row alt">
-      <button class="btn btn-ghost" data-act="swipe"><span class="bt">${I.swipe}高速仕分け</span><small>知ってる単語をよける</small></button>
-    </div>` : ''}
+  <section class="tcard holed today${mk ? ' has-mk' : ''}" aria-label="今日の学習"><span class="ring"></span>
+    ${head}
+    ${act.length ? `<ol class="path">${revStep}${newStep}${goalStep}</ol>${more}${how}`
+      : '<p class="th-none">使う単語帳を選ぶと、ここに今日の復習と新しい単語が出ます。</p><button class="btn btn-main" data-act="tab" data-tab="decks">単語帳を選ぶ</button>'}
   </section>
-  ${nRecent + nMany ? `<div class="sec"><div class="sec-h"><h2>苦手を特訓</h2><span class="sub">使っている単語帳から</span></div>
-    <div class="btn-row drill">
-      <button class="btn btn-ghost" data-act="drill" data-kind="recent" ${nRecent ? '' : 'disabled'}><span>前回まちがえた</span><b>${nRecent}語</b></button>
-      <button class="btn btn-ghost" data-act="drill" data-kind="many" ${nMany ? '' : 'disabled'}><span>${S.settings.drillMin || 2}回以上まちがえた</span><b>${nMany}語</b></button>
-    </div></div>` : ''}
-    ${nToday ? `<button class="btn btn-ghost btn-block today-again" data-act="practiceToday">${I.play}今日やった単語をもう一度<b>${nToday}語</b></button>` : ''}
-  <div class="sec"><div class="sec-h"><h2>使っている単語帳</h2><span class="sp"></span><button class="link" data-act="tab" data-tab="decks">すべて見る</button></div>
-    <div class="decks">${act.length ? act.map(id => deckRow(deckById(id), false)).join('') : `<div class="empty">単語帳タブで、使う単語帳の右のスイッチをオンにしてください。</div>`}</div>
-    ${act.length ? legendHTML() : ''}
-  </div>`;
+  ${act.length ? `<div class="sec"><div class="sec-h"><h2>使っている単語帳</h2><span class="sp"></span><button class="link hsw" data-act="tab" data-tab="decks">切りかえ${I.right}</button></div>
+    <div class="hdecks">${act.map(deckById).filter(Boolean).map(homeDeck).join('')}</div></div>
+  <div class="sec"><div class="sec-h"><h2>ほかの練習</h2></div><div class="hlist">${others.join('')}</div></div>` : ''}`;
 }
 function heatmap(){
   const today = dayIdx(); const dow = new Date(today*DAY).getUTCDay();
@@ -2550,32 +2844,65 @@ function heatmap(){
     <div class="heat-foot"><span>最長 <b class="num">${best}</b>日</span><span class="sp"></span>少<span class="heat-key">${[0,1,2,3,4].map(l=>`<i style="background:var(--heat${l})"></i>`).join('')}</span>多</div></div>`;
 }
 const DECK_ICO = {junior:'中', j1:'基', j2:'標', j3:'発', toeic:'T', theme:'テ', idioms:'熟', tagi:'多'};
-function deckRow(d, withToggle){
-  const st = deckStats(d); const on = S.settings.active.includes(d.id);
-  return `<div class="deck" ${withToggle ? '' : `role="button" tabindex="0" data-act="openDeck" data-id="${esc(d.id)}"`}>
-    <span class="deck-ico ${on?'on':''}" aria-hidden="true">${esc(DECK_ICO[d.id] || [...d.name][0] || '')}</span>
-    <div class="deck-main" ${withToggle ? `data-act="openDeck" data-id="${esc(d.id)}" role="button" tabindex="0"` : ''}>
-      <div class="deck-name">${esc(d.name)}<span class="deck-tag">${esc(d.tag||'')}</span></div>
-      ${stackBar(st)}
-      <div class="deck-sub"><span class="nw">習得 ${st.m}</span><span class="nw">学習中 ${st.l}</span><span class="nw">未学習 ${st.n}</span>${withToggle && st.due ? `<b class="nw" style="color:var(--red)">復習待ち ${st.due}</b>` : ''}</div>
-      ${(x => x && deckSections(d).length > 1 ? `<div class="deck-cur">いま <b class="num">${secLabel(x)}</b>（${secStudied(x)} / ${x.heads.length}）</div>` : '')(curSection(d))}
-    </div>
-    ${withToggle ? `<button class="switch" role="switch" aria-checked="${on}" aria-label="${esc(d.name)}を使う" data-act="toggleDeck" data-id="${esc(d.id)}"></button>`
-      : `<div class="deck-count"><b class="num">${Math.round(st.m / (st.total || 1) * 100)}%</b>習得</div>`}
-  </div>`;
+/* 表紙: a deck as a book face in its own colour (--cv-<id>; a deck you made: --cv-my and its first letter), with the small 極.
+   opts: size 'hero' (92×120) | 'sm' (44×58) | shelf (72×96, the default); pct: true = the 学習ずみ % badge (a number: that one);
+   on: 使用中 (an accent outline); tag: a word on its lower edge instead of the 極 (e.g. 'いまここ'); ring: the card ring through the hole;
+   alt: named for screen readers (else hidden: the row beside it says the name) */
+function deckCover(d, opts = {}){
+  const ch = DECK_ICO[d.id] || ([...(d.name || '').trim()][0] || '?').toUpperCase(), lat = /^[\x21-\x7e]$/.test(ch);
+  const pct = opts.pct === true ? deckPct(d) : typeof opts.pct === 'number' ? opts.pct : null;
+  const cls = `cover${opts.size === 'hero' ? ' cv-hero' : opts.size === 'sm' ? ' cv-sm' : ''}${opts.on ? ' on' : ''}`;
+  const name = opts.alt ? `role="img" aria-label="${esc(d.name)}${pct != null ? `、学習ずみ ${pct}%` : ''}${opts.on ? '、使用中' : ''}"` : 'aria-hidden="true"';
+  return `<span class="${cls}" style="--cv:var(--cv-${DECK_ICO[d.id] ? d.id : 'my'})" ${name}><span class="cv-face"></span><span class="cv-kj${lat ? ' lat' : ''}">${esc(ch)}</span>${BRAND && !opts.tag ? '<i class="cv-mk"></i>' : ''}${pct != null ? `<b class="cv-pct num">${pct}%</b>` : ''}${opts.tag ? `<em class="cv-tag">${esc(opts.tag)}</em>` : ''}${opts.ring ? '<span class="cv-ring"></span>' : ''}</span>`;
+}
+/* 単語帳 tab: the decks in use as cards, then the shelves (受験英単語シリーズ in the order to go in, the ＋α decks), then
+   自分でつくる and the decks you made. A cover opens the deck's page, where it is put to use or not (使う / 使っている) */
+const SERIES = ['junior', 'j1', 'j2', 'j3'];
+const SHELF_SUB = {junior:'中学〜高1', j1:'共通テスト', j2:'中堅大', j3:'難関大', idioms:'句動詞・熟語', tagi:'意味＋語法', theme:'環境・医療', toeic:'ビジネス'};
+Object.assign(I, {
+  more:'<svg class="ico" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="18.5" cy="12" r="1.2"/></svg>',
+  star:'<svg class="ico" viewBox="0 0 24 24"><path d="M12 3.5l2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.4l-5.1 2.7 1-5.6-4.1-4 5.7-.8z"/></svg>',
+});
+const cvOf = d => `var(--cv-${DECK_ICO[d.id] ? d.id : 'my'})`;
+/* 学習ずみ as a bar: 覚えた, then the rest of 学習ずみ (学習中); together they are the deck's % */
+function learnBar(m, r, t){ const w = v => v > 0 ? Math.max(1, v / (t || 1) * 100).toFixed(1) : 0;
+  return `<span class="lbar" aria-hidden="true"><i class="m" style="width:${w(m)}%"></i><i class="l" style="width:${w(r - m)}%"></i></span>`; }
+const secMastered = x => x.heads.filter(c => status(prog(c)) === 'master').length;
+function useCard(d, going){
+  const st = deckStats(d), cur = curSection(d), many = deckSections(d).length > 1;
+  const where = !st.total ? '' : !cur ? '<span class="cur done nw">ぜんぶ学習ずみ</span>' : many ? `<span class="cur nw">いま ${secLabel(cur)}</span>` : '';
+  return `<button class="ucard" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}、${st.r} / ${st.total}語 学習ずみ（${st.pct}%）${cur && many ? `、いま ${secSay(cur)}` : ''}${going ? '、進めている' : ''}">
+    ${deckCover(d, {pct: st.pct || null})}<span class="u-main"><span class="u-name">${esc(d.name)}${going ? '<span class="u-tag">進めている</span>' : ''}</span>
+    ${learnBar(st.m, st.r, st.total)}<span class="u-sub"><span class="nw"><b class="num">${st.r}</b> / ${st.total}語</span>${where}</span></span>${I.right}</button>`;
+}
+function shelfBook(d){
+  const on = S.settings.active.includes(d.id), pct = deckPct(d);
+  return `<button class="sbook" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}${pct ? `、学習ずみ ${pct}%` : ''}${on ? '、使用中' : ''}">${deckCover(d, {pct: pct || null, on})}
+    <span class="sb-n">${esc(SERIES.includes(d.id) ? deckNick(d) : d.name).replace(' ', '<br>')}</span><span class="sb-s${on ? ' use' : ''}">${on ? '使用中' : esc(SHELF_SUB[d.id] || d.tag || '')}</span></button>`;
+}
+function myRow(d){
+  const st = deckStats(d), on = S.settings.active.includes(d.id);
+  return `<button class="ucard my" data-act="openDeck" data-id="${esc(d.id)}">${deckCover(d, {size: 'sm'})}<span class="u-main"><span class="u-name">${esc(d.name)}${on ? '<span class="u-tag">使用中</span>' : ''}</span>
+    <span class="u-sub"><span class="nw"><b class="num">${st.r}</b> / ${st.total}語 学習ずみ</span>${st.total ? `<span class="cur nw">${st.pct}%</span>` : ''}</span></span>${I.right}</button>`;
 }
 function viewDecks(){
-  const ds = decks();
+  const ds = decks(), act = activeIds().map(deckById), built = ds.filter(d => d.builtin), mine = ds.filter(d => !d.builtin);
+  const series = SERIES.map(id => built.find(d => d.id === id)).filter(Boolean), plus = built.filter(d => !SERIES.includes(d.id));
+  // 進めている: the deck new words come from first (単語帳の順: the first one in use not yet through); none when they come at random
+  const going = S.settings.order === 'rand' ? null : act.find(d => curSection(d));
   return `${topbar()}
-  <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">単語帳</h2><span class="sp"></span><span class="sub">スイッチをオンにした単語帳から出題します</span></div>
-  <div class="sec" style="margin-top:14px"><div class="decks">${ds.map(d => deckRow(d, true)).join('')}</div>${legendHTML()}</div>
-  <div class="sec"><div class="sec-h"><h2>単語帳をつくる</h2></div>
-    <div class="actions">
-      <button class="action" data-act="newDeck">${I.plus}新しい単語帳</button>
-      <button class="action" data-act="importSheet">${I.import}英単語を貼って取り込む</button>
-      <button class="action ai-only" data-act="aiDeck">${I.spark}英文から自動でつくる</button>
-    </div>
-  </div>`;
+  <h1 class="pg-h">単語帳</h1>
+  <section class="blk" aria-label="使っている単語帳"><div class="blk-h"><h2>使っている単語帳</h2></div>
+    <div class="ucards">${act.length ? act.map(d => useCard(d, d === going)).join('') : '<div class="u-none">まだありません。下の表紙をタップして、使う単語帳を選んでください。</div>'}</div></section>
+  ${series.length ? `<section class="blk" aria-label="受験英単語シリーズ"><div class="blk-h"><small>この順に進めると入試まで届く</small><h2>受験英単語シリーズ</h2></div>
+    <div class="shelf series">${series.map(shelfBook).join(`<span class="arw" aria-hidden="true">${I.right}</span>`)}</div></section>` : ''}
+  ${plus.length ? `<section class="blk" aria-label="熟語・多義語・テーマ"><div class="blk-h"><small>点につながる＋αの単語帳</small><h2>熟語・多義語・テーマ</h2></div>
+    <div class="shelf">${plus.map(shelfBook).join('')}</div></section>` : ''}
+  <section class="blk" aria-label="自分でつくる"><div class="blk-h"><h2>自分でつくる</h2></div>
+    <div class="mk-tiles"><button class="mk-t" data-act="newDeck">${I.plus}新しい単語帳<small>1語ずつ追加</small></button>
+      <button class="mk-t" data-act="importSheet">${I.import}貼って取り込む<small>英単語のリストから</small></button>
+      <button class="mk-t ai-only" data-act="aiDeck">${I.spark}英文から自動でつくる</button></div>
+    ${mine.length ? `<div class="ucards">${mine.map(myRow).join('')}</div>` : ''}</section>`;
 }
 function filterCards(d){
   const q = route.q.trim().toLowerCase(), blk = route.sec != null ? deckSections(d)[route.sec] : null;
@@ -2600,7 +2927,7 @@ function wordRows(d){
     const p = prog(c), s = status(p);
     const due = p?.sus ? '出題しない' : isReview(p) ? (p.due <= today ? '復習' : `次 ${mdLabel(p.due)}`) : s === 'learn' ? '学習待ち' : '';
     return `<button class="wrow" data-act="card" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">
-      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword" lang="en">${c.n && !c.isD ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD && c.s.length > 1 ? `<span class="wsn" lang="ja">意味${learnedSenses(c)}/${c.s.length}</span>` : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean"${route.red ? ' aria-hidden="true"' : ''}>${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !derivUnlocked(c) ? (!isReview(prog(c.parent)) ? '見出し語の後' : !settled(prog(c.parent)) ? '見出し語の復習後' : '前の派生語の後') : '')}</span></button>`;
+      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword" lang="en">${c.n && !c.isD && d.builtin ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD && c.s.length > 1 ? `<span class="wsn" lang="ja">意味${learnedSenses(c)}/${c.s.length}</span>` : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean"${route.red ? ' aria-hidden="true"' : ''}>${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !derivUnlocked(c) ? (!isReview(prog(c.parent)) ? '見出し語の後' : !settled(prog(c.parent)) ? '見出し語の復習後' : '前の派生語の後') : '')}</span></button>`;
   }).join('');
   return rows + (list.length > route.limit ? `<div class="more"><button class="link" data-act="more">さらに表示（残り${list.length - route.limit}語）</button></div>` : '');
 }
@@ -2609,8 +2936,9 @@ function catChips(d){
   if (!cats.length) return '';
   return `<div class="chips cats filter">${cats.map(x => `<button class="chip" aria-pressed="${route.cat === x}" data-act="cat" data-c="${esc(x)}">${esc(x)}</button>`).join('')}</div>`;
 }
-/* the deck page's one study button, docked at the bottom: the words peeked at under the 赤シート, else the words shown
-   (a filter, a category or a search), else the whole deck */
+/* 単語一覧's study button, docked at the bottom only when there is something to study from the list: the words peeked
+   at under the 赤シート, else the 100 words picked (from a block's sheet), else the words shown (a filter, a category or a
+   search). Else none: 続きから is at the top of the page */
 function deckDock(d){
   if (PEEK.size) return `<button class="btn btn-primary btn-block btn-big" data-act="studyPeeked">${I.play}のぞいた ${PEEK.size}語を学習</button>`;
   const blk = route.sec != null ? deckSections(d)[route.sec] : null;
@@ -2619,46 +2947,103 @@ function deckDock(d){
     return `<button class="btn btn-primary btn-block btn-big" data-act="studySec">${I.play}${secLabel(blk)} を${left ? '学習' : '練習'}<small>${left ? `${nx.rev ? '復習 ' : ''}${nx.n}問` : 'ひととおり学習ずみ'}</small></button>`;
   }
   const n = route.filter !== 'all' || route.cat || route.q.trim() ? filterCards(d).filter(c => !prog(c)?.sus).length : 0;
-  return n ? `<button class="btn btn-primary btn-block btn-big" data-act="studyFiltered">${I.play}表示中の単語を学習<small>${Math.min(S.settings.setSize, n)}問</small></button>`
-    : `<button class="btn btn-primary btn-block btn-big" data-act="studyDeck" data-id="${esc(d.id)}">${I.play}この単語帳で学習</button>`;
+  return n ? `<button class="btn btn-primary btn-block btn-big" data-act="studyFiltered">${I.play}表示中の単語を学習<small>${Math.min(S.settings.setSize, n)}問</small></button>` : '';
 }
-function secGrid(d){
-  const xs = deckSections(d); if (xs.length < 2) return '';
-  const cur = curSection(d);
-  return `<div class="sec"><div class="sec-h"><h2>100語ずつ</h2><span class="sub">タップでその100語だけを表示・学習</span></div>
-    <div class="secs">${xs.map(x => { const k = secStudied(x), full = k === x.heads.length, on = route.sec === x.i;
-      return `<button class="secbtn${full ? ' full' : ''}${x === cur ? ' cur' : ''}" aria-pressed="${on}" data-act="sec" data-i="${x.i}" aria-label="${secLabel(x)}、${x.heads.length}語中${k}語学習ずみ">
-        <span class="sech"><b class="num">${x.from}–${x.to}</b>${full ? I.check : x === cur ? '<em>いまここ</em>' : ''}</span>
-        <span class="secbar"><i style="width:${Math.round(k / x.heads.length * 100)}%"></i></span><small class="num">${k} / ${x.heads.length}</small></button>`; }).join('')}</div></div>`;
+/* the dock follows the list as it changes (search, peeking) without drawing the page again: it comes and goes */
+function syncDock(d){
+  const h = d ? deckDock(d) : '', dk = $('#deckdock');
+  if (dk) { if (h) dk.innerHTML = h; else dk.remove(); }
+  else if (h && $('#wordlist')) $('#view').insertAdjacentHTML('beforeend', `<div class="ctadock" id="deckdock">${h}</div>`);
 }
-function viewDeck(){
-  const d = deckById(route.deck); const st = deckStats(d);
+/* 100語ずつ: the deck's blocks as a path of numbered circles, each ringed by its 覚えた / 学習中 share, いまここ (めくる peeks
+   over it) on the block you are on; おさらい at the end (this deck's 苦手 and 前回まちがえた). A block opens its sheet (secSheet) */
+const blockRing = (x, k = secStudied(x), m = secMastered(x)) => { const t = x.heads.length || 1, pm = Math.round(m / t * 100);
+  return `<span class="ndr" style="--m:${pm};--l:${Math.max(0, Math.round(k / t * 100) - pm)}"></span>`; };
+function pathTab(d, xs, cur){
+  const nodes = xs.map(x => {
+    const t = x.heads.length, k = secStudied(x), m = secMastered(x), full = k === t, here = x === cur, later = !k && !here;
+    const nums = [m ? `覚えた ${m}` : '', k - m ? `学習中 ${k - m}` : '', here && t - k ? `まだ ${t - k}` : ''].filter(Boolean).map(s => `<span class="nw">${s}</span>`).join(' ・ ');
+    return `<li><button class="bnode${full ? ' done' : ''}${here ? ' cur' : ''}${later ? ' later' : ''}" data-act="secSheet" data-i="${x.i}" aria-label="${secSay(x)}、${t}語中${k}語学習ずみ${here ? '、いまここ' : ''}">${here ? '<span class="curbg"></span>' : ''}
+      <span class="bnd num">${blockRing(x, k, m)}${x.i + 1}${full ? `<span class="ok">${I.check}</span>` : ''}</span>
+      <span class="nt"><b class="num">${secLabel(x)}${here ? '<em class="here">いまここ</em>' : ''}</b>${here ? learnBar(m, k, t) : ''}${nums ? `<small>${nums}</small>` : ''}</span>
+      <span class="np num">${t}語</span>${here ? mekuru('normal', 'mkpeek') : ''}</button></li>`;
+  }).join('');
+  const nWeak = drillCards('many', [d.id]).length, nRecent = drillCards('recent', [d.id]).length, min = S.settings.drillMin || 2;
+  return `<ol class="bpath">${nodes}
+    <li><div class="bnode stage"><span class="bnd">${I.star}</span><span class="stg"><b>おさらい</b><small>${nWeak || nRecent ? 'この単語帳でまちがえた単語から' : 'まちがえた単語は、まだありません'}</small>
+      ${nWeak || nRecent ? `<span class="stg-ch"><button class="pbtn weak" data-act="drill" data-kind="many" data-id="${esc(d.id)}" aria-label="苦手（${min}回以上まちがえた）${nWeak}語" ${nWeak ? '' : 'disabled'}>苦手<b class="num">${nWeak}</b></button><button class="pbtn" data-act="drill" data-kind="recent" data-id="${esc(d.id)}" aria-label="前回まちがえた ${nRecent}語" ${nRecent ? '' : 'disabled'}>前回まちがえた<b class="num">${nRecent}</b></button></span>` : ''}</span></div></li></ol>`;
+}
+/* 単語一覧: the list as before — search, 赤シート, the filters, a key for the dots — narrowed to one block from its sheet */
+function listTab(d){
   const f = (id, label) => `<button class="chip" aria-pressed="${route.filter===id}" data-act="filter" data-f="${id}">${label}</button>`;
-  const sub = [d.desc, d.builtin && /^j\d$/.test(d.id) ? '' : `${st.total}語`].filter(Boolean).join(' ・ ');   // 基礎・標準・発展 say their range in the description
-  return `<button class="back" data-act="backDecks">${I.left}単語帳一覧</button>
-  <section class="tcard holed dhead"><span class="ring"></span>
-    <h1>${esc(d.name)}</h1><div class="muted small">${sub.split(' ・ ').map(s => s.length <= 18 ? `<span class="nw">${esc(s)}</span>` : esc(s)).join(' ・ ')}</div>
-    <div class="dsum">${donut(st, 84)}<ul class="dnums num"><li><i class="m"></i>習得<b>${st.m}</b></li><li><i class="l"></i>学習中<b>${st.l}</b></li><li><i class="n"></i>未学習<b>${st.n}</b></li></ul></div>
-    ${st.n ? `<button class="btn btn-ghost btn-block" data-act="swipeDeck" data-id="${esc(d.id)}" style="margin-top:4px">${I.swipe}高速仕分け</button>` : ''}
-  </section>
-  ${secGrid(d)}
-  <div class="sec">
+  const blk = route.sec != null ? deckSections(d)[route.sec] : null, min = S.settings.drillMin || 2;
+  return `<div class="sec dk-list">
     <div class="toolrow"><label class="search">${I.search}<input id="q" type="search" placeholder="英単語・意味で検索" value="${esc(route.q)}" autocomplete="off" enterkeyhint="search" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
       <button class="sheetbtn" data-act="red" aria-pressed="${route.red}">赤シート</button></div>
     ${route.red ? '<p class="small muted">単語をタップすると意味をのぞけます（もう一度タップで詳細）。のぞいた単語は下のボタンでまとめて学習できます。</p>' : ''}
-    <div class="chips filter">${f('all','すべて')}${f('new','未学習')}${f('learn','学習中')}${f('master','習得')}${f('recent','前回まちがえた')}${f('leech', `${S.settings.drillMin || 2}回以上まちがえた`)}${d.dcards.length ? f('deriv', `派生語 ${d.dcards.length}`) : ''}${f('sus','出題しない')}</div>
+    ${blk ? `<div class="blkrow"><button class="blkchip num" data-act="sec" data-i="${blk.i}" aria-label="${secSay(blk)} だけの表示をやめる">${secLabel(blk)}${I.close}</button>${blk === curSection(d) ? '<span>いまここ</span>' : ''}</div>` : ''}
+    <div class="chips filter">${f('all','すべて')}${f('new','未学習')}${f('learn','学習中')}${f('master','覚えた')}${f('recent','前回まちがえた')}${f('leech', `${min}回以上まちがえた`)}${d.dcards.length ? f('deriv', `派生語 ${d.dcards.length}`) : ''}${f('sus','出題しない')}</div>
     ${catChips(d)}
-    <div class="legend"><span><i class="wdot master"></i>習得</span><span><i class="wdot learn"></i>学習中</span><span><i class="wdot"></i>未学習</span><span><i class="wdot leech"></i>${S.settings.drillMin || 2}回以上まちがえた</span></div>
+    <div class="legend"><span><i class="wdot master"></i>覚えた</span><span><i class="wdot learn"></i>学習中</span><span><i class="wdot"></i>未学習</span><span><i class="wdot leech"></i>${min}回以上まちがえた</span></div>
     <div class="words ${route.red ? 'redsheet' : ''}" id="wordlist">${wordRows(d)}</div>
-  </div>
+  </div>`;
+}
+/* the deck page: the deck's face (表紙, 学習ずみ, 覚えた + 学習中), 続きから, 高速仕分け and 使う / 使っている; then 100語ずつ
+   (the path) or 単語一覧. A deck of one block has no path: its list comes right away */
+function viewDeck(){
+  const d = deckById(route.deck), st = deckStats(d), on = S.settings.active.includes(d.id), xs = deckSections(d), cur = curSection(d);
+  const tabs = xs.length > 1, list = !tabs || route.dtab === 'list' || route.sec != null, id = esc(d.id), dock = list ? deckDock(d) : '';   // a block picked for the list (route.sec) is shown in 単語一覧
+  // 続きから's small label is what the set starts with: studyDeck asks the deck's reviews first (any block), then new words
+  const k = counts([d.id]), rev = k.due || (!k.newToday && k.dueAll);   // as studyDeck's extraNew and pickSet's 復習が先
+  const go = !st.total ? `<button class="btn btn-primary btn-block btn-go" data-act="addCard" data-id="${id}">${I.plus}単語を追加</button>`
+    : `<button class="btn btn-primary btn-block btn-go" data-act="studyDeck" data-id="${id}">${I.play}${cur ? `${st.r ? '続きから' : 'はじめる'}${rev ? `<small class="num">復習 ${setN(rev)}問</small>` : tabs ? `<small class="num">${secLabel(cur)}</small>` : ''}` : 'この単語帳で学習'}</button>`;
+  return `<div class="dk-nav"><button class="back" data-act="backDecks">${I.left}単語帳</button><button class="iconbtn" data-act="deckMenu" data-id="${id}" aria-label="その他（書き出しなど）">${I.more}</button></div>
+  <section class="dk-head" style="--cv:${cvOf(d)}">${deckCover(d, {size: 'hero', ring: true, pct: st.pct})}
+    <div class="dk-info"><span class="dk-pre">${SERIES.includes(d.id) ? '受験英単語シリーズ' : d.builtin ? '＋αの単語帳' : '自分でつくった単語帳'}</span><h1>${esc(d.name)}</h1>
+      <div class="dk-n"><b class="num">${st.r}</b><span class="nw">/ ${st.total}語 学習ずみ</span><span class="pc num">${st.pct}%</span></div>
+      ${learnBar(st.m, st.r, st.total)}
+      ${st.r ? `<div class="dk-dots">${st.m ? `<span><i class="m"></i>覚えた <b class="num">${st.m}</b></span>` : ''}${st.r - st.m ? `<span><i class="l"></i>学習中 <b class="num">${st.r - st.m}</b></span>` : ''}</div>` : ''}</div>
+  </section>
+  ${d.builtin && d.desc ? `<p class="dk-desc">${esc(d.desc)}</p>` : ''}
+  <div class="dk-go">${go}</div>
+  <div class="dk-acts">${st.n ? `<button class="btn btn-ghost" data-act="swipeDeck" data-id="${id}">${I.swipe}高速仕分け</button>` : ''}<button class="btn btn-ghost btn-use" data-act="toggleDeck" data-id="${id}" aria-pressed="${on}">${on ? `${I.check}使っている` : `${I.plus}使う`}</button></div>
+  ${d.builtin ? '' : `<div class="mk-tiles dk-my"><button class="mk-t" data-act="addCard" data-id="${id}">${I.plus}単語を追加<small>1語ずつ</small></button><button class="mk-t" data-act="importSheet" data-id="${id}">${I.import}まとめて取り込む<small>英単語のリストから</small></button></div>`}
   ${d.todo?.length ? `<div class="sec"><div class="sec-h"><h2>意味がまだの単語</h2><span class="sub">${d.todo.length}語 ・ タップして意味を入れると出題されます</span></div>
-    <div class="fchips">${d.todo.map(c => `<button class="fchip" data-act="editCard" data-deck="${esc(d.id)}" data-k="${esc(c.k)}"><b>${esc(c.w)}</b></button>`).join('')}</div></div>` : ''}
-  <div class="sec"><div class="actions">
-    ${d.builtin ? '' : `<button class="action" data-act="addCard" data-id="${esc(d.id)}">${I.plus}単語を追加</button><button class="action" data-act="importSheet" data-id="${esc(d.id)}">${I.import}まとめて取り込む</button>`}
-    <button class="action" data-act="exportDeck" data-id="${esc(d.id)}">${I.import}TSVで書き出す</button>
-    ${d.builtin ? '' : `<button class="action" data-act="renameDeck" data-id="${esc(d.id)}">名前を変える</button><button class="action" data-act="delDeck" data-id="${esc(d.id)}" style="color:var(--again-t)">単語帳を削除</button>`}
-  </div></div>
-  <div class="dock-space"></div><div class="ctadock" id="deckdock">${deckDock(d)}</div>`;
+    <div class="fchips">${d.todo.map(c => `<button class="fchip" data-act="editCard" data-deck="${id}" data-k="${esc(c.k)}"><b>${esc(c.w)}</b></button>`).join('')}</div></div>` : ''}
+  ${tabs ? `<div class="dtabs" role="tablist"><button role="tab" aria-selected="${!list}" data-act="dtab" data-t="path">100語ずつ</button><button role="tab" aria-selected="${list}" data-act="dtab" data-t="list">単語一覧<small class="num">${st.total}</small></button></div>` : ''}
+  ${list ? listTab(d) : pathTab(d, xs, cur)}
+  ${on ? `<div class="dk-quit"><button data-act="toggleDeck" data-id="${id}"><span>この単語帳を使うのをやめる</span><small>（学習の記録は残ります）</small></button></div>` : ''}
+  ${list ? '<div class="dock-space"></div>' : ''}${dock ? `<div class="ctadock" id="deckdock">${dock}</div>` : ''}`;
+}
+/* a block's sheet: its ring and counts, then which words — おまかせ (the block's next set: its reviews, then new words, as
+   before), まだの単語, 学習中 (a 練習: schedules stay), 苦手 — a choice with nothing in it can't be picked; one スタート */
+const secLearning = x => x.heads.filter(c => { const p = prog(c); return isReview(p) && !p.sus && status(p) !== 'master'; });
+const secWeak = (d, x) => drillCards('many', [d.id]).filter(c => x.all.has(c));
+function secSheet(d, i){
+  const x = deckSections(d)[i]; if (!x) return;
+  const t = x.heads.length, k = secStudied(x), m = secMastered(x), left = secLeft([d.id], x.all), nx = secNext([d.id], x.all);
+  const nNew = t - k, nLearn = secLearning(x).length, nWeak = secWeak(d, x).length;
+  const ch = (c, label, sub, n, unit, on, cls = '') => `<button class="ch${cls}" role="radio" aria-checked="${on}" data-act="secPick" data-c="${c}" ${n ? '' : 'disabled'}><span>${label}</span><b class="num">${n}<small>${unit}</small></b><small>${n ? sub : c === 'new' ? 'ぜんぶ学習ずみ' : 'まだありません'}</small></button>`;
+  const auto = left ? nx.n : Math.min(S.settings.setSize, learnedIn(x.heads));
+  openSheet(`<div class="bs-top"><span class="bnd num">${blockRing(x, k, m)}${i + 1}</span>
+      <div class="bs-t"><span class="dk-pre">${esc(d.name)}</span><h3 class="num">${secLabel(x)}</h3>
+        <div class="dk-dots">${m ? `<span><i class="m"></i>覚えた <b class="num">${m}</b></span>` : ''}${k - m ? `<span><i class="l"></i>学習中 <b class="num">${k - m}</b></span>` : ''}${nNew ? `<span><i></i>まだ <b class="num">${nNew}</b></span>` : ''}</div></div>
+      <button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="bs-q">どの単語をやる？</div>
+    <div class="chs" role="radiogroup" aria-label="どの単語をやる？">${ch('auto', 'おまかせ', !left ? '覚えた単語で練習' : !nx.rev ? '新しい単語から' : nNew ? '復習 → 新しい単語' : '復習から', auto, '問', !!auto)}${ch('new', 'まだの単語', '新しく覚える', nNew, '語', !auto)}${ch('learn', '学習中', 'おさらいの練習', nLearn, '語', false)}${ch('weak', '苦手', `${S.settings.drillMin || 2}回以上まちがえた`, nWeak, '語', false, ' weak')}</div>
+    <button class="btn btn-primary btn-block btn-go" data-act="secGo" data-i="${i}">${I.play}スタート</button>
+    <button class="link bs-list" data-act="secList" data-i="${i}">この${t}語を一覧で見る${I.right}</button>`);
+}
+function secStart(d, x, c){
+  if (c === 'new') return startQuiz({deckIds: [d.id], extraNew: true, only: x.all, sec: secLabel(x), kind: 'new'});
+  if (c === 'learn') return startQuiz({cards: shuffle(secLearning(x)).slice(0, S.settings.setSize), practice: 'set', deckIds: [d.id]});
+  if (c === 'weak') return startQuiz({cards: secWeak(d, x).slice(0, S.settings.setSize), drill: 'many', deckIds: [d.id]});
+  studySection(d, x);
+}
+/* the deck page's … : what is used rarely (書き出し; for a deck you made, its name and deleting it) */
+function deckMenu(d){
+  openSheet(`<div class="sheet-h"><h3>${esc(d.name)}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="mrows">${d.builtin ? '' : `<button class="mrow" data-act="renameDeck" data-id="${esc(d.id)}">名前を変える</button>`}<button class="mrow" data-act="exportDeck" data-id="${esc(d.id)}">TSVで書き出す</button>${d.builtin ? '' : `<button class="mrow danger" data-act="delDeck" data-id="${esc(d.id)}">単語帳を削除</button>`}</div>`);
 }
 function viewStats(){
   const td = todayStat();
@@ -2679,7 +3064,7 @@ function viewStats(){
   const grid = []; for (let v = top; v >= 0; v -= step) grid.push(`<div><span>${v}</span></div>`);
   const bars = fc.map((v,i) => `<div class="fc-bar ${i===0?'d0':''}" data-tip="${i===0?'今日（期限切れ含む）':mdLabel(today+i)}　${v}語"><i style="height:${v/top*100}%"></i></div>`).join('');
   return `${topbar()}
-  <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">記録</h2></div>
+  <h1 class="pg-h">記録</h1>
   <div class="sec" style="margin-top:14px"><div class="sec-h"><h2>今日</h2></div>
     ${td.n ? `<div class="statline">
       <div><b>${td.n}問</b><span>今日解いた</span></div>
@@ -2701,7 +3086,7 @@ function viewStats(){
   <div class="sec"><div class="sec-h"><h2>学習の記録</h2></div>${heatmap()}</div>
   <div class="sec"><div class="sec-h"><h2>単語帳ごとの進み具合</h2><span class="sub">タップで単語帳へ</span></div>
     <div class="dgrid">${decks().map(d => { const st = deckStats(d);
-      return `<button class="dcard" data-act="openDeck" data-id="${esc(d.id)}">${donut(st)}<b>${esc(d.name)}</b><small class="num">習得 ${st.m} ・ 学習中 ${st.l}<br>全${st.total}語</small></button>`; }).join('')}</div>
+      return `<button class="dcard" data-act="openDeck" data-id="${esc(d.id)}">${donut(st)}<b>${esc(d.name)}</b><small class="num"><span class="dots"><span class="nw">覚えた ${st.m}</span><span class="nw">学習中 ${st.r - st.m}</span></span>全${st.total}語</small></button>`; }).join('')}</div>
     ${legendHTML()}
   </div>
   <div class="sec small faint">復習は、単語ごとの覚え具合から計算して、忘れかけたころに出します。</div>`;
@@ -2714,7 +3099,7 @@ function viewSettings(){
   const ret = s.retention < 0.875 ? 0.85 : s.retention < 0.925 ? 0.9 : 0.95;   // older saved values (80–97%) show as the nearest of the three
   const retSeg = `<div class="seg" role="group" aria-label="復習の量">${[[0.85, '少なめ'], [0.9, 'ふつう'], [0.95, 'しっかり']].map(([v, l]) => `<button aria-pressed="${ret === v}" data-act="set" data-k="retention" data-v="${v}">${l}</button>`).join('')}</div>`;
   return `${topbar()}
-  <div class="sec-h" style="margin-top:4px"><h2 style="font-size:20px">設定</h2></div>
+  <h1 class="pg-h">設定</h1>
   <div class="sec" style="margin-top:14px"><div class="sec-h"><h2>学習</h2></div><div class="form">
     <div class="frow"><div class="lab"><b>1日の目標（新しい単語）</b><span>今日の復習とこの数の新しい単語を終えると「今日の目標」達成で、連続記録が1日のびます。達成したあともそのまま続けられます</span></div>
       <div class="stepper"><button data-act="step" data-k="newPerDay" data-d="-5" aria-label="1日の目標を5減らす">−</button><output class="num">${s.newPerDay}</output><button data-act="step" data-k="newPerDay" data-d="5" aria-label="1日の目標を5増やす">＋</button></div></div>
@@ -3829,9 +4214,9 @@ function renderResults(){
   const goalTile = !won && !before.done && rem > 0 ? `<div><b><small class="pre">あと</small>${rem}<small>語</small></b><span>今日の目標まで</span></div>`
     : `<div><b>${st.n}<small>日</small></b><span>連続学習</span></div>`;
   const sets = setsFor(more.due) + setsFor(more.newToday), nextN = setN(more.due || more.newToday);
-  const nextBtn = hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="${more.due ? 'studyReview' : 'goNew'}">${I.play}${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問<small>${before.done ? `今日あと${rem}問` : sets <= 1 ? `終えると連続${before.n + 1}日` : `目標まで あと${sets}セット`}</small></button>`
+  const nextBtn = hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="${more.due ? 'studyReview' : 'goNew'}">${I.play}<span class="nw">${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問</span><small>${before.done ? `今日あと${rem}問` : sets <= 1 ? `終えると連続${before.n + 1}日` : `目標まで あと${sets}セット`}</small></button>`
     : `<div class="res-done">${I.check}今日の目標は達成</div>${nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.dueAll || more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>${more.dueAll ? `のこりの復習 ${more.dueAll}語` : '新しい単語'}</small></button>` : ''}`;
-  const home = '<button class="btn btn-ghost btn-block" data-act="quitQuiz">ホームへ</button>';
+  const homeLbl = backLabel(), home = `<button class="btn btn-ghost btn-block" data-act="quitQuiz">${homeLbl}</button>`;
   // 復習 完了: today's reviews (all decks in use) were left when this set started and none are left now — any kind of set,
   // decided from the set itself, so 1問もどす, drawing again or another device can't make it wrong. Under the goal's banner
   // it isn't repeated; on a lighter day (休み明け) it says "today's share" and where the rest went
@@ -3845,9 +4230,9 @@ function renderResults(){
     : `<div class="res-done">${I.check}${esc(Q.opts.sec)} をひととおり学習しました</div>${nextBtn}`;
   // 練習 keeps its two buttons; 苦手を特訓 offers one more drill set (or the usual set) and no 練習
   const btns = prac ? `<button class="btn btn-primary btn-block btn-big" data-act="practiceAgain">${I.play}もう一度<small>${Q.opts.practice === 'today' && todayCards().length > n ? `今日の単語から${n}問` : `同じ${n}語で練習`}</small></button>${home}`
-    : dl?.length ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}苦手をもう1セット<small>${Math.min(S.settings.setSize, dl.length)}語</small></button>${hasMore ? '<div class="btn-row"><button class="btn btn-ghost" data-act="againNormal">ふつうの学習へ</button><button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>' : home}`
+    : dl?.length ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}苦手をもう1セット<small>${Math.min(S.settings.setSize, dl.length)}語</small></button>${hasMore ? `<div class="btn-row"><button class="btn btn-ghost" data-act="againNormal">ふつうの学習へ</button><button class="btn btn-ghost" data-act="quitQuiz">${homeLbl}</button></div>` : home}`
     : dl ? `<div class="res-done">${I.check}苦手はぜんぶ終わり</div>${nextBtn}${home}`
-    : `${mainBtn}${(k => k ? `<button class="btn btn-ghost btn-block" data-act="studyCheck">${I.play}今日のおさらい ${k}語</button>` : '')(sameDayWaiting(Q.opts.deckIds || activeIds()).length)}<div class="btn-row">${missed.length ? `<button class="btn btn-ghost" data-act="practiceMiss">まちがえた${missed.length}語を練習</button>` : '<button class="btn btn-ghost" data-act="practiceSet">同じ単語で練習</button>'}<button class="btn btn-ghost" data-act="quitQuiz">ホームへ</button></div>`;
+    : `${mainBtn}${(k => k ? `<button class="btn btn-ghost btn-block" data-act="studyCheck">${I.play}今日のおさらい ${k}語</button>` : '')(sameDayWaiting(Q.opts.deckIds || activeIds()).length)}<div class="btn-row">${missed.length ? `<button class="btn btn-ghost" data-act="practiceMiss">まちがえた${missed.length}語を練習</button>` : '<button class="btn btn-ghost" data-act="practiceSet">同じ単語で練習</button>'}<button class="btn btn-ghost" data-act="quitQuiz">${homeLbl}</button></div>`;
   $('#screen').innerHTML = `<div class="screen-in res">
     <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span><button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>1問もどす</span></button></div>
     <div class="res-h">${win}${rvBanner}${prac ? '' : (sc => `<div class="res-mk">${mekuru(sc === 'res_low' ? 'cheer' : sc === 'res_ok' ? 'normal' : 'happy')}<span>${esc(mkSay(sc, {n: st.n, pct, w: comeback}) || (sc === 'res_low' ? 'まちがえた単語は、また出すから大丈夫' : 'さ、次めくろ！'))}</span></div>`)(won ? 'res_goal' : pct >= 50 && rvDone && allDue.newToday && MK_LINES.res_review_done ? 'res_review_done' : pct >= 50 && comeback && MK_LINES.res_comeback ? 'res_comeback' : pct === 100 ? 'res_perfect' : pct >= 80 ? 'res_great' : pct >= 50 ? 'res_ok' : 'res_low')}<div class="eyebrow">${prac ? '練習おわり' : 'セット完了'}</div>
@@ -3976,7 +4361,7 @@ function renderSwipeDone(){
     ${nudgeHTML()}<div class="words rlist">${unk.slice(0,30).map(c => `<div class="rrow"><span class="mk x">×</span><div class="rword"><b lang="en">${esc(c.w)}</b><span>${studyMeaningHTML(c)}</span></div><span></span></div>`).join('') || '<div class="empty">知らない単語はありませんでした。</div>'}</div>
     <div class="res-btns">
       ${unk.length ? `<button class="btn btn-primary btn-block btn-big" data-act="learnUnknown">${I.play}${unk.length <= S.settings.setSize ? `知らない${unk.length}語を覚える` : `知らない単語から${S.settings.setSize}語を覚える`}</button>` : ''}
-      <div class="btn-row"><button class="btn btn-ghost" data-act="swipeMore">続けて仕分ける</button><button class="btn btn-ghost" data-act="quitSwipe">ホームへ</button></div></div></div>`;
+      <div class="btn-row"><button class="btn btn-ghost" data-act="swipeMore">続けて仕分ける</button><button class="btn btn-ghost" data-act="quitSwipe">${backLabel()}</button></div></div></div>`;
   SW.unknown = unk;
   flush();
 }
@@ -4244,23 +4629,37 @@ function importSheet(deckId){
 function backupJSON(){ return JSON.stringify({app:'tangoloop', v:1, at:new Date().toISOString(), data:S}); }
 
 /* ---------- events ---------- */
-let RESET_UNDO = null;   // 記録をリセット's 「元に戻す」: the card and its record before the reset
+let RESET_UNDO = null, DECK_UNDO = null;   // 「元に戻す」: 記録をリセット's card and its record before the reset; 使うのをやめる's deck
 const ACT = {
   // a tab comes back as it was left (the deck page with its filter, search and scroll); the tab you are on, tapped again, goes to the top
   // (for 単語帳: back to the list, as does すべて見る)
   tab: t => { const to = t.dataset.tab, same = to === route.tab; SCROLL[route.tab] = same ? 0 : scrollY;
     if (to === 'decks' && (same || !t.classList.contains('tab'))) { PEEK.clear(); route.deck = null; SCROLL.decks = 0; }
     route.tab = to; render(); scrollTo(0, SCROLL[to] || 0); },
-  openDeck: t => { if (route.tab !== 'decks') SCROLL[route.tab] = scrollY; PEEK.clear(); route.tab = 'decks'; route.deck = t.dataset.id; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; route.sec = null; render(); scrollTo(0,0); },
+  openDeck: t => { if (route.tab !== 'decks') SCROLL[route.tab] = scrollY; PEEK.clear(); route.tab = 'decks'; route.deck = t.dataset.id; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; route.sec = null; route.dtab = 'path'; render(); scrollTo(0,0); },
   backDecks: () => { PEEK.clear(); route.deck = null; route.sec = null; render(); },
   sec: t => { const i = +t.dataset.i; route.sec = route.sec === i ? null : i; route.limit = 150; render(); },
   studySec: () => { const d = deckById(route.deck), x = d && deckSections(d)[route.sec]; if (x) studySection(d, x); },
+  // the deck page: its two tabs (back to the tabs' top when the page was scrolled past them), a block's sheet, …
+  dtab: t => { const tb = $('.dtabs'), y = tb ? tb.getBoundingClientRect().top + scrollY - 8 : 0; route.dtab = t.dataset.t; if (route.dtab === 'path') route.sec = null;
+    render(); if (scrollY > y) scrollTo(0, y); },
+  secSheet: t => { const d = deckById(route.deck); if (d) secSheet(d, +t.dataset.i); },
+  secPick: t => { if (!t.disabled) t.parentElement.querySelectorAll('.ch').forEach(b => b.setAttribute('aria-checked', String(b === t))); },
+  secGo: t => { if (locked()) return; const d = deckById(route.deck), x = d && deckSections(d)[+t.dataset.i]; if (!x) return;
+    secStart(d, x, $('#sheetroot .ch[aria-checked="true"]')?.dataset.c || 'auto'); closeSheet(); },
+  secList: t => { route.sec = +t.dataset.i; route.dtab = 'list'; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; closeSheet(); render();
+    const tb = $('.dtabs'); if (tb) scrollTo(0, tb.getBoundingClientRect().top + scrollY - 8); },
+  deckMenu: t => { const d = deckById(t.dataset.id); if (d) deckMenu(d); },
   paceSheet: () => paceSheet(),
   paceStep: t => { const [lo, hi] = STEP_RANGE.newPerDay; setSetting('newPerDay', clamp(S.settings.newPerDay + (+t.dataset.d), lo, hi)); render(); const b = $('#pacebox'); if (b) b.innerHTML = paceBody(); },
   // the deck is done: add the next one and start on it right away
   nextDeck: t => { if (locked()) return; const id = t.dataset.id; if (!S.settings.active.includes(id)) setSetting('active', [...S.settings.active, id]);
     clearTimeout(Q?.timer); stopCountdown(); render(); startQuiz({deckIds: [id], extraNew: true}); },
-  toggleDeck: t => { const id = t.dataset.id; const a = S.settings.active.includes(id) ? S.settings.active.filter(x => x !== id) : [...S.settings.active, id]; setSetting('active', a); render(); },
+  // 使う / 使っている (the deck page): turning one off says so and can be undone; the records stay either way
+  toggleDeck: t => { const id = t.dataset.id, d = deckById(id), i = S.settings.active.indexOf(id), off = i >= 0; DECK_UNDO = off ? {id, i} : null;
+    setSetting('active', off ? S.settings.active.filter(x => x !== id) : [...S.settings.active, id]); render();
+    if (d) off ? toast(`「${deckNick(d)}」を使うのをやめました`, {label: '元に戻す', act: 'undoDeck'}, 5000) : toast(`「${deckNick(d)}」を使います。新しい単語がここからも出ます`); },
+  undoDeck: () => { const u = DECK_UNDO; DECK_UNDO = null; $('#toastroot').innerHTML = ''; if (u && deckById(u.id) && !S.settings.active.includes(u.id)) { const a = [...S.settings.active]; a.splice(Math.min(u.i, a.length), 0, u.id); setSetting('active', a); render(); } },
   study: () => startQuiz({}),
   // the home lanes: 復習 (reviews, then today's おさらい, then a lighter day's rest) and 新しい単語. From a results screen
   // (Q is kept only there) the next set stays on that set's decks, e.g. a deck studied from its page that isn't in use
@@ -4272,7 +4671,7 @@ const ACT = {
     const c = counts();
     if (!c.due) return ACT.goNew();
     openSheet(`<div class="sheet-h"><h3>まだ復習が終わっていません</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-      <p class="ask-p">復習があと <b class="num">${c.due}語</b> あります。先に復習からやりますか？</p>
+      <p class="ask-p">復習があと <b class="num">${c.due}語</b> あります。<span class="nw">先に復習からやりますか？</span></p>
       <button class="btn btn-primary btn-block btn-big" data-act="studyReview">${I.play}復習からやる</button>
       <button class="btn btn-ghost btn-block" data-act="goNew">このまま新しい単語</button>`);
   },
@@ -4280,7 +4679,7 @@ const ACT = {
   again: () => { if (locked()) return; ACT.againGo(); },
   againGo: () => {
     if (Q?.opts?.only) { const o = {deckIds: Q.opts.deckIds, extraNew: true, only: Q.opts.only, sec: Q.opts.sec}, cards = pickSet(o); if (cards.length) return startQuiz({...o, cards}); }
-    if (Q?.opts?.drill) { const cards = drillCards(Q.opts.drill); if (cards.length) return startQuiz({cards: cards.slice(0, S.settings.setSize), drill: Q.opts.drill}); } const ids = Q?.opts?.deckIds, flash = Q?.opts?.flash, kind = Q?.opts?.kind === 'check' ? 'review' : Q?.opts?.kind; startQuiz(ids ? {deckIds:ids, flash, kind} : {flash, kind}); },
+    if (Q?.opts?.drill) { const ids = Q.opts.deckIds, cards = drillCards(Q.opts.drill, ids || activeIds()); if (cards.length) return startQuiz({cards: cards.slice(0, S.settings.setSize), drill: Q.opts.drill, ...(ids ? {deckIds: ids} : {})}); } const ids = Q?.opts?.deckIds, flash = Q?.opts?.flash, kind = Q?.opts?.kind === 'check' ? 'review' : Q?.opts?.kind; startQuiz(ids ? {deckIds:ids, flash, kind} : {flash, kind}); },
   againNormal: () => { if (locked()) return; const ids = Q?.opts?.deckIds; startQuiz(ids ? {deckIds: ids} : {}); },   // after 苦手を特訓: the usual set
   // past today's goal: keep going with new words (and whatever reviews are left)
   studyMore: () => { if (locked()) return; startQuiz({extraNew: true, deckIds: Q?.opts?.deckIds, flash: Q?.opts?.flash}); },
@@ -4320,8 +4719,9 @@ const ACT = {
     openSheet(`<div class="sheet-h"><h3 lang="en">${esc(it.c.w)}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
       <div class="fb-word">${ipaHTML(it.c)}<button class="say" data-act="say" data-w="${esc(it.c.w)}" data-p="${esc((it.c.s[it.si] || it.c.s[0]).p)}" aria-label="発音">${I.say}</button></div>${detailHTML(it)}`); },
   streakSheet: () => streakSheet(),
-  drill: t => { const cards = drillCards(t.dataset.kind); if (!cards.length) return toast('対象の単語はありません');
-    startQuiz({cards: cards.slice(0, S.settings.setSize), drill: t.dataset.kind}); },
+  // 苦手を特訓: the decks in use, or one deck (its page's おさらい: data-id)
+  drill: t => { const ids = t.dataset.id ? [t.dataset.id] : null, cards = drillCards(t.dataset.kind, ids || activeIds()); if (!cards.length) return toast('対象の単語はありません');
+    startQuiz({cards: cards.slice(0, S.settings.setSize), drill: t.dataset.kind, ...(ids ? {deckIds: ids} : {})}); },
   studyFiltered: () => { const d = deckById(route.deck); if (!d) return; const cards = filterCards(d).filter(c => !prog(c)?.sus);
     if (!cards.length) return toast('対象の単語はありません'); startQuiz({cards: shuffle(cards).slice(0, S.settings.setSize)}); },
   studyPeeked: () => { const cards = [...PEEK].map(x => findCard(...x.split('\t'))).filter(c => c && !prog(c)?.sus); PEEK.clear();
@@ -4343,7 +4743,7 @@ const ACT = {
   more: () => { route.limit += 300; $('#wordlist').innerHTML = wordRows(deckById(route.deck)); },
   card: (t, e) => {
     if (route.red && !t.classList.contains('peek')) { t.classList.add('peek'); setTimeout(() => t.classList.remove('peek'), 1800);
-      PEEK.add(t.dataset.deck + '\t' + t.dataset.k); const dk = $('#deckdock'); if (dk) dk.innerHTML = deckDock(deckById(route.deck)); return; }
+      PEEK.add(t.dataset.deck + '\t' + t.dataset.k); syncDock(deckById(route.deck)); return; }
     const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c);
   },
   closeSheet: () => { aiCtl?.abort(); closeSheet(); },
@@ -4456,7 +4856,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.id === 'q' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); e.target.blur(); return; }   // not while a Japanese word is being converted
   if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229 && e.target.tagName === 'INPUT' && e.target.closest?.('#newdeckform')) {   // not a submit: on to the next field
     e.preventDefault(); const n = e.target.id === 'dname' ? $('#imptext') : e.target.closest('.impx-row')?.nextElementSibling?.querySelector('.impx-m'); n ? n.focus() : e.target.blur(); return; }
-  if (e.target.matches?.('.deck,[role="button"]') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); return; }
+  if (e.target.matches?.('[role="button"]') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); return; }
   if (sheetOpen()) { if (e.key === 'Escape') closeSheet(); return; }
   if ($('#screen').hidden) return;
   if (Q && !Q.done) {
@@ -4480,7 +4880,7 @@ document.addEventListener('keydown', e => {
   } else if (e.key === 'Escape') closeScreen();
 });
 document.addEventListener('input', e => {
-  if (e.target.id === 'q') { route.q = e.target.value; route.limit = 150; const d = deckById(route.deck); if (d) { $('#wordlist').innerHTML = wordRows(d); const dk = $('#deckdock'); if (dk) dk.innerHTML = deckDock(d); } }
+  if (e.target.id === 'q') { route.q = e.target.value; route.limit = 150; const d = deckById(route.deck); if (d && $('#wordlist')) { $('#wordlist').innerHTML = wordRows(d); syncDock(d); } }
   if (e.target.id === 'imptext') { clearTimeout(impT); impT = setTimeout(() => { impT = null; impPreview(); }, 250); }
   if (e.target.classList?.contains('impx-m')) {   // a meaning typed for a word the app doesn't have: add that word
     const k = e.target.dataset.w, v = e.target.value; IMP.mean.set(k, v);
