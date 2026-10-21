@@ -98,7 +98,7 @@ p{margin:0}
 .nudge span{font-size:12.5px;color:var(--muted)}
 .nudge .btn{min-height:42px}
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
-.tabbar-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tabbar-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
 .tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 8px;font-size:11px;color:var(--faint);font-weight:700}
 .tab[aria-current="page"]{color:var(--accent)}
 .tab .ico{width:22px;height:22px}
@@ -1390,6 +1390,67 @@ html{touch-action:manipulation}
 .hw .step{padding-bottom:12px}
 .hw .step.goal{padding-bottom:0}
 .hw-tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:700;white-space:nowrap}
+/* === 辞書: the box stays at the top while the results scroll; a row like the deck list's; an entry looks like the card sheet,
+   its two buttons held at the sheet's foot === */
+.dsearch{position:sticky;top:0;z-index:5;margin:8px -16px 0;padding:8px 16px 10px;background:var(--bg)}
+.dsearch .search{height:48px;border-radius:12px;box-shadow:var(--shadow)}
+.dsearch .search .ico{color:var(--muted)}
+.dintro{margin:6px 2px 0;font-size:13px;color:var(--muted);line-height:1.65;word-break:auto-phrase}
+.dsec{margin-top:20px}
+.drecent .fchip,.dfam .fchip{min-height:44px;padding:6px 13px}
+.dres{margin-top:4px}
+.drow{display:grid;grid-template-columns:10px minmax(0,1fr) minmax(0,1.15fr);gap:10px;align-items:center;width:100%;min-height:54px;padding:10px 14px;text-align:left;border-top:1px solid var(--line)}
+.drow:first-child{border-top:0}
+.dw{display:flex;flex-direction:column;min-width:0}
+.dwl{display:flex;align-items:center;flex-wrap:wrap;gap:2px 6px}
+.dwl b{font-family:var(--f-word);font-weight:600;font-size:16px;line-height:1.3;overflow-wrap:anywhere}
+.dw small{font-size:12px;color:var(--faint);line-height:1.45;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dmn{font-size:13px;line-height:1.45;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dhl{color:var(--accent)}
+.dtag{display:inline-flex;align-items:center;height:20px;margin-left:6px;padding:0 7px;border-radius:999px;background:var(--again-soft);color:var(--again-t);font-family:var(--f-ui);font-size:11.5px;font-weight:700;line-height:1;white-space:nowrap;vertical-align:2px}
+.dwl .dtag{margin-left:0}
+@media (max-width:360px){.drow{grid-template-columns:10px minmax(0,1fr);row-gap:3px}.drow .wdot{grid-row:1 / span 2}.drow .dmn{grid-column:2}}
+.dmiss{display:flex;flex-direction:column;gap:12px;margin-top:12px;padding:16px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
+.dmiss.sm{margin-top:16px;padding:14px;background:var(--surface-2)}
+.dm-h{font-size:14.5px;font-weight:700;line-height:1.6;word-break:auto-phrase}
+.dm-h b{font-family:var(--f-word);font-size:18px;font-weight:600;margin-right:2px;overflow-wrap:anywhere}
+.dm-ext{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}   /* two equal halves inside the box (Weblio's label is the longer) */
+.dm-ext .btn{font-size:14px;gap:4px;padding:0 6px;white-space:nowrap;text-decoration:none}
+.dm-ext .ico{width:16px;height:16px}
+.dm-form{display:flex;flex-direction:column;gap:12px;padding-top:14px;border-top:1px dashed var(--line)}
+.dm-t{font-size:13.5px;font-weight:700}
+.dm-form label small{font-weight:400}
+.dm-open{align-self:flex-start;min-height:44px}
+.dm-s{margin-top:-6px;font-size:13px;color:var(--muted);line-height:1.5}
+.dentry .qpos{flex-wrap:wrap;justify-content:center}
+.dst{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.dst.learn{color:var(--accent)} .dst.master{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+.dst.weak{background:var(--again-soft);border-color:transparent;color:var(--again-t)}
+.dpar{display:inline-flex;align-items:baseline;flex-wrap:wrap;justify-content:center;align-content:center;gap:0 2px;min-height:44px;padding:4px 10px;border-radius:10px;font-size:13.5px;font-weight:700;color:var(--accent)}
+.dpar b{font-family:var(--f-word);font-size:16px;font-weight:600}
+.dpar span{color:var(--muted)}
+.dgrp{width:100%;margin-top:6px;text-align:left}
+.dgrp + .dgrp{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.dgrp-h{display:flex;flex-wrap:wrap;gap:2px 12px;padding:0 8px;font-size:12px;font-weight:700;color:var(--muted)}
+.dgrp-h i{display:inline-block;width:9px;height:9px;margin-right:5px;border-radius:2px;background:var(--cv)}
+.dgrp .senses{margin-top:4px}
+.dplaces{display:flex;flex-direction:column;gap:6px}
+.dplace{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:7px 10px 7px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);text-align:left}
+.dplace .cover{--cw:30px;--chh:40px;margin:2px 2px 0 0}
+.dplace > span:not(.cover){flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.4}
+.dplace b{font-size:14px} .dplace small{font-size:12px;color:var(--muted)}
+.dplace > .ico{width:16px;height:16px;color:var(--faint)}
+.sheet:has(.dacts){padding-bottom:0}   /* the button bar holds the home-indicator inset itself (it would float above it) */
+.dacts{position:sticky;bottom:0;z-index:2;display:flex;gap:8px;margin:0 -18px -22px;padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);box-shadow:0 -12px 16px -14px rgba(0,0,0,.35)}
+.dacts .btn{flex:1 1 0;min-width:0;padding:0 12px;white-space:nowrap}
+.dacts .btn.add{flex-grow:1.5}
+.btn-weak{background:var(--again-soft);color:var(--again-t)}
+.sheet-h .sp{flex:1}
+.dback{gap:4px;min-height:44px;font-size:14px}
+.dback b{font-family:var(--f-word);font-size:16px;font-weight:600;color:var(--ink)}
+.bs-note{margin:-4px 0 0;font-size:12.5px;color:var(--muted);line-height:1.5}
+@media (max-width:360px){.dacts .btn{font-size:14px;padding:0 8px}.dacts .btn .ico{display:none}}
+@media (max-width:374px){.dm-x{display:none}}   /* narrower than 375 (320 too): Weblio ↗ ／ 英辞郎 ↗ side by side, the form in view */
 </style>
 
 </head><body><div id="app" lang="ja"><main class="wrap" id="view"></main></div>
@@ -1397,6 +1458,7 @@ html{touch-action:manipulation}
   <button class="tab" data-act="tab" data-tab="home"><svg class="ico" viewBox="0 0 24 24"><path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1H15v-6H9v6H4.5a1 1 0 0 1-1-1z"/></svg>ホーム</button>
   <button class="tab" data-act="tab" data-tab="decks"><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="14" rx="2"/><circle cx="8" cy="10" r="1.4"/><path d="M8 3.5h10a2 2 0 0 1 2 2"/></svg>単語帳</button>
   <button class="tab" data-act="tab" data-tab="stats"><svg class="ico" viewBox="0 0 24 24"><path d="M4 20V11M10 20V5M16 20v-6M21 20H3"/></svg>記録</button>
+  <button class="tab" data-act="tab" data-tab="dict"><svg class="ico" viewBox="0 0 24 24"><path d="M16.5 10V5.5A1.5 1.5 0 0 0 15 4H6a1.5 1.5 0 0 0-1.5 1.5v13A1.5 1.5 0 0 0 6 20h5"/><path d="M8 8h5M8 11.5h3"/><circle cx="15.5" cy="15.5" r="3.2"/><path d="m18 18 2.5 2.5"/></svg>辞書</button>
   <button class="tab" data-act="tab" data-tab="settings"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/></svg>設定</button>
 </div></nav>
 <div class="screen" id="screen" lang="ja" hidden></div>
@@ -1965,7 +2027,7 @@ function builtinCard(ref){
   if (!BKEYS) { const m = new Map(); for (const d of BUILTIN) for (const c of [...d.cards, ...d.dcards]) m.set(c.deck + '|' + c.k, c); BKEYS = m; }
   return BKEYS.get(ref) || null;
 }
-let deckCache = null;
+let deckCache = null, DICT = null;   // DICT: the 辞書's index (dictIndex), made again after a deck changes
 /* A custom deck mixes its own cards with references {ref:'j2|abandon'} to built-in cards. A referenced word IS the built-in
    card, so its meanings, examples, derivatives, audio and record are shared and nothing is learned twice. A referenced
    derivative is asked like a word of its own (direct); a word still without a meaning (todo) waits until one is typed. */
@@ -1991,7 +2053,7 @@ function decks(){
     .sort((a,b) => (a.created||0) - (b.created||0)).map(customDeck);
   return deckCache = [...BUILTIN.filter(d => !RETIRED.has(d.id) || usesDeck(d.id)), ...custom];
 }
-function invalidateDecks(){ deckCache = null; }
+function invalidateDecks(){ deckCache = null; DICT = null; }
 const deckById = id => decks().find(d => d.id === id);
 /* 100語ずつ: a deck's words in order, cut into blocks of 100 (named by their No.); a block also holds its words'
    meaning cards and derivatives, so studying a block covers everything those 100 words bring */
@@ -2112,20 +2174,23 @@ function status(p){
   return (p.s >= 21 || (p.k && p.r >= 2)) ? 'master' : 'learn';   // 知ってる from sorting counts once its first 4択 check is passed
 }
 const wrongCount = p => Math.max(p?.w || 0, p?.l || 0);
-const isLeech = p => wrongCount(p) >= (S.settings.drillMin || 2);
+/* wk: put into 苦手 by hand (辞書). It counts as 苦手 whatever the number of misses, until it is taken out again */
+const isLeech = p => !!p?.wk || wrongCount(p) >= (S.settings.drillMin || 2);
 const missedLast = p => isReview(p) && p.lg === 1;
 /* 今日やった単語: answered in a study set today (a word only sorted as 知ってる in 高速仕分け doesn't count) */
 function todayCards(ids=activeIds()){
   const t = dayIdx();
   return cardsOf(ids, true).filter(c => { const p = prog(c); return p && isReview(p) && !p.sus && dayIdx(p.last) === t && !(p.k && (p.r || 0) <= 1); });
 }
-/* 苦手を特訓: 前回まちがえた (newest first) / 3回以上まちがえた (most missed first, not yet answered today) */
+/* 苦手を特訓: 前回まちがえた (newest first) / 3回以上まちがえた (most missed first, not yet answered today). A word put into
+   苦手 by hand comes in whatever its count, first (one never answered yet too) */
 function drillCards(kind, ids=activeIds(), min = S.settings.drillMin || 2){
   const today = dayIdx();
   const all = cardsOf(ids, true).filter(c => { const p = prog(c); return p && !p.sus; });
   if (kind === 'recent') return all.filter(c => missedLast(prog(c))).sort((a, b) => prog(b).last - prog(a).last);
-  return all.filter(c => wrongCount(prog(c)) >= min && (dayIdx(prog(c).last) < today || missedLast(prog(c))))
-    .sort((a, b) => wrongCount(prog(b)) - wrongCount(prog(a)));
+  const weak = p => wrongCount(p) + (p.wk ? 1e3 : 0);
+  return all.filter(c => { const p = prog(c); return (p.wk || wrongCount(p) >= min) && (!p.last || dayIdx(p.last) < today || missedLast(p) || p.wk > p.last); })   // marked after today's answer: once more
+    .sort((a, b) => weak(prog(b)) - weak(prog(a)));
 }
 
 /* ---------- daily log ---------- */
@@ -2285,7 +2350,8 @@ function pickSet({deckIds=activeIds(), size=S.settings.setSize, extraNew=false, 
   const fresh = S.settings.order === 'rand' ? shuffle(P.fresh) : P.fresh;
   const mixed = []; // derivatives and new headwords alternate so neither crowds out the other
   for (let i = 0; i < Math.max(fresh.length, P.dnew.length); i++) { if (P.dnew[i]) mixed.push(P.dnew[i]); if (fresh[i]) mixed.push(fresh[i]); }
-  const pool = [...P.queued, ...mixed];
+  const dId = dictDeckId(), dF = new Set(dId && deckIds.includes(dId) ? deckById(dId)?.cards || [] : []);   // 辞書で調べた単語: its new words first, before 知らない ones too
+  const pool = [...[...P.queued, ...P.fresh].filter(c => dF.has(c)), ...P.queued.filter(c => !dF.has(c)), ...mixed.filter(c => !dF.has(c))];
   return shuffle(pool.slice(0, setN(extraNew ? pool.length : Math.min(newLeftToday(), pool.length), size)));
 }
 
@@ -2811,7 +2877,7 @@ function iabNote(){
    waits for closeScreen / closeSheet) — after saving, and says so once. */
 let swNew = false;
 function reloadIfQuiet(){
-  if (!swNew || !$('#screen').hidden || sheetOpen()) return;
+  if (!swNew || !$('#screen').hidden || sheetOpen() || $('#dfm')?.value.trim() || $('#dfe')?.value.trim()) return;   // nor with the 辞書's form half filled in
   swNew = false; saveNow();
   Promise.race([flush(true).catch(() => {}), new Promise(r => setTimeout(r, 3000))]).then(() => { lsSet('kiwami.updated', '1'); location.reload(); });
 }
@@ -2951,7 +3017,7 @@ if (window.visualViewport) {
 }
 
 /* ---------- views ---------- */
-let route = {tab:'home', deck:null, filter:'all', cat:'', q:'', red:false, limit:150, sec:null, dtab:'path'};   // dtab: the deck page's tab, 100語ずつ (path) or 単語一覧 (list)
+let route = {tab:'home', deck:null, filter:'all', cat:'', q:'', red:false, limit:150, sec:null, dtab:'path', dq:'', df:null, from:null};   // dtab: the deck page's tab, 100語ずつ (path) or 単語一覧 (list); dq: what the 辞書's box holds; df: its form's fields; from: 'dict', a deck page opened from an entry
 const PEEK = new Set();   // 赤シートでのぞいた語 (deck \t key), only while this deck's page is open
 let shownDay = dayIdx();  // the day the view was drawn for
 let moreSetOpen = false;  // 設定の「くわしい設定」 stays open when the view is drawn again
@@ -2974,12 +3040,14 @@ function render(){
   const sx = key === viewKey ? [...v.querySelectorAll('.chips.filter')].map(e => e.scrollLeft) : [];   // the chip rows keep their sideways scroll
   const said = $('#mkbubble')?.hidden === false && $('#mkbubble').dataset.tap ? $('#mkbubble').textContent : '';   // めくる keeps talking through a redraw (what it was tapped to say)
   const sel = a && v.contains(a) && a.dataset?.act ? ['act','k','v','d','f','c','id','tab'].filter(n => a.dataset[n] != null).map(n => `[data-${n}="${CSS.escape(a.dataset[n])}"]`).join('') : '';
+  const dq = a && /^(dq|df[wme])$/.test(a.id) ? [a.id, a.selectionStart, a.selectionEnd] : null;   // the 辞書's box (and its form) keep the keyboard and the caret
   v.innerHTML = route.tab === 'home' ? viewHome()
     : route.tab === 'decks' ? (route.deck && deckById(route.deck) ? viewDeck() : viewDecks())
-    : route.tab === 'stats' ? viewStats() : viewSettings();
+    : route.tab === 'stats' ? viewStats() : route.tab === 'dict' ? viewDict() : viewSettings();
   v.querySelectorAll('.chips.filter').forEach((e, i) => { if (sx[i]) e.scrollLeft = sx[i]; });
   if (still) v.querySelectorAll('.ctadock').forEach(d => d.classList.add('still'));
   if (sel) v.querySelector(sel)?.focus({preventScroll:true});
+  const di = dq && $('#' + dq[0]); if (di) { di.focus({preventScroll:true}); try { di.setSelectionRange(dq[1], dq[2]); } catch(e) {} }
   viewKey = $('#screen').hidden ? key : '';   // drawn under the study screen: it rises when the screen closes
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false'));
   renderSync(); shownDay = dayIdx();
@@ -3140,7 +3208,8 @@ function viewHome(){
   const total = c.due + c.newToday;
   const sdWait = sameDayWaiting(act).length;   // today's おさらい still waiting
   const tomorrow = cardsOf(act, true).filter(x => { const p = prog(x); return isReview(p) && !p.sus && p.due === today + 1; }).length;
-  const nRecent = drillCards('recent', act).length, nMany = drillCards('many', act).length, nToday = todayCards(act).length, nMiss = nMany || drillCards('many', act, 1).length;
+  const nRecent = drillCards('recent', act).length, many = drillCards('many', act), nMany = many.length, nToday = todayCards(act).length, nMiss = nMany || drillCards('many', act, 1).length;
+  const nWk = many.filter(c => prog(c).wk).length;   // put into 苦手 from the 辞書 (shown on day 1 too)
   const nd = act.length ? nextDeck(act, c) : null, heavy = total ? backlog(c, td) : '';
   const where = placesText(deckPlaces(act)), moreNew = c.fresh + c.queued + c.dnew;   // 「基礎 No.101–200」, or 「基礎・熟語」 with several decks on
   const hit = stk.done, done = (td.rn || 0) + (td.nw || 0), mins = q => Math.max(1, Math.round(q * secPerQ() / 60));
@@ -3188,7 +3257,7 @@ function viewHome(){
   const row = (a, ico, label, n, kind) => `<button class="hrow" data-act="${a}"${kind ? ` data-kind="${kind}"` : ''}><span class="rico">${ico}</span><span class="rt"><b>${label}</b></span><span class="cnt"><b class="num">${n}</b>語</span>${I.right}</button>`;
   const others = [day1 && sdWait && row('studyCheck', I.redo, '今日のおさらい', sdWait), nToday && row('practiceToday', I.redo, '今日の単語をもう一度', nToday),
     !day1 && nRecent && row('drill', I.target, '前回まちがえた単語', nRecent, 'recent'),   // day 1: a new card's もう一度 is おかわり, not a mistake
-    !day1 && nMiss && row('manySheet', I.target, `${S.settings.drillMin || 2}回以上まちがえた単語`, nMany),
+    (!day1 || nWk) && nMiss && row('manySheet', I.target, `${S.settings.drillMin || 2}回以上まちがえた単語`, nMany),
     `<button class="hrow" data-act="swipe"><span class="rico">${I.swipe}</span><span class="rt"><b>高速仕分け</b><small>知ってる単語をよけて、覚える単語だけに</small></span>${I.right}</button>`].filter(Boolean);
   return `${topbar()}
   <section class="tcard holed today${mk ? ' has-mk' : ''}" aria-label="今日の学習"><span class="ring"></span>
@@ -3286,7 +3355,7 @@ function filterCards(d){
     if (route.filter === 'new' && s !== 'new') return false;
     if (route.filter === 'learn' && s !== 'learn') return false;
     if (route.filter === 'master' && s !== 'master') return false;
-    if (route.filter === 'leech' && wrongCount(p) < (S.settings.drillMin || 2)) return false;
+    if (route.filter === 'leech' && !isLeech(p)) return false;
     if (route.filter === 'recent' && !missedLast(p)) return false;
     if (route.filter === 'sus' && !p?.sus) return false;
     if (route.cat && (c.cat || c.parent?.cat) !== route.cat) return false;
@@ -3301,7 +3370,7 @@ function wordRows(d){
     const p = prog(c), s = status(p);
     const due = p?.sus ? '出題しない' : isReview(p) ? (p.due <= today ? '復習' : `次 ${mdLabel(p.due)}`) : s === 'learn' ? '学習待ち' : '';
     return `<button class="wrow" data-act="card" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">
-      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword" lang="en">${c.n && !c.isD && d.builtin ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD && c.s.length > 1 ? `<span class="wsn" lang="ja">意味${learnedSenses(c)}/${c.s.length}</span>` : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean"${route.red ? ' aria-hidden="true"' : ''}>${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !derivUnlocked(c) ? (!isReview(prog(c.parent)) ? '見出し語の後' : !settled(prog(c.parent)) ? '見出し語の復習後' : '前の派生語の後') : '')}</span></button>`;
+      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword" lang="en">${c.n && !c.isD && d.builtin ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${p?.wk ? '<span class="dtag">苦手</span>' : ''}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD && c.s.length > 1 ? `<span class="wsn" lang="ja">意味${learnedSenses(c)}/${c.s.length}</span>` : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean"${route.red ? ' aria-hidden="true"' : ''}>${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !derivUnlocked(c) ? (!isReview(prog(c.parent)) ? '見出し語の後' : !settled(prog(c.parent)) ? '見出し語の復習後' : '前の派生語の後') : '')}</span></button>`;
   }).join('');
   return rows + (list.length > route.limit ? `<div class="more"><button class="link" data-act="more">さらに表示（残り${list.length - route.limit}語）</button></div>` : '');
 }
@@ -3372,7 +3441,7 @@ function viewDeck(){
   const k = counts([d.id]), rev = k.due || (!k.newToday && k.dueAll);   // as studyDeck's extraNew and pickSet's 復習が先
   const go = !st.total ? `<button class="btn btn-primary btn-block btn-go" data-act="addCard" data-id="${id}">${I.plus}単語を追加</button>`
     : `<button class="btn btn-primary btn-block btn-go" data-act="studyDeck" data-id="${id}">${I.play}${cur ? `${st.r ? '続きから' : 'はじめる'}${rev ? `<small class="num">復習 ${setN(rev)}問</small>` : tabs ? `<small class="num">${secLabel(cur)}</small>` : ''}` : 'この単語帳で学習'}</button>`;
-  return `<div class="dk-nav"><button class="back" data-act="backDecks">${I.left}単語帳</button><button class="iconbtn" data-act="deckMenu" data-id="${id}" aria-label="その他（書き出しなど）">${I.more}</button></div>
+  return `<div class="dk-nav"><button class="back" data-act="backDecks">${I.left}${route.from === 'dict' ? '辞書' : '単語帳'}</button><button class="iconbtn" data-act="deckMenu" data-id="${id}" aria-label="その他（書き出しなど）">${I.more}</button></div>
   <section class="dk-head" style="--cv:${cvOf(d)}">${deckCover(d, {size: 'hero', ring: true, pct: st.pct})}
     <div class="dk-info"><span class="dk-pre">${SERIES.includes(d.id) ? '受験英単語シリーズ' : d.builtin ? '＋αの単語帳' : '自分でつくった単語帳'}</span><h1>${esc(d.name)}</h1>
       <div class="dk-n"><b class="num">${st.r}</b><span class="nw">/ ${st.total}語 学習ずみ</span><span class="pc num">${st.pct}%</span></div>
@@ -3413,9 +3482,10 @@ function secSheet(d, i){
 /* 何回以上まちがえた単語を特訓するか、その場で選ぶ (counts for each, 0 can't be picked; the choice is remembered) */
 function manySheet(){
   const act = activeIds(), cur = S.settings.drillMin || 2, ns = [1, 2, 3, 5].map(n => [n, drillCards('many', act, n).length]);
+  const nWk = drillCards('many', act, Infinity).length;   // put into 苦手 by hand: in every choice
   const pick = ns.some(([n, k]) => n === cur && k) ? cur : (ns.find(([, k]) => k) || [cur])[0];
   openSheet(`<div class="sheet-h"><h3>まちがえた単語を特訓</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-    <div class="bs-q">何回以上まちがえた単語？</div>
+    <div class="bs-q">何回以上まちがえた単語？</div>${nWk ? `<p class="bs-note">辞書で苦手に入れた ${nWk}語は、どれを選んでも入ります</p>` : ''}
     <div class="chs" role="radiogroup" aria-label="何回以上まちがえた単語？">${ns.map(([n, k]) => `<button class="ch" role="radio" aria-checked="${n === pick}" data-act="secPick" data-c="${n}" ${k ? '' : 'disabled'}><span>${n}回以上</span><b class="num">${k}<small>語</small></b><small>${k ? ({1: '一度でもまちがえた', 2: 'くり返しまちがえた', 3: 'かなり苦手', 5: 'とくに苦手'})[n] : 'まだありません'}</small></button>`).join('')}</div>
     <button class="btn btn-primary btn-block btn-go" data-act="manyGo">${I.play}スタート</button>`);
 }
@@ -3559,7 +3629,7 @@ function cardSheet(c, keep=false){
   const refIn = route.tab === 'decks' && S.custom[route.deck]?.cards?.some(x => x.ref === c.deck + '|' + c.k) ? route.deck : null;   // opened from a custom deck that refers to it
   openSheet(`<div class="sheet-h"><h3>${esc(deck?.name || '')}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="tcard holed cardview"><span class="ring"></span>
-      <div class="qpos">${c.n ? `<span class="no">No.${c.n}</span>` : ''}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(c.p)}" aria-label="発音">${I.say}</button>${c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : ''}</div>
+      <div class="qpos">${c.n ? `<span class="no">No.${c.n}</span>` : ''}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(c.p)}" aria-label="発音">${I.say}</button>${c.s.length > 1 ? `<span class="nsense">意味 ${c.s.length}つ</span>` : ''}${p?.wk ? '<span class="dst weak">苦手</span>' : ''}</div>
       <div class="qword" lang="en">${esc(c.w)}</div>${ipaHTML(c)}
       ${c.isD ? `<div class="qask">← ${esc(c.parent.w)}（${esc(c.parent.m)}）の派生語</div>` : sensesProgress(c)}
       ${sensesHTML(c, -1, 'all')}${c.isD ? affixHTML(c) : etyHTML(c)}
@@ -3572,7 +3642,7 @@ function cardSheet(c, keep=false){
     </div>
     ${memo ? `<div class="memo">${esc(memo)}</div>` : ''}
     <div class="ai-only" style="flex-direction:column;gap:8px"><button class="btn btn-soft" data-act="aiMnemonic" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">${I.spark}Claudeに覚え方を聞く</button><div id="aiout"></div></div>
-    <button class="btn btn-ghost btn-block" data-act="suspend" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">${p?.sus ? '出題に戻す' : '出題しない'}</button>
+    ${p?.wk ? '<div class="btn-row">' : ''}<button class="btn btn-ghost${p?.wk ? '' : ' btn-block'}" data-act="suspend" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">${p?.sus ? '出題に戻す' : '出題しない'}</button>${p?.wk ? `<button class="btn btn-ghost" data-act="unweak" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">苦手から外す</button></div>` : ''}
     ${deck && !deck.builtin ? `<div class="btn-row"><button class="btn btn-ghost" data-act="editCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">編集</button><button class="btn btn-danger" data-act="delCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">削除</button></div>` : ''}
     ${refIn ? `<button class="btn btn-ghost btn-block" data-act="unref" data-id="${esc(refIn)}" data-ref="${esc(c.deck + '|' + c.k)}">「${esc(deckById(refIn)?.name || '')}」から外す<small>学習記録は残ります</small></button>` : ''}
     ${p && p.st ? `<button class="link reset-link" data-act="resetCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">この単語の記録をリセット</button>` : ''}`, false, keep);
@@ -4738,7 +4808,7 @@ function swDecide(known){
   if (!SW || SW.busy || swOver()) return;
   stopCountdown();
   const c = SW.cards[SW.i], prev = clone(prog(c)), now = Date.now();
-  const np = known ? swKnown(prev, c, now) : {st:1, last:now, r:0, l:0};
+  const np = known ? swKnown(prev, c, now) : {st:1, last:now, r:0, l:0, ...(prev?.wk ? {wk: prev.wk} : {})};   // a 苦手 mark from the 辞書 stays
   setProg(c, np); SW.hist.push({c, prev, known});
   bumpDaily({sw:1});
   sfx('tick');
@@ -5047,16 +5117,320 @@ function importSheet(deckId){
 }
 function backupJSON(){ return JSON.stringify({app:'tangoloop', v:1, at:new Date().toISOString(), data:S}); }
 
+/* ---------- 辞書 ---------- */
+/* The 辞書 tab looks a word up in every deck: built-in headwords with all their meanings, their derivatives, the idioms and
+   the words of your own decks. English: the word itself (e-mail, abandon's, took it for granted too), then its base form
+   (abandoned → abandon, ran → run, knives → knife), then words that start with it, then words that hold it; nothing like it:
+   もしかして (recieve → receive). Japanese: inside the meanings (放棄 → relinquish; りんご finds リンゴ). A word in several decks (fine:
+   中学基礎 and 必修多義語) is one entry. From an entry a word goes into 「辞書で調べた単語」 (made on first use; a reference to
+   the built-in card, so the record is shared; put first among the decks in use, so it comes soon) or gets a 苦手 mark (p.wk:
+   「N回以上まちがえた単語」 and the 苦手 filter take it whatever its count). A word the app doesn't have is looked up on
+   Weblio / 英辞郎 and added with the meaning found there */
+const DICT_NAME = '辞書で調べた単語', DICT_KEY = 'kiwami.dict', DICT_N = 30;   // the deck; 最近しらべた単語 (this device only); rows shown at first
+let dictT = null, dictLimit = DICT_N, DICT_CUR = null, DICT_HIST = [], DICT_UNDO = null, dictTapAt = 0;   // HIST: the entries before this one in the sheet (← back); TapAt: the last tap on an entry's button
+const IRR_REV = new Map();   // took → [take], ran → [run], children → [child]; the 辞書 only: better → [good, well], worse → [bad]
+for (const [b, fs] of [...Object.entries(IRR), ...Object.entries(FORMS_X), ...Object.entries({good: 'better|best', well: 'better|best', bad: 'worse|worst', many: 'more|most', much: 'more|most', little: 'less|least', far: 'further|farther|furthest|farthest'})])
+  for (const f of fs.split('|')) { const a = IRR_REV.get(f) || []; if (!a.includes(b)) IRR_REV.set(f, [...a, b]); }
+const hira = s => s.replace(/[ァ-ヶ]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60));   // リンゴ = りんご
+const pro = k => k.replace(/\b(my|your|his|her|its|our|their)\b/g, "one's").replace(/\b(myself|yourself|himself|herself|itself|ourselves|yourselves|themselves)\b/g, 'oneself').replace(/\b(it|him|them|me|us)\b/g, 'a');   // took it for granted = take A for granted
+/* {map: word → entry, alt: "take for granted" → entry, list}; entry = {k, w, heads, ders, fams, own, mine, ja}: built-in headword
+   cards, derivative cards, derivatives listed under a word without a card there ({c, f}), your own cards, your decks holding it */
+function dictIndex(){
+  if (DICT) return DICT;
+  const map = new Map(), alt = new Map(), ds = decks();
+  const get = w => { const k = normW(w); let e = map.get(k);
+    if (!e) { e = {k, w: String(w).trim(), heads: [], ders: [], fams: [], own: [], mine: new Set()}; map.set(k, e); const l = looseW(k); if (l && l !== k && !alt.has(l)) alt.set(l, e); }
+    return e; };
+  for (const d of ds) if (d.builtin) { d.cards.forEach(c => get(c.w).heads.push(c)); d.dcards.forEach(c => get(c.w).ders.push(c)); }
+  for (const d of ds) if (d.builtin) for (const c of d.cards) for (const f of c.fam || []) if (!f.card) get(f.w).fams.push({c, f});
+  for (const d of ds) if (!d.builtin) for (const c of d.cards) { const e = get(c.w); e.mine.add(d.id);
+    if (c.deck === d.id) e.own.push(c); else if (!e.heads.includes(c) && !e.ders.includes(c)) (c.isD ? e.ders : e.heads).push(c); }   // a deck not shown (TOEIC) still lends its card
+  const list = [...map.values()];
+  for (const e of list) { const ms = new Set(); [...e.heads, ...e.ders, ...e.own].forEach(c => c.s.forEach(s => s.m && ms.add(s.m))); e.fams.forEach(x => x.f.m && ms.add(x.f.m));
+    e.ja = [...ms].map(m => [m, hira(m.replace(/[～〜\s]/g, ''))]); }
+  return DICT = {map, alt, list, one: list.filter(e => /^[a-z]+$/.test(e.k))};   // one: the single words (もしかして)
+}
+/* what the box holds: an English word or phrase, a Japanese meaning (ja: katakana as hiragana; jt: as typed), or a pasted
+   「word<TAB or space>meaning」 line (12. ／ ① before it too; Tシャツ stays Japanese) */
+function dictQuery(raw){
+  const s0 = String(raw || '').trim(), s = s0.normalize('NFKC').trim(); if (!s) return null;
+  if (/[a-z]/i.test(s) && JA.test(s)) { const x = wordLine(s0); if (x?.m && (x.w.length >= 4 || /\s/.test(s))) return {q: normW(x.w), raw: x.w, m: x.m}; }
+  if (JA.test(s)) { const t = s.replace(/[～〜~\s]/g, ''); return t ? {ja: hira(t), jt: t} : null; }
+  const cut = v => v.replace(/^[^a-z0-9]+|[^a-z0-9]+$/gi, '');   // “abandon” (abandon) 「abandon」 abandon.
+  const q = cut(normW(s)).trim();
+  return q ? {q, raw: cut(s.replace(/\s+/g, ' '))} : null;
+}
+/* the base forms a word may be: -s -es -ies -ed -ing, an irregular form (always), -er / -est (only when nothing else is found) */
+function dictBases(k, more){
+  const [h, ...rest] = k.split(' '), tail = rest.length ? ' ' + rest.join(' ') : '', out = new Set();
+  (IRR_REV.get(h) || []).forEach(b => out.add(b));
+  if (more && /^[a-z]+$/.test(h)) {
+    baseForms(h).forEach(b => out.add(b));
+    if (/ying$/.test(h)) out.add(h.slice(0, -4) + 'ie');   // dying → die
+    if (/ves$/.test(h)) { out.add(h.slice(0, -3) + 'f'); out.add(h.slice(0, -3) + 'fe'); }   // leaves → leaf, knives → knife
+    if (/ses$/.test(h)) out.add(h.slice(0, -2) + 'is');   // analyses → analysis
+    if (/a$/.test(h) && h.length >= 5) { out.add(h.slice(0, -1) + 'on'); out.add(h.slice(0, -1) + 'um'); }   // criteria → criterion, media → medium
+    if (/ier$|iest$/.test(h)) out.add(h.replace(/i(?:er|est)$/, 'y'));
+    const m = /^(.+?)(er|est)$/.exec(h);
+    if (m && m[1].length >= 3) { out.add(m[1]); out.add(m[1] + 'e'); if (m[1].at(-1) === m[1].at(-2)) out.add(m[1].slice(0, -1)); }   // bigger → big
+  }
+  return [...out].filter(b => b.length >= 2).map(b => b + tail).filter(b => b !== k);
+}
+const jaCore = t => t.replace(/[（(][^）)]*[）)]/g, '').replace(/[～〜…\s]/g, '').replace(/^(?:を|に|が|と|で|へ|の|から|より|は)+/, '');
+/* a meaning that is the word asked (3), starts with it (2: 放棄する), or holds it (1) */
+function jaScore([m, flat], q){
+  if (!flat.includes(q)) return 0;
+  const ps = m.replace(/[（(][^）)]*[）)]/g, '').split(/[、，,／;；]/).map(p => hira(jaCore(p)));
+  return ps.includes(q) ? 3 : ps.some(p => p.startsWith(q)) ? 2 : 1;
+}
+/* letters apart (two swapped count as one), more than max: max + 1 */
+function osa(a, b, max){
+  let p2 = [], p = Array.from({length: b.length + 1}, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const c = [i]; let lo = i;
+    for (let j = 1; j <= b.length; j++) {
+      let v = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, p2[j - 2] + 1);
+      c.push(v); if (v < lo) lo = v;
+    }
+    if (lo > max) return max + 1;
+    p2 = p; p = c;
+  }
+  return p[b.length];
+}
+/* もしかして: the words closest to a misspelling (recieve → receive), 1 letter off (2 for 6 letters or more), at most 5 */
+function dictNear(k){
+  const max = k.length <= 5 ? 1 : 2, out = [];
+  for (const e of dictIndex().one) if (Math.abs(e.k.length - k.length) <= max) { const d = osa(k, e.k, max); if (d <= max) out.push([d, e]); }
+  out.sort((a, b) => a[0] - b[0] || (a[1].heads.length ? 0 : 1) - (b[1].heads.length ? 0 : 1));
+  return out.filter(x => x[0] === out[0][0]).slice(0, 5);
+}
+/* hits, best first: [{e, t (4 the word / 3 its base form / 2.6–2.5 もしかして / 2 starts with / 1 holds it; Japanese 3–1), from, fix, m}] */
+function dictFind(x){
+  const D = dictIndex(), hits = new Map(), put = (e, t, o = {}) => { const h = hits.get(e); if (!h || t > h.t) hits.set(e, {e, t, ...o}); };
+  if (x.ja) for (const e of D.list) { let t = 0, m = ''; for (const j of e.ja) { const v = jaScore(j, x.ja); if (v > t) { t = v; m = j[0]; } } if (t) put(e, t, {m}); }
+  else {
+    const k = x.q, one = key => D.map.get(key) || D.alt.get(key);
+    for (const key of new Set([k, looseW(k)])) { const e = one(key); if (e) put(e, 4); }
+    if (!hits.size) for (const key of [k.replace(/'s$/, ''), k.replace(/-/g, ''), k.replace(/-/g, ' '), k.includes(' ') ? looseW(pro(k)) : '']) { const e = key && key !== k && one(key); if (e) put(e, 4); }   // abandon's, e-mail, take it for granted
+    const exact = hits.size > 0;
+    for (const b of dictBases(k, !exact)) { const e = one(b) || (b.includes(' ') && one(looseW(pro(b)))); if (e) put(e, 3, {from: k}); }   // made up his mind → make up one's mind
+    for (const e of D.list) { if (e.k.startsWith(k)) put(e, 2); else if (k.length >= 3 && e.k.includes(k)) put(e, 1); }
+    if (/^[a-z]{4,}$/.test(k) && ![...hits.values()].some(h => h.t >= 2)) for (const [d, e] of dictNear(k)) put(e, d === 1 ? 2.6 : 2.5, {fix: k});   // not while a word is being typed (aban → abandon)
+  }
+  const hd = h => h.e.heads.length ? 0 : 1;
+  return [...hits.values()].sort((a, b) => b.t - a.t || hd(a) - hd(b) || a.e.k.length - b.e.k.length || (a.e.k < b.e.k ? -1 : 1));
+}
+const dictDeckId = () => Object.values(S.custom).filter(d => d && d.dict && !d.del && Array.isArray(d.cards))   // two devices may each have made one: the oldest, on every device
+  .sort((a, b) => (a.created || 0) - (b.created || 0) || (a.id < b.id ? -1 : 1))[0]?.id || null;
+const dictName = id => S.custom[id]?.name || DICT_NAME;   // renamed or not
+const dictDeck = () => { const id = dictDeckId(); return id ? deckById(id) : null; };
+/* the entry's card in 「辞書で調べた単語」, if it is there */
+function dictInMine(e){ const d = dictDeck(); return d ? [...e.heads, ...e.ders, ...e.own].find(c => d.cards.includes(c)) || null : null; }
+/* the card an entry's buttons act on: the one in 辞書で調べた単語, marked 苦手, with a record, a headword, not 多義語 (its meanings are
+   a deck of their own), as findBuiltin; a word only in your own decks: its own card. null: no card at all (only listed as a derivative) */
+function dictMain(e){
+  const d = dictDeck(), cs = [...e.heads, ...e.ders];
+  const score = c => { const p = prog(c); return (d?.cards.includes(c) ? 64 : 0) + (p?.wk ? 16 : 0) + (isReview(p) ? 4 : p?.st === 1 ? 2 : 0) + (c.isD ? 0 : 1) - (c.deck === 'tagi' ? 8 : 0); };
+  if (cs.length) return cs.reduce((a, b) => score(b) > score(a) ? b : a);
+  return e.own.find(c => d?.cards.includes(c)) || e.own[0] || null;
+}
+/* a word listed only as a derivative (no card of its own): its meaning shown from that list */
+const dictPseudo = e => { const f = e.fams[0]?.f; return mkCard('', e.k, f ? f.w : e.w, f ? [{p: f.p, m: f.m, e: f.e, j: f.j}] : [], 0); };
+/* 「辞書で調べた単語」: made if needed, switched on and put first among the decks in use (its new words come before the others') */
+function dictDeckFirst(){
+  let id = dictDeckId(), made = false;
+  if (!id) { id = createDeck(DICT_NAME, []); Object.assign(S.custom[id], {dict: 1, desc: '辞書から追加した単語'}); touchDeck(id); made = true; }
+  if (S.settings.active[0] !== id) setSetting('active', [id, ...S.settings.active.filter(x => x !== id)]);
+  return {id, made};
+}
+/* 元に戻す: the deck and the decks in use as they were (and a 苦手 mark), before one 辞書 action */
+const dictSnap = (o = {}) => { const id = dictDeckId(); return {id, deck: id ? clone(S.custom[id]) : null, active: [...S.settings.active], ...o}; };
+function dictUndo(){
+  const u = DICT_UNDO; DICT_UNDO = null; dictTapAt = 0; $('#toastroot').innerHTML = ''; if (!u) return;   // TapAt: the buttons answer at once again
+  const now = Date.now(), id = dictDeckId();
+  if (u.mark) setProg(u.mark.c, {...(u.mark.p || {st: 0}), u: now});   // u: newer than the mark, so a sync doesn't bring it back
+  if (u.deck) { S.custom[u.id] = {...u.deck, upd: now}; touchDeck(u.id); }
+  else if (id) { S.custom[id] = {id, del: true, upd: now, cards: []}; delete S.prog[id]; markDirty('prog_' + id); touchDeck(id); }   // made by what is undone
+  setSetting('active', u.active);
+  dictAfter(); toast('元に戻しました');
+}
+const dictRef = c => builtinCard(c.deck + '|' + c.k) === c ? c.deck + '|' + c.k : null;
+function dictPutCard(c, id){ S.custom[id].cards.push(storeCard({ref: dictRef(c), w: c.w, s: [{p: c.p, m: c.m}]})); touchDeck(id); }
+const dictUndoBtn = {label: '元に戻す', act: 'dictUndo'};
+/* [自分の単語帳に追加]: the built-in card as a reference (a word listed only as a derivative: its meaning as your own card) */
+function dictPut(e){
+  const c = [...e.heads, ...e.ders].length ? dictMain(e) : null, snap = dictSnap(), {id, made} = dictDeckFirst();
+  if (c) dictPutCard(c, id);
+  else { const x = dictPseudo(e); S.custom[id].cards.push(storeCard({w: x.w, s: x.s})); touchDeck(id); }
+  DICT_UNDO = snap;
+  const p = c ? prog(c) : null, where = made ? `単語帳「${DICT_NAME}」をつくって追加しました` : `「${dictName(id)}」に追加しました`;
+  toast(isReview(p) && !p.sus ? `${where}。覚えた単語なので、復習の日に出ます` : `${where}。新しい単語の最初に出ます`, dictUndoBtn, 6000);
+}
+function dictRemove(c){
+  const id = dictDeckId(); if (!id) return;
+  const snap = dictSnap(), ref = dictRef(c), d = S.custom[id];
+  d.cards = d.cards.filter(x => ref ? x.ref !== ref : x.k !== c.k); touchDeck(id);
+  DICT_UNDO = snap; toast(ref ? `「${dictName(id)}」から外しました（学習の記録は残ります）` : `「${dictName(id)}」から外しました`, dictUndoBtn, 6000);
+}
+/* [苦手に入れる] / [苦手から外す]: the mark on the card's record (wk: when; a word answered today comes into the 特訓 once more).
+   A word of a deck not in use also goes into 辞書で調べた単語, so the 特訓 (the decks in use) can reach it; 出題しない is undone */
+function dictWeak(e){
+  const c = dictMain(e); if (!c) return;
+  const snap = dictSnap({mark: {c, p: clone(prog(c)) || null}}), p = clone(prog(c)) || {st: 0}, on = !p.wk, sus = on && !!p.sus;
+  if (on) { p.wk = Date.now(); delete p.sus; } else delete p.wk;
+  p.u = Date.now(); setProg(c, p);
+  let added = '';
+  if (on && dictRef(c) && !cardsOf(activeIds(), true).includes(c)) {
+    const {id} = dictDeckFirst(); added = deckById(id)?.cards.includes(c) ? `「${dictName(id)}」を使う単語帳にしました` : `「${dictName(id)}」にも追加`;   // switched off: on again
+    if (!deckById(id)?.cards.includes(c)) dictPutCard(c, id); }
+  DICT_UNDO = snap; const why = [added, sus && '出題しないは解除'].filter(Boolean).join('、');
+  toast(!on ? '苦手から外しました' : added ? `苦手に入れました（${why}）` : `苦手に入れました${why ? `（${why}）` : ''}。ホームの「${S.settings.drillMin || 2}回以上まちがえた単語」で特訓できます`, dictUndoBtn, 6000);
+}
+/* the form under a word the app doesn't have: your own card in 辞書で調べた単語 (a word the app has after all: its card) */
+function dictAddNew(){
+  const w = ($('#dfw')?.value || '').normalize('NFKC').replace(/\s+/g, ' ').trim(), mt = ($('#dfm')?.value || '').trim(), ex = ($('#dfe')?.value || '').normalize('NFKC').trim();
+  if (!w || !mt || !/[a-z]/i.test(w)) return;
+  const e = dictIndex().map.get(normW(w));
+  document.activeElement?.blur?.(); route.df = null;
+  if (e && (e.heads.length || e.ders.length)) { if (dictInMine(e)) toast('もう自分の単語帳に入っています'); else dictPut(e); }
+  else {
+    const s = parseSenseText(mt); if (!s.length) return;
+    s[0].e = ex;
+    const snap = dictSnap(), {id, made} = dictDeckFirst();
+    S.custom[id].cards.push(storeCard({w, s})); touchDeck(id); DICT_UNDO = snap;
+    toast(`「${w}」を${made ? `単語帳「${DICT_NAME}」をつくって` : `「${dictName(id)}」に`}追加しました。新しい単語の最初に出ます`, dictUndoBtn, 6000);
+  }
+  route.dq = w; dictLimit = DICT_N; if ($('#dq')) $('#dq').value = w;
+  const n = dictIndex().map.get(normW(w)); if (n) dictRecent(n);
+  dictAfter();
+}
+/* after a change: the open entry and the list under it drawn again */
+function dictAfter(){
+  if (DICT_CUR && $('#sheetroot .dentry')) { if (dictIndex().map.has(DICT_CUR)) dictSheet(DICT_CUR, true); else closeSheet(); }
+  if (route.tab === 'dict' && $('#dictres')) $('#dictres').innerHTML = dictResHTML(); else render();
+}
+/* 最近しらべた単語: the last 20 entries opened, on this device */
+function dictRecentList(){ try { const a = JSON.parse(lsGet(DICT_KEY) || '[]'); return Array.isArray(a) ? a.filter(x => x && x.k) : []; } catch(e) { return []; } }
+function dictRecent(e){ lsSet(DICT_KEY, JSON.stringify([{k: e.k, w: e.w}, ...dictRecentList().filter(x => x.k !== e.k)].slice(0, 20))); }
+function viewDict(){
+  return `${topbar()}
+  <h1 class="pg-h">辞書</h1>
+  <div class="dsearch"><label class="search">${I.search}<input id="dq" type="search" placeholder="英語でも日本語でも" value="${esc(route.dq)}" autocomplete="off" enterkeyhint="search" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="辞書で調べる（英語でも日本語でも）"></label></div>
+  <div id="dictres">${dictResHTML()}</div>`;
+}
+/* where a word is, short (a result row): 「標準 No.1092」「run の派生語」, your own deck by name */
+function dictWhere(e){
+  const out = [];
+  for (const c of e.heads) { const d = deckById(c.deck); if (d) out.push(`${deckNick(d)}${c.n ? ` No.${c.n}` : ''}`); }
+  for (const c of e.ders) out.push(`${c.parent.w} の派生語`);
+  for (const id of e.mine) { const d = deckById(id); if (d && !e.heads.some(c => d.cards.includes(c))) out.push(d.name); }
+  if (!out.length) e.fams.slice(0, 2).forEach(x => out.push(`${x.c.w} の派生語`));
+  return [...new Set(out)].join('・');
+}
+function dictRow(h, x){
+  const e = h.e, c = dictMain(e), p = c ? prog(c) : null, main = c || dictPseudo(e);
+  const mean = h.m ? dictHL(h.m, x.ja) : esc(allMeanings(main));   // a Japanese search: the meaning it was found in
+  return `<button class="drow" data-act="dictOpen" data-k="${esc(e.k)}"><span class="wdot ${isLeech(p) ? 'leech' : status(p)}"></span>
+    <span class="dw"><span class="dwl"><b lang="en">${esc(e.w)}</b>${p?.wk ? '<span class="dtag">苦手</span>' : ''}</span><small>${h.fix ? 'もしかして ・ ' : h.from ? `${esc(h.from)} の元の形 ・ ` : ''}${esc(dictWhere(e))}</small></span>
+    <span class="dmn">${mean}</span></button>`;
+}
+/* the meaning with the asked word in colour (katakana and hiragana alike) */
+function dictHL(m, q){
+  const f = hira(m); let out = '', i = 0, j;
+  while (q && (j = f.indexOf(q, i)) >= 0) { out += esc(m.slice(i, j)) + `<b class="dhl">${esc(m.slice(j, j + q.length))}</b>`; i = j + q.length; }
+  return out + esc(m.slice(i));
+}
+function dictResHTML(){
+  const x = dictQuery(route.dq);
+  if (!x) { const rc = dictRecentList();
+    return `<p class="dintro">極の単語（派生語・熟語・自分の単語帳も）を、英語でも日本語でも引けます</p>
+    ${rc.length ? `<div class="sec dsec"><div class="sec-h"><h2>最近しらべた単語</h2></div><div class="fchips drecent">${rc.map(r => `<button class="fchip" data-act="dictOpen" data-k="${esc(r.k)}"><b lang="en">${esc(r.w)}</b></button>`).join('')}</div></div>` : ''}`; }
+  const hits = dictFind(x), found = x.ja ? hits.length > 0 : hits.some(h => h.t >= 3);   // not the word itself (nor its base form): it can be added
+  const rows = hits.slice(0, dictLimit).map(h => dictRow(h, x)).join('');
+  const more = hits.length > dictLimit ? `<div class="more"><button class="link" data-act="dictMore">さらに表示（残り${hits.length - dictLimit}語）</button></div>` : '';
+  if (!hits.length) return x.ja || /^[a-z][a-z' .-]+$/.test(x.q) ? dictMissHTML(x, true) : '<p class="dintro">見つかりませんでした</p>';   // x, 1, - : not a word to add
+  return `<div class="words dres">${rows}</div>${more}${!found && x.q && x.q.length >= 3 ? dictMissHTML(x, false) : ''}`;
+}
+/* a word the app doesn't have: look it up outside (a new tab), then add it with the meaning found */
+function dictMissHTML(x, full){
+  const term = x.q || x.jt, u = encodeURIComponent(term);
+  const links = `<div class="btn-row dm-ext"><a class="btn btn-ghost" href="https://ejje.weblio.jp/content/${u}" target="_blank" rel="noopener noreferrer" aria-label="Weblioで調べる（別のタブ）">Weblio<span class="dm-x">で調べる</span>${I.ext}</a><a class="btn btn-ghost" href="https://eow.alc.co.jp/search?q=${u}" target="_blank" rel="noopener noreferrer" aria-label="英辞郎で調べる（別のタブ）">英辞郎<span class="dm-x">で調べる</span>${I.ext}</a></div>`;
+  const head = x.ja ? `「${esc(x.jt)}」という意味の単語は、極にはまだ載っていません` : `<b lang="en">${esc(x.raw)}</b> は、極にはまだ載っていません`;
+  const kana = x.ja && /^[ぁ-ゟァ-ヿ]+$/.test(x.jt) ? '<p class="dm-s">漢字に変換すると見つかるかも</p>' : '';   // すてる → 捨てる
+  if (full) return `<div class="dmiss"><p class="dm-h">${head}</p>${kana}${links}${dictFormHTML(x)}</div>`;
+  return `<div class="dmiss sm"><p class="dm-h"><b lang="en">${esc(x.raw)}</b> そのものは、極にはまだ載っていません</p>${links}<div id="dformbox">${route.df?.dq === route.dq ? dictFormHTML(x) : '<button class="link dm-open" data-act="dictForm">意味を入れて、自分の単語帳に追加する</button>'}</div></div>`;
+}
+/* route.df: what was typed in the form (for this query), kept through a redraw */
+function dictFormHTML(x){
+  const f = route.df?.dq === route.dq ? route.df : null;
+  return `<form id="dictform" class="dm-form" autocomplete="off"><div class="dm-t">調べた意味を入れて、自分の単語帳に追加</div>
+    <div class="field"><label for="dfw">英単語・熟語</label><input class="input" id="dfw" required lang="en" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(f ? f.w : x.raw || '')}"></div>
+    <div class="field"><label for="dfm">意味</label><input class="input" id="dfm" required enterkeyhint="next" placeholder="例：思いがけない発見" value="${esc(f ? f.m : x.m || x.jt || '')}"></div>
+    <div class="field"><label for="dfe">例文<small>（なくてもOK）</small></label><input class="input" id="dfe" lang="en" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" value="${esc(f?.e || '')}"></div>
+    <button class="btn btn-primary btn-block" type="submit">${I.plus}自分の単語帳に追加</button></form>`;
+}
+/* an entry: the word, every meaning from every deck (grouped by deck when they differ) with the decks' examples and audio,
+   語法, コア・成り立ち, 派生語 (tap: their entry), where it is (tap: that deck), and the two buttons */
+function dictGroups(e){
+  const gs = [];
+  for (const c of [...e.heads, ...e.ders, ...e.own]) { const sig = c.s.map(s => s.p + s.m + '\u0001' + (s.e || '')).join('|'), g = gs.find(x => x.sig === sig); if (g) g.cs.push(c); else gs.push({sig, c, cs: [c]}); }   // examples too: every deck's sentence is shown
+  if (!gs.length) gs.push({c: dictPseudo(e), cs: []});
+  return gs;
+}
+const dictPlace = c => { const d = deckById(c.deck); return !d ? '' : c.isD ? `${c.parent.w} の派生語${c.parent.n && d.builtin ? `（No.${c.parent.n}）` : ''}` : c.n && d.builtin ? `No.${c.n}` : d.builtin ? '' : '自分で追加した単語'; };
+function dictSheet(k, keep = false){
+  const D = dictIndex(), e = D.map.get(k); if (!e) return;
+  DICT_CUR = k;
+  const c = dictMain(e), p = c ? prog(c) : null, gs = dictGroups(e), main = c || gs[0].c, st = status(p), wk = !!p?.wk;
+  const n = new Set(gs.flatMap(g => g.c.s.map(s => s.m))).size, prev = DICT_HIST.length ? D.map.get(DICT_HIST[DICT_HIST.length - 1]) : null;
+  const pill = (p?.sus ? '<span class="dst">出題しない</span>' : st !== 'new' ? `<span class="dst ${st}">${st === 'master' ? '習得' : '学習中'}</span>` : '') + (wk ? '<span class="dst weak">苦手</span>' : '');
+  // a derivative without a headword of its own: back to the word it comes from
+  const par = e.heads.length ? [] : [...new Map([...e.ders.map(d => d.parent), ...e.fams.map(x => x.c)].map(x => [normW(x.w), x])).values()].slice(0, 2);
+  const parHTML = par.map(x => `<button class="dpar" data-act="dictOpen" data-k="${esc(normW(x.w))}">← <b lang="en">${esc(x.w)}</b><span>（${esc(x.m)}）の派生語</span></button>`).join('');
+  const lab = g => g.cs.map(x => { const d = deckById(x.deck); return d ? `<span class="nw"><i style="--cv:${cvOf(d)}"></i>${esc(d.name)}${dictPlace(x) ? ` ${esc(dictPlace(x))}` : ''}</span>` : ''; }).join('');
+  const mean = gs.length > 1 ? gs.map(g => `<div class="dgrp"><div class="dgrp-h">${lab(g)}</div>${sensesHTML(g.c, -1, 'all')}</div>`).join('') : sensesHTML(gs[0].c, -1, 'all');
+  const ety = e.heads.map(etyHTML).find(Boolean) || (main.isD ? affixHTML(main) : '');
+  const fam = new Map(), addF = (w, ps) => { const fk = normW(w); if (fk !== k && !fam.has(fk) && D.map.has(fk) && !par.some(x => normW(x.w) === fk)) fam.set(fk, {w, p: ps}); };
+  e.heads.forEach(h => (h.fam || []).forEach(f => addF(f.w, f.p))); e.ders.forEach(d => addF(d.parent.w, d.parent.p)); e.fams.forEach(x => addF(x.c.w, x.c.p));
+  const famHTML = fam.size ? `<div class="fam dfam"><div class="fam-h">派生語<span class="fam-sub">タップでその単語へ</span></div><div class="fchips">${[...fam].map(([fk, f]) => `<button class="fchip" data-act="dictOpen" data-k="${esc(fk)}"><b lang="en">${esc(f.w)}</b><span class="pos">${esc(f.p)}</span></button>`).join('')}</div></div>` : '';
+  // where it is: each deck once, with its No. (a derivative: its headword's); tap → that deck's list, the word searched
+  const places = new Map();
+  for (const x of [...e.heads, ...e.ders, ...e.own]) { const d = deckById(x.deck); if (d && !places.has(d.id)) places.set(d.id, {d, sub: dictPlace(x)}); }
+  for (const id of e.mine) { const d = deckById(id); if (d && !places.has(id)) places.set(id, {d, sub: 'この単語が入っています'}); }
+  const plHTML = places.size ? `<div class="dplaces"><div class="fam-h">載っている単語帳</div>${[...places.values()].map(({d, sub}) => `<button class="dplace" data-act="dictDeck" data-id="${esc(d.id)}" data-w="${esc(e.w)}">${deckCover(d, {size: 'sm'})}<span><b>${esc(d.name)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span>${I.right}</button>`).join('')}</div>` : '';
+  const inMine = dictInMine(e), canAdd = !!inMine || !!(e.heads.length || e.ders.length) || !e.own.length;   // a word only in another deck of yours is in your decks already
+  const btns = (canAdd ? `<button class="btn ${inMine ? 'btn-ghost' : 'btn-primary'} add" data-act="dictAdd" data-k="${esc(k)}">${inMine ? '単語帳から外す' : `${I.plus}自分の単語帳に追加`}</button>` : '')
+    + (c ? `<button class="btn ${wk ? 'btn-weak' : 'btn-ghost'}" data-act="dictWeak" data-k="${esc(k)}">${wk ? '苦手から外す' : '苦手に入れる'}</button>` : '');
+  openSheet(`<div class="sheet-h">${prev ? `<button class="back dback" data-act="dictBack" aria-label="${esc(prev.w)} にもどる">${I.left}<b lang="en">${esc(prev.w)}</b></button><span class="sp"></span>` : '<h3>辞書</h3>'}<button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="tcard holed cardview dentry"><span class="ring"></span>
+      <div class="qpos"><button class="say" data-act="say" data-w="${esc(e.w)}" data-p="${esc(main.p)}" aria-label="発音">${I.say}</button>${n > 1 ? `<span class="nsense">意味 ${n}つ</span>` : ''}${pill}</div>
+      <div class="qword" lang="en">${esc(e.w)}</div>${ipaHTML(main)}${parHTML}
+      ${mean}${ety}
+    </div>
+    ${famHTML}${plHTML}
+    ${btns ? `<div class="dacts">${btns}</div>` : ''}`, false, keep);
+}
+function dictRun(){
+  dictT = null; const r = $('#dictres'); if (!r || route.tab !== 'dict') return;
+  dictLimit = DICT_N; r.innerHTML = dictResHTML();
+  const y = r.getBoundingClientRect().top + scrollY - ($('.dsearch')?.offsetHeight || 0); if (scrollY > y) scrollTo(0, y);   // new results start just under the box
+}
+Object.assign(I, {ext: '<svg class="ico" viewBox="0 0 24 24"><path d="M14 4.5h5.5V10M19.5 4.5 11 13"/><path d="M18 14v4.5a1 1 0 0 1-1 1H5.5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1H10"/></svg>'});
+
 /* ---------- events ---------- */
 let RESET_UNDO = null, DECK_UNDO = null;   // 「元に戻す」: 記録をリセット's card and its record before the reset; 使うのをやめる's deck
 const ACT = {
   // a tab comes back as it was left (the deck page with its filter, search and scroll); the tab you are on, tapped again, goes to the top
   // (for 単語帳: back to the list, as does すべて見る)
-  tab: t => { const to = t.dataset.tab, same = to === route.tab; SCROLL[route.tab] = same ? 0 : scrollY;
+  tab: t => { const to = t.dataset.tab, same = to === route.tab; SCROLL[route.tab] = same ? 0 : scrollY; route.from = null;
     if (to === 'decks' && (same || !t.classList.contains('tab'))) { PEEK.clear(); route.deck = null; SCROLL.decks = 0; }
-    route.tab = to; render(); scrollTo(0, SCROLL[to] || 0); },
-  openDeck: t => { if (route.tab !== 'decks') SCROLL[route.tab] = scrollY; PEEK.clear(); route.tab = 'decks'; route.deck = t.dataset.id; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; route.sec = null; route.dtab = 'path'; render(); scrollTo(0,0); },
-  backDecks: () => { PEEK.clear(); route.deck = null; route.sec = null; render(); },
+    route.tab = to; render(); scrollTo(0, SCROLL[to] || 0);
+    if (to === 'dict' && (same || !route.dq)) { const i = $('#dq'); if (i) { i.focus({preventScroll:true}); if (same) i.select(); } } },   // 辞書: ready to type
+  openDeck: t => { if (route.tab !== 'decks') SCROLL[route.tab] = scrollY; PEEK.clear(); route.tab = 'decks'; route.deck = t.dataset.id; route.from = null; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; route.sec = null; route.dtab = 'path'; render(); scrollTo(0,0); },
+  backDecks: () => { PEEK.clear(); route.deck = null; route.sec = null;
+    if (route.from === 'dict') { route.from = null; route.tab = 'dict'; render(); scrollTo(0, SCROLL.dict || 0); if (DICT_CUR && dictIndex().map.has(DICT_CUR)) dictSheet(DICT_CUR); return; }   // opened from an entry: back to it
+    render(); },
   sec: t => { const i = +t.dataset.i; route.sec = route.sec === i ? null : i; route.limit = 150; render(); },
   studySec: () => { const d = deckById(route.deck), x = d && deckSections(d)[route.sec]; if (x) studySection(d, x); },
   // the deck page: its two tabs (back to the tabs' top when the page was scrolled past them), a block's sheet, …
@@ -5169,6 +5543,20 @@ const ACT = {
     const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c);
   },
   closeSheet: () => { aiCtl?.abort(); closeSheet(); },
+  // 辞書: an entry from the list (or from another entry: ← goes back to it), its two buttons, a deck it is in (its list, the word searched)
+  dictOpen: t => { const k = t.dataset.k, e = dictIndex().map.get(k); if (!e) return toast('この単語は見つかりませんでした');
+    if (!t.closest('#sheetroot')) DICT_HIST = []; else if (DICT_CUR && DICT_CUR !== k) DICT_HIST.push(DICT_CUR);
+    dictRecent(e); dictSheet(k); },
+  dictBack: () => { const k = DICT_HIST.pop(); if (k && dictIndex().map.has(k)) dictSheet(k); },
+  dictDeck: t => { const w = t.dataset.w; closeSheet(); ACT.openDeck(t); route.from = 'dict'; route.dtab = 'list'; route.q = w; render();   // back: the 辞書 and this entry
+    const l = $('.dk-list'); if (l) scrollTo(0, l.getBoundingClientRect().top + scrollY - 8); },
+  // the two buttons are drawn again in place: a quick second tap (within 0.5 s) would undo the first
+  dictAdd: t => { if (Date.now() - dictTapAt < 500) return; dictTapAt = Date.now(); const e = dictIndex().map.get(t.dataset.k); if (!e) return; const c = dictInMine(e); if (c) dictRemove(c); else dictPut(e); dictAfter(); },
+  dictWeak: t => { if (Date.now() - dictTapAt < 500) return; dictTapAt = Date.now(); const e = dictIndex().map.get(t.dataset.k); if (e) { dictWeak(e); dictAfter(); } },
+  dictUndo: () => dictUndo(),
+  dictMore: () => { dictLimit += 50; const r = $('#dictres'); if (r) r.innerHTML = dictResHTML(); },
+  dictForm: () => { const x = dictQuery(route.dq), b = $('#dformbox'); if (!x || !b) return; route.df = {dq: route.dq, w: x.raw || '', m: x.m || '', e: ''}; b.innerHTML = dictFormHTML(x); $('#dfm')?.focus(); },
+  unweak: t => { const c = findCard(t.dataset.deck, t.dataset.k), p = c && clone(prog(c)); if (!p?.wk) return; delete p.wk; p.u = Date.now(); setProg(c, p); cardSheet(c, true); render(); },   // the card sheet's 苦手から外す
   suspend: t => { const c = findCard(t.dataset.deck, t.dataset.k); const p = clone(prog(c)) || {st:0}; p.sus = !p.sus; p.last = Date.now(); setProg(c, p); cardSheet(c, true); render(); },
   resetCard: t => { const c = findCard(t.dataset.deck, t.dataset.k); if (!c) return; RESET_UNDO = {c, prev: clone(prog(c))};
     setProg(c, {st:0, last:Date.now()}); cardSheet(c, true); render(); toast('記録をリセットしました', {label:'元に戻す', act:'undoReset'}, 5000); },
@@ -5281,6 +5669,8 @@ document.addEventListener('click', e => {
 document.addEventListener('contextmenu', e => { const t = e.target.closest('.wrow'); if (!t) return; e.preventDefault(); const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c); });
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.id === 'q' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); e.target.blur(); return; }   // not while a Japanese word is being converted
+  if (e.key === 'Enter' && e.target.id === 'dq' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); route.dq = e.target.value; clearTimeout(dictT); dictRun(); e.target.blur(); return; }
+  if (e.key === 'Enter' && (e.target.id === 'dfw' || e.target.id === 'dfm') && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); $(e.target.id === 'dfw' ? '#dfm' : '#dfe')?.focus(); return; }   // on to the next field (例文: Enter adds)
   if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229 && e.target.tagName === 'INPUT' && e.target.closest?.('#newdeckform')) {   // not a submit: on to the next field
     e.preventDefault(); const n = e.target.id === 'dname' ? $('#imptext') : e.target.closest('.impx-row')?.nextElementSibling?.querySelector('.impx-m'); n ? n.focus() : e.target.blur(); return; }
   if (e.target.matches?.('[role="button"]') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); return; }
@@ -5310,6 +5700,11 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('input', e => {
   if (e.target.id === 'q') { route.q = e.target.value; route.limit = 150; const d = deckById(route.deck); if (d && $('#wordlist')) { $('#wordlist').innerHTML = wordRows(d); syncDock(d); } }
+  // 辞書: the results follow the typing (not while kana are being converted: compositionend runs it; Android's keyboard composes English words too)
+  if (e.target.id === 'dq') { route.dq = e.target.value; clearTimeout(dictT); if (!e.isComposing || !JA.test(e.target.value)) dictT = setTimeout(dictRun, 150); }
+  if (e.target.id === 'dfw' && !e.isComposing && JA.test(e.target.value)) {   // a pasted 「word 意味」 line: the meaning goes to its own field
+    const x = wordLine(e.target.value), m = $('#dfm'); if (x?.m) { e.target.value = x.w; if (m && !m.value.trim()) m.value = x.m; } }
+  if (e.target.closest?.('#dictform')) route.df = {dq: route.dq, w: $('#dfw')?.value || '', m: $('#dfm')?.value || '', e: $('#dfe')?.value || ''};
   if (e.target.id === 'imptext') { clearTimeout(impT); impT = setTimeout(() => { impT = null; impPreview(); }, 250); }
   if (e.target.classList?.contains('impx-m')) {   // a meaning typed for a word the app doesn't have: add that word
     const k = e.target.dataset.w, v = e.target.value; IMP.mean.set(k, v);
@@ -5326,10 +5721,12 @@ document.addEventListener('change', e => {
   if (e.target.classList?.contains('impx-on')) { IMP.on.set(e.target.dataset.w, e.target.checked); impCount(); }
 });
 document.addEventListener('toggle', e => { if (e.target.id === 'moreset') moreSetOpen = e.target.open; }, true);   // toggle doesn't bubble
+document.addEventListener('compositionend', e => { if (e.target.id === 'dq') { route.dq = e.target.value; clearTimeout(dictT); dictT = setTimeout(dictRun, 60); } });
 document.addEventListener('submit', e => {
   e.preventDefault();
   const f = e.target;
   if (f.id === 'mailform') { mailAuth(e.submitter?.dataset.mode || 'in'); return; }
+  if (f.id === 'dictform') { dictAddNew(); return; }
   if (f.id === 'newdeckform') { const items = importItems(analyzeImport($('#imptext')?.value || '', null));
     const id = createDeck($('#dname').value.trim().slice(0,40) || '新しい単語帳', items); closeSheet(); route.tab = 'decks'; route.deck = id; render(); toast(items.length ? `${items.length}語の単語帳をつくりました` : '単語帳をつくりました'); }
   if (f.id === 'renameform') { const d = S.custom[f.dataset.id]; d.name = $('#rname').value.trim().slice(0,40) || d.name; touchDeck(d.id); closeSheet(); render(); }
