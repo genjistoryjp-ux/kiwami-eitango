@@ -1132,6 +1132,7 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .sb > .btn-main{margin-top:4px}
 .sb > .btn-main ~ .sub{margin-top:8px}
 .sb.two{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:10px}
+.sbtns{display:flex;flex-direction:column;gap:6px}   /* ① after the goal: 続ける over おさらい */
 .nd-go{margin-top:8px}
 /* the main button and the quieter one beside it: a bottom edge, pressed down on tap */
 .btn-main{width:100%;min-height:54px;margin-bottom:4px;font-size:18px;letter-spacing:.02em;background:var(--accent);color:var(--accent-ink);box-shadow:0 4px 0 var(--accent-edge)}
@@ -3314,7 +3315,8 @@ function viewHome(){
       ${total ? `<div class="th-side">今日の目標<span><b class="num">${done}</b> / ${done + total}語</span></div>` : td.n ? `<div class="th-side">今日やった<span><b class="num">${td.n}</b>語を<b class="num">${tmin}</b>分で</span></div>` : ''}</div>
     ${nd ? nextDeckLine(nd) : paceHTML(act)}`;
   const node = (n, st) => `<span class="node" aria-hidden="true">${st === 'done' ? I.check : n}</span>`;
-  // ① 復習: today's reviews with the main button; then today's おさらい, or a lighter day's rest (続ける), still reachable here.
+  // ① 復習: today's reviews with the main button; then a heavy day's rest (続ける) and today's おさらい, both still reachable here
+  // (the rest first: a review matters more than a same-day check, so the おさらい never hides it).
   // The first day: 明日から (today's おさらい is under ほかの練習 then, so ① doesn't say なし beside a button)
   const revDone = !c.due && (td.rv || td.d0 > 0), revSt = c.due ? 'now' : revDone ? 'done' : 'skip';
   const revStep = `<li class="step rev ${revSt}">${node(1, revSt)}<div class="sb${!c.due && !day1 && (sdWait || c.dueAll) ? ' two' : ''}">
@@ -3324,8 +3326,9 @@ function viewHome(){
       ${tk === 'home2' ? tutHTML(tutLine((S.daily[dayKey(today - 1)]?.n ? 'home2' : 'home2later') + (isCardMode() ? 'card' : '')), 'in') : ''}`
     : day1 ? `<div><div class="sh"><b>復習</b><span class="nonet">${firstRev(act)}から</span></div>${tomorrow ? `<p class="sub">明日の復習は<b class="num">${tomorrow}</b>語</p>` : ''}</div>`
     : `<div><div class="sh"><b>復習</b>${revDone ? `<span class="okt">${td.rn ? `<b class="num">${td.rn}</b>語 ` : ''}完了</span>` : '<span class="nonet">今日はなし</span>'}</div>
-      ${(t => t ? `<p class="sub">${t}</p>` : '')(sdWait ? `<span class="sd">今日のおさらい ${sdWait}語</span>` : c.dueAll ? `今日の目標分はおわり。まだ<b class="num">${c.dueAll}</b>語あるので、続けてもOK` : tomorrow ? `明日の復習は<b class="num">${tomorrow}</b>語` : '')}</div>
-      ${sdWait ? '<button class="btn btn-sub sm" data-act="studyCheck">おさらい</button>' : c.dueAll ? '<button class="btn btn-sub sm" data-act="studyReview">続ける</button>' : ''}`}</div></li>`;
+      ${c.dueAll ? `<p class="sub">今日の目標分はおわり。まだ<b class="num">${c.dueAll}</b>語あるので、続けてもOK</p>` : ''}${sdWait ? `<p class="sub sd">今日のおさらい ${sdWait}語</p>` : !c.dueAll && tomorrow ? `<p class="sub">明日の復習は<b class="num">${tomorrow}</b>語</p>` : ''}</div>
+      ${c.dueAll && sdWait ? '<div class="sbtns"><button class="btn btn-sub sm" data-act="studyReview" data-more="1">続ける</button><button class="btn btn-sub sm" data-act="studyCheck">おさらい</button></div>'
+        : sdWait ? '<button class="btn btn-sub sm" data-act="studyCheck">おさらい</button>' : c.dueAll ? '<button class="btn btn-sub sm" data-act="studyReview">続ける</button>' : ''}`}</div></li>`;
   // ② 新しい単語: today's new words from where each deck is; the main button once the reviews are done
   const nwSt = c.newToday ? (c.due ? 'next' : 'now') : (td.nw || 0) > 0 ? 'done' : 'skip';
   const from = moreNew ? (where ? `${esc(where)}の続きから` : '') : act.length ? 'ぜんぶ学習しました' : '';
@@ -5603,8 +5606,9 @@ const ACT = {
   study: () => startQuiz({}),
   // the home lanes: 復習 (reviews, then today's おさらい, then a lighter day's rest) and 新しい単語. From a results screen
   // (Q is kept only there) the next set stays on that set's decks, e.g. a deck studied from its page that isn't in use
-  studyReview: () => { if (locked()) return; const o = nextOpts(), c = counts(o.deckIds);
-    const go = c.due ? {kind: 'review'} : sameDayWaiting(o.deckIds).length ? {kind: 'check'} : c.dueAll ? {kind: 'review', extraNew: true} : null;
+  // data-more: ①'s 続ける beside おさらい goes on with the rest of the reviews, not the おさらい
+  studyReview: t => { if (locked()) return; const o = nextOpts(), c = counts(o.deckIds), more = t?.dataset?.more && c.dueAll;
+    const go = c.due ? {kind: 'review'} : more ? {kind: 'review', extraNew: true} : sameDayWaiting(o.deckIds).length ? {kind: 'check'} : c.dueAll ? {kind: 'review', extraNew: true} : null;
     if (go) startQuiz({...o, ...go}); else toast('今日の復習はもう終わっています'); closeSheet(); },
   studyCheck: () => { if (locked()) return; startQuiz({...nextOpts(), kind: 'check'}); closeSheet(); },
   studyNew: () => {
