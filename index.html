@@ -2202,10 +2202,15 @@ const fD   = (d,g) => clamp(W[7]*fD0(4) + (1-W[7])*(d - W[6]*(g-3)), 1, 10);
 const fSr  = (d,s,r,g) => s*(1 + Math.exp(W[8])*(11-d)*Math.pow(s,-W[9])*(Math.exp((1-r)*W[10]) - 1)*(g===2?W[15]:1)*(g===4?W[16]:1));
 const fSf  = (d,s,r) => W[11]*Math.pow(d,-W[12])*(Math.pow(s+1,W[13]) - 1)*Math.exp((1-r)*W[14]);
 const isReview = p => p && p.st === 2;
-/* settled: answered right in a review on a later day than it was first learned (sd = that day; it stays once set).
-   Only then do its next meaning and its derivatives open. Records from before f / sd existed count once they have
-   two answers, the last one right or two right in all. */
-const settled = p => isReview(p) && !!(p.sd || (p.f == null && (p.r || 0) >= 2 && (p.lg >= 2 || p.r - (p.w || 0) >= 2)));
+/* settled: answered right in reviews on two later days than it was first learned (s1 = the first of them, sd = the
+   second, always after s1; sd stays once set). Only then do its next meaning and its derivatives open: one right answer
+   the next day came too soon (2026-10). A word sorted as 知ってる needs only its 4択 check (the sort is the first).
+   Records from the one-answer rule (sd, no s1) count once answered right again on a later day than sd (知ってる and
+   records without f: at once); records from before f / sd existed once they have two answers, the last one right or two
+   right in all. An sd on s1's own day was written by an older version on another device and doesn't count */
+const settled = p => isReview(p) && (p.s1 != null ? p.sd > p.s1 : p.sd != null ? !!p.k || p.f == null || (dayIdx(p.last) > p.sd && p.lg >= 2) : p.f == null && (p.r || 0) >= 2 && (p.lg >= 2 || p.r - (p.w || 0) >= 2));
+/* right answers still needed before it settles: 2, 1 (one later day already, or 知ってる waiting for its check) or 0 */
+const settleLeft = p => settled(p) ? 0 : isReview(p) && (p.s1 != null || p.sd != null || p.k) ? 1 : 2;
 function retr(p, today=dayIdx()){ return isReview(p) ? fR(Math.max(0, today - dayIdx(p.last)), p.s) : 0; }
 /* a new word's starting stability: もう一度 / 難しい as FSRS-4.5 (tomorrow), 正解 / 簡単 nearer FSRS-6 (2 and 7 days at 90%):
    a word got right was first recalled again only after 4 days, too late for many (initial-interval study, 2026-10) */
@@ -2232,9 +2237,18 @@ function nextState(p, g, now=Date.now(), fuzz=true){
   delete out.tc;   // a same-day check still waiting is replaced by this answer
   delete out.nl;   // 「次は聞き取り」 is used once
   out.w = (p?.w || 0) + (g === 1 ? 1 : 0); out.lg = g;
-  // f: the day it was first learned; sd: the first later day it was answered right
-  if (!isReview(p)) { out.f = today; delete out.sd; }
-  else if (!out.sd && (settled(p) || (g > 1 && today > (p.f ?? dayIdx(p.last))))) out.sd = today;
+  // f: the day it was first learned; s1, sd: the first and the second later day it was answered right
+  if (!isReview(p)) { out.f = today; delete out.s1; delete out.sd; }
+  else {
+    if (out.s1 == null && (out.sd != null || settled(p))) {   // a record from before s1
+      if (settled(p)) { out.sd = out.sd ?? today; out.s1 = out.sd - 1; }   // settled stays settled
+      else { out.s1 = out.sd; delete out.sd; }                   // the one-answer rule's day was the first right one
+    } else if (out.s1 != null && out.sd != null && !(out.sd > out.s1)) delete out.sd;   // an older version's, on s1's day
+    if (g > 1 && today > (p.f ?? dayIdx(p.last))) {
+      if (out.s1 == null) { out.s1 = out.k ? out.f ?? today - 1 : today; if (out.k) out.sd = today; }   // 知ってる: the sort was the first
+      else if (!out.sd && today > out.s1) out.sd = today;
+    }
+  }
   return out;
 }
 function status(p){
@@ -3662,8 +3676,8 @@ function viewSettings(){
     <div class="frow wrap"><div class="lab"><b>出題の形式</b><span>段階式：覚えるほど「英→日」→「日→英」→「スペル」と難しくなる</span></div>${seg('mode',[['auto','段階式'],['choice','4択だけ'],['flash','カード']], '出題の形式')}</div>
     <div class="frow"><div class="lab"><b>選択肢をタップで表示</b><span>4択の選択肢を隠しておき、答えを思い浮かべてからタップで表示（仲間はずれ問題は除く）</span></div>${sw('veil', '選択肢をタップで表示')}</div>
     <div class="frow"><div class="lab"><b>スペル入力を出す</b><span>段階式で、しっかり覚えた単語に出題</span></div>${sw('spell', 'スペル入力を出す')}</div>
-    <div class="frow"><div class="lab"><b>意味を1つずつ覚える</b><span><span class="rec">おすすめ：オン。</span>最初はメインの意味だけを出題し、後日の復習で正解したら2つ目・3つ目の意味を新しいカードとして1つずつ出題。オフにすると毎回すべての意味を表示</span></div>${sw('senseCards', '意味を1つずつ覚える')}</div>
-    <div class="frow"><div class="lab"><b>派生語も出題する</b><span><span class="rec">おすすめ：オン。</span>見出し語を後日の復習で正解したら、派生語（decide → decision など）を別のカードとして1つずつ出題</span></div>${sw('deriv', '派生語も出題する')}</div>
+    <div class="frow"><div class="lab"><b>意味を1つずつ覚える</b><span><span class="rec">おすすめ：オン。</span>最初はメインの意味だけを出題し、後日の復習で2回正解したら2つ目・3つ目の意味を新しいカードとして1つずつ出題。オフにすると毎回すべての意味を表示</span></div>${sw('senseCards', '意味を1つずつ覚える')}</div>
+    <div class="frow"><div class="lab"><b>派生語も出題する</b><span><span class="rec">おすすめ：オン。</span>見出し語を後日の復習で2回正解したら、派生語（decide → decision など）を別のカードとして1つずつ出題</span></div>${sw('deriv', '派生語も出題する')}</div>
     <div class="frow"><div class="lab"><b>新しい単語の順番</b></div>${seg('order',[['seq','単語帳の順'],['rand','ランダム']], '新しい単語の順番')}</div>
     <div class="frow wrap"><div class="lab"><b>苦手を特訓の対象</b><span>この回数以上まちがえた単語を集めます</span></div>${seg('drillMin', [[1,'1回以上'],[2,'2回以上'],[3,'3回以上'],[5,'5回以上']], '苦手を特訓の対象')}</div>
     <div class="frow"><div class="lab"><b>正解したら自動で次へ</b><span>正解したら答えを一瞬見せて、すぐ次の問題へ。「詳しく」で説明も見られます</span></div>${sw('autoNext', '正解したら自動で次へ')}</div>
@@ -4129,17 +4143,20 @@ function sensesProgress(c){
 }
 /* the meanings a question may show: the first one and those already learned (the rest stay ？？？ until their turn) */
 const metSenses = c => S.settings.senseCards && !c.isS && !c.isD ? c.s.filter((_, i) => i === 0 || 'ml'.includes(senseState(c, i))) : c.s;
-/* what a locked meaning waits for: the meaning before it (for the 2nd, the word itself) to be learned, then answered right in a later review */
+/* what a locked meaning waits for: the meaning before it (for the 2nd, the word itself) to be learned, then answered right in
+   reviews on two later days — 「2回」, 「もう1回」 once one is done, nothing for a 知ってる word waiting for its check */
+const rightLeft = p => { const n = settleLeft(p); return n === 2 ? '2回' : n === 1 && (p.s1 != null || p.sd != null) ? 'もう1回' : ''; };
 function lockNote(c, i){
   if (senseState(c, i) === 'n') return '次に出題';
-  return isReview(senseProg(c, i - 1)) ? `${i === 1 ? `${esc(c.w)} ` : `${i}つ目の意味`}の復習で正解すると出題` : `${i}つ目を覚えると出題`;
+  const p = senseProg(c, i - 1);
+  return isReview(p) ? `${i === 1 ? `${esc(c.w)} ` : `${i}つ目の意味`}の復習で${rightLeft(p)}正解すると出題` : `${i}つ目を覚えると出題`;
 }
 /* Meanings shown during study: the ones already met in full; the rest wait behind one ？？？ line until their turn.
    noProg: without the 学習ずみの意味 line (right after a miss it would read as praise) */
 function sensesGated(c, hit, compact=false, noProg=false){
   const open = i => i === 0 || i === hit || 'ml'.includes(senseState(c, i));
   const locked = c.s.filter((_, i) => !open(i)).length, nx = c.s.findIndex((_, i) => !open(i));
-  if (compact) return `<div class="fb-mean">${esc(c.s[hit]?.m || c.m)}${patHTML(c.s[hit]?.pat, 'pat inl')}</div>${locked ? `<div class="tease">ほかの意味もあと${locked}つ（${senseState(c, nx) === 'n' ? '次から1つずつ' : '後日の復習で正解すると1つずつ'}）</div>` : ''}`;
+  if (compact) return `<div class="fb-mean">${esc(c.s[hit]?.m || c.m)}${patHTML(c.s[hit]?.pat, 'pat inl')}</div>${locked ? `<div class="tease">ほかの意味もあと${locked}つ（${senseState(c, nx) === 'n' ? '次から1つずつ' : `後日の復習で${rightLeft(senseProg(c, nx - 1))}正解すると1つずつ`}）</div>` : ''}`;
   return (noProg ? '' : sensesProgress(c)) + `<ol class="senses">${c.s.map((x, i) => !open(i) ? ''
     : `<li class="${i === hit ? 'hit' : ''}"><span class="pos">${esc(x.p || '—')}</span><div class="sbody"><span class="sm">${esc(x.m)}</span>${patHTML(x.pat)}${i === hit && x.e
         ? `<div class="sex" lang="en">${exSay(markWord(x.e, c.w), x.e)}</div><div class="sja">${esc(x.j)}</div>` : ''}</div></li>`).join('')}${locked
@@ -5687,7 +5704,7 @@ const ACT = {
   dictClear: () => { const i = $('#dq'); if (!i) return; i.value = ''; route.dq = ''; route.df = null; clearTimeout(dictT); $('.dclr').hidden = true; dictRun(); },   // the shelves again (focused: the keyboard stays)
   dictForm: () => { const x = dictQuery(route.dq), b = $('#dformbox'); if (!x || !b) return; route.df = {dq: route.dq, w: x.raw || '', m: x.m || '', e: ''}; b.innerHTML = dictFormHTML(x); $('#dfm')?.focus(); },
   unweak: t => { const c = findCard(t.dataset.deck, t.dataset.k), p = c && clone(prog(c)); if (!p?.wk) return; delete p.wk; p.u = Date.now(); setProg(c, p); cardSheet(c, true); render(); },   // the card sheet's 苦手から外す
-  suspend: t => { const c = findCard(t.dataset.deck, t.dataset.k); const p = clone(prog(c)) || {st:0}; p.sus = !p.sus; p.last = Date.now(); setProg(c, p); cardSheet(c, true); render(); },
+  suspend: t => { const c = findCard(t.dataset.deck, t.dataset.k); const p = clone(prog(c)) || {st:0}; p.sus = !p.sus; p.u = Date.now(); setProg(c, p); cardSheet(c, true); render(); },   // u, not last: last is the last answer (FSRS and settled() read it)
   resetCard: t => { const c = findCard(t.dataset.deck, t.dataset.k); if (!c) return; RESET_UNDO = {c, prev: clone(prog(c))};
     setProg(c, {st:0, last:Date.now()}); cardSheet(c, true); render(); toast('記録をリセットしました', {label:'元に戻す', act:'undoReset'}, 5000); },
   // u: newer than the reset, so a sync doesn't bring the reset back (as in undoAnswer)
