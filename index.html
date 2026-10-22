@@ -18,7 +18,7 @@
 :root{
   --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F6F8FB; --pop:#FFFFFF; --ink:#17202E; --muted:#58657A; --faint:#5C687D; --line:#D8DEE7;
   --accent:#2B45D3; --accent-ink:#FFFFFF; --accent-soft:#E2E7FF; --accent-2:#8D9CF0;
-  --red:#D2363C; --red-soft:#FBE3E3; --sheet:#E04A50; --marker:#FFE45C; --hit:color-mix(in srgb,var(--marker) 42%,transparent); --ring:#A9B1BE;
+  --red:#D2363C; --red-soft:#FBE3E3; --sheet:#E04A50; --marker:#FFE45C; --hl:linear-gradient(transparent 12%,#FFE45C 12% 94%,transparent 94%); --hl-ink:var(--ink); --ring:#A9B1BE;
   --good:#167F56; --good-soft:#DCF2E8; --sg1:#F4A58A; --sg2:#EFC27A; --sg3:#7FCFA9; --sg4:#8FB1EE; --sg1f:#FBD3C4; --hard:#A8650C; --hard-soft:#FAEBD4; --again:#D9480F; --again-soft:#FDE6DC; --easy:#2259B8; --perfect:#8A3FD1; --easy-soft:#DEE8FA;
   --again-t:#B93E0C; --hard-t:#8A5208; --good-t:#126B48; --memo-ink:#2b2508; --streak:#F2701F; --streak-ink:#3B1A05; --streak-t:#A84A0B; --sw-off:var(--line);
   --streak-soft:#FFF0E4; --accent-edge:color-mix(in srgb,var(--accent) 68%,#0A1240); --ghost-edge:#CBD2DD;   /* the goal band; the edge under the home's buttons */
@@ -29,6 +29,7 @@
   --shadow:0 1px 2px rgba(23,32,46,.06),0 8px 22px rgba(23,32,46,.07);
   --f-word:"Literata",Georgia,"Times New Roman",serif;
   --f-ui:"BIZ UDPGothic","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+  --f-num:"Literata",var(--f-ui);   /* counts: Literata figures, any Japanese beside them (10問) in the UI face, never a mincho fallback */
   --r:14px;
   --tap:44px; --fs-cap:12px; --fs-meta:12.5px; --fs-ui:13.5px; --fs-body:15px; --fs-lead:17px;
   --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --dur-1:.15s; --dur-2:.2s; --ease-out:cubic-bezier(.2,.8,.3,1);
@@ -36,7 +37,7 @@
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#0F131A; --surface:#181E28; --surface-2:#131922; --pop:#1F2633; --ink:#E7ECF3; --muted:#9AA6B9; --faint:#8592A5; --line:#2A3341;
   --accent:#7F94FF; --accent-ink:#0F131A; --accent-soft:#232C4D; --accent-2:#4C5DAE;
-  --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hit:color-mix(in srgb,var(--marker) 28%,transparent); --ring:#59616E;
+  --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hl:linear-gradient(#E5C84E,#E5C84E); --hl-ink:#1D1A06; --ring:#59616E;
   --good:#4FD39B; --good-soft:#163428; --sg1:#B3644A; --sg2:#B08A45; --sg3:#3E9A74; --sg4:#5679B5; --sg1f:#5A3A30; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
   --again-t:#FF8A5C; --hard-t:#F0B35A; --good-t:#4FD39B; --memo-ink:var(--ink); --streak-t:var(--streak); --sw-off:var(--ring);
   --streak-soft:#3A2414; --accent-edge:color-mix(in srgb,var(--accent) 52%,#000); --ghost-edge:#0A0D12;
@@ -48,7 +49,7 @@
 :root[data-theme="dark"]{
   --bg:#0F131A; --surface:#181E28; --surface-2:#131922; --pop:#1F2633; --ink:#E7ECF3; --muted:#9AA6B9; --faint:#8592A5; --line:#2A3341;
   --accent:#7F94FF; --accent-ink:#0F131A; --accent-soft:#232C4D; --accent-2:#4C5DAE;
-  --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hit:color-mix(in srgb,var(--marker) 28%,transparent); --ring:#59616E;
+  --red:#FF6E72; --red-soft:#3A2023; --sheet:#B7343A; --marker:#7A6A1C; --hl:linear-gradient(#E5C84E,#E5C84E); --hl-ink:#1D1A06; --ring:#59616E;
   --good:#4FD39B; --good-soft:#163428; --sg1:#B3644A; --sg2:#B08A45; --sg3:#3E9A74; --sg4:#5679B5; --sg1f:#5A3A30; --hard:#F0B35A; --hard-soft:#3A2B14; --again:#FF8A5C; --again-soft:#3B2219; --easy:#7FB0FF; --perfect:#C79BFF; --easy-soft:#1A2A45;
   --again-t:#FF8A5C; --hard-t:#F0B35A; --good-t:#4FD39B; --memo-ink:var(--ink); --streak-t:var(--streak); --sw-off:var(--ring);
   --streak-soft:#3A2414; --accent-edge:color-mix(in srgb,var(--accent) 52%,#000); --ghost-edge:#0A0D12;
@@ -201,7 +202,7 @@ p{margin:0}
 .back{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-weight:700;font-size:13px;padding:6px 0}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chip{padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:12.5px;font-weight:700;color:var(--muted)}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}   /* chosen: pale blue and a blue edge, as everywhere */
 .toolrow{display:flex;gap:8px;align-items:center}
 .search{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 10px;height:40px}
 .search input{border:0;background:transparent;outline:none;flex:1;min-width:0}
@@ -418,7 +419,7 @@ p{margin:0}
 .stepper output{min-width:38px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;flex-wrap:wrap}
 .seg button{padding:7px 11px;font-size:12.5px;font-weight:700;color:var(--muted)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);border-radius:9px}
 input[type=range]{accent-color:var(--accent);width:130px}
 .field{display:flex;flex-direction:column;gap:5px}
 .field label{font-size:12.5px;font-weight:700;color:var(--muted)}
@@ -462,7 +463,8 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .senses{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;text-align:left;width:100%;counter-reset:sn}
 .senses li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:start;padding:6px 8px;border-radius:9px}
 .senses li .pos{margin-top:2px}
-.senses li.hit{background:var(--hit)}
+.senses li.hit .sm{font-size:18px;line-height:1.55;color:var(--hl-ink);background:var(--hl);border-radius:2px;padding:0 3px;margin:0 -3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}   /* the meaning being learned: first and large, under a highlighter */
+.senses li.hit .pos{margin-top:4px}
 .senses .sm{font-weight:700;font-size:15px;line-height:1.45}
 .senses .sbody{min-width:0}
 .sex{font-family:var(--f-word);font-size:14px;line-height:1.5;margin-top:3px;overflow-wrap:anywhere}
@@ -479,7 +481,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .nosound{min-height:40px;padding:8px 14px;font-size:12.5px;font-weight:700;color:var(--muted);border-radius:10px}
 .senses.compact{flex-direction:row;flex-wrap:wrap;gap:4px 6px}
 .senses.compact li{padding:2px 8px 2px 4px;gap:5px}
-.senses.compact .sm{font-size:13.5px}
+.senses.compact .sm,.senses.compact li.hit .sm{font-size:13.5px;line-height:1.45}
 .cardview .senses{margin-top:6px}
 .qfrom{font-size:13px;color:var(--muted);font-weight:700;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap;justify-content:center}
 .qfrom span{font-weight:400;font-size:12px}
@@ -535,7 +537,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .fb-actions .btn-primary{flex:1}
 @keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
 .fb-head{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;font-weight:700;font-size:17px}
-.fb-tt{white-space:nowrap}
+.fb-tt{display:inline-flex;align-items:center;white-space:nowrap}   /* the ○ / × and 不正解 on one line (.mk is a grid box) */
 .swask{margin-top:6px;font-size:13px;font-weight:700;color:var(--muted)}
 .fb.ok .fb-head{color:var(--good)} .fb.ng .fb-head{color:var(--again)}
 .fb-head .sp{flex:1}
@@ -610,6 +612,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .segs i.g1.fix{background:var(--sg1f)}
 .fb-head .mk{width:26px;height:26px;margin-right:6px;font-size:14px}
 .fb-more{font-size:12.5px;font-weight:700;color:var(--muted);padding:4px 10px;border-radius:999px;border:1px solid var(--line);margin-left:8px}
+@media (max-width:360px){.fb-head{gap:2px 6px;font-size:16px}.fb-head .fb-more{margin-left:0;padding:4px 8px}.fb-head .ivl{padding:2px 6px;font-size:11.5px}}   /* 320px: ×不正解, 「1問あとにもう一度」 and 詳しく on one line */
 .cmp{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border-radius:10px;background:var(--surface-2)}
 .cmp-row{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:14.5px;line-height:1.45}
 .cmp-l{flex:none;font-size:11px;font-weight:700;color:var(--muted);width:3em}
@@ -658,7 +661,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .screen-in.res .res-btns{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 22%);padding-top:26px;padding-bottom:max(6px,env(safe-area-inset-bottom,0px))}
 .res-done{display:flex;align-items:center;justify-content:center;gap:6px;font-weight:700;color:var(--good);padding:10px}
 
-.rate{margin-left:8px;font-family:var(--f-word);font-style:italic;font-weight:600;font-size:14px;letter-spacing:.01em}
+.rate{margin-left:8px;font-family:var(--f-word);font-weight:600;font-size:14px;letter-spacing:.01em}
 .rate.t4{color:var(--perfect)} .rate.t3{color:var(--easy)} .rate.t2{color:var(--good)} .rate.t1{color:var(--hard)}
 
 .dirrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;font-weight:700;color:var(--muted)}
@@ -727,10 +730,10 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .swnote{margin-top:-6px;font-size:12.5px;color:var(--muted)}
 .rword .moremean{font-size:12px}
 .pat{display:block;font-family:var(--f-word);font-weight:600;font-size:14px;color:var(--accent);line-height:1.35}
-.pat.inl{display:inline;margin-right:8px}
+.pat.inl{display:inline;margin-left:8px}
 .qpat{font-family:var(--f-word);font-weight:600;font-size:17px;color:var(--accent)}
 .wpat{display:block;font-family:var(--f-word);font-size:12px;font-weight:600;color:var(--accent);line-height:1.3;margin-top:1px}
-.senses.compact .pat{display:inline;font-size:12.5px;margin-right:4px}
+.senses.compact .pat{display:inline;font-size:12.5px;margin-left:5px}
 
 .drill .btn{flex-direction:column;gap:0;min-height:58px;line-height:1.3}
 .drill .btn span{font-size:13px}
@@ -767,8 +770,9 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .qtimer i.pf{background:var(--perfect)}
 .qrate{margin:0;min-width:5.2em;text-align:right;font-size:16px;line-height:1;transition:opacity .2s}
 .qrate.gone{opacity:0}
-.qrate.pop{animation:ratepop .35s cubic-bezier(.2,.9,.3,1.4)}
+.qrate.pop{animation:ratein .18s ease-out}
 @keyframes ratepop{from{transform:scale(.7)}50%{transform:scale(1.25)}to{transform:none}}
+@keyframes ratein{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:none}}   /* a grade name: in from the left, no bounce */
 
 .res-note{margin-top:8px;font-size:12.5px;color:var(--muted);text-align:center}
 .res-btns .btn-ghost small{margin-left:6px;font-size:11.5px;font-weight:400;color:var(--muted)}
@@ -836,7 +840,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 /* a right 4択 answer stays on the question: its grade on the chosen line, the next review where わからない was */
 .inl-fb{display:flex;justify-content:center;align-items:center;gap:12px;min-height:44px;margin-top:6px}
 .inl-fb .fb-more{margin-left:0}
-.choice .crate{margin:0;font-size:15px;animation:ratepop .35s cubic-bezier(.2,.9,.3,1.4)}
+.choice .crate{margin:0;font-size:15px;animation:ratein .18s ease-out both}
 .qnow{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
 .qcombo{position:absolute;left:42px;top:12px;font-size:12px;font-weight:700;color:var(--hard-t,var(--hard));white-space:nowrap;z-index:1}
 /* the sheet: [hidden] really hides (.fb-body / .fb-actions are display:flex); a sayex at a line end doesn't scroll it sideways */
@@ -1039,7 +1043,7 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .cv-hero .cv-pct{height:24px;font-size:13px}
 .cv-sm .cv-pct{min-width:30px;height:20px;padding:0 5px;right:-10px;top:-9px}
 .cv-tag{position:absolute;left:50%;bottom:-9px;z-index:2;transform:translateX(-50%);padding:2px 7px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-style:normal;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap}
-.cover.on::after{content:"";position:absolute;inset:-6px -7px -6px -6px;border-radius:calc(var(--cw) * .12) calc(var(--cw) * .22) calc(var(--cw) * .22) calc(var(--cw) * .12);box-shadow:0 0 0 2.5px var(--accent);pointer-events:none}   /* 使用中 */
+.cover.on::after{content:"";position:absolute;inset:-6px -7px -6px -6px;border-radius:calc(var(--cw) * .12) calc(var(--cw) * .22) calc(var(--cw) * .22) calc(var(--cw) * .12);box-shadow:0 0 0 2.5px var(--accent);pointer-events:none}   /* 使っている */
 .cv-ring{position:absolute;left:calc(var(--cw) * .06);top:calc(var(--cw) * -.2);z-index:2;width:calc(var(--cw) * .26);height:calc(var(--cw) * .44);border:3px solid var(--ring);border-bottom-color:transparent;border-left-color:transparent;border-radius:50%;transform:rotate(-24deg);pointer-events:none}
 .mekuru{display:block;flex:none;pointer-events:none;user-select:none}
 .hero-mk.wig{animation:mkwig .45s ease-out}
@@ -1078,7 +1082,7 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .th-big b{font-size:30px;line-height:1;letter-spacing:-.01em;margin:0 2px}
 .th-big.hit{font-size:24px;color:var(--streak-t);letter-spacing:.02em}
 .th-side{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;padding-bottom:1px;font-size:12px;font-weight:700;color:var(--muted);line-height:1.35;white-space:nowrap}
-.th-side b{font-size:22px;color:var(--ink);line-height:1.1}
+.th-side b{font-size:18px;color:var(--ink);line-height:1.1}
 .th-none{margin:10px 0 14px 24px;font-size:13.5px;color:var(--muted)}
 .today > .btn-main{margin-bottom:18px}
 /* under the head: the finish line 「12月28日 に 基礎 を一周」 (a tap: 1日の目標), or how far the deck is */
@@ -1101,8 +1105,8 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .sh{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 8px;min-height:40px;padding-top:5px}
 .sh > b{font-size:18px;line-height:1.5;letter-spacing:.02em}
 .step.done .sh > b,.step.skip .sh > b{font-size:16px;color:var(--muted)}
-.sn{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
-.sn b{font-size:24px;line-height:1;color:var(--ink);margin-right:1px}
+.sn{font-size:13px;color:var(--muted);white-space:nowrap}
+.sn b{font-size:19px;line-height:1;color:var(--ink);margin-right:1px}
 .okt{font-size:14px;font-weight:700;color:var(--good-t);white-space:nowrap}
 .nonet{font-size:13.5px;font-weight:700;color:var(--muted)}
 .st-tag{font-style:normal;font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap}
@@ -1168,7 +1172,7 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .hd-n > b{flex:1;min-width:0;font-size:15px;line-height:1.35;word-break:auto-phrase}
 .hd-p{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
 .hd-p small{font-size:12px;margin-right:3px}
-.hd-p b{font-size:18px;color:var(--ink);margin-right:1px}
+.hd-p b{font-size:16px;color:var(--ink);margin-right:1px}
 .hd-w{font-size:12.5px;line-height:1.35;color:var(--muted)}
 .hd-w b{font-size:13.5px;color:var(--ink)}
 .hbar{display:flex;height:8px;border-radius:999px;background:var(--st-new);overflow:hidden}
@@ -1185,7 +1189,15 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
 .hrow > .ico:last-child{width:18px;height:18px;color:var(--faint)}
 .rico{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;flex:none;background:var(--accent-soft);color:var(--accent)}
 .cnt{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
-.cnt b{font-size:17px;color:var(--ink);margin-right:1px}
+.cnt b{font-size:16px;color:var(--ink);margin-right:1px}
+/* a count (語・分・日・問・%) in Literata, the words' face, as on 記録 and the results; its unit small and regular. A date or a
+   number inside a sentence keeps the UI face */
+.th-big b,.th-side b,.sn b,.okt b,.dpill b,.hd-p b,.cnt b,.pill.streak .num,.u-sub b,.cv-pct,.dk-n b,.dk-n .pc,.dk-dots b,.xn,.np b,.gl .gn,.dtabs small.num,.ch > b,.stepper output{font-family:var(--f-num);font-weight:600;font-variant-numeric:lining-nums tabular-nums}
+.th-side > span,.hd-p,.cnt,.u-sub .nw,.dk-n,.dpill,.np,.pill.streak,.ch > b small{font-weight:400}
+.okt b{font-size:16px;margin-right:1px}
+.np b{font-size:13px;margin-right:1px}
+.gl .gn{margin:0 1px}
+.pill.streak .num{font-size:14px}
 /* the streak pill once today's goal is reached: warm, as the goal band */
 .pill.streak.done{background:var(--streak-soft);border-color:color-mix(in srgb,var(--streak) 45%,transparent);color:var(--streak-t)}
 .pill.streak.done .ico{fill:var(--streak)}
@@ -1196,11 +1208,11 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
   .step::before{left:17px;top:42px}
   .sh{min-height:36px;padding-top:3px;gap:0 6px}
   .sh > b{font-size:16px}
-  .sn b{font-size:20px}
+  .sn b{font-size:17px}
   .btn-sub.sm{padding:0 11px}
   .th-big b{font-size:26px}
-  .th-side b{font-size:20px}
-  .th-big.hit{font-size:20px;letter-spacing:0}   /* 「目標達成！」 beside 「今日やった 28語を 10分で」 at 320px */
+  .th-side b{font-size:17px}
+  .th-big.hit{font-size:20px;letter-spacing:0}   /* 「目標達成」 beside 「今日やった 28語を 10分で」 at 320px */
   .today.has-mk .step.goal .sb{padding-right:66px}
   .today .mk-btn,.today .hero-mk{width:72px;height:72px}
   .today .mk-btn{margin-top:-40px}
@@ -1208,6 +1220,7 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
   .gl{gap:4px}
   .dpill{padding:1px 7px}
   .mkbubble{right:70px;max-width:calc(100% - 116px)}
+  .today.has-mk .step.goal.hit{margin-top:28px}
 }
 /* sheet */
 .backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade .15s}
@@ -1249,6 +1262,14 @@ button.rrow{width:100%;text-align:left;grid-template-columns:24px minmax(0,1fr) 
   .btn-row .btn{font-size:14px;gap:6px}
 }
 @media (max-width:350px){.btn-row{grid-template-columns:1fr}}
+/* 320px results: two rows of buttons, each on one line */
+@media (max-width:360px){
+  .res-btns small.sets{display:none}
+  .res-btns .btn-big{padding:0 12px}
+  .res-btns .btn-row{grid-template-columns:minmax(0,1fr) auto}
+  .res-btns .btn-row .btn{padding:0 12px}
+  .res-btns .btn-row .btn:last-child{white-space:nowrap}
+}
 /* === C: tokens & base === */
 /* state colours as text: dark enough on white and on their own soft fills (bars, borders and fills keep --again / --hard / --good) */
 .g1{color:var(--again-t)} .g2{color:var(--hard-t)} .g3{color:var(--good-t)}
@@ -1321,7 +1342,7 @@ html{touch-action:manipulation}
 .tk{display:inline-block;margin:0 2px;padding:0 6px;border-radius:6px;font-size:12.5px;line-height:1.65;white-space:nowrap}
 .tk.g1,.tk.no{background:var(--again-soft);color:var(--again-t)} .tk.g2{background:var(--hard-soft);color:var(--hard-t)} .tk.g3{background:var(--good-soft);color:var(--good-t)}
 .tk.g4,.tk.yes{background:var(--easy-soft);color:var(--easy)} .tk.st{background:var(--streak-soft);color:var(--streak-t)}
-.tk.pf{background:color-mix(in srgb,var(--perfect) 13%,var(--surface));color:var(--perfect);font-family:var(--f-word);font-style:italic;font-weight:600}
+.tk.pf{background:color-mix(in srgb,var(--perfect) 13%,var(--surface));color:var(--perfect);font-family:var(--f-word);font-weight:600}
 /* a set of new words only: what you said about each, not a score — 「N語 めくった」 in the four colours, the words by when they come back */
 .res-fr{display:flex;align-items:center;justify-content:center;gap:20px;margin:2px 0}
 .fring{--a:0%;--b:0%;--c:0%;width:118px;height:118px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--easy) 0 var(--a),var(--good) 0 var(--b),var(--hard) 0 var(--c),var(--again) 0)}
@@ -1671,15 +1692,14 @@ const MK_LINES = {
   "{w} が一発で出た。成長期？"
  ],
  "res_review_done": [
-  "復習ぜんぶ片づいた！次は新顔とごあいさつ",
-  "忘れかけ組、全員救出。次いこ！",
-  "復習おわり。忘却曲線さん、今日は完敗です",
   "前に覚えた単語、ちゃんと残ってた。えらい",
-  "復習コンプ！ここから新しいページめくろ",
-  "古い友だちに挨拶完了。新入りが待ってる",
-  "復習クリア。ぼくのリングもちょっと軽い",
-  "復習ぜんぶOK！新しい単語、もう並んでる",
-  "計画通り…忘れかけた子から出しといた"
+  "忘却曲線さん、今日は完敗です",
+  "古い友だち、みんな顔を覚えててくれた",
+  "計画通り…忘れかけた子から出しといた",
+  "前のページ、まだインクが濃かった",
+  "忘れかけの単語、ぎりぎりでキャッチ",
+  "頭の引き出し、ちゃんと開いた。さびてない",
+  "覚えた単語、頭の棚にちゃんと並んでた"
  ],
  "res_fresh": [
   "{n}語、ぼくの束に仲間入り。リングがちょっと重い",
@@ -2336,7 +2356,7 @@ function senseState(c, i){
 const learnedSenses = c => c.s.filter((_, i) => 'ml'.includes(senseState(c, i))).length;
 function senseDots(c){
   if (c.s.length < 2) return '';
-  const lab = {m:'習得', l:'学習中', n:'次に出題', x:'まだ先'};
+  const lab = {m:'覚えた', l:'学習中', n:'次に出題', x:'まだ先'};
   return `<span class="sdots" role="img" aria-label="意味 ${learnedSenses(c)}/${c.s.length}">${c.s.map((_, i) => { const st = senseState(c, i); return `<i class="${st}" title="${i + 1}つ目の意味：${lab[st]}"></i>`; }).join('')}</span>`;
 }
 /* 休み明け・復習がたまった日: that day's review limit drops to about a usual day's (at least 2 sets), decided once when the
@@ -3109,14 +3129,14 @@ function topbar(){
   return `<div class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span><span class="brand-name">極<small>きわみ</small></span></div><span class="sp"></span>
     <button class="pill streak ${st.done ? 'done' : ''}" data-act="streakSheet" aria-label="連続 ${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}">${I.flame}<span class="num">${st.n}</span>日${fz}</button>${IS_WEB && FIREBASE ? `<button id="syncbtn" class="syncbtn" data-act="syncInfo"><span id="syncdot" class="syncdot ${Sync.state}"></span><span class="synclab">${syncShort()}</span></button>` : ''}</div>${iabNote()}`;   // no login: where the record is saved is told in 設定 (保存先), not by a bare dot
 }
-/* n / l / m: 未学習・学習中・習得 by status(); r: 学習ずみ (learnedIn) and pct, the deck's % (deckPct); q: sorted as まだ, not
-   learned yet (status() counts them in l). So 習得 m + the rest of 学習ずみ r - m + not yet n + q = total */
+/* n / l / m: 未学習・学習中・覚えた by status(); r: 学習ずみ (learnedIn) and pct, the deck's % (deckPct); q: sorted as まだ, not
+   learned yet (status() counts them in l). So 覚えた m + the rest of 学習ずみ r - m + not yet n + q = total */
 function deckStats(d){
   let n=0,l=0,m=0,r=0,q=0,due=0; const today = dayIdx();
   for (const c of d.cards) { const p = prog(c); const s = status(p); if (s==='new') n++; else if (s==='learn') l++; else m++; if (p?.st === 1) q++; if (isReview(p)) { r++; if (!p.sus && p.due <= today) due++; } }
   return {n,l,m,r,q,due,total:d.cards.length,pct:pctOf(r, d.cards.length)};
 }
-/* the centre is the deck's 学習ずみ % (st.pct); the two arcs add up to it: 習得, then the rest of 学習ずみ */
+/* the centre is the deck's 学習ずみ % (st.pct); the two arcs add up to it: 覚えた, then the rest of 学習ずみ */
 function donut(st, size = 88){
   const t = st.total || 1, pct = v => v ? Math.max(1, v / t * 100) : 0, pm = pct(st.m), pl = Math.min(pct(Math.max(0, st.r - st.m)), 100 - pm);
   const done = st.pct, r = 15.9155, arc = (cls, len, off) => len ? `<circle class="${cls}" cx="18" cy="18" r="${r}" pathLength="100" stroke-dasharray="${len.toFixed(2)} ${(100 - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>` : '';
@@ -3223,7 +3243,7 @@ Object.assign(I, {
   redo:'<svg class="ico" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v4.2h-4.2"/></svg>',
 });
 /* a deck in use on the home: its 表紙, name, 学習ずみ %, where you are (「いま No.101–200（45 / 100）」) and one bar
-   (習得, then the rest of 学習ずみ, as the donut); a tap opens its page */
+   (覚えた, then the rest of 学習ずみ, as the donut); a tap opens its page */
 function homeDeck(d){
   const st = deckStats(d), x = curSection(d), t = st.total || 1;
   const wl = st.r ? Math.max(1.5, st.r / t * 100) : 0, wm = Math.min(st.m / t * 100, wl);
@@ -3231,7 +3251,7 @@ function homeDeck(d){
   return `<button class="hdeck" data-act="openDeck" data-id="${esc(d.id)}">${deckCover(d, {size: 'sm'})}
     <span class="hd-m"><span class="hd-n"><b>${esc(d.name)}</b><span class="hd-p"><small>学習ずみ</small><b class="num">${st.pct}</b>%</span></span>
       <span class="hd-w">${where}</span>
-      <span class="hbar" role="img" aria-label="学習ずみ ${st.pct}%（習得${st.m}語、全${st.total}語）"><i class="m" style="width:${wm.toFixed(1)}%"></i><i class="l" style="width:${(wl - wm).toFixed(1)}%"></i></span></span></button>`;
+      <span class="hbar" role="img" aria-label="学習ずみ ${st.pct}%（覚えた${st.m}語、全${st.total}語）"><i class="m" style="width:${wm.toFixed(1)}%"></i><i class="l" style="width:${(wl - wm).toFixed(1)}%"></i></span></span></button>`;
 }
 /* ホーム: the 今日の学習 card is a short road — ① 復習 → ② 新しい単語 → ゴール (連続 N日 → N+1日, めくる waits there; a tap
    and it talks) — with one main button: 復習する while reviews are due, then 覚える. The parts keep their order in every
@@ -3253,7 +3273,7 @@ function viewHome(){
   const day1 = !c.dueAll && !daysBefore(today);   // nothing studied before today: reviews start tomorrow
   // head: what is left (のこり 約7分 ・ 今日の目標 12 / 40語), or 目標達成！ with what today held; under it the finish line
   const head = !act.length ? `<div class="th"><div class="th-t"><b class="th-big">単語帳を選ぼう</b></div></div>`
-    : `<div class="th"><div class="th-t">${total ? `<span class="th-big">のこり 約<b class="num">${mins(total)}</b>分</span>` : '<b class="th-big hit">目標達成！</b>'}</div>
+    : `<div class="th"><div class="th-t">${total ? `<span class="th-big">のこり 約<b class="num">${mins(total)}</b>分</span>` : '<b class="th-big hit">目標達成</b>'}</div>
       ${total ? `<div class="th-side">今日の目標<span><b class="num">${done}</b> / ${done + total}語</span></div>` : td.n ? `<div class="th-side">今日やった<span><b class="num">${td.n}</b>語を <b class="num">${tmin}</b>分で</span></div>` : ''}</div>
     ${nd ? nextDeckLine(nd) : paceHTML(act)}`;
   const node = (n, st) => `<span class="node" aria-hidden="true">${st === 'done' ? I.check : n}</span>`;
@@ -3266,7 +3286,7 @@ function viewHome(){
       ${c.dueAll > c.due ? `<p class="sub">今日の目標は <b class="num">${c.due}</b>語（${aboutMin(c.due)}）。多い日は少しずつでOK、続けてもOK</p>` : ''}${sdWait ? `<p class="sub sd">＋今日のおさらい ${sdWait}語（復習のあとに出ます）</p>` : ''}
       ${tk === 'home2' ? tutHTML(tutLine((S.daily[dayKey(today - 1)]?.n ? 'home2' : 'home2later') + (isCardMode() ? 'card' : '')), 'in') : ''}`
     : day1 ? `<div><div class="sh"><b>復習</b><span class="nonet">${firstRev(act)}から</span></div>${tomorrow ? `<p class="sub">明日の復習は <b class="num">${tomorrow}</b>語</p>` : ''}</div>`
-    : `<div><div class="sh"><b>復習</b>${revDone ? `<span class="okt">${td.rn ? `${td.rn}語 ` : ''}完了</span>` : '<span class="nonet">今日はなし</span>'}</div>
+    : `<div><div class="sh"><b>復習</b>${revDone ? `<span class="okt">${td.rn ? `<b class="num">${td.rn}</b>語 ` : ''}完了</span>` : '<span class="nonet">今日はなし</span>'}</div>
       ${(t => t ? `<p class="sub">${t}</p>` : '')(sdWait ? `<span class="sd">今日のおさらい ${sdWait}語</span>` : c.dueAll ? `今日の目標分はおわり。まだ <b class="num">${c.dueAll}</b>語あるので、続けてもOK` : tomorrow ? `明日の復習は <b class="num">${tomorrow}</b>語` : '')}</div>
       ${sdWait ? '<button class="btn btn-sub sm" data-act="studyCheck">おさらい</button>' : c.dueAll ? '<button class="btn btn-sub sm" data-act="studyReview">続ける</button>' : ''}`}</div></li>`;
   // ② 新しい単語: today's new words from where each deck is; the main button once the reviews are done
@@ -3275,13 +3295,13 @@ function viewHome(){
   const newStep = `<li class="step new ${nwSt}">${node(2, nwSt)}<div class="sb${c.newToday ? (c.due ? ' two' : '') : !nd && moreNew && total ? ' two' : ''}">
     ${c.newToday ? `<div><div class="sh"><b>新しい単語</b><span class="sn"><b class="num">${c.newToday}</b>語</span></div>${from ? `<p class="sub">${from}</p>` : ''}</div>
       <button class="btn ${c.due ? 'btn-sub sm' : 'btn-main'}" data-act="studyNew">${c.due ? '' : I.play}覚える</button>`
-    : `<div><div class="sh"><b>新しい単語</b>${(td.nw || 0) > 0 ? `<span class="okt">${td.nw}語 覚えた</span>` : !moreNew ? '<span class="nonet">ありません</span>' : ''}</div>
+    : `<div><div class="sh"><b>新しい単語</b>${(td.nw || 0) > 0 ? `<span class="okt"><b class="num">${td.nw}</b>語 覚えた</span>` : !moreNew ? '<span class="nonet">ありません</span>' : ''}</div>
       ${(t => t ? `<p class="sub">${t}</p>` : '')(!(td.nw > 0) && moreNew ? (td.aw ? '休み明けなので、今日は<span class="nw">復習を優先</span>' : '今日の新しい単語は0語の設定') : total || nd ? from : !moreNew ? from : '')}</div>
       ${nd ? `<div class="nd-go">${nextDeckBtn(nd, 'btn-soft')}</div>` : moreNew && total ? '<button class="btn btn-sub sm" data-act="studyNew">覚える</button>' : ''}`}</div></li>`;
-  // ゴール: 連続 N日 → N+1日 (the pill above says N); reached: 連続 N日！ on a warm band, めくる says やったね！
+  // ゴール: 連続 N日 → N+1日 (the pill above says N); reached: 連続N日 on a warm band, めくる says やったね！ (the one 「！」)
   const mk = MEKURU.normal ? `<button class="mk-btn" data-act="mkTalk" aria-label="めくるに話しかける">${mekuru(heavy === 'away' ? 'cheer' : hit ? 'happy' : 'normal', 'hero-mk')}</button><div id="mkbubble" class="mkbubble" role="status"${hit && tk !== 'home1' ? '' : ' hidden'}>${hit ? esc(milestoneText(stk.n) || 'やったね！') : ''}</div>` : '';
   const goalStep = `<li class="step goal${hit ? ' hit' : ''}"><span class="node" aria-hidden="true">${I.flame}</span><div class="sb">
-    ${hit ? `<b class="gl">連続 ${stk.n}日！</b>` : stk.n ? `<b class="gl">連続 <span class="dpill"><b class="num">${stk.n}</b>日</span><span class="arrow" aria-label="から">→</span><span class="dpill lit"><b class="num">${stk.n + 1}</b>日</span></b>`
+    ${hit ? `<b class="gl">連続<span class="num gn">${stk.n}</span>日</b>` : stk.n ? `<b class="gl">連続 <span class="dpill"><b class="num">${stk.n}</b>日</span><span class="arrow" aria-label="から">→</span><span class="dpill lit"><b class="num">${stk.n + 1}</b>日</span></b>`
       : `<b class="gl">${stk.prev > 1 ? 'また ' : '連続 '}<span class="dpill lit"><b class="num">1</b>日目</span></b>${stk.prev > 1 ? `<span class="gsub">前回は${stk.prev}日 続きました</span>` : ''}`}${hit ? '' : '<span class="gsub">①と②がおわったら</span>'}</div>${mk}</li>`;
   // the first home: under the goal (めくる is right there), what the goal does for the streak
   const goalTip = tk === 'home1' ? tutHTML(hit ? tutLine('home1hit') : tutLine('home1', {n: total}), 'up') : '';
@@ -3320,13 +3340,13 @@ function heatmap(){
 const DECK_ICO = {junior:'中', j1:'基', j2:'標', j3:'発', toeic:'T', theme:'テ', idioms:'熟', tagi:'多'};
 /* 表紙: a deck as a book face in its own colour (--cv-<id>; a deck you made: --cv-my and its first letter), with the small 極.
    opts: size 'hero' (92×120) | 'sm' (44×58) | shelf (72×96, the default); pct: true = the 学習ずみ % badge (a number: that one);
-   on: 使用中 (an accent outline); tag: a word on its lower edge instead of the 極 (e.g. 'いまここ'); ring: the card ring through the hole;
+   on: 使っている (an accent outline); tag: a word on its lower edge instead of the 極 (e.g. 'いまここ'); ring: the card ring through the hole;
    alt: named for screen readers (else hidden: the row beside it says the name) */
 function deckCover(d, opts = {}){
   const ch = DECK_ICO[d.id] || ([...(d.name || '').trim()][0] || '?').toUpperCase(), lat = /^[\x21-\x7e]$/.test(ch);
   const pct = opts.pct === true ? deckPct(d) : typeof opts.pct === 'number' ? opts.pct : null;
   const cls = `cover${opts.size === 'hero' ? ' cv-hero' : opts.size === 'sm' ? ' cv-sm' : ''}${opts.on ? ' on' : ''}`;
-  const name = opts.alt ? `role="img" aria-label="${esc(d.name)}${pct != null ? `、学習ずみ ${pct}%` : ''}${opts.on ? '、使用中' : ''}"` : 'aria-hidden="true"';
+  const name = opts.alt ? `role="img" aria-label="${esc(d.name)}${pct != null ? `、学習ずみ ${pct}%` : ''}${opts.on ? '、使っている' : ''}"` : 'aria-hidden="true"';
   return `<span class="${cls}" style="--cv:var(--cv-${DECK_ICO[d.id] ? d.id : 'my'})" ${name}><span class="cv-face"></span><span class="cv-kj${lat ? ' lat' : ''}">${esc(ch)}</span>${BRAND && !opts.tag ? '<i class="cv-mk"></i>' : ''}${pct != null ? `<b class="cv-pct num">${pct}%</b>` : ''}${opts.tag ? `<em class="cv-tag">${esc(opts.tag)}</em>` : ''}${opts.ring ? '<span class="cv-ring"></span>' : ''}</span>`;
 }
 /* 単語帳 tab: the decks in use as cards, then the shelves (受験英単語シリーズ in the order to go in, the ＋α decks), then
@@ -3353,12 +3373,12 @@ function useCard(d, going){
 }
 function shelfBook(d){
   const on = S.settings.active.includes(d.id), pct = deckPct(d);
-  return `<button class="sbook" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}${pct ? `、学習ずみ ${pct}%` : ''}${on ? '、使用中' : ''}">${deckCover(d, {pct: pct || null, on})}
-    <span class="sb-n">${esc(SERIES.includes(d.id) ? deckNick(d) : d.name).replace(' ', '<br>')}</span><span class="sb-s${on ? ' use' : ''}">${on ? '使用中' : esc(SHELF_SUB[d.id] || d.tag || '')}</span></button>`;
+  return `<button class="sbook" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}${pct ? `、学習ずみ ${pct}%` : ''}${on ? '、使っている' : ''}">${deckCover(d, {pct: pct || null, on})}
+    <span class="sb-n">${esc(SERIES.includes(d.id) ? deckNick(d) : d.name).replace(' ', '<br>')}</span><span class="sb-s${on ? ' use' : ''}">${on ? '使っている' : esc(SHELF_SUB[d.id] || d.tag || '')}</span></button>`;
 }
 function myRow(d){
   const st = deckStats(d), on = S.settings.active.includes(d.id);
-  return `<button class="ucard my" data-act="openDeck" data-id="${esc(d.id)}">${deckCover(d, {size: 'sm'})}<span class="u-main"><span class="u-name">${esc(d.name)}${on ? '<span class="u-tag">使用中</span>' : ''}</span>
+  return `<button class="ucard my" data-act="openDeck" data-id="${esc(d.id)}">${deckCover(d, {size: 'sm'})}<span class="u-main"><span class="u-name">${esc(d.name)}${on ? '<span class="u-tag">使っている</span>' : ''}</span>
     <span class="u-sub"><span class="nw"><b class="num">${st.r}</b> / ${st.total}語 学習ずみ</span>${st.total ? `<span class="cur nw">${st.pct}%</span>` : ''}</span></span>${I.right}</button>`;
 }
 /* the 単語帳 tab: the title, the 辞書's search box, then the shelves; while the box holds a word its results take their place */
@@ -3373,8 +3393,9 @@ function viewDecks(){
 function shelvesHTML(){
   const ds = decks(), act = activeIds().map(deckById), built = ds.filter(d => d.builtin), mine = ds.filter(d => !d.builtin);
   const series = SERIES.map(id => built.find(d => d.id === id)).filter(Boolean), plus = built.filter(d => !SERIES.includes(d.id));
-  // 進めている: the deck new words come from first (単語帳の順: the first one in use not yet through); none when they come at random
-  const going = S.settings.order === 'rand' ? null : act.find(d => curSection(d));
+  // 進めている: the deck new words come from first (単語帳の順: the first one in use not yet through); none when they come at
+  // random, or with one deck in use (nothing to tell it from)
+  const going = S.settings.order === 'rand' || act.length < 2 ? null : act.find(d => curSection(d));
   return `<section class="blk" aria-label="使っている単語帳"><div class="blk-h"><h2>使っている単語帳</h2></div>
     <div class="ucards">${act.length ? act.map(d => useCard(d, d === going)).join('') : '<div class="u-none">まだありません。下の表紙をタップして、使う単語帳を選んでください。</div>'}</div></section>
   ${series.length ? `<section class="blk" aria-label="受験英単語シリーズ"><div class="blk-h"><h2>受験英単語シリーズ</h2></div>
@@ -3452,7 +3473,7 @@ function pathTab(d, xs, cur){
     return `<li><button class="bnode${full ? ' done' : ''}${all ? ' all' : ''}${here ? ' cur' : ''}${later ? ' later' : ''}" data-act="secSheet" data-i="${x.i}" aria-label="${secSay(x)}、${t}語中${k}語学習ずみ${all ? '、派生語と意味までぜんぶ学習ずみ' : ''}${here ? '、いまここ' : ''}">${here ? '<span class="curbg"></span>' : ''}
       <span class="bnd num">${blockRing(x, k, m)}${x.i + 1}${full ? `<span class="ok">${all ? I.star : I.check}</span>` : ''}</span>
       <span class="nt"><b class="num">${secLabel(x)}${here ? '<em class="here">いまここ</em>' : ''}</b>${here ? learnBar(m, k, t) : ''}${nums}</span>
-      <span class="np num">${t}語</span>${here ? mekuru('normal', 'mkpeek') : ''}</button></li>`;
+      <span class="np"><b class="num">${t}</b>語</span>${here ? mekuru('normal', 'mkpeek') : ''}</button></li>`;
   }).join('');
   const nWeak = drillCards('many', [d.id]).length, nRecent = drillCards('recent', [d.id]).length, min = S.settings.drillMin || 2;
   return `<ol class="bpath">${nodes}
@@ -3580,9 +3601,9 @@ function viewStats(){
   <h1 class="pg-h">記録</h1>
   ${recHero(streakInfo(), td)}
   <div class="sec"><div class="sec-h"><h2>単語</h2></div><div class="ledger">
-    ${row('習得した単語', loc(m), `/ ${loc(all.length)}語`)}${row('学習中の単語', loc(l), '語')}
-    ${row('覚えた意味', loc(senseLearned), `/ ${loc(senseTotal)}`)}${row('意味をぜんぶ覚えた単語', loc(senseComplete), '語')}
-    ${row('習得した派生語', loc(dm), `/ ${loc(allD.length)}語`)}${row('学習中の派生語', loc(dl), '語')}</div></div>
+    ${row('覚えた単語', loc(m), `/ ${loc(all.length)}語`)}${row('学習中の単語', loc(l), '語')}
+    ${row('学習ずみの意味', loc(senseLearned), `/ ${loc(senseTotal)}`)}${row('意味をぜんぶ学習ずみ', loc(senseComplete), '語')}
+    ${row('覚えた派生語', loc(dm), `/ ${loc(allD.length)}語`)}${row('学習中の派生語', loc(dl), '語')}</div></div>
   <div class="sec"><div class="sec-h"><h2>単語帳ごとの進み具合</h2></div>
     <div class="ledger">${decks().map(deckRow).join('')}</div>${legendHTML()}</div>
   <div class="sec"><div class="sec-h"><h2>復習</h2><span class="sub">この30日</span></div><div class="ledger">
@@ -3674,7 +3695,7 @@ function cardSheet(c, keep=false){
   const p = prog(c), today = dayIdx(), s = status(p);
   const memo = S.notes[c.deck]?.[c.k];
   const deck = deckById(c.deck);
-  const stLabel = p?.sus ? '出題しない' : {new:'未学習', learn:'学習中', master:'習得'}[s];
+  const stLabel = p?.sus ? '出題しない' : {new:'未学習', learn:'学習中', master:'覚えた'}[s];
   const refIn = route.tab === 'decks' && S.custom[route.deck]?.cards?.some(x => x.ref === c.deck + '|' + c.k) ? route.deck : null;   // opened from a custom deck that refers to it
   openSheet(`<div class="sheet-h"><h3>${esc(deck?.name || '')}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="tcard holed cardview"><span class="ring"></span>
@@ -4066,12 +4087,12 @@ const patHTML = (pat, cls = 'pat') => {
   const [en, ja] = String(pat).split('｜'), gloss = ja && cls.split(' ')[0] === 'pat';
   return `<span class="${cls}" lang="en">${esc(en)}${gloss ? `<span class="pg" lang="ja">${esc(ja)}</span>` : ''}</span>`;
 };
-/* 覚えた意味 (the 記録 tab's word, not the 3-week 習得): nothing before the first; コンプリート only once every one is 習得 */
+/* 学習ずみの意味 (as on 記録; 覚えた is the 3-week state): nothing before the first; コンプリート only once every one is 覚えた */
 function sensesProgress(c){
   if (c.s.length < 2) return '';
   const n = learnedSenses(c); if (!n) return '';
   const all = c.s.every((_, i) => senseState(c, i) === 'm');
-  return `<div class="sprog">${senseDots(c)}<span>覚えた意味 ${n} / ${c.s.length}${n < c.s.length ? `（あと${c.s.length - n}つ）` : all ? ' でコンプリート' : ''}</span></div>`;
+  return `<div class="sprog">${senseDots(c)}<span>学習ずみの意味 ${n} / ${c.s.length}${n < c.s.length ? `（あと${c.s.length - n}つ）` : all ? ' でコンプリート' : ''}</span></div>`;
 }
 /* the meanings a question may show: the first one and those already learned (the rest stay ？？？ until their turn) */
 const metSenses = c => S.settings.senseCards && !c.isS && !c.isD ? c.s.filter((_, i) => i === 0 || 'ml'.includes(senseState(c, i))) : c.s;
@@ -4081,13 +4102,13 @@ function lockNote(c, i){
   return isReview(senseProg(c, i - 1)) ? `${i === 1 ? `${esc(c.w)} ` : `${i}つ目の意味`}の復習で正解すると出題` : `${i}つ目を覚えると出題`;
 }
 /* Meanings shown during study: the ones already met in full; the rest wait behind one ？？？ line until their turn.
-   noProg: without the 覚えた意味 line (right after a miss it would read as praise) */
+   noProg: without the 学習ずみの意味 line (right after a miss it would read as praise) */
 function sensesGated(c, hit, compact=false, noProg=false){
   const open = i => i === 0 || i === hit || 'ml'.includes(senseState(c, i));
   const locked = c.s.filter((_, i) => !open(i)).length, nx = c.s.findIndex((_, i) => !open(i));
-  if (compact) return `<div class="fb-mean">${patHTML(c.s[hit]?.pat, 'pat inl')}${esc(c.s[hit]?.m || c.m)}</div>${locked ? `<div class="tease">ほかの意味 あと${locked}つ（${senseState(c, nx) === 'n' ? '次から1つずつ' : '後日の復習で正解すると1つずつ'}）</div>` : ''}`;
+  if (compact) return `<div class="fb-mean">${esc(c.s[hit]?.m || c.m)}${patHTML(c.s[hit]?.pat, 'pat inl')}</div>${locked ? `<div class="tease">ほかの意味 あと${locked}つ（${senseState(c, nx) === 'n' ? '次から1つずつ' : '後日の復習で正解すると1つずつ'}）</div>` : ''}`;
   return (noProg ? '' : sensesProgress(c)) + `<ol class="senses">${c.s.map((x, i) => !open(i) ? ''
-    : `<li class="${i === hit ? 'hit' : ''}"><span class="pos">${esc(x.p || '—')}</span><div class="sbody">${patHTML(x.pat)}<span class="sm">${esc(x.m)}</span>${i === hit && x.e
+    : `<li class="${i === hit ? 'hit' : ''}"><span class="pos">${esc(x.p || '—')}</span><div class="sbody"><span class="sm">${esc(x.m)}</span>${patHTML(x.pat)}${i === hit && x.e
         ? `<div class="sex" lang="en">${markWord(x.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(x.e)}" lang="ja" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(x.j)}</div>` : ''}</div></li>`).join('')}${locked
     ? `<li class="locked"><span class="pos" title="次に出る意味の品詞">${esc(c.s[nx]?.p || '？')}</span><div class="sbody"><span class="sm">？？？</span><span class="lk">ほかの意味 あと${locked}つ</span><div class="lkn">${lockNote(c, nx)}</div></div></li>` : ''}</ol>`;
 }
@@ -4097,7 +4118,7 @@ function sensesHTML(c, hit=-1, ex='hit', compact=false, limit=0){
   return `<ol class="senses${compact ? ' compact' : ''}">${c.s.map((s,i) => {
     const showEx = s.e && (ex === 'all' || (ex === 'hit' && i === hit));
     const extra = hidden && i >= limit && i !== hit;
-    return `<li class="${i === hit ? 'hit' : ''}${extra ? ' extra' : ''}"><span class="pos">${esc(s.p || '—')}</span><div class="sbody">${patHTML(s.pat)}<span class="sm">${esc(s.m)}</span>${showEx
+    return `<li class="${i === hit ? 'hit' : ''}${extra ? ' extra' : ''}"><span class="pos">${esc(s.p || '—')}</span><div class="sbody"><span class="sm">${esc(s.m)}</span>${patHTML(s.pat)}${showEx
       ? `<div class="sex" lang="en">${markWord(s.e, c.w)}<button class="sayex" data-act="sayex" data-w="${esc(s.e)}" lang="ja" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(s.j)}</div>` : ''}</div></li>`;
   }).join('')}</ol>${hidden ? `<button class="more-s" data-act="moreSenses">＋ほかの意味 ${hidden}つ</button>` : ''}`;
 }
@@ -4471,7 +4492,7 @@ function inlineOK(it, np){
   srSay(`正解。${RATE_NAME[it.tier] || ''}`);
 }
 /* the full explanation: the meanings met so far, 語源・コア, 派生語 (the sheet's 詳しく, and a word tapped on the results).
-   noProg: without the 覚えた意味 line */
+   noProg: without the 学習ずみの意味 line */
 function detailHTML(it, noProg = false){
   const c = it.c, hit = (it.type === 'odd' || isSpell(it.type) || it.type === 'flash' || c.isD) ? -1 : it.si;
   const use = it.type === 'use' ? useNoteHTML(c, it.si) : '';
@@ -4561,7 +4582,7 @@ function haptic(ok){
    withHead: a derivative's screen also has a chip for its headword (a headword's own list doesn't name itself) */
 function familyHTML(c, hit, withHead = false){
   if (!c.fam || !c.fam.length) return '';
-  const tag = f => !f ? '見出し語' : !f.card ? '別の見出し語' : ({master:'習得', learn:'学習中'})[status(prog(f.card))] || '';
+  const tag = f => !f ? '見出し語' : !f.card ? '別の見出し語' : ({master:'覚えた', learn:'学習中'})[status(prog(f.card))] || '';
   const chip = (w, p, f) => `<button class="fchip${w === hit ? ' on' : ''}" data-act="famchip" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}" data-w="${esc(w)}"><b lang="en">${esc(w)}</b><span class="pos">${esc(p)}</span></button>`;
   const open = hit ? famDetail(c, hit) : '';
   return `<div class="fam"><div class="fam-h">派生語<span class="fam-sub">タップで意味・例文</span></div><div class="fchips">${withHead ? chip(c.w, c.p, null) : ''}${c.fam.map(f => chip(f.w, f.p, f)).join('')}</div>
@@ -4570,7 +4591,7 @@ function familyHTML(c, hit, withHead = false){
 function famDetail(c, w){
   const f = c.fam.find(x => x.w === w);
   const p = f ? f.p : c.p, m = f ? f.m : allMeanings(c), e = f ? f.e : c.e, j = f ? f.j : c.j;
-  const t = !f ? '見出し語' : !f.card ? '別の見出し語' : ({master:'習得', learn:'学習中'})[status(prog(f.card))] || '';
+  const t = !f ? '見出し語' : !f.card ? '別の見出し語' : ({master:'覚えた', learn:'学習中'})[status(prog(f.card))] || '';
   return `<div class="frow1"><span class="pos">${esc(p)}</span><b class="fw" lang="en">${esc(w)}</b>${ipaInline(w, p)}<button class="sayex" data-act="say" data-w="${esc(w)}" data-p="${esc(p)}" aria-label="発音">${I.say}</button>${t ? `<span class="ftag">${t}</span>` : ''}</div>
     <div class="sm">${esc(m)}</div>${e ? `<div class="sex" lang="en">${markWord(e, w)}<button class="sayex" data-act="sayex" data-w="${esc(e)}" lang="ja" aria-label="例文を聞く">${I.say}</button></div><div class="sja">${esc(j)}</div>` : ''}`;
 }
@@ -4685,6 +4706,7 @@ function reveal(noProg = false){
   const ety = isNew && it.first === null ? (c.isD ? affixHTML(c) : c.isS ? linkHTML(c) : etyHTML(c)) : '';
   const pron = !it.flip ? `<div class="back-pron">${ipaHTML(c)}</div>` : '';   // every card's answer side: how it sounds
   $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `<div class="back-face">${front}${pron}${back}${parentLine(c)}${ety}</div>`);
+  const qp = $('#qcard .qpat'); if (qp && [...document.querySelectorAll('#qcard .back-face .pat')].some(x => x.firstChild?.textContent === qp.textContent)) qp.remove();   // the collocation once: under its meaning
   if (it.flip) playWord(c.w, c.p);
   if (it.first !== null || it.sameDay) {
     // second look in this set (or today's check): the review date is already set, so only "again or got it" matters here
@@ -4732,7 +4754,7 @@ function renderResults(){
     <span class="rword"><b lang="en">${esc(x.c.w)}</b><span>${x.c.isD ? `← ${esc(x.c.parent.w)}　` : ''}${studyMeaningHTML(x.c)}</span></span><span class="ivl">${x.after ? ivlW(x.after.due - today) : ''}</span>${I.right}</button>`; }).join('');
   // the speed grades this set earned, and once ever what they mean
   const tiers = !prac && its.some(x => x.tier > 0), miss = missed.filter(x => isReview(x.p0)).length;
-  const tierRow = tiers ? `<span class="tiers">${[4, 3, 2, 1].map(t => [t, its.filter(x => x.tier === t).length]).filter(([, k]) => k).map(([t, k]) => `<span class="rate t${t}">${RATE_NAME[t]} <b class="num">${k}</b></span>`).join('')}${miss ? `<span class="rate tx">× <b class="num">${miss}</b></span>` : ''}</span>` : '';
+  const tierRow = tiers ? `<span class="tiers">${[4, 3, 2, 1].map(t => [t, its.filter(x => x.tier === t).length]).filter(([, k]) => k).map(([t, k]) => `<span class="rate t${t}">${RATE_NAME[t]} <b class="num">${k}</b></span>`).join('')}${miss ? `<span class="rate tx">まちがい <b class="num">${miss}</b></span>` : ''}</span>` : '';
   const tierHint = tiers && !lsGet('tangoloop.tierhint') ? '<div class="res-note">速く正解するほど評価が上がって（Good → Perfect）、次の復習が先にのびます</div>' : '';
   if (tierHint) lsSet('tangoloop.tierhint', '1');
   // under the ring, a few quiet rows instead of tiles: what the set held, how far today's goal still is (or the streak once
@@ -4744,7 +4766,7 @@ function renderResults(){
     : (prac ? fact('1回目で正解', `${nb(ok)}<small>/ ${n}語</small>`) : (learned ? fact('新しく覚えた', nb(`+${learned}`, '語')) : '') + (reviewed ? fact('復習した', nb(reviewed, '語')) : ''))
       + goalRow + (tiers ? fact('答えの速さ', tierRow) : '') + (Q.maxCombo >= 2 ? fact('連続正解', `<small>最大</small>${nb(Q.maxCombo, '問')}`) : '') + fact('かかった時間', took);
   const sets = setsFor(more.due) + setsFor(more.newToday), nextN = setN(more.due || more.newToday);
-  const nextBtn = hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="${more.due ? 'studyReview' : 'goNew'}">${I.play}<span class="nw">${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問</span><small>${before.done ? `今日あと${rem}問` : sets <= 1 ? `終えると連続${before.n + 1}日` : `目標まで あと${sets}セット`}</small></button>`
+  const nextBtn = hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="${more.due ? 'studyReview' : 'goNew'}">${I.play}<span class="nw">${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問</span>${before.done ? `<small>今日あと${rem}問</small>` : sets <= 1 ? `<small>終えると連続${before.n + 1}日</small>` : `<small class="sets">目標まで あと${sets}セット</small>`}</button>`
     : `<div class="res-done">${I.check}今日の目標は達成</div>${nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.dueAll || more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>${more.dueAll ? `のこりの復習 ${more.dueAll}語` : '新しい単語'}</small></button>` : ''}`;
   const homeLbl = backLabel(), home = `<button class="btn btn-ghost btn-block" data-act="quitQuiz">${homeLbl}</button>`;
   const pc = k => Math.round(k / n * 1000) / 10;
@@ -4754,7 +4776,7 @@ function renderResults(){
   const allDue = Q.opts.deckIds || Q.opts.only ? counts(activeIds()) : more;
   const rvDone = !prac && Q.due0 > 0 && Q.day0 === today && allDue.due === 0;
   if (rvDone && !todayStat().rv) bumpDaily({rv: 1});
-  const rvBanner = rvDone && !won ? `<div class="rv-done" role="status"><span class="rv-ico">${I.check}</span><div><b>${allDue.dueAll ? '今日の分の復習 完了！' : '今日の復習 完了！'}</b><span>${allDue.dueAll ? `のこり${allDue.dueAll}語は明日から少しずつ` : allDue.newToday ? `次は 新しい単語 ${allDue.newToday}語` : 'おつかれさま'}</span></div></div>` : '';
+  const rvBanner = rvDone && !won ? `<div class="rv-done" role="status"><span class="rv-ico">${I.check}</span><div><b>${allDue.dueAll ? '今日の分の復習 完了' : '今日の復習 完了'}</b><span>${allDue.dueAll ? `のこり${allDue.dueAll}語は明日から少しずつ` : allDue.newToday ? `次は 新しい単語 ${allDue.newToday}語` : 'おつかれさま'}</span></div></div>` : '';
   // めくる: the very first set's results say what comes tomorrow (once); a set of new words gets its own lines, not a score's
   const sc = won ? 'res_goal' : fr && MK_LINES.res_fresh ? 'res_fresh' : pct >= 50 && rvDone && allDue.newToday && MK_LINES.res_review_done ? 'res_review_done' : pct >= 50 && comeback && MK_LINES.res_comeback ? 'res_comeback' : pct === 100 ? 'res_perfect' : pct >= 80 ? 'res_great' : pct >= 50 ? 'res_ok' : 'res_low';
   const inst = won ? instHTML('res') : '';   // ホーム画面に入れとこ at the goal (iPhone Safari), in view under the banner, with its own めくる
@@ -4788,7 +4810,7 @@ function renderResults(){
 }
 
 /* ---------- swipe (高速仕分け) ---------- */
-/* 知ってる is checked by a 4択 later and counts as 習得 only once that is right. The day comes from the word's key, so a big
+/* 知ってる is checked by a 4択 later and counts as 覚えた only once that is right. The day comes from the word's key, so a big
    sort spreads over 7–21 days instead of landing on one; someone whose 知ってる often turned out wrong (under 70% of 10+
    checks) gets the check in 3–7 days, from a weaker start. The checks are counted per day (kc, kh) so the rate syncs. */
 const keyHash = s => { let h = 7; for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
@@ -5023,14 +5045,14 @@ function impCount(){
   const go = $('#impgo'), n = IMP.last ? importItems(IMP.last).length : 0;
   if (go) go.textContent = n ? `${go.dataset.label}（${n}語）` : go.dataset.label;
 }
-/* before importing: 「アプリにある 47語（うち習得済み 12）／ない 3語」, and each word the app doesn't have, to add or leave out */
+/* before importing: 「アプリにある 47語（うち覚えた 12）／ない 3語」, and each word the app doesn't have, to add or leave out */
 function impPreview(){
   const box = $('#impinfo'); if (!box) return;
   const tgt = $('#imptarget')?.value, text = ($('#imptext')?.value || '') + (IMP.file ? '\n' + IMP.file : '');
   const a = IMP.last = analyzeImport(text, tgt && tgt !== '__new' ? tgt : null);
   impCount();
   if (!a.list.length && !a.bad && !a.dup) { box.innerHTML = ''; return; }
-  const sum = [a.found ? `アプリにある <b class="num">${a.found}語</b>（うち習得済み ${a.mastered}）` : '', a.unknown.length ? `ない <b class="num">${a.unknown.length}語</b>` : '',
+  const sum = [a.found ? `アプリにある <b class="num">${a.found}語</b>（うち覚えた ${a.mastered}）` : '', a.unknown.length ? `ない <b class="num">${a.unknown.length}語</b>` : '',
     a.own ? `意味つき <b class="num">${a.own}語</b>` : ''].filter(Boolean).join('／');
   box.innerHTML = `<div class="impsum">${sum || '取り込める単語がありません'}</div>
     ${a.dup ? `<div>重複 ${a.dup}語は入れません</div>` : ''}${a.bad ? `<div>読み取れなかった行 ${a.bad}</div>` : ''}
@@ -5437,7 +5459,7 @@ function dictSheet(k, keep = false){
   DICT_CUR = k;
   const c = dictMain(e), p = c ? prog(c) : null, gs = dictGroups(e), main = c || gs[0].c, st = status(p), wk = !!p?.wk;
   const n = new Set(gs.flatMap(g => g.c.s.map(s => s.m))).size, prev = DICT_HIST.length ? D.map.get(DICT_HIST[DICT_HIST.length - 1]) : null;
-  const pill = (p?.sus ? '<span class="dst">出題しない</span>' : st !== 'new' ? `<span class="dst ${st}">${st === 'master' ? '習得' : '学習中'}</span>` : '') + (wk ? '<span class="dst weak">苦手</span>' : '');
+  const pill = (p?.sus ? '<span class="dst">出題しない</span>' : st !== 'new' ? `<span class="dst ${st}">${st === 'master' ? '覚えた' : '学習中'}</span>` : '') + (wk ? '<span class="dst weak">苦手</span>' : '');
   // a derivative without a headword of its own: back to the word it comes from
   const par = e.heads.length ? [] : [...new Map([...e.ders.map(d => d.parent), ...e.fams.map(x => x.c)].map(x => [normW(x.w), x])).values()].slice(0, 2);
   const parHTML = par.map(x => `<button class="dpar" data-act="dictOpen" data-k="${esc(normW(x.w))}">← <b lang="en">${esc(x.w)}</b><span>（${esc(x.m)}）の派生語</span></button>`).join('');
