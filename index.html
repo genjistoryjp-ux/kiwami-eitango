@@ -2006,9 +2006,12 @@ function fmtMs(ms){ const s = Math.round(ms/1000); return s < 60 ? `${s}秒` : `
 
 /* ---------- state ---------- */
 function blank(){ return {v:1, prog:{}, daily:{}, settings:{...DEF}, custom:{}, notes:{}}; }
+/* 出題の形式 was 段階式 / 4択だけ / カード, but 4択だけ only meant 段階式 without spelling (2026-10): now 4択 or カード, and
+   spelling is スペル入力を出す alone. A record from then (or from an older version on another device) keeps its no-spelling */
+const fixMode = st => { if (st.mode === 'choice') { st.mode = 'auto'; st.spell = false; } return st; };
 function normalize(o){
   const b = blank();
-  return {...b, ...o, settings:{...DEF, ...(o.settings||{})}, prog:o.prog||{}, daily:o.daily||{}, custom:o.custom||{}, notes:o.notes||{}};
+  return {...b, ...o, settings:fixMode({...DEF, ...(o.settings||{})}), prog:o.prog||{}, daily:o.daily||{}, custom:o.custom||{}, notes:o.notes||{}};
 }
 function loadLocal(){
   try { const raw = localStorage.getItem(LS_KEY); if (raw) return normalize(JSON.parse(raw)); } catch(e) {}
@@ -2022,7 +2025,7 @@ function saveNow(){
   catch(e) { if (!saveWarned) { saveWarned = true; setTimeout(() => toast('この端末に保存できませんでした。空き容量やプライベートモードを確認してください', null, 6000), 0); } }   // full storage / private mode: say it once
 }
 function save(){ clearTimeout(saveT); saveT = setTimeout(saveNow, 300); }
-function setSetting(k, v){ if (k === 'mode' && v === 'flash' && S.settings.mode !== 'flash') try { localStorage.setItem('tangoloop.mode4', S.settings.mode); } catch(e) {}   // for 出題のしかた's 4択
+function setSetting(k, v){
   S.settings[k] = v; S.settings.upd = Date.now(); save(); markDirty('meta', true); }
 
 /* ---------- decks ---------- */
@@ -2751,7 +2754,7 @@ async function pull(){
       // a new device that just logged in keeps the account's settings instead of pushing its own fresh defaults
       if (data.settings && (first || ru > lu)) {
         const ob = S.settings.onboarded, mine = S.settings.active.filter(x => S.custom[x] && !rDecks.has(x));   // decks made on this device, unknown to the account
-        S.settings = {...DEF, ...clone(data.settings)}; if (ob) S.settings.onboarded = true;
+        S.settings = fixMode({...DEF, ...clone(data.settings)}); if (ob) S.settings.onboarded = true;
         if (mine.length) { S.settings.active = [...new Set([...S.settings.active, ...mine])]; S.settings.upd = Date.now(); Sync.dirty.add('meta'); }
         applyZoom(); changed = true;
       }
@@ -3259,10 +3262,10 @@ const nextDeckBtn = (nd, cls) => `<button class="btn ${cls} btn-block" data-act=
 const nextDeckLine = nd => `<div class="goal-line nd">${I.check}<span>${esc(shortName(nd.from))}${nd.left ? `の新しい単語はあと${nd.left}語` : 'をひととおり学習しました'}</span></div>`;
 const sizeRow = () => `<div class="dirrow"><span>1セット</span><div class="stepper stepper-sm"><button data-act="step" data-k="setSize" data-d="-5" aria-label="1セットの問題数を5減らす" ${S.settings.setSize <= 5 ? 'disabled' : ''}>−</button><output class="num">${S.settings.setSize}問</output><button data-act="step" data-k="setSize" data-d="5" aria-label="1セットの問題数を5増やす" ${S.settings.setSize >= 50 ? 'disabled' : ''}>＋</button></div></div>`;
 const dirRow = () => `<div class="dirrow"><span>出題</span><div class="seg seg-sm" role="group" aria-label="出題の向き">${Object.entries(DIR_LABEL).map(([v, l]) => `<button aria-pressed="${(S.settings.dir || 'auto') === v}" data-act="set" data-k="dir" data-v="${v}">${l}</button>`).join('')}</div></div>`;
-/* 復習のしかた: 4択 (graded by right/wrong and speed) or カード (you say yourself whether you remembered). 4択 keeps
-   段階式 or 4択だけ, whichever was set in くわしい設定 */
+/* 復習のしかた: 4択 (graded by right/wrong and speed; spelling too for well-known words if スペル入力を出す is on) or カード
+   (you say yourself whether you remembered) */
 const isCardMode = () => S.settings.mode === 'flash';
-const modeRow = () => `<div class="dirrow"><span>復習</span><div class="seg seg-sm" role="group" aria-label="復習のしかた">${[[(isCardMode() ? lsGet('tangoloop.mode4') : S.settings.mode) === 'choice' ? 'choice' : 'auto', '4択'], ['flash', 'カード']].map(([v, l]) => `<button aria-pressed="${isCardMode() === (v === 'flash')}" data-act="set" data-k="mode" data-v="${v}">${l}</button>`).join('')}</div></div>`;
+const modeRow = () => `<div class="dirrow"><span>復習</span><div class="seg seg-sm" role="group" aria-label="復習のしかた">${[['auto', '4択'], ['flash', 'カード']].map(([v, l]) => `<button aria-pressed="${isCardMode() === (v === 'flash')}" data-act="set" data-k="mode" data-v="${v}">${l}</button>`).join('')}</div></div>`;
 /* 出題のしかた (the home card's 「変える ›」): 復習 [4択｜カード] with what it means, 出題の向き, 1セットの問題数 */
 const optRows = () => `${modeRow()}<p class="opt-hint">${isCardMode() ? 'カード：めくって、覚えてたか自分で選ぶ' : '4択：選んで答える。速く正解するほど高評価'}</p>${dirRow()}${sizeRow()}`;
 function studyOpts(){
@@ -3676,9 +3679,9 @@ function viewSettings(){
     <div class="frow"><div class="lab"><b>1日の復習の上限</b><span>たまった復習は、忘れかけの単語から順に少しずつ出します</span></div>
       <div class="stepper"><button data-act="step" data-k="maxRev" data-d="-50" aria-label="1日の復習の上限を50減らす">−</button><output class="num">${s.maxRev}</output><button data-act="step" data-k="maxRev" data-d="50" aria-label="1日の復習の上限を50増やす">＋</button></div></div>
     <div class="frow wrap"><div class="lab"><b>復習の量</b><span>ふつうがおすすめ。しっかりは忘れにくくなるかわりに復習が約2倍、少なめは約6割になります</span></div>${retSeg}</div>
-    <div class="frow wrap"><div class="lab"><b>出題の形式</b><span>段階式：覚えるほど「英→日」→「日→英」→「スペル」と難しくなる</span></div>${seg('mode',[['auto','段階式'],['choice','4択だけ'],['flash','カード']], '出題の形式')}</div>
+    <div class="frow wrap"><div class="lab"><b>復習のしかた</b><span>${isCardMode() ? 'カード：めくって、覚えてたか自分で選ぶ' : '4択：選んで答える。速く正解するほど高評価'}</span></div>${seg('mode',[['auto','4択'],['flash','カード']], '復習のしかた')}</div>
     <div class="frow"><div class="lab"><b>選択肢をタップで表示</b><span>4択の選択肢を隠しておき、答えを思い浮かべてからタップで表示（仲間はずれ問題は除く）</span></div>${sw('veil', '選択肢をタップで表示')}</div>
-    <div class="frow"><div class="lab"><b>スペル入力を出す</b><span>段階式で、しっかり覚えた単語に出題</span></div>${sw('spell', 'スペル入力を出す')}</div>
+    <div class="frow"><div class="lab"><b>スペル入力を出す</b><span>しっかり覚えた単語は、つづりを打って答える</span></div>${sw('spell', 'スペル入力を出す')}</div>
     <div class="frow"><div class="lab"><b>意味を1つずつ覚える</b><span><span class="rec">おすすめ：オン。</span>最初はメインの意味だけを出題し、後日の復習で2回正解したら2つ目・3つ目の意味を新しいカードとして1つずつ出題。オフにすると毎回すべての意味を表示</span></div>${sw('senseCards', '意味を1つずつ覚える')}</div>
     <div class="frow"><div class="lab"><b>派生語も出題する</b><span><span class="rec">おすすめ：オン。</span>見出し語を後日の復習で2回正解したら、派生語（decide → decision など）を別のカードとして1つずつ出題</span></div>${sw('deriv', '派生語も出題する')}</div>
     <div class="frow"><div class="lab"><b>新しい単語の順番</b></div>${seg('order',[['seq','単語帳の順'],['rand','ランダム']], '新しい単語の順番')}</div>
