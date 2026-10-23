@@ -4839,7 +4839,13 @@ function renderResults(){
     : (prac ? fact('1回目で正解', `${nb(ok)}<small>/ ${n}語</small>`) : (learned ? fact('新しく覚えた', nb(`+${learned}`, '語')) : '') + (reviewed ? fact('復習した', nb(reviewed, '語')) : ''))
       + goalRow + (tiers ? fact('答えの速さ', tierRow) : '') + (Q.maxCombo >= 2 ? fact('連続正解', `<small>最大</small>${nb(Q.maxCombo, '問')}`) : '') + fact('かかった時間', took);
   const sets = setsFor(more.due) + setsFor(more.newToday), nextN = setN(more.due || more.newToday);
-  const nextBtn = hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="${more.due ? 'studyReview' : 'goNew'}">${I.play}<span class="nw">${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問</span>${before.done ? `<small>今日あと${rem}問</small>` : sets <= 1 ? `<small>終えると連続${before.n + 1}日</small>` : `<small class="sets">目標まで あと${sets}セット</small>`}</button>`
+  // reviews past the day's goal left after a set of reviews: once you went past the goal (続ける / 次の10問, noChecks) the next
+  // set is reviews again, new words one tap below; right after the goal's last review set new words stay first (the day's
+  // plan) and the rest of the reviews is the tap below
+  const revMore = !prac && !fr && reviewed > 0 && !more.due ? more.dueAll : 0, goOn = !!revMore && !!Q.opts.noChecks;
+  const revBtn = main => `<button class="btn ${main ? 'btn-primary btn-block btn-big' : 'btn-ghost btn-block'}" data-act="studyReview" data-more="1">${I.play}${main ? `<span class="nw">復習の続き ${setN(revMore)}問</span><small>のこり${revMore}語</small>` : `復習を続ける（のこり${revMore}語）`}</button>`;
+  const nextBtn = hasMore && goOn ? `${revBtn(true)}<button class="btn btn-ghost btn-block" data-act="goNew">${I.play}新しい単語へ ${setN(more.newToday)}問</button>`
+    : hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="${more.due ? 'studyReview' : 'goNew'}">${I.play}<span class="nw">${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問</span>${before.done ? `<small>今日あと${rem}問</small>` : sets <= 1 ? `<small>終えると連続${before.n + 1}日</small>` : `<small class="sets">目標まで あと${sets}セット</small>`}</button>${revMore ? revBtn(false) : ''}`
     : `<div class="res-done">${I.check}今日の目標は達成</div>${nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.dueAll || more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>${more.dueAll ? `のこりの復習 ${more.dueAll}語` : '新しい単語'}</small></button>` : ''}`;
   const homeLbl = backLabel(), home = `<button class="btn btn-ghost btn-block" data-act="quitQuiz">${homeLbl}</button>`;
   const pc = k => Math.round(k / n * 1000) / 10;
@@ -5612,7 +5618,7 @@ const ACT = {
   // (Q is kept only there) the next set stays on that set's decks, e.g. a deck studied from its page that isn't in use
   // data-more: ①'s 続ける beside おさらい goes on with the rest of the reviews, not the おさらい
   studyReview: t => { if (locked()) return; const o = nextOpts(), c = counts(o.deckIds), more = t?.dataset?.more && c.dueAll;
-    const go = c.due ? {kind: 'review'} : more ? {kind: 'review', extraNew: true, noChecks: true} : sameDayWaiting(o.deckIds).length ? {kind: 'check'} : c.dueAll ? {kind: 'review', extraNew: true} : null;
+    const go = c.due ? {kind: 'review'} : more ? {kind: 'review', extraNew: true, noChecks: true} : sameDayWaiting(o.deckIds).length ? {kind: 'check'} : c.dueAll ? {kind: 'review', extraNew: true, noChecks: true} : null;
     if (go) startQuiz({...o, ...go}); else toast('今日の復習はもう終わっています'); closeSheet(); },
   studyCheck: () => { if (locked()) return; startQuiz({...nextOpts(), kind: 'check'}); closeSheet(); },
   studyNew: () => {
