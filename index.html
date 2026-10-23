@@ -3251,11 +3251,13 @@ function paceBody(){
 function paceSheet(){
   openSheet(`<div class="sheet-h"><h3>1日の目標</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="stk" id="pacebox">${paceBody()}</div>`);
 }
-/* 基礎 → 標準 → 発展: offered once the active deck has fewer new cards left than one set */
+/* 基礎 → 標準 → 発展: offered once the active deck has fewer new cards left than one set, and only while the next one isn't in
+   use yet (a set chained from one deck's page checks the decks in use, not just its own) */
 const NEXT_DECK = {junior: 'j1', j1: 'j2', j2: 'j3'};
 function nextDeck(act = activeIds(), c = counts(act)){
   if (c.fresh + c.queued + c.dnew >= S.settings.setSize) return null;
-  for (const id of act) { const n = NEXT_DECK[id]; if (n && !act.includes(n) && deckById(n)) return {from: deckById(id), to: deckById(n), left: c.fresh + c.queued + c.dnew}; }
+  const on = activeIds();
+  for (const id of act) { const n = NEXT_DECK[id]; if (n && !act.includes(n) && !on.includes(n) && deckById(n)) return {from: deckById(id), to: deckById(n), left: c.fresh + c.queued + c.dnew}; }
   return null;
 }
 const nextDeckBtn = (nd, cls) => `<button class="btn ${cls} btn-block" data-act="nextDeck" data-id="${esc(nd.to.id)}">${I.play}${esc(shortName(nd.to))}もはじめる<small>${esc(nd.to.tag || '')}</small></button>`;
@@ -4846,7 +4848,9 @@ function renderResults(){
   const revBtn = main => `<button class="btn ${main ? 'btn-primary btn-block btn-big' : 'btn-ghost btn-block'}" data-act="studyReview" data-more="1">${I.play}${main ? `<span class="nw">復習の続き ${setN(revMore)}問</span><small>のこり${revMore}語</small>` : `復習を続ける（のこり${revMore}語）`}</button>`;
   const nextBtn = hasMore && goOn ? `${revBtn(true)}<button class="btn btn-ghost btn-block" data-act="goNew">${I.play}新しい単語へ ${setN(more.newToday)}問</button>`
     : hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="${more.due ? 'studyReview' : 'goNew'}">${I.play}<span class="nw">${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問</span>${before.done ? `<small>今日あと${rem}問</small>` : sets <= 1 ? `<small>終えると連続${before.n + 1}日</small>` : `<small class="sets">目標まで あと${sets}セット</small>`}</button>${revMore ? revBtn(false) : ''}`
-    : `<div class="res-done">${I.check}今日の目標は達成</div>${nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.dueAll || more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>${more.dueAll ? `のこりの復習 ${more.dueAll}語` : '新しい単語'}</small></button>` : ''}`;
+    // the goal reached: reviews still left come first (the next deck below them), then the next deck, then more new words
+    : `<div class="res-done">${I.check}今日の目標は達成</div>${more.dueAll ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}<span class="nw">復習の続き ${setN(more.dueAll)}問</span><small>のこり${more.dueAll}語</small></button>${nd ? nextDeckBtn(nd, 'btn-ghost') : ''}`
+      : nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>新しい単語</small></button>` : ''}`;
   const homeLbl = backLabel(), home = `<button class="btn btn-ghost btn-block" data-act="quitQuiz">${homeLbl}</button>`;
   const pc = k => Math.round(k / n * 1000) / 10;
   // 復習 完了: today's reviews (all decks in use) were left when this set started and none are left now — any kind of set,
