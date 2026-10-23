@@ -3829,8 +3829,9 @@ const sameDayWaiting = (ids = activeIds(), only) => cardsOf(ids, true)
   .sort((a, b) => prog(a).tc - prog(b).tc);
 function startQuiz(opts={}){
   const cards = opts.cards || pickSet(opts);
-  // today's おさらい ride along with reviews (or make a set of their own), never with a set of new words
-  const withChecks = !opts.practice && opts.kind !== 'new' && (opts.kind === 'check' || cards.some(c => isReview(prog(c))));
+  // today's おさらい ride along with the day's reviews (or make a set of their own), never with a set of new words nor with
+  // the reviews past the goal (noChecks: 続ける / 次の10問 have the おさらい as a button of its own beside them)
+  const withChecks = !opts.practice && !opts.noChecks && opts.kind !== 'new' && (opts.kind === 'check' || cards.some(c => isReview(prog(c))));
   const have = new Set(cards), sd = withChecks ? sameDayWaiting(opts.deckIds || activeIds(), opts.only).filter(c => !have.has(c)).slice(0, opts.kind === 'check' ? 10 : 5) : [];
   if (!cards.length && !sd.length) { toast('今出題できる単語はありません'); return; }
   const due0 = opts.practice ? 0 : counts().due, day0 = dayIdx();   // today's reviews left when the set starts
@@ -5611,7 +5612,7 @@ const ACT = {
   // (Q is kept only there) the next set stays on that set's decks, e.g. a deck studied from its page that isn't in use
   // data-more: ①'s 続ける beside おさらい goes on with the rest of the reviews, not the おさらい
   studyReview: t => { if (locked()) return; const o = nextOpts(), c = counts(o.deckIds), more = t?.dataset?.more && c.dueAll;
-    const go = c.due ? {kind: 'review'} : more ? {kind: 'review', extraNew: true} : sameDayWaiting(o.deckIds).length ? {kind: 'check'} : c.dueAll ? {kind: 'review', extraNew: true} : null;
+    const go = c.due ? {kind: 'review'} : more ? {kind: 'review', extraNew: true, noChecks: true} : sameDayWaiting(o.deckIds).length ? {kind: 'check'} : c.dueAll ? {kind: 'review', extraNew: true} : null;
     if (go) startQuiz({...o, ...go}); else toast('今日の復習はもう終わっています'); closeSheet(); },
   studyCheck: () => { if (locked()) return; startQuiz({...nextOpts(), kind: 'check'}); closeSheet(); },
   studyNew: () => {
@@ -5629,7 +5630,7 @@ const ACT = {
     if (Q?.opts?.drill) { const ids = Q.opts.deckIds, cards = drillCards(Q.opts.drill, ids || activeIds()); if (cards.length) return startQuiz({cards: cards.slice(0, S.settings.setSize), drill: Q.opts.drill, ...(ids ? {deckIds: ids} : {})}); } const ids = Q?.opts?.deckIds, flash = Q?.opts?.flash, kind = Q?.opts?.kind === 'check' ? 'review' : Q?.opts?.kind; startQuiz(ids ? {deckIds:ids, flash, kind} : {flash, kind}); },
   againNormal: () => { if (locked()) return; const ids = Q?.opts?.deckIds; startQuiz(ids ? {deckIds: ids} : {}); },   // after 苦手を特訓: the usual set
   // past today's goal: keep going with new words (and whatever reviews are left)
-  studyMore: () => { if (locked()) return; startQuiz({extraNew: true, deckIds: Q?.opts?.deckIds, flash: Q?.opts?.flash}); },
+  studyMore: () => { if (locked()) return; startQuiz({extraNew: true, noChecks: true, deckIds: Q?.opts?.deckIds, flash: Q?.opts?.flash}); },
   swipe: () => startSwipe(),
   studyDeck: t => startQuiz({deckIds:[t.dataset.id], extraNew: counts([t.dataset.id]).due === 0 && counts([t.dataset.id]).newToday === 0}),
   swipeDeck: t => startSwipe([t.dataset.id]),
