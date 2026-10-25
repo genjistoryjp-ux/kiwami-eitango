@@ -3912,28 +3912,45 @@ const headVerb = w => { const t = normW(w).split(' '); return t.length > 1 && !N
    particle dropped (「（仕事・責任など）を引き受ける」 = 「～を担当する、～を引き受ける」, 「を取っておく」 = 「取っておく」) */
 const corePieces = m => String(m).replace(/[（(][^）)]*[）)]/g, '').split(/[、，,／]/).map(t => normM(t).replace(/^(?:を|に|が|と|で|へ|の|から|より)+/, '')).filter(t => t.length >= 2);
 const sameCore = (a, b) => { const A = new Set(corePieces(a)); return corePieces(b).some(t => A.has(t)); };
+/* a wrong option marked trap (a look-alike, an idiom with the same verb) makes the question harder: its answer time goes in a box of its own (rtKey) */
 function pickChoices(c, type, si, noConf){
   const target = c.s[si], pool = distractorPool(c), mine = c.isS ? c.parent.s : c.s;
   const ordered = [...pool.filter(x => (type === 'e2j' ? metSenses(x) : x.s).some(s => s.p === target.p)), ...pool];
   const picked = [], used = new Set();
   const cf = !noConf && (type === 'e2j' || type === 'j2e') ? confPick(c, type, target) : null;   // its look-alike, once both are learned (not when it is only heard)
   if (cf) { picked.push(cf); used.add(cf.card.deck + '|' + cf.card.k); }
-  // 熟語の日→英: other idioms with the same verb come first (put up with → put off / put on / put out), so the particle decides
-  const idiom = isIdiom(c), verb = idiom && type === 'j2e' ? headVerb(c.w) : '';
+  // 熟語: other idioms with the same verb come first (put up with → put off / put on / put out), so the particle decides.
+  // 日→英 always; 英→日 only on a review of 4 days or more (not while it is new, nor when it is only heard): one of them, two from 15 days
+  const p = prog(c), idiom = isIdiom(c), late = !noConf && isReview(p) && p.s >= 4;
+  const verb = idiom && (type === 'j2e' || (type === 'e2j' && late)) ? headVerb(c.w) : '', nVerb = type === 'j2e' ? 3 : p?.s >= 15 ? 2 : 1;
   const alike = (a, b) => similar(a, b) || (idiom && (sharesPiece(a, b) || sameCore(a, b)));
+  let nv = 0;
   for (const x of [...(verb ? pool.filter(x => headVerb(x.w) === verb) : []), ...ordered]) {
     if (picked.length >= 3) break;
     const id = x.deck + '|' + x.k; if (used.has(id) || isNear(c.w, x.w)) continue;   // never an idiom that could answer for this one
+    const sv = !!verb && headVerb(x.w) === verb; if (sv && nv >= nVerb) continue;
     if (type === 'e2j') {
       const ms = metSenses(x), cand = ms.find(s => s.p === target.p) || ms[0];   // another word's meaning the learner has already met
       if (mine.some(s => alike(s.m, cand.m)) || picked.some(o => alike(o.text, cand.m))) continue;
-      picked.push({card:x, text:qm(cand.m), sub:x.w, ok:false});
+      picked.push({card:x, text:qm(cand.m), sub:x.w, ok:false, trap:sv});
     } else {
       if (x.w.toLowerCase() === c.w.toLowerCase() || picked.some(o => o.text.toLowerCase() === x.w.toLowerCase())) continue;
       if (x.s.some(s => alike(s.m, target.m))) continue;
-      picked.push({card:x, text:x.w, sub:shownMeanings(x), ok:false});
+      picked.push({card:x, text:x.w, sub:shownMeanings(x), ok:false, trap:sv});
     }
-    used.add(id);
+    used.add(id); if (sv) nv++;
+  }
+  // 英→日: when only the right meaning carries a （…） note (「（問題）に取り組む」), it stands out — one plain wrong option gives way
+  // to another word's meaning that has a note too
+  const note = t => /[（(]/.test(t);
+  if (type === 'e2j' && note(qm(target.m)) && !picked.some(o => note(o.text))) {
+    let k = picked.length - 1; while (k >= 0 && (picked[k].trap || picked[k].tip)) k--;
+    for (const x of k < 0 ? [] : ordered) {
+      const id = x.deck + '|' + x.k; if (used.has(id) || isNear(c.w, x.w) || (verb && headVerb(x.w) === verb)) continue;
+      const cand = metSenses(x).find(s => s.p === target.p && note(qm(s.m)));
+      if (!cand || mine.some(s => alike(s.m, cand.m)) || picked.some(o => alike(o.text, cand.m))) continue;
+      picked[k] = {card:x, text:qm(cand.m), sub:x.w, ok:false}; break;
+    }
   }
   const right = type === 'e2j' ? {card:c, text:qm(target.m), sub:c.w, ok:true} : {card:c, text:c.w, sub:shownMeanings(c), ok:true};
   return shuffle([right, ...picked]);
@@ -3995,19 +4012,22 @@ const openIdx = c => c.s.map((_, i) => i).filter(i => !S.settings.senseCards || 
 /* meanings compared piece by piece (、 ／ split): 「めったに～ない」 is in hardly's 「ほとんど～ない、めったに～ない」 */
 const mPieces = m => String(m).split(/[、，,／]/).map(normM).filter(Boolean);
 const sharesPiece = (a, b) => { const A = new Set(mPieces(a)); return mPieces(b).some(t => A.has(t)); };
+/* a meaning card (assume #2 「（責任）を引き受ける」) takes part too: its own review decides, and the look-alike's meaning is checked
+   against every meaning of the word */
 function confPick(c, type, target){
-  if (c.isS || !CONF.size) return null;
+  if (!CONF.size) return null;
   const p = prog(c); if (!isReview(p) || p.s < 4 || Math.random() < 0.4) return null;
+  const mine = c.isS ? c.parent.s : c.s;
   for (const {w, tip} of shuffle(CONF.get(normW(c.w)) || [])) {
     const x = (wordIndex().get(normW(w)) || []).find(y => { const q = prog(y); return isReview(q) && !q.sus; });
     if (!x || normW(x.w) === normW(c.w) || isNear(c.w, x.w)) continue;
     if (type === 'j2e') {
       if (x.s.some(s => sharesPiece(s.m, target.m))) continue;   // the look-alike must not also mean the prompt
-      return {card:x, text:x.w, sub:shownMeanings(x), ok:false, tip};
+      return {card:x, text:x.w, sub:shownMeanings(x), ok:false, tip, trap:true};
     }
     const ms = metSenses(x), cand = ms.find(s => s.p === target.p) || ms[0];
-    if (!cand?.m || c.s.some(s => sharesPiece(s.m, cand.m))) continue;
-    return {card:x, text:cand.m, sub:x.w, ok:false, tip};
+    if (!cand?.m || mine.some(s => sharesPiece(s.m, cand.m))) continue;
+    return {card:x, text:qm(cand.m), sub:x.w, ok:false, tip, trap:true};
   }
   return null;
 }
@@ -4026,6 +4046,24 @@ function tipLeaks(tip, cards){
   }
   return false;
 }
+/* two meanings far enough apart that a sentence can't fit both: no shared kanji at all (症例 / 事例, 気をつける / 気にする), no shared
+   piece, and neither inside the other once notes and particles are dropped (「～をやめる」 in 「～するのをやめる」; four characters in a
+   row are enough: 「がいなくて寂しく思う」 / 「がなくて［いなくて］寂しく思う」) */
+const enNote = m => /[（(][^）)]*[A-Za-z]/.test(String(m));   // a 語法 note: （doing） （the ～） （×join to A）
+const bareM = m => String(m).replace(/[（(［\[][^）)］\]]*[）)］\]]/g, '').replace(/[～〜…、，,。・／\s\[\]［］A-Za-z]/g, '');
+function farMeaning(a, b){
+  if (similar(a, b) || sharesPiece(a, b)) return false;
+  const K = new Set(String(a).match(/[一-鿿々]/g) || []); if ((String(b).match(/[一-鿿々]/g) || []).some(k => K.has(k))) return false;
+  const x = bareM(a), y = bareM(b); if (!x || !y) return true;
+  if (x.includes(y) || y.includes(x)) return false;
+  for (let i = 0; i + 4 <= x.length; i++) if (y.includes(x.slice(i, i + 4))) return false;
+  return true;
+}
+/* 必修多義語 / 中学基礎 meanings that farMeaning can't tell apart but a sentence can fit both ways (「Without water ...」 is 「水がなければ」
+   and 「水なしで」 alike): found by reading every such pair once both decks are learned (2026-10-25). A pair is left out in either direction */
+const CROSS_NEAR = {right: [['正しい', '適切な']], without: [['なしで', 'がなければ']], quarter: [['4分の1', '四半期']], trouble: [['トラブル', '故障']],
+  check: [['勘定書', '小切手']], last: [['長持ち', 'もつ']], title: [['タイトル', '称号']], see: [['会う', '診てもらう']], case: [['事件', '訴訟']],
+  work: [['うまくいく', '効く']], thought: [['考え', '思いやり']]};
 /* 文脈: the example sentence of a learned meaning with the word marked. The word needs another learned meaning that is
    not a near-synonym, so the sentence decides between real alternatives. */
 function ctxParts(c, si){
@@ -4033,14 +4071,29 @@ function ctxParts(c, si){
   const host = c.isS ? c.parent : c, i = c.isS ? c.si : si, target = host?.s[i];
   if (!target?.e) return null;
   const mark = markWord(target.e, host.w); if (!mark.includes('class="mark"')) return null;
-  const mates = openIdx(host).filter(j => j !== i && host.s[j].m && !similar(host.s[j].m, target.m));
+  const mates = openIdx(host).filter(j => j !== i && host.s[j].m && !similar(host.s[j].m, target.m)).map(j => ({text: host.s[j].m, sub: `${host.w}の別の意味`}));
+  // 必修多義語 and the same spelling in another deck (中学基礎), once that card is learned: 中学基礎's fine 「元気な」 is the misreading
+  // of 必修多義語's fine 「罰金」, and the other way round. Not between other decks: 受験英単語 and TOEIC share words whose meanings overlap
+  // (extend 延長する / 伸ばす). Plain meanings only, on both sides: under a 語法 note (「（doing）～したことを覚えている」, 「（remember to ～）
+  // 忘れずに～する」) the everyday meaning still fits the sentence. And nothing near any meaning of this word (farMeaning, CROSS_NEAR)
+  if (!enNote(target.m)) for (const y of wordIndex().get(normW(host.w)) || []) {
+    if (y.isD || y.deck === host.deck || (host.deck === 'tagi') === (y.deck === 'tagi') || normW(y.w) !== normW(host.w)) continue;
+    const q = prog(y); if (!isReview(q) || q.sus) continue;
+    const pairs = CROSS_NEAR[normW(host.w)] || [];
+    for (const j of openIdx(y)) {
+      const m = y.s[j].m;
+      if (!m || enNote(m) || !host.s.every(s => farMeaning(s.m, m)) || !mates.every(o => farMeaning(o.text, m))) continue;
+      if (pairs.some(([a, b]) => host.s.some(s => (s.m.includes(a) && m.includes(b)) || (s.m.includes(b) && m.includes(a))))) continue;
+      mates.push({text: m, sub: `${host.w}の別の意味（${BUILTIN.find(d => d.id === y.deck)?.nick || ''}）`});
+    }
+  }
   return mates.length ? {host, i, target, mark, mates} : null;
 }
-/* the choices: the right meaning, the word's other learned meanings, then meanings of other words (same part of speech first) */
+/* the choices: the right meaning, the word's other learned meanings (in this deck or another), then meanings of other words (same part of speech first) */
 function pickCtx(c, si){
   const x = ctxParts(c, si); if (!x) return null;
   const {host, target} = x, used = new Set();
-  const picked = shuffle(x.mates).slice(0, 3).map(j => ({card:c, text:host.s[j].m, sub:`${host.w}の別の意味`, ok:false}));
+  const picked = shuffle(x.mates).slice(0, 3).map(o => ({card:c, text:o.text, sub:o.sub, ok:false}));
   const pool = distractorPool(c);
   for (const pass of [0, 1]) for (const y of pool) {
     if (picked.length >= 3) break;
@@ -4272,7 +4325,7 @@ function renderQ(){
   if (it.lis == null) { it.lis = lisFor(it); if (it.lis) it.type = 'lis'; }   // 聞き取り is decided once, when the question first comes up
   if (it.type === 'lis' && (it.tries > 0 || lisOff())) it.type = 'e2j';         // asked again after a miss: with the spelling
   Q.cur = it; Q.answered = false; Q.hint = 0; Q.gaveUp = false; Q.picked = null; Q.typed = ''; Q.revealed = null; Q.drop = false;   // a card that comes back starts face down again
-  Q.near = null; Q.retype = false; Q.lisNg = -1; Q.lisTapped = false;   // おしい waiting for the retype / 聞き取り's first wrong pick / 🔊 tapped
+  Q.near = null; Q.retype = false; Q.lisNg = -1; Q.lisTapped = false; Q.trap = false;   // おしい waiting for the retype / 聞き取り's first wrong pick / 🔊 tapped / a trap among the options
   if (it.type === 'odd') { Q.choices = pickOdd(it.c); if (!Q.choices) it.type = 'j2e'; }
   else if (it.type === 'ctx' || it.type === 'use') { Q.choices = it.type === 'ctx' ? pickCtx(it.c, it.si) : pickUse(it.c, it.si); if (!Q.choices) it.type = 'e2j'; }
   const c = it.c, type = it.type, left = Q.queue.length, sense = c.s[it.si] || c.s[0];
@@ -4316,7 +4369,7 @@ function renderQ(){
   }
   if (type === 'e2j' || type === 'j2e' || type === 'odd' || type === 'dform' || type === 'snew' || type === 'ctx' || type === 'use' || type === 'lis') {
     if (type === 'dform') Q.choices = pickForms(c);
-    else if (type !== 'odd' && type !== 'ctx' && type !== 'use') Q.choices = pickChoices(c, type === 'snew' || type === 'lis' ? 'e2j' : type, it.si, type === 'lis');
+    else if (type !== 'odd' && type !== 'ctx' && type !== 'use') { Q.choices = pickChoices(c, type === 'snew' || type === 'lis' ? 'e2j' : type, it.si, type === 'lis'); Q.trap = Q.choices.some(o => o.trap); }
     const en = type === 'j2e' || type === 'dform' || type === 'use';
     const veiled = S.settings.veil && type !== 'odd';
     body = `<div class="choices${veiled ? ' veiled' : ''}" id="choices">${veiled ? '<button class="veil" data-act="unveil">答えを思い浮かべたらタップ<small>選択肢を表示<span class="kbd">（Space）</span></small></button>' : ''}${Q.choices.map((o,i) => `<button class="choice" data-act="choose" data-i="${i}"><span class="key">${i+1}</span><span class="ctext ${en?'en':''}"${en ? ' lang="en"' : ''}>${esc(o.text)}<span class="csub" hidden${en ? ' lang="ja"' : ''}>${esc(o.sub)}</span></span></button>`).join('')}</div>
@@ -4335,12 +4388,13 @@ function renderQ(){
     <div class="qstage">${behind}<div class="tcard holed qcard${type === 'flash' ? ' flashc' : ''}" id="qcard"${type === 'flash' ? ' data-act="reveal"' : ''}><span class="ring"></span>${Q.combo >= 3 ? `<span class="qcombo">${Q.combo} 連続正解</span>` : ''}<span class="qtype">${kindLabel(it, type, fresh, !!Q.opts.practice)}</span><div class="qcard-in">${card}</div></div></div>
     <div id="qbody">${body}</div></div><div id="fb"></div>`;
   Q.t0 = performance.now(); Q.lockUntil = Q.t0 + 250; Q.timedOut = false; tutDrop();
+  const rk = rtKey(type);   // the speed lines: a question with a trap among its options is timed against its own kind
   const go = () => {
-    if (clock) countdown(type === 'flash' ? S.settings.timeLimit * 500 : slowMs(type), () => timeUp(it),
-      live ? ms => showRate(speedTier(type, ms)) : null, limitMs(type), live ? fastMs(type) : []);
+    if (clock) countdown(type === 'flash' ? S.settings.timeLimit * 500 : slowMs(rk), () => timeUp(it),
+      live ? ms => showRate(speedTier(rk, ms)) : null, limitMs(type), live ? fastMs(rk) : []);
     else stopCountdown();
     if (type === 'lis') lisStart(it, sense.p, clock, live);
-    if (live) showRate(speedTier(type, 0));
+    if (live) showRate(speedTier(rk, 0));
   };
   // the first 4択 against the clock: めくる says what the bar means; the choices show, and the bar and the speed count start, only once it is closed
   if (live && type !== 'lis' && !Q.opts.practice && tutNew('rate1') && tutSay('rate1', tutLine('rate1'), $('#screen .qstage'), 'top', () => { $('#choices')?.classList.remove('wait'); if (Q?.cur === it && !Q.answered) { Q.t0 = performance.now(); go(); } })) { stopCountdown(); $('#choices')?.classList.add('wait'); }
@@ -4422,14 +4476,24 @@ function noteRT(type, ms){
   const a = (RT[type] ||= []); a.push(Math.round(ms)); if (a.length > 40) a.shift();
   try { localStorage.setItem('tangoloop.rt', JSON.stringify(RT)); } catch(e) {}
 }
-function rtMedian(type){ const a = RT[type]; if (!a || a.length < 12) return 0; const b = [...a].sort((x,y) => x - y); return b[b.length >> 1]; }
+/* a question with a trap among its options (a look-alike, an idiom with the same verb) takes a moment longer, so its answers go in a box
+   of their own, 'e2j+' / 'j2e+': harder options never make the usual speed lines stricter. Until that box has 12 answers, its lines are the
+   usual ones × TRAP_SLACK */
+const TRAP_SLACK = 1.3;
+const rtKey = type => type + (Q?.trap ? '+' : '');
+const rtBase = k => String(k).replace(/\+$/, ''), rtSlack = k => k !== rtBase(k) ? TRAP_SLACK : 1;
+function rtMedian(type){
+  const a = RT[type];
+  if (!a || a.length < 12) { const m = type !== rtBase(type) ? rtMedian(rtBase(type)) : 0; return m ? Math.round(m * TRAP_SLACK) : 0; }
+  const b = [...a].sort((x,y) => x - y); return b[b.length >> 1];
+}
 /* past this many ms a correct choice answer counts as 難しい (the timer bar turns yellow here) */
 const SLOW_DEF = {e2j: 6000, snew: 6000, odd: 9000, dform: 7000, j2e: 7000, ctx: 9000, use: 9000, lis: 6500};   // 聞き取り counts from the end of the audio
-function slowMs(type){ const med = rtMedian(type); return med ? Math.max(med * 2.2, med + 3500) : (SLOW_DEF[type] || 7000); }
+function slowMs(type){ const med = rtMedian(type); return med ? Math.max(med * 2.2, med + 3500) : (SLOW_DEF[rtBase(type)] || 7000) * rtSlack(type); }
 /* a right 4択 answer earns one of four speed tiers: 4 Perfect / 3 Excellent / 2 Great / 1 Good.
    Perfect is well under your usual time, Excellent under it, Good past the slow line (fixed times until 12 answers exist) */
 const FAST_DEF = {e2j: [1500, 2600], snew: [1500, 2600], odd: [3500, 5500], dform: [2000, 3500], j2e: [2500, 4000], ctx: [3500, 5500], use: [3000, 5000], lis: [1500, 2800]};
-const fastMs = type => { const med = rtMedian(type); return med ? [med * 0.6, med] : (FAST_DEF[type] || [2000, 3500]); };   // [Perfect under, Excellent under]
+const fastMs = type => { const med = rtMedian(type); return med ? [med * 0.6, med] : (FAST_DEF[rtBase(type)] || [2000, 3500]).map(x => x * rtSlack(type)); };   // [Perfect under, Excellent under]
 function speedTier(type, ms){
   const [perfect, excellent] = fastMs(type);
   return ms > slowMs(type) ? 1 : ms < perfect ? 4 : ms < excellent ? 3 : 2;
@@ -4439,9 +4503,9 @@ function speedTier(type, ms){
 const easyOK = type => !['e2j', 'dform', 'snew', 'ctx', 'use', 'lis'].includes(type);
 const tierGrade = (type, tier) => tier === 4 && easyOK(type) ? 4 : tier === 1 ? 2 : 3;
 const tierBoost = (type, tier) => tier === 4 && !easyOK(type) ? 1.5 : tier === 3 ? 1.25 : 1;
-function gradeFrom(type, ok, ms, hinted, wasReview){
+function gradeFrom(type, ok, ms, hinted, wasReview, key = type){
   if (!ok) return 1;
-  if (type in SLOW_DEF) { const g = tierGrade(type, speedTier(type, ms)); return g === 4 && !wasReview ? 3 : g; }
+  if (type in SLOW_DEF) { const g = tierGrade(type, speedTier(key, ms)); return g === 4 && !wasReview ? 3 : g; }
   const med = rtMedian(type);
   if (med && !hinted) {
     if (ms > slowMs(type)) return 2;
@@ -4464,11 +4528,12 @@ function answer(ok, grade){
   (Q.hist ||= []).push(snap);
   const ub = $('.qundo'); if (ub) ub.disabled = false;
   const ms = Math.min(60000, performance.now() - Q.t0);
-  const g = grade ?? gradeFrom(it.type, ok, ms, Q.hint > 1, isReview(it.p0));
+  const rk = rtKey(it.type);   // 'e2j+' when a trap was among the options
+  const g = grade ?? gradeFrom(it.type, ok, ms, Q.hint > 1, isReview(it.p0), rk);
   const practice = !!Q.opts.practice; snap.practice = practice;
-  if (it.first === null && ok && grade == null && !practice && !it.sameDay) { noteRT(it.type, ms); snap.rt = it.type; }
+  if (it.first === null && ok && grade == null && !practice && !it.sameDay) { noteRT(rk, ms); snap.rt = rk; }
   if (grade != null) ok = grade > 1;
-  const tier = ok && grade == null && it.first === null && !it.sameDay && it.type in SLOW_DEF ? speedTier(it.type, ms) : 0;
+  const tier = ok && grade == null && it.first === null && !it.sameDay && it.type in SLOW_DEF ? speedTier(rk, ms) : 0;
   showRate(tier, true);   // the tier it earned pops; a miss clears it
   let np = null;
   if (it.first === null && practice) { it.first = g; it.ok = ok; it.ms = ms; it.grade = g; it.tier = tier; }   // 練習: nothing is saved
