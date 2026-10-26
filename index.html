@@ -2270,23 +2270,57 @@ html{touch-action:manipulation}
 .k-dj-wait{flex:1;min-height:48px;display:flex;align-items:center;gap:8px;padding:6px 16px;border-radius:var(--r-pill);background:rgba(255,255,255,.10);font-size:var(--fs-body);font-weight:700;line-height:1.35;color:rgba(255,255,255,.86);font-feature-settings:"palt"}
 .k-dj-wait svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .k-dj .k-say{padding:0;margin-top:12px}
-/* the first time (data-new: it waits out of sight until it is scrolled to): the gate drops in, the card lands with a thud, a light runs
-   over it, paper bits fly, めくる says so. 動きを減らす: it only fades in (by script; every CSS animation is off then) */
-.k-dj[data-new] .k-dj-card,.k-dj[data-new] .k-say{opacity:0}
+/* the first time: the card waits unseen (data-new, then data-hold while the reveal plays over the page); the reveal's 看板 flies into
+   the card's and the card opens out around it with a thud, a light runs over it, paper bits fly, めくる says so. 動きを減らす: it only
+   fades in (by script; every CSS animation is off then) */
+.k-dj[data-new] .k-dj-card,.k-dj[data-new] .k-say,.k-dj[data-hold] .k-dj-card,.k-dj[data-hold] .k-say{opacity:0}
 .k-dj-fx{position:absolute;left:calc(-1 * max(var(--pad),env(safe-area-inset-left,0px)));right:calc(-1 * max(var(--pad),env(safe-area-inset-right,0px)));top:-150px;height:340px;overflow:hidden;pointer-events:none;z-index:2}   /* the page's width: the bits never make it scroll sideways */
 .k-dj-fx i{position:absolute;left:calc(50% - 3px);top:185px;width:6px;height:10px;border-radius:1px;background:var(--c,#fff);opacity:0}
 @media (prefers-reduced-motion: no-preference){
-  .k-dj.rise .k-dj-card{animation:dj-drop .62s cubic-bezier(.3,1.35,.5,1) var(--dt,0s) both}
-  .k-dj.rise .k-dj-sign{animation:dj-thud .32s ease-out calc(var(--dt,0s) + .38s) both}
-  .k-dj.rise .k-dj-card::after{content:"";position:absolute;top:0;bottom:0;left:0;width:46%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.26),transparent);transform:translateX(-120%) skewX(-12deg);animation:dj-sweep .75s ease-in-out calc(var(--dt,0s) + .55s) both;pointer-events:none}
-  .k-dj.rise .k-dj-fx i{animation:dj-bit 1.15s cubic-bezier(.15,.7,.35,1) calc(var(--dt,0s) + .42s + var(--d,0s)) both}
-  .k-dj.rise .k-say{animation:mkin .3s var(--ease-out) calc(var(--dt,0s) + 1s) both}
-  .k-dj.rise .k-seal{animation:rs-pop .4s var(--ease-out) calc(var(--dt,0s) + .7s) both}
+  .k-dj.rise .k-dj-card{transform-origin:36px 70px;animation:dj-land .55s cubic-bezier(.3,1.45,.5,1) var(--dt,0s) both}   /* out from the 看板: the sign that flew in stays put */
+  .k-dj.rise .k-dj-sign{animation:dj-thud .32s ease-out var(--dt,0s) both}
+  .k-dj.rise .k-dj-card::after{content:"";position:absolute;top:0;bottom:0;left:0;width:46%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.26),transparent);transform:translateX(-120%) skewX(-12deg);animation:dj-sweep .75s ease-in-out calc(var(--dt,0s) + .2s) both;pointer-events:none}
+  .k-dj.rise .k-dj-fx i{animation:dj-bit 1.15s cubic-bezier(.15,.7,.35,1) calc(var(--dt,0s) + .06s + var(--d,0s)) both}
+  .k-dj.rise .k-say{animation:mkin .3s var(--ease-out) calc(var(--dt,0s) + .55s) both}
+  .k-dj.rise .k-seal{animation:rs-pop .4s var(--ease-out) calc(var(--dt,0s) + .4s) both}
 }
-@keyframes dj-drop{0%{opacity:0;transform:translateY(-70px) scale(1.06)}35%{opacity:1}62%{transform:translateY(5px) scale(1)}100%{opacity:1;transform:none}}
+@keyframes dj-land{0%{opacity:0;transform:scale(.9)}30%{opacity:1}62%{transform:scale(1.015)}100%{opacity:1;transform:none}}
 @keyframes dj-thud{0%{transform:none}35%{transform:translateY(2px) scaleY(.96)}100%{transform:none}}
 @keyframes dj-sweep{to{transform:translateX(330%) skewX(-12deg)}}
 @keyframes dj-bit{0%{opacity:1;transform:translate(0,0) rotate(0) scale(.6)}45%{opacity:1;transform:translate(calc(var(--x) * .7),var(--y)) rotate(calc(var(--r) * .5)) scale(1)}100%{opacity:0;transform:translate(var(--x),calc(var(--y) + 70px)) rotate(var(--r)) scale(1)}}   /* up, then falling away */
+/* the reveal (djFx), over everything (the toasts too): the screen goes 墨, a light leaks through a seam as the drum rolls, the 看板
+   slams down (an ink splash in the deck's colour, light rays, a shock ring, one soft flash, gold sparks and paper on a canvas), the brush
+   line, then the 看板 flies into the card. Every move is the Web Animations API (one clock: a tap ends it at any moment, and the docs'
+   pictures stop it anywhere); 動きを減らす: it only fades in and out */
+.k-djx{position:fixed;inset:0;z-index:96;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;cursor:pointer;-webkit-tap-highlight-color:transparent;color:#fff}
+.k-djx-bg{position:absolute;inset:0;background:radial-gradient(110% 70% at 50% 40%,#2B2931 0%,var(--dj-bg) 48%,#0B0A0D 100%);opacity:0}
+.k-djx-st,.k-djx-fx{position:absolute;inset:0}
+.k-djx canvas{position:absolute;inset:0;width:100%;height:100%}
+.k-djx-c{position:absolute;left:50%;top:40%;width:0;height:0;scale:var(--k,1)}   /* the point it all comes out of: the 看板's middle (smaller on a short screen) */
+.k-djx-c > *{position:absolute}
+.k-djx-rays{left:-80vmax;top:-80vmax;width:160vmax;height:160vmax;opacity:0}
+.k-djx-rays i{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from 4deg,rgba(255,226,170,0) 0deg 8deg,rgba(255,226,170,.17) 10.5deg 12.5deg,rgba(255,226,170,0) 15deg 22.5deg);-webkit-mask:radial-gradient(closest-side,#000 6%,rgba(0,0,0,.55) 30%,transparent var(--rl,62%));mask:radial-gradient(closest-side,#000 6%,rgba(0,0,0,.55) 30%,transparent var(--rl,62%))}
+.k-djx-rays i + i{background:repeating-conic-gradient(from 0deg,rgba(255,240,215,0) 0deg 5deg,rgba(255,240,215,.10) 6deg 7deg,rgba(255,240,215,0) 8deg 15deg)}
+.k-djx.kw .k-djx-rays{--rl:92%}
+.k-djx.kw .k-djx-rays i{background:repeating-conic-gradient(from 4deg,rgba(255,206,110,0) 0deg 7deg,rgba(255,206,110,.24) 10deg 12.5deg,rgba(255,206,110,0) 15.5deg 22.5deg)}
+.k-djx.kw .k-djx-rays i + i{background:repeating-conic-gradient(from 0deg,rgba(255,232,180,0) 0deg 4.5deg,rgba(255,232,180,.13) 6deg 7.5deg,rgba(255,232,180,0) 9deg 15deg)}
+.k-djx-glow{left:-190px;top:-190px;width:380px;height:380px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,216,150,.5),rgba(255,190,100,.16) 55%,rgba(255,190,100,0));opacity:0}
+.k-djx.kw .k-djx-glow{left:-260px;top:-260px;width:520px;height:520px;background:radial-gradient(closest-side,rgba(255,206,110,.62),rgba(255,180,70,.2) 55%,rgba(255,180,70,0))}
+.k-djx-ink{left:-170px;top:-170px;width:340px;height:340px;opacity:0;overflow:visible}
+.k-djx-ring{left:-70px;top:-70px;width:140px;height:140px;border-radius:50%;border:2px solid rgba(255,228,176,.85);box-shadow:0 0 18px rgba(255,210,140,.5),inset 0 0 18px rgba(255,210,140,.35);opacity:0}
+.k-djx-slit{left:-1.5px;top:-34vh;width:3px;height:68vh;border-radius:2px;background:linear-gradient(rgba(255,236,200,0),#FFF6E4 32%,#FFF6E4 68%,rgba(255,236,200,0));box-shadow:0 0 22px 5px rgba(255,214,150,.55);opacity:0}
+.k-djx-fly{left:-44px;top:-119px;width:88px;height:238px}
+.k-djx .k-dj-sign{width:88px;height:238px;padding-top:33px;border-radius:4px;box-shadow:0 18px 50px rgba(0,0,0,.55)}   /* the card's 看板 ×2.2, so it flies into it */
+.k-djx .k-dj-sign::before{height:18px}
+.k-djx .k-dj-sign span{font-size:42px}
+.k-djx .k-dj-sign.l5 span{font-size:35px}
+.k-djx-txt{position:absolute;left:0;right:0;top:calc(40% + 150px * var(--k,1));padding:0 16px;text-align:center}
+.k-djx-t{margin:0;font-family:var(--f-cover);font-size:clamp(26px,8.6vw,40px);font-weight:400;line-height:1.2;letter-spacing:.02em;white-space:nowrap;text-shadow:0 0 22px rgba(255,206,130,.45),0 2px 0 rgba(0,0,0,.4)}
+.k-djx-t i{display:inline-block;font-style:normal;opacity:0}
+.k-djx.kw .k-djx-t i{color:#F6D27A;background:linear-gradient(180deg,#FFF3D1 10%,#F4C966 55%,#D2963A 92%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 0 14px rgba(255,196,90,.5))}
+.k-djx-s{margin:10px 0 0;font-size:var(--fs-body);font-weight:700;color:rgba(255,255,255,.82);letter-spacing:.04em;font-feature-settings:"palt";opacity:0}
+.k-djx-hint{position:absolute;left:0;right:0;bottom:calc(30px + env(safe-area-inset-bottom,0px));margin:0;text-align:center;font-size:var(--fs-min);font-weight:700;color:rgba(255,255,255,.5);opacity:0}
+.k-djx-flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(255,249,234,.85),rgba(255,236,205,.3) 42%,rgba(255,236,205,0) 78%);opacity:0;pointer-events:none}
 /* the 記録 tab's profile: the 段 large (brush), and the 道場's list › — the 級 row stays under it */
 .k-dan{width:100%;min-height:56px;display:flex;align-items:center;gap:12px;margin-top:14px;padding:0;text-align:left;color:var(--ink)}
 .k-dan .q{font-family:var(--f-cover);font-size:34px;line-height:1;letter-spacing:.02em}
@@ -2334,6 +2368,16 @@ html{touch-action:manipulation}
 .rs-dj .t{flex:1;min-width:0;margin:0;font-size:var(--fs-body);font-weight:700;line-height:1.4;font-feature-settings:"palt"}
 .rs-dj .t small{display:block;font-size:var(--fs-min);font-weight:500;color:rgba(255,255,255,.76)}
 .rs-dj button{flex:none;height:40px;padding:0 16px;border-radius:var(--r-pill);background:#fff;color:#121216;font-size:var(--fs-body);font-weight:800;font-feature-settings:"palt"}
+/* it should feel like news: a gold edge, the little 看板 lands, a light runs over it twice, the button breathes */
+.rs-dj{position:relative;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(246,201,102,.55),0 8px 24px -10px rgba(214,150,58,.55)}
+.rs-dj .t{font-weight:800}
+@media (prefers-reduced-motion: no-preference){
+  .rs-dj .k-dj-sign{animation:rs-djsign .55s cubic-bezier(.3,1.5,.5,1) .35s both}
+  .rs-dj::after{content:"";position:absolute;top:0;bottom:0;left:0;width:40%;background:linear-gradient(100deg,transparent,rgba(255,226,160,.28),transparent);transform:translateX(-130%) skewX(-14deg);animation:dj-sweep 1s ease-in-out .7s 2 both;pointer-events:none}
+  .rs-dj button{animation:rs-djgo 1.6s ease-in-out 1.2s 3}
+}
+@keyframes rs-djsign{0%{opacity:0;transform:translateY(-14px) scale(1.5) rotate(-8deg)}100%{opacity:1;transform:none}}
+@keyframes rs-djgo{0%,100%{transform:none;box-shadow:0 0 0 0 rgba(246,201,102,0)}45%{transform:scale(1.05);box-shadow:0 0 0 5px rgba(246,201,102,.32)}}
 @media (max-width:360px){
   .k-stk{gap:12px} .k-stk-ring{width:96px;height:96px}
   .k-pst > div{padding-left:10px}
@@ -4111,7 +4155,8 @@ addEventListener('popstate', e => {
   if (!IS_WEB) return;
   if (e.state?.kt) { HG = true; return; }   // forward onto the marker again
   HG = false;
-  if (sheetOpen()) { if ($('#sheetroot .backdrop[data-act]')) ACT.closeSheet(); }   // the first-run welcome stays open
+  if (DJX) djFxEnd();   // 道場's reveal: back ends it, the page stays
+  else if (sheetOpen()) { if ($('#sheetroot .backdrop[data-act]')) ACT.closeSheet(); }   // the first-run welcome stays open
   else if (!$('#screen').hidden) { if (DJ && !DJ.done) djQuitAsk(); else closeScreen(); }   // 道場: quitting fails it, so it asks
   else if (route.tab === 'decks' && route.deck) ACT.backDecks();
   else { history.back(); return; }   // a marker left behind by ×: this back was meant for the page before
@@ -5222,44 +5267,189 @@ function djBits(id){
 }
 /* the entrance: 看板, name, the rule, what passing brings (passed: 合格・初段 and the seal), the button — or, taken today, when again.
    DJ_RV: the show just played here (its moves carry on through a redraw; めくる's line stays while the page does) */
-let DJ_RV = null, djIO = null;
+let DJ_RV = null, djT = 0;
 function djCardHTML(id){
   if (!djSeen(id)) return '';
   const e = djE(id), kw = id === 'kw', d = kw ? null : deckById(id), R = djRule(id), passed = e.p != null, open = djOpen(id);
-  const fresh = open && e.s == null, rv = DJ_RV?.id === id ? DJ_RV : null, dt = rv ? (Date.now() - rv.t0) / 1000 : 9, rise = dt < 2.4;
+  const fresh = open && e.s == null, rv = DJ_RV?.id === id ? DJ_RV : null, hold = !!rv && rv.t0 == null, dt = rv && !hold ? (Date.now() - rv.t0) / 1000 : 9, rise = dt < 2.4;   // hold: the reveal is over the page, its 看板 not landed yet
   const best = e.b != null ? `<span class="b">最高${e.b}問</span>` : '';
   const st = passed ? `<span>合格・${djDan(id)}</span>${best}` : `<span>合格すると${kw ? '極' : DAN_NAME[danN() + 1]}</span>${best}`;
   const act = !open ? `<p class="k-dj-wait">${DJ_WAIT}<span>${kPhrases('見出し語をぜんぶ学習済みにすると、また挑戦できる')}</span></p>`
     : djToday(id) ? `<p class="k-dj-wait">${DJ_WAIT}<span>${kPhrases('今日は挑戦した、明日また挑戦できる')}</span></p>`
     : `<button class="k-play${kw ? ' kw' : ''}" data-act="djStart" data-id="${id}">${K_ICO.play}<span class="k-play-t"><span class="k-play-main">${passed ? 'もう一度挑戦する' : '挑戦する'}</span><span class="k-play-sub"><span class="ln">${R.n}問、約${Math.ceil(R.n * DJ_SEC / 60)}分</span></span></span></button>`;
-  return `<section class="k-dj${kw ? ' kw' : ''}${passed ? ' passed' : ''}${rise ? ' rise' : ''}" id="dj-${id}" aria-label="${esc(djName(id))}"${fresh ? ' data-new="1"' : ''} style="${d ? `--bk:var(--c-${bookOf(d).k});` : ''}${rise ? `--dt:${(-dt).toFixed(2)}s` : ''}">
+  return `<section class="k-dj${kw ? ' kw' : ''}${passed ? ' passed' : ''}${rise ? ' rise' : ''}" id="dj-${id}" aria-label="${esc(djName(id))}"${fresh ? ' data-new="1"' : hold ? ' data-hold="1"' : ''} style="${d ? `--bk:var(--c-${bookOf(d).k});` : ''}${rise ? `--dt:${(-dt).toFixed(2)}s` : ''}">
     <div class="k-dj-card"><div class="k-dj-top">${djSign(id)}<div class="k-dj-txt"><h2 class="k-dj-t">${esc(djName(id))}</h2><p class="k-dj-s">${kPhrases(djRuleText(id))}</p><p class="k-dj-st">${st}</p></div>${passed ? '<span class="k-seal" aria-hidden="true">合格</span>' : ''}</div>
-    <div class="k-dj-act">${act}</div></div>${rise ? djBits(id) : ''}${rv?.say ? `<div class="k-say">${mekuru('happy')}<p class="k-bubble" role="status">${kPhrases(rv.say)}</p></div>` : ''}</section>`;
+    <div class="k-dj-act">${act}</div></div>${rise ? djBits(id) : ''}${rv?.say && !hold ? `<div class="k-say">${mekuru('happy')}<p class="k-bubble" role="status">${kPhrases(rv.say)}</p></div>` : ''}</section>`;
 }
-/* after a page is drawn: a dojo that has come and never been shown waits out of sight; the page glides down to it (the deck's is at
-   the bottom) and the show plays once it is mostly in view, with nothing over the page */
+/* after a page is drawn: a dojo that has come and never been shown is revealed over the whole screen, once, a beat after the page
+   appears (nothing else over it); behind it the page moves to the card (the deck's is at the bottom) so the 看板 can fly into it */
 function djAfter(v){
   const key = route.tab + '/' + (route.deck || '');
+  clearTimeout(djT); if (DJX) return;
   if (DJ_RV && DJ_RV.key !== key) DJ_RV = null;
-  djIO?.disconnect(); djIO = null;
   const el = v.querySelector('.k-dj[data-new]'); if (!el) return;
-  const quiet = () => $('#screen').hidden && !sheetOpen();
-  if (!('IntersectionObserver' in window)) { if (quiet()) djReveal(el); return; }
-  djIO = new IntersectionObserver(es => { if (!es.some(x => x.isIntersecting) || !el.isConnected || !quiet()) return; djIO.disconnect(); djIO = null; djReveal(el); }, {threshold: 0.6});
-  djIO.observe(el);
-  if (quiet()) setTimeout(() => { if (el.isConnected && el.dataset.new && quiet()) el.scrollIntoView({behavior: lessMotion() ? 'auto' : 'smooth', block: 'center'}); }, lessMotion() ? 0 : 450);
+  const go = () => { if (!el.isConnected || !el.dataset.new || DJX) return; if (!$('#screen').hidden || sheetOpen()) { djT = setTimeout(go, 400); return; } djFx(el.id.slice(3)); };
+  djT = setTimeout(go, lessMotion() ? 120 : 300);
 }
-function djReveal(el){
-  const id = el.id.slice(3), name = djName(id);
-  djSet(id, {s: dayIdx()});
-  DJ_RV = {id, t0: Date.now(), key: route.tab + '/' + (route.deck || ''), say: mkSay(id === 'kw' ? 'dojo_kw_appear' : 'dojo_appear', {d: name}) || `${name}があらわれた！`};
-  el.outerHTML = djCardHTML(id);
-  const nw = $('#dj-' + id); if (lessMotion() && nw?.animate) nw.animate([{opacity: 0, transform: 'translateY(8px)'}, {opacity: 1, transform: 'none'}], {duration: 500, easing: 'ease-out'});
-  haptic(true); setTimeout(() => sfx('done'), lessMotion() ? 0 : 420); srSay(`${name}があらわれた`);
-  setTimeout(() => document.querySelector(`#dj-${id} .k-dj-fx`)?.remove(), 2600);   // the bits, flown out past the page's edge, leave no box behind
+/* ---- the reveal: one clock T (s) — hit: the 看板 lands; out: it flies to the card; end: the card has it ---- */
+let DJX = null;
+const djRand = a => () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };   // seeded: the same show every time
+/* an ink splash: a blob with a ragged edge and a few tongues (a smooth closed curve through the points), drops thrown past it */
+function djInk(R, r, fill){
+  const n = 90, ph = [R() * 6.3, R() * 6.3, R() * 6.3], tg = Array.from({length: 8}, () => [R() * 6.283, .12 + R() * .5]), P = [];
+  for (let i = 0; i < n; i++) { const a = i / n * 6.283; let k = 1 + .07 * Math.sin(3 * a + ph[0]) + .05 * Math.sin(7 * a + ph[1]) + .035 * Math.sin(13 * a + ph[2]);
+    for (const [ta, tl] of tg) { const d = Math.atan2(Math.sin(a - ta), Math.cos(a - ta)); k += tl * Math.exp(-d * d / .008); }
+    P.push([Math.cos(a) * r * k, Math.sin(a) * r * k]); }
+  const f = v => v.toFixed(1); let d = `M${f(P[0][0])},${f(P[0][1])}`;
+  for (let i = 0; i < n; i++) { const p0 = P[(i + n - 1) % n], p1 = P[i], p2 = P[(i + 1) % n], p3 = P[(i + 2) % n];
+    d += `C${f(p1[0] + (p2[0] - p0[0]) / 6)},${f(p1[1] + (p2[1] - p0[1]) / 6)} ${f(p2[0] - (p3[0] - p1[0]) / 6)},${f(p2[1] - (p3[1] - p1[1]) / 6)} ${f(p2[0])},${f(p2[1])}`; }
+  let dr = ''; for (let i = 0; i < 16; i++) { const a = R() * 6.283, q = r * (1.2 + R() * .7); dr += `<circle cx="${f(Math.cos(a) * q)}" cy="${f(Math.sin(a) * q)}" r="${f(1.5 + R() * R() * 9)}"/>`; }
+  return `<g fill="${fill}"><path d="${d}Z"/>${dr}</g>`;
+}
+/* 和太鼓 (効果音 on only): a roll that quickens, then ドン — a sine falling in pitch, a burst of low noise for the skin — and a few high
+   glints; 極 strikes twice over a low gong. One gain for all of it, so ending early silences it */
+function djFxSound(kw, T, calm){
+  if (!S.settings.sfx) return null;
+  try {
+    const ac = audioCtx(); if (!ac || ac.state !== 'running') return null;   // queued on a stopped context it would all sound at once later
+    const t0 = ac.currentTime + .03, out = ac.createGain(), cmp = ac.createDynamicsCompressor(); out.gain.value = .9; out.connect(cmp).connect(ac.destination);
+    const nb = ac.createBuffer(1, ac.sampleRate * .25 | 0, ac.sampleRate), ch = nb.getChannelData(0); for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1;
+    const env = (g, t, v, a, d) => { g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + d); };
+    const tone = (t, f, v, d, type = 'sine', f1) => { const o = ac.createOscillator(), g = ac.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); if (f1) o.frequency.exponentialRampToValueAtTime(f1, t + d * .3);
+      env(g, t, v, .005, d); o.connect(g).connect(out); o.start(t); o.stop(t + d + .05); };
+    const drum = (t, v, f0, f1, d) => { tone(t, f0, v, d, 'sine', f1); tone(t, f0 * 1.52, v * .22, d * .4, 'sine', f1 * 1.5);
+      const n = ac.createBufferSource(), lp = ac.createBiquadFilter(), g = ac.createGain(); n.buffer = nb; lp.type = 'lowpass'; lp.frequency.value = 500 + 900 * v; env(g, t, v * .5, .002, .13); n.connect(lp).connect(g).connect(out); n.start(t); n.stop(t + .2); };
+    const H = t0 + T.hit;
+    if (!calm) { const n = kw ? 10 : 7; for (let i = 0; i < n; i++) drum(t0 + .3 + (T.hit - .42) * (1 - Math.pow(1 - i / n, 1.7)), .07 + .26 * i / n, 135, 72, .32); }   // ドロロロ…
+    drum(H, 1, 168, 46, 1.5); drum(H, .45, 92, 38, 1.7);   // ドン
+    if (kw) { tone(H, 98, .12, 3.2, 'triangle'); tone(H, 147.5, .06, 2.6); tone(H, 223, .035, 2.2); if (T.hit2) { drum(t0 + T.hit2, 1, 190, 50, 1.6); drum(t0 + T.hit2, .5, 100, 40, 1.8); } }
+    const g0 = t0 + (T.hit2 || T.hit) + .28; [2093, 2637, 3136, 4186, 3136, 4186].slice(0, kw ? 6 : 4).forEach((f, i) => tone(g0 + i * .075, f, .028, .55));   // キラッ
+    return {stop(){ try { out.gain.cancelScheduledValues(ac.currentTime); out.gain.setTargetAtTime(.0001, ac.currentTime, .04); setTimeout(() => out.disconnect(), 400); } catch(e) {} }};
+  } catch(e) { return null; }
+}
+/* the drum's hits as one vibration pattern (Android); iPhone has no vibrate: the switch's click (haptic) at the big one */
+function djBuzz(hits, X){
+  if (!S.settings.haptic) return;
+  if (typeof navigator.vibrate !== 'function') { X.timers.push(setTimeout(() => haptic(true), hits[hits.length - 1][0] * 1000)); return; }
+  const p = [hits[0][1]]; for (let i = 1; i < hits.length; i++) p.push(Math.max(0, Math.round((hits[i][0] - hits[i - 1][0]) * 1000) - hits[i - 1][1]), hits[i][1]);
+  X.timers.push(setTimeout(() => { try { navigator.vibrate(p); } catch(e) {} }, hits[0][0] * 1000));
+}
+function djFx(id){
+  const kw = id === 'kw', calm = lessMotion(), d = kw ? null : deckById(id), name = djName(id), R = djRand(kw ? 51 : 17);
+  djSet(id, {s: dayIdx()});   // seen from its first moment: closing the app halfway doesn't bring it back
+  DJ_RV = {id, t0: null, key: route.tab + '/' + (route.deck || ''), say: mkSay(kw ? 'dojo_kw_appear' : 'dojo_appear', {d: name}) || `${name}があらわれた！`};
+  const card = $('#dj-' + id); if (card) { card.outerHTML = djCardHTML(id); $('#dj-' + id)?.scrollIntoView({block: 'center'}); }   // held unseen; the page behind moves to it
+  const W = innerWidth, H = innerHeight, k = Math.min(1, H / 700, W / 330), cx = W / 2, cy = H * .4, cs = getComputedStyle(document.documentElement);
+  const bk = (kw ? ACH_BOOKS.map(deckById) : [d]).map(x => cs.getPropertyValue(`--c-${bookOf(x).k}`).trim() || '#2E7D5B');
+  const T = calm ? {hit: .3, out: 2.4, end: 2.8} : kw ? {hit: 1.45, hit2: 1.95, out: 4.05, end: 4.65} : {hit: 1.05, out: 3.05, end: 3.6};
+  const title = [...`${name}、あらわる`], fs = Math.max(20, Math.min(40, W * .086, (Math.min(W, 560) - 40) / (title.length * 1.03)));
+  const x = document.createElement('div'); x.className = 'k-djx' + (kw ? ' kw' : ''); x.setAttribute('aria-hidden', 'true'); x.style.setProperty('--k', k.toFixed(3));
+  x.innerHTML = `<div class="k-djx-bg"></div><div class="k-djx-st"><div class="k-djx-fx">${calm ? '' : '<canvas></canvas>'}<div class="k-djx-c">
+    <div class="k-djx-rays"><i></i><i></i></div><div class="k-djx-glow"></div>
+    <svg class="k-djx-ink" viewBox="-170 -170 340 340">${kw ? bk.map((c, i) => `<g transform="rotate(${i * 72 - 90}) translate(78 0)">${djInk(R, 50, c)}</g>`).join('') : djInk(R, 104, bk[0])}</svg>
+    <div class="k-djx-ring"></div>${kw ? '<div class="k-djx-ring"></div><div class="k-djx-ring"></div>' : ''}<div class="k-djx-slit"></div></div>
+    <div class="k-djx-txt"><p class="k-djx-t" style="font-size:${fs.toFixed(1)}px">${title.map(ch => `<i>${esc(ch)}</i>`).join('')}</p><p class="k-djx-s">${esc(kw ? '5つの道場、ぜんぶ合格' : `見出し語${d.cards.length}語、ぜんぶ学習済み`)}</p></div>
+    <p class="k-djx-hint">タップでとばす</p></div><div class="k-djx-c"><div class="k-djx-fly">${djSign(id)}</div></div></div><div class="k-djx-flash"></div>`;
+  document.body.appendChild(x);
+  const X = DJX = {id, el: x, T, timers: [], A: [], p0: performance.now(), raf: 0}, q = s => x.querySelector(s), qa = s => [...x.querySelectorAll(s)];
+  // seq: one animation through [time, keyframe, easing to the next] (times absolute on T's clock)
+  const seq = (el, ks) => { if (!el?.animate) return null; const a0 = ks[0][0], a1 = ks[ks.length - 1][0];
+    const a = el.animate(ks.map(([t, p, e]) => ({...p, offset: (t - a0) / (a1 - a0), ...(e ? {easing: e} : {})})), {duration: (a1 - a0) * 1000, delay: a0 * 1000, fill: 'both'}); X.A.push(a); return a; };
+  const hit = T.hit, out = T.out, end = T.end, sign = q('.k-djx-fly .k-dj-sign'), fly = q('.k-djx-fly'), ti = qa('.k-djx-t i');
+  seq(q('.k-djx-bg'), [[0, {opacity: 0}, 'ease-out'], [.35, {opacity: 1}], [out, {opacity: 1}, 'ease-in'], [end, {opacity: 0}]]);
+  if (calm) {   // 動きを減らす: no shake, no flash, nothing flying — it fades in, stays, fades out
+    for (const [s, o] of [['.k-djx-rays', .5], ['.k-djx-glow', .8], ['.k-djx-ink', .9]]) seq(q(s), [[.2, {opacity: 0}], [.7, {opacity: o}]]);
+    seq(sign, [[.25, {opacity: 0}], [.7, {opacity: 1}]]); ti.forEach(i => seq(i, [[.5, {opacity: 0}], [.9, {opacity: 1}]]));
+    seq(q('.k-djx-s'), [[.7, {opacity: 0}], [1.1, {opacity: 1}]]); seq(q('.k-djx-hint'), [[.9, {opacity: 0}], [1.2, {opacity: 1}]]);
+    seq(q('.k-djx-st'), [[out, {opacity: 1}], [end, {opacity: 0}]]);
+  } else {
+    const hits = kw ? [hit, T.hit2] : [hit], last = hits[hits.length - 1];
+    // the rumble before (growing), the jolt of each hit (dying away)
+    const sh = [[0, {transform: 'none'}]];
+    for (let t = .3; t < hit - .02; t += .045) { const a = .3 + 2.4 * ((t - .3) / (hit - .3)) ** 2; sh.push([t, {transform: `translate(${((R() - .5) * 2 * a).toFixed(1)}px,${((R() - .5) * 2 * a).toFixed(1)}px)`}]); }
+    hits.forEach((h, j) => { const nx = j + 1 < hits.length ? hits[j + 1] : h + .6; for (let t = h; t < Math.min(nx, h + .6) - .01; t += .035) { const a = (kw ? 13 : 10) * Math.exp(-(t - h) * 6.5);
+      sh.push([t, {transform: `translate(${((R() - .5) * 2 * a).toFixed(1)}px,${((R() - .5) * 2 * a).toFixed(1)}px) rotate(${((R() - .5) * a * .12).toFixed(2)}deg)`}]); } });
+    sh.push([last + .62, {transform: 'none'}]); seq(q('.k-djx-st'), sh);
+    // the light through a seam: it grows while the drum rolls, then bursts open at the hit
+    seq(q('.k-djx-slit'), [[.3, {opacity: 0, transform: 'scale(1,0)'}, 'cubic-bezier(.2,.7,.3,1)'], [.6, {opacity: .9, transform: 'scale(1,.55)'}], [hit - .04, {opacity: 1, transform: 'scale(1,1)'}, 'ease-out'], [hit + .14, {opacity: 0, transform: 'scale(24,1.25)'}]]);
+    seq(q('.k-djx-glow'), [[.3, {opacity: 0, transform: 'scale(.5)'}], [hit - .04, {opacity: .35, transform: 'scale(.7)'}, 'cubic-bezier(.2,.8,.3,1)'], [hit + .12, {opacity: 1, transform: 'scale(1.18)'}, 'ease-out'], [hit + .7, {opacity: .78, transform: 'scale(1)'}], [out, {opacity: .85, transform: 'scale(1.06)'}]]);
+    // the 看板 slams down from far above the screen, squashes, settles
+    seq(sign, [[hit - .3, {opacity: 0}], [hit - .2, {opacity: 1}]]);
+    seq(sign, [[hit - .3, {transform: 'scale(3.6) rotate(-10deg)'}, 'cubic-bezier(.55,0,.9,.45)'], [hit, {transform: 'scale(1) rotate(0deg)'}, 'ease-out'], [hit + .07, {transform: 'scale(1.07,.9)'}, 'ease-in-out'], [hit + .18, {transform: 'scale(.97,1.03)'}, 'ease-in-out'], [hit + .3, {transform: 'none'}]]);
+    seq(q('.k-djx-ink'), [[hit - .01, {opacity: 0, transform: 'scale(.2) rotate(-14deg)'}, 'cubic-bezier(.12,.9,.25,1)'], [hit + .04, {opacity: .95, transform: 'scale(.62) rotate(-6deg)'}, 'cubic-bezier(.12,.9,.25,1)'], [hit + .6, {opacity: .95, transform: 'scale(1) rotate(0deg)'}], [out, {opacity: .95, transform: 'scale(1.04) rotate(1deg)'}]]);
+    seq(q('.k-djx-rays'), [[hit - .02, {opacity: 0, transform: 'scale(.3)'}, 'cubic-bezier(.15,.8,.3,1)'], [hit + .12, {opacity: 1, transform: 'scale(.7)'}, 'cubic-bezier(.15,.8,.3,1)'], [hit + .8, {opacity: 1, transform: 'scale(1)'}], [out, {opacity: .9, transform: 'scale(1.08)'}]]);
+    qa('.k-djx-rays i').forEach((r, j) => seq(r, [[hit, {transform: 'rotate(0deg)'}], [end, {transform: `rotate(${j ? -16 : 24}deg)`}]]));
+    qa('.k-djx-ring').forEach((r, j) => { const h = j === 2 ? T.hit2 : hit + j * .14; seq(r, [[h - .01, {opacity: 0, transform: 'scale(.2)'}], [h, {opacity: .95, transform: 'scale(.25)'}, 'cubic-bezier(.1,.7,.3,1)'], [h + .75, {opacity: 0, transform: `scale(${j ? 5.5 : 4.4})`}]]); });
+    seq(q('.k-djx-flash'), [[hit, {opacity: 0}, 'ease-out'], [hit + .06, {opacity: kw ? .6 : .5}, 'ease-in'], [hit + .55, {opacity: 0}]]);   // one soft flash, no more
+    if (kw) seq(q('.k-djx-c'), [[T.hit2 - .05, {transform: 'none'}, 'ease-out'], [T.hit2 + .06, {transform: 'scale(1.06)'}, 'ease-in-out'], [T.hit2 + .4, {transform: 'none'}]]);   // the 2nd ドン swells it all
+    // the brush line, a letter at a time
+    const t1 = last + .2; ti.forEach((i, j) => seq(i, [[t1 + j * .05, {opacity: 0, transform: 'translateY(.35em) scale(1.7)'}, 'cubic-bezier(.2,1.45,.45,1)'], [t1 + j * .05 + .4, {opacity: 1, transform: 'none'}]]));
+    seq(q('.k-djx-s'), [[t1 + ti.length * .05 + .1, {opacity: 0, transform: 'translateY(8px)'}, 'ease-out'], [t1 + ti.length * .05 + .45, {opacity: 1, transform: 'none'}]]);
+    seq(q('.k-djx-hint'), [[.9, {opacity: 0}], [1.2, {opacity: 1}]]);
+    seq(q('.k-djx-fx'), [[out, {opacity: 1, transform: 'none'}, 'ease-in'], [out + .3, {opacity: 0, transform: 'scale(1.04)'}]]);
+    // the 看板 flies into the card's (aimed again just before it goes: the page may have moved)
+    const aim = () => { const r = $(`#dj-${id} .k-dj-sign`)?.getBoundingClientRect();
+      return r?.width ? `translate(${((r.left + r.width / 2 - cx) / k).toFixed(1)}px,${((r.top + r.height / 2 - cy) / k).toFixed(1)}px) scale(${(r.width / (88 * k)).toFixed(4)})` : 'translateY(-30px) scale(.5)'; };
+    const fk = () => [{transform: 'none', offset: 0, easing: 'cubic-bezier(.55,0,.25,1)'}, {transform: aim(), offset: 1}];
+    const fa = seq(fly, [[out, {transform: 'none'}], [end, {transform: 'none'}]]); fa?.effect?.setKeyframes?.(fk());
+    X.timers.push(setTimeout(() => { try { fa?.effect?.setKeyframes(fk()); } catch(e) {} }, (out - .06) * 1000));
+    // sparks and paper: worked out from the time alone (no stepping), so a frame can be drawn at any moment
+    const cv = q('canvas'), g = cv.getContext('2d'), dpr = Math.min(2, devicePixelRatio || 1), sp = Math.max(.8, Math.min(1.25, Math.min(W, H) / 400)), P = [], Q = [];
+    cv.width = W * dpr | 0; cv.height = H * dpr | 0;
+    const gold = ['#FFE7A8', '#FFD27A', '#FFF6DE', '#F6B94A'], paper = [...bk, ...bk, '#FBFAF7', '#F2C25B', '#E5483F', '#FFFFFF'];
+    const burst = (t0, nS, nP, cols) => {
+      for (let i = 0; i < nS; i++) { const a = R() * 6.283, v = (300 + R() * 900) * sp; Q.push({t0: t0 + R() * .04, x: cx, y: cy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, k: 3.4, g: 420, life: .5 + R() * .75, w: 1.3 + R() * 1.4, c: gold[i % 4]}); }
+      for (let i = 0; i < nP; i++) { const a = -Math.PI * (.06 + R() * .88), v = (450 + R() * 850) * sp; P.push({t0: t0 + R() * .08, x: cx + (R() - .5) * 50, y: cy + (R() - .5) * 90, vx: Math.cos(a) * v * 1.15, vy: Math.sin(a) * v,
+        k: 2.1, g: 560, w: 5 + R() * 4, h: 8 + R() * 6, c: cols[i % cols.length], ro: R() * 6.3, rs: (R() - .5) * 10, fl: 5 + R() * 9, fp: R() * 6.3, sw: 8 + R() * 22, sf: 1.5 + R() * 2}); }
+    };
+    burst(hit, kw ? 110 : 70, 90, paper); if (kw) burst(T.hit2, 90, 110, paper);
+    for (let i = 0, n = kw ? 60 : 36; i < n; i++) P.push({t0: hit + .2 + R() * 1.7, x: R() * W, y: -16 - R() * 30, vx: (R() - .5) * 40, vy: 30 + R() * 50, k: 1.3, g: 330, w: 5 + R() * 4, h: 8 + R() * 6,
+      c: paper[i % paper.length], ro: R() * 6.3, rs: (R() - .5) * 6, fl: 4 + R() * 7, fp: R() * 6.3, sw: 10 + R() * 20, sf: 1.2 + R() * 1.6});   // and more paper drifting down from the top while it stays
+    for (let i = 0, n = kw ? 50 : 28; i < n; i++) { const a = R() * 6.283, r = 30 + R() * 130; Q.push({t0: hit + .15 + R() * (out - hit - .6), x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r * .8, vx: (R() - .5) * 30, vy: -25 - R() * 45, k: .5, g: -12, life: 1.1 + R(), w: 1.8 + R() * 1.6, c: gold[i % 4]}); }   // embers rising
+    const pos = (p, u) => { const e = Math.exp(-p.k * u), f = (1 - e) / p.k, gk = p.g / p.k; return [p.x + p.vx * f, p.y + (p.vy - gk) * f + gk * u, p.vx * e, (p.vy - gk) * e + gk]; };
+    X.draw = t => {
+      g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height); g.globalCompositeOperation = 'source-over';
+      for (const p of P) { const u = t - p.t0; if (u < 0) continue; let [px, py] = pos(p, u); if (py > H + 30) continue; px += p.sw * Math.sin(p.sf * u + p.fp) * Math.min(1, u);
+        const c = Math.cos(p.ro + p.rs * u), s = Math.sin(p.ro + p.rs * u), fl = Math.cos(p.fl * u + p.fp);
+        g.globalAlpha = .7 + .3 * Math.abs(fl); g.fillStyle = p.c; g.setTransform(dpr * c, dpr * s, -dpr * s * fl, dpr * c * fl, dpr * px, dpr * py); g.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); }
+      g.setTransform(dpr, 0, 0, dpr, 0, 0); g.globalCompositeOperation = 'lighter'; g.lineCap = 'round';
+      for (const p of Q) { const u = t - p.t0; if (u < 0 || u > p.life) continue; const [px, py, vx, vy] = pos(p, u), a = 1 - u / p.life;
+        g.globalAlpha = a * a * (p.k < 1 ? .5 + .5 * Math.sin(u * 9 + p.x) : 1); g.strokeStyle = p.c; g.lineWidth = p.w; g.beginPath(); g.moveTo(px, py); g.lineTo(px - vx * .035 - .1, py - vy * .035); g.stroke(); }
+      g.globalAlpha = 1;
+    };
+    const loop = () => { if (DJX !== X || X.frozen) return; const t = (performance.now() - X.p0) / 1000; X.draw(t); if (t < out + .4) X.raf = requestAnimationFrame(loop); };
+    X.raf = requestAnimationFrame(loop);
+    const roll = []; for (let i = 0, n = kw ? 10 : 7; i < n; i++) roll.push([.3 + (hit - .42) * (1 - Math.pow(1 - i / n, 1.7)), 8 + i]);
+    djBuzz([...roll, [hit, 70], ...(kw ? [[T.hit2, 90]] : [])], X);
+  }
+  if (calm) djBuzz([[hit, 40]], X);
+  X.snd = djFxSound(kw, T, calm);
+  X.timers.push(setTimeout(djFxDone, end * 1000));
+  x.addEventListener('click', djFxEnd);
+  for (const ev of ['wheel', 'touchmove']) x.addEventListener(ev, e => e.preventDefault(), {passive: false});   // the page under it stays where the 看板 will land
+  /* the docs' pictures: the whole show stopped at t seconds */
+  X.seek = t => { X.frozen = true; X.timers.forEach(clearTimeout); X.timers = []; X.snd?.stop(); X.A.forEach(a => { a.pause(); a.currentTime = t * 1000; }); X.draw?.(t); };
+  guard(); srSay(`${name}があらわれた`);
+}
+/* a tap, Esc or back: a quick fade, and the card lands (already flying: it lands now) */
+function djFxEnd(){
+  const X = DJX; if (!X || X.ending) return; X.ending = true;
+  X.snd?.stop(); X.timers.forEach(clearTimeout); X.timers = []; try { if (typeof navigator.vibrate === 'function') navigator.vibrate(0); } catch(e) {}
+  if (X.frozen || (performance.now() - X.p0) / 1000 >= X.T.out || !X.el.animate) return djFxDone();
+  X.el.animate([{opacity: 1}, {opacity: 0}], {duration: 240, easing: 'ease-in', fill: 'forwards'}); X.timers.push(setTimeout(djFxDone, 250));
+}
+function djFxDone(){
+  const X = DJX; if (!X) return; DJX = null;
+  X.timers.forEach(clearTimeout); cancelAnimationFrame(X.raf); X.el.remove();
+  if (DJ_RV?.id === X.id) DJ_RV.t0 = Date.now();
+  const el = $('#dj-' + X.id); if (!el) return;
+  el.outerHTML = djCardHTML(X.id); const nw = $('#dj-' + X.id);
+  if (lessMotion() && nw?.animate) nw.animate([{opacity: 0}, {opacity: 1}], {duration: 450, easing: 'ease-out'});
+  if (!X.ending) haptic(true);
+  setTimeout(() => document.querySelector(`#dj-${X.id} .k-dj-fx`)?.remove(), 2600);   // the bits, flown out past the page's edge, leave no box behind
 }
 /* the results of a set that made a deck all 学習済み: its dojo has come (shown on the page, once) */
-const djNoticeHTML = id => `<section class="rs-dj" role="status">${djSign(id, true)}<p class="t">${esc(djName(id))}があらわれた<small>${id === 'kw' ? '単語帳タブのいちばん上にある' : '単語帳のページの、いちばん下にある'}</small></p><button data-act="djGo" data-id="${id}">見に行く</button></section>`;
+const djNoticeHTML = id => `<section class="rs-dj" role="status">${djSign(id, true)}<p class="t">${esc(djName(id))}があらわれた！<small>${id === 'kw' ? '単語帳タブのいちばん上にある' : '単語帳のページの、いちばん下にある'}</small></p><button data-act="djGo" data-id="${id}">見に行く</button></section>`;
 /* before a test: the rules, plainly (quitting fails it, once a day) */
 function djStartSheet(id){
   const R = djRule(id);
@@ -8000,6 +8190,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && (e.target.id === 'dfw' || e.target.id === 'dfm') && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); $(e.target.id === 'dfw' ? '#dfm' : '#dfe')?.focus(); return; }   // on to the next field (例文: Enter adds)
   if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229 && e.target.tagName === 'INPUT' && e.target.closest?.('#newdeckform')) {   // not a submit: on to the next field
     e.preventDefault(); const n = e.target.id === 'dname' ? $('#imptext') : e.target.closest('.impx-row')?.nextElementSibling?.querySelector('.impx-m'); n ? n.focus() : e.target.blur(); return; }
+  if (DJX) { if (/^(Escape|Enter| |Arrow(Up|Down)|Page(Up|Down)|Home|End)$/.test(e.key)) { e.preventDefault(); if (/^(Escape|Enter| )$/.test(e.key)) djFxEnd(); } return; }   // 道場's reveal: these end it, nothing scrolls the page under it
   if (e.target.matches?.('[role="button"]') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); return; }
   if (tutCur && e.target.tagName !== 'INPUT') {   // a key closes めくるの一言; an answer key (1–4, 0, ← →) only closes it
     tutClose(); if (/^[0-4]$/.test(e.key) || ['ArrowLeft', 'ArrowRight', 'Escape'].includes(e.key)) { e.preventDefault(); return; } }
