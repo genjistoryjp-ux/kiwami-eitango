@@ -81,6 +81,7 @@
   --fs-page:28px; --fs-book:24px;   /* a tab's big title (単語帳); a deck's name on its page */
   /* the study screen (S/quiz/notes.md): right and wrong (not of the blue or the orange family), the word sizes, the steps */
   --ok:#1E9E5A; --ok-ink:#0E7642; --ok-tint:#E6F5EC; --ok-solid:#0E7642; --ng:#E5484D; --ng-ink:#C8303A; --ng-tint:#FDEDED;
+  --hd-ink:#8A5208; --hd-tint:#FBF0D9;   /* 難しい on a card's grade button (もう一度 --ng-*, 正解 --ok-*, 簡単 --blue on --blue-tint) */
   --step-todo:#E7E7EA; --step-redo:#F7C8CA; --line-card:rgba(18,18,22,.14); --scrim:rgba(18,18,22,.46); --grab:rgba(18,18,22,.16); --card-bg:#FFFFFF;
   --f-en:"Figtree",sans-serif; --f-ipa:"Noto Sans","Noto Sans JP",sans-serif;   /* 発音記号: Figtree has no ɪ ə */
   --fs-word:40px; --fs-entry:26px; --fs-answer:22px; --fs-stat:26px;
@@ -97,7 +98,7 @@
   --paper:#E9E6DF; --paper-spine:rgba(18,18,22,.10); --tabbar-bg:rgba(17,17,20,.92);
   --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6); --sh-book-lg:0 1.5px 2.5px rgba(0,0,0,.45),0 14px 26px -10px rgba(0,0,0,.65);
   --ring-track:rgba(255,255,255,.14); --ring-star:rgba(255,255,255,.30); --seg-on:#2E2E36; --now-mix:45%;
-  --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20;
+  --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20; --hd-ink:#F0B35A; --hd-tint:#3A2B14;
   --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
   --blue-2:#4B5389; --track-off:rgba(255,255,255,.22); --opts-track:rgba(255,255,255,.08);
   --hm-1:#262D55; --hm-2:#3B4688; --hm-3:#5F6FCB; --hm-4:#8E9DFF; --md-pf:#4A4752; --md-yet-ring:rgba(255,255,255,.26); --md-yet-kj:rgba(255,255,255,.2);
@@ -109,7 +110,7 @@
   --paper:#E9E6DF; --paper-spine:rgba(18,18,22,.10); --tabbar-bg:rgba(17,17,20,.92);
   --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6); --sh-book-lg:0 1.5px 2.5px rgba(0,0,0,.45),0 14px 26px -10px rgba(0,0,0,.65);
   --ring-track:rgba(255,255,255,.14); --ring-star:rgba(255,255,255,.30); --seg-on:#2E2E36; --now-mix:45%;
-  --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20;
+  --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20; --hd-ink:#F0B35A; --hd-tint:#3A2B14;
   --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
   --blue-2:#4B5389; --track-off:rgba(255,255,255,.22); --opts-track:rgba(255,255,255,.08);
   --hm-1:#262D55; --hm-2:#3B4688; --hm-3:#5F6FCB; --hm-4:#8E9DFF; --md-pf:#4A4752; --md-yet-ring:rgba(255,255,255,.26); --md-yet-kj:rgba(255,255,255,.2);
@@ -1744,13 +1745,16 @@ html{touch-action:manipulation}
 .study.v2 .kana,.fb.v2 .kana{display:inline;margin:0 0 0 10px;font-size:var(--fs-sub);font-weight:500;color:var(--ink-2)}
 .study.v2 .sayex,.fb.v2 .sayex{width:32px;height:32px;margin-left:4px;border-radius:50%;background:var(--fill);color:var(--ink);vertical-align:-9px}
 .study.v2 .sayex .ico,.fb.v2 .sayex .ico{width:16px;height:16px}
-/* grading a card: どれくらい覚えてた？ and 4 grey buttons, the first line's colour says which (もう一度 red, 難しい ink, 正解 green, 簡単 blue) */
+/* grading a card: どれくらい覚えてた？ and 4 buttons, each on its own light tint with its words in its colour, as before the new look
+   (もう一度 red, 難しい brown on cream, 正解 green, 簡単 blue); a press sinks it a little and deepens the tint */
 .study.v2 .g-q{font-feature-settings:"palt";margin-top:14px;text-align:center;font-size:var(--fs-body);font-weight:700;color:var(--ink-2)}
 .study.v2 .grades{margin-top:10px;gap:8px}
-.study.v2 .grade{min-height:76px;padding:8px 2px;justify-content:center;gap:1px;border:0;border-radius:var(--r-card);background:var(--fill);color:var(--ink);text-align:center}
+.study.v2 .grade{--gt:var(--fill);--gi:var(--ink);min-height:76px;padding:8px 2px;justify-content:center;gap:1px;border:0;border-radius:var(--r-card);background:var(--gt);color:var(--gi);text-align:center;transition:transform var(--dur-1) var(--ease-io),background-color var(--dur-1) var(--ease-io)}
+.study.v2 .grade.g1{--gt:var(--ng-tint);--gi:var(--ng-ink)} .study.v2 .grade.g2{--gt:var(--hd-tint);--gi:var(--hd-ink)} .study.v2 .grade.g3{--gt:var(--ok-tint);--gi:var(--ok-ink)} .study.v2 .grade.g4{--gt:var(--blue-tint);--gi:var(--blue)}
+.study.v2 .grade:active{transform:scale(.97);background:color-mix(in srgb,var(--gi) 12%,var(--gt))}
 .study.v2 .grade b{font-size:var(--fs-name);font-weight:800;line-height:1.3;white-space:nowrap;letter-spacing:-.01em}
-.study.v2 .grade small,.study.v2 .grade small.jp{margin:0;font-family:var(--f-ui);font-size:var(--fs-sub);font-weight:500;line-height:1.3;color:var(--ink-2);opacity:1}
-.study.v2 .grade.g1 b{color:var(--ng-ink)} .study.v2 .grade.g3 b{color:var(--ok-ink)} .study.v2 .grade.g4 b{color:var(--blue)}
+.study.v2 .grade small,.study.v2 .grade small.jp{margin:0;font-family:var(--f-ui);font-size:var(--fs-sub);font-weight:500;line-height:1.3;color:var(--gi);opacity:1}
+.study.v2 .grade b{color:var(--gi)}
 .study.v2 .grade-note{font-size:var(--fs-min);color:var(--ink-2)}
 /* a short screen (iPhone SE, 文字「大」): tighter, so わからない stays in view */
 .short .study.v2 .qhead{margin-top:14px}
@@ -2201,9 +2205,33 @@ html{touch-action:manipulation}
 .rs-ach-md .k-bd{width:80px}
 .rs-ach-more{margin:10px max(var(--pad),env(safe-area-inset-left,0px)) 0;text-align:center;font-size:var(--fs-sub);color:var(--ink-2);font-feature-settings:"palt"}
 .rs-ach .k-say{margin-top:14px}
+.rs-ach.kyu .k-say{margin-top:0}
 @media (prefers-reduced-motion: no-preference){ .rs-ach .k-bd .md{animation:rs-pop .5s var(--ease-out) both} .rs-ach .k-bd + .k-bd .md{animation-delay:.08s} }
 /* the onboarding's nickname */
 .ob-nick{margin-top:0}
+/* ===== XP と級（docs/features/xp_kyu.md）: the results' +XP and the 級's bar under the hero, the profile's 級 =====
+   the bar is the app blue on the bars' track (as every progress bar); no new colour, no badge: the 級 is a word */
+.k-xbar{display:block;height:8px;border-radius:var(--r-bar);background:var(--track);overflow:hidden}
+.k-xbar i{display:block;height:100%;min-width:8px;background:var(--blue);border-radius:var(--r-bar)}
+.k-xbar i.zero{min-width:0}
+.rs-xp{margin-top:22px}
+.rs-xp .hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.rs-xp .g{margin:0;font-size:var(--fs-body);font-weight:700;line-height:1.1;white-space:nowrap;font-feature-settings:"palt"}
+.rs-xp .g b{font-family:"Figtree",var(--f-ui);font-size:var(--fs-stat);font-weight:800;letter-spacing:-.01em;margin-right:3px}
+.rs-xp .q{margin:0;font-size:var(--fs-name);font-weight:800;line-height:1.1;white-space:nowrap;font-feature-settings:"palt"}
+.rs-xp .k-xbar{margin-top:10px}
+.rs-xp .s{margin:7px 0 0;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.45;font-feature-settings:"palt"}
+.rs-xp .s b{font-weight:700;color:var(--ink)}
+@media (prefers-reduced-motion: no-preference){
+  .rs-xp .k-xbar i{animation:rs-xfill .8s var(--ease-out) .2s both}
+  .rs-xp .q.up{animation:rs-pop .5s var(--ease-out) .9s both}
+}
+@keyframes rs-xfill{from{width:var(--from,0%)}}
+/* the profile: 3級, its bar, あと120XP (1級: 次は極み道場で初段) */
+.k-kyu{display:flex;align-items:center;gap:12px;margin-top:16px}
+.k-kyu .q{flex:none;font-size:var(--fs-name);font-weight:800;line-height:1.2;font-feature-settings:"palt"}
+.k-kyu .k-xbar{flex:1;min-width:48px;height:6px}
+.k-kyu .r{flex:none;font-size:var(--fs-min);font-weight:700;color:var(--ink-2);white-space:nowrap;font-feature-settings:"palt"}
 @media (max-width:360px){
   .k-stk{gap:12px} .k-stk-ring{width:96px;height:96px}
   .k-pst > div{padding-left:10px}
@@ -2638,6 +2666,29 @@ const MK_LINES = {
   "{k}個いっぺんに達成！記録タブがにぎやかになる",
   "実績{k}個！ぼくの余白が足りなくなりそう",
   "{name}、実績{k}個！今日はお祭りだね"
+ ],
+ "res_kyu": [
+  "{q}に上がったよ！ぼくの角も、ちょっと立った",
+  "{q}になった！単語カードの束が、少し厚くなった感じ",
+  "{q}に昇級！記録係として、ちゃんと書いといた",
+  "やった、{q}！めくった回数が、ちゃんと積もってる",
+  "{name}、{q}に上がったよ！続けた分だけ上がるやつ",
+  "{q}だって！{name}、その調子でめくろ"
+ ],
+ "res_kyu1": [
+  "1級になったよ！次は極み道場で初段をめざそう",
+  "ついに1級！ここから先は、極み道場で腕だめし",
+  "{name}、1級おめでとう！次は極み道場で初段だね"
+ ],
+ "res_kyu_badge": [
+  "{q}に上がって、「{b}」も取ったよ！",
+  "{q}と「{b}」、いっぺんに来た！今日はついてる",
+  "{name}、{q}に上がって「{b}」まで！おめでとう"
+ ],
+ "res_kyu_badges": [
+  "{q}に上がって、実績も{k}個取ったよ！",
+  "{q}と実績{k}個！ぼくの裏面、お祝いでいっぱい",
+  "{name}、{q}に上がって実績も{k}個！今日はお祭りだね"
  ]
 };
 function mkSay(scene, vars = {}){
@@ -3139,7 +3190,7 @@ function goalReached(){
 /* records today's goal the first time it is reached; true at that moment (the set's results celebrate it) */
 function checkGoal(){
   if (todayStat().g || !goalReached()) return false;
-  bumpDaily({g: 1}); return true;
+  xpOpen(); bumpDaily({g: 1, [XPK]: XP.goal}); return true;   // and its XP
 }
 const milestoneText = n => ({3: '3日連続！いい調子', 7: '1週間連続！', 14: '2週間連続！', 30: '1か月連続！', 50: '50日連続！',
   100: '100日連続！すごい', 150: '150日連続！', 200: '200日連続！', 300: '300日連続！', 365: '1年連続！', 500: '500日連続！', 1000: '1000日連続！'})[n] || '';
@@ -4804,12 +4855,75 @@ function achSheet(){
     <p class="k-ach-sum">${L.length}個のうち、<b>${n}</b>個取った</p>${cats}<button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
 }
 /* the results' めくる when a set earned badges: the badges, and one line (glad) — several at once are said once */
-function achSayHTML(list, first = ''){
-  if (!list?.length) return '';
-  const t = first || (list.length > 1 ? mkSay('res_badges', {k: list.length, b: list[0].say}) || `実績を${list.length}個取ったよ！` : mkSay('res_badge', {b: list[0].say}) || `「${list[0].say}」を取ったよ！`);
-  const shown = list.slice(0, 4);
-  return `<section class="rs-ach" aria-label="取った実績"><div class="rs-ach-md">${shown.map(b => medalHTML(b, true)).join('')}</div>${list.length > 4 ? `<p class="rs-ach-more">ほかに${list.length - 4}個、記録タブの実績で見られる</p>` : ''}
+function achSayHTML(list, first = '', kyu = null){
+  const n = list?.length || 0; if (!n && !kyu) return '';
+  const q = kyu?.name, v = {k: n, b: list?.[0]?.say, q};
+  const t = first || (kyu && n ? mkSay(n > 1 ? 'res_kyu_badges' : 'res_kyu_badge', v) || `${q}に上がって、実績も取ったよ！`
+    : kyu ? mkSay(kyu.kyu === 1 ? 'res_kyu1' : 'res_kyu', v) || `${q}に上がったよ！`
+    : n > 1 ? mkSay('res_badges', v) || `実績を${n}個取ったよ！` : mkSay('res_badge', v) || `「${list[0].say}」を取ったよ！`);
+  const shown = (list || []).slice(0, 4);
+  return `<section class="rs-ach${n ? '' : ' kyu'}" aria-label="${n ? '取った実績' : '級が上がった'}">${n ? `<div class="rs-ach-md">${shown.map(b => medalHTML(b, true)).join('')}</div>` : ''}${n > 4 ? `<p class="rs-ach-more">ほかに${n - 4}個、記録タブの実績で見られる</p>` : ''}
     <div class="k-say">${mekuru('happy')}<p class="k-bubble" role="status">${first || kPhrases(t)}</p></div></section>`;
+}
+/* ---------- XP と級（docs/features/xp_kyu.md） ---------- */
+/* 級 is how much was done: XP from studying lifts it 10級 → 1級 (段, the skill, comes from 極み道場, not from XP). Reviews earn the
+   most; 練習 and doing the same words again earn nothing; speed adds only a little. XP lives in daily, a field per device
+   (xp_<device>, like pf_<device>: daily keeps the larger of each field when two devices meet, so each device adds to its own),
+   and the total is every day's fields added up. A day with no XP field (studied before this version, or only on an older one)
+   is estimated from its record (xpEst: the same answer every time, on every device); the first XP of a day freezes that
+   estimate of what came before it as xe, so the day never drops when XP starts being counted on it. 1問もどす takes the XP back */
+const XP = {rev: 3, pf: 1, miss: 1, nw: 2, chk: 1, drill: 1, set: 5, goal: 20};
+const KYU = [0, 100, 250, 500, 900, 1500, 2400, 3600, 5200, 7500];   // the XP each 級 starts at: 10級 … 1級
+const XPK = 'xp_' + DEV;
+const isXpKey = f => f === 'xe' || f.startsWith('xp_');
+const xpHas = d => !!d && Object.keys(d).some(isXpKey);
+/* a day from its record alone: reviews right / missed, new words, sets (10 questions a set), the goal (a 全問Perfect can't be told) */
+function xpEst(k, d){
+  if (!d) return 0;
+  const n = d.n || 0, nw = Math.min(n, d.nw || 0), rn = Math.max(0, d.rn ?? n - nw), rc = Math.max(0, Math.min(rn, d.rc ?? (d.c || 0) - nw));
+  return XP.rev * rc + XP.miss * (rn - rc) + XP.nw * nw + XP.set * Math.ceil(n / 10) + (dayOn(k) && (n > 0 || d.g) ? XP.goal : 0);
+}
+function xpDay(k, d){
+  if (!xpHas(d)) return xpEst(k, d);
+  let v = 0; for (const [f, x] of Object.entries(d)) if (isXpKey(f) && x > 0) v += x;
+  return v;
+}
+function xpTotal(){ let v = 0; for (const [k, d] of Object.entries(S.daily)) v += xpDay(k, d); return v; }
+/* before today's first XP: what today's record already holds (an older version's sets this morning) is kept as xe */
+function xpOpen(){
+  const k = dayKey(dayIdx()), d = S.daily[k];
+  if (d && !xpHas(d)) { const e = xpEst(k, d); if (e > 0) d.xe = e; }
+}
+/* the words drilled today on this device (苦手を特訓 earns 1 a word a day, however often it is drilled): add 1 / -1, else ask */
+const XPD_KEY = 'tangoloop.xpdrill';
+function xpDrilled(c, add = 0){
+  let o = null; try { o = JSON.parse(lsGet(XPD_KEY) || 'null'); } catch(e) {}
+  const t = dayIdx(), k = c.deck + ' ' + c.k; if (!o || o.d !== t || !Array.isArray(o.k)) o = {d: t, k: []};
+  const has = o.k.includes(k); if (!add) return has;
+  o.k = add > 0 ? (has ? o.k : [...o.k, k]) : o.k.filter(x => x !== k); lsSet(XPD_KEY, JSON.stringify(o)); return add > 0;
+}
+/* an answer's XP by its kind: rev a review (3, Perfect 4, missed 1), nw a new word, drill 苦手を特訓 (the first time today),
+   rep a word already answered today or drilled today (0) */
+const xpOf = (xk, ok, tier) => xk === 'rev' ? (ok ? XP.rev + (tier === 4 ? XP.pf : 0) : XP.miss) : xk === 'nw' ? XP.nw : xk === 'drill' ? XP.drill : 0;
+/* the 級 of an XP total: its number, where it starts and where the next starts (null at 1級), how far along */
+function kyuOf(xp){
+  let i = 0; while (i + 1 < KYU.length && xp >= KYU[i + 1]) i++;
+  const lo = KYU[i], hi = KYU[i + 1] ?? null;
+  return {kyu: 10 - i, name: `${10 - i}級`, xp, lo, hi, left: hi === null ? 0 : hi - xp, fr: hi === null ? 1 : (xp - lo) / (hi - lo)};
+}
+const xpBar = (fr, from) => `<span class="k-xbar" aria-hidden="true"><i${fr > 0 ? '' : ' class="zero"'} style="width:${(fr * 100).toFixed(1)}%${from != null ? `;--from:${(from * 100).toFixed(1)}%` : ''}"></i></span>`;
+/* the 記録 tab's profile: 3級, the bar, あと120XP */
+function kyuRow(){
+  const k = kyuOf(xpTotal()), one = k.hi === null;
+  return `<div class="k-kyu" role="img" aria-label="${k.name}、${one ? '次は極み道場で初段' : `${k.kyu - 1}級まであと${nLoc(k.left)}XP`}、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${k.name}</span>${xpBar(k.fr)}<span class="r" aria-hidden="true">${one ? '次は極み道場で初段' : `あと${nLoc(k.left)}XP`}</span></div>`;
+}
+/* the results: +38 XP, the 級 and its bar (filling from where it stood before this set); a 級 up says so, 1級 points to the 道場 */
+function xpResHTML(gain, k0, k1){
+  const up = k1.kyu < k0.kyu, one = k1.hi === null, from = up ? 0 : k0.fr;
+  const s = one ? `${up ? '<b>1級になった</b>、' : ''}次は極み道場で初段<br><span class="k-ph">道場は、もうすぐひらく</span>`
+    : up ? `<b>${k1.name}に上がった</b>、${k1.kyu - 1}級まであと${nLoc(k1.left)}XP` : `${k1.kyu - 1}級まで、あと${nLoc(k1.left)}XP`;
+  return `<section class="rs-xp" aria-label="このセットで${nLoc(gain)}XP、${k1.name}${up ? 'に上がった' : ''}"><div class="hd" aria-hidden="true"><p class="g"><b>+${nLoc(gain)}</b>XP</p><p class="q${up ? ' up' : ''}">${k1.name}</p></div>
+    ${xpBar(k1.fr, one && !up ? null : from)}<p class="s">${s}</p></section>`;
 }
 function viewStats(){
   const g = goalToday(), {st} = g, today = dayIdx();
@@ -4833,7 +4947,7 @@ function viewStats(){
         <button class="k-prof-goal" data-act="profSheet" data-f="goal" aria-label="${gl ? `目標 ${esc(gl[2])}、変える` : '目標を決める'}"><span class="pill">${K_FLAG}${gl ? `<span class="k">目標</span>${esc(gl[1])}` : '目標を決める'}</span></button>
         ${since ? `<p class="since">${since}にはじめた</p>` : ''}</div>
       <button class="k-prof-edit" data-act="profSheet" aria-label="プロフィールを編集"><span class="pill">${K_PEN}編集</span></button></div>
-    <div class="k-pst"><div><p class="n">${nLoc(mAll)}<small>語</small></p><p class="l">覚えた単語</p></div><div><p class="n">${nLoc(days)}<small>日</small></p><p class="l">学習した日</p></div><div><p class="n">${nLoc(tm[0])}<small>${tm[1]}</small></p><p class="l">学習した時間</p></div></div></section>`;
+    ${kyuRow()}<div class="k-pst"><div><p class="n">${nLoc(mAll)}<small>語</small></p><p class="l">覚えた単語</p></div><div><p class="n">${nLoc(days)}<small>日</small></p><p class="l">学習した日</p></div><div><p class="n">${nLoc(tm[0])}<small>${tm[1]}</small></p><p class="l">学習した時間</p></div></div></section>`;
   const streak = `<section class="k-sec" aria-label="連続記録"><div class="k-sec-h"><h2 class="k-sec-t">連続記録</h2></div>${streakBlock(g)}${calBlock(st, g.fr)}${tktBlock(st)}</section>`;
   const ach = `<section class="k-sec" aria-label="実績"><div class="k-sec-h"><h2 class="k-sec-t"><button data-act="achSheet">実績${K_ICO.chev}</button></h2></div>${achGrid()}</section>`;
   // これまで: every question answered and how many right, and the last 20 weeks a square a day (the blue deeper the more)
@@ -5857,6 +5971,7 @@ function answer(ok, grade){
     if (!ok && p.lg === 2) { p.s = Math.min(p.s, W[0]); p.due = Math.min(p.due, dayIdx() + 1); }
     p.u = Date.now(); setProg(it.c, p);
     it.first = g; it.ok = ok; it.ms = ms; it.after = p; it.grade = g; it.tier = 0;
+    snap.bump = {[XPK]: XP.chk}; xpOpen(); bumpDaily(snap.bump);   // its XP only (1問もどす takes it back)
   }
   else if (it.first === null) {
     const wasNew = !isReview(it.p0);
@@ -5869,7 +5984,11 @@ function answer(ok, grade){
     setProg(it.c, np); it.after = np; it.grade = g; it.tier = tier;
     snap.bump = {n:1, c:ok?1:0, nw:wasNew?1:0, rn:wasNew?0:1, rc:(!wasNew && ok)?1:0, t:ms};
     if (!card && swCheck(it.p0)) { snap.bump.kc = 1; snap.bump.kh = ok ? 1 : 0; }   // the first 4択 on a word sorted as 知ってる: was it right?
-    bumpDaily(snap.bump);
+    // its XP: 苦手を特訓, 1 the first time a word is drilled today (then nothing); a review answered already today earns nothing more
+    snap.xk = Q.opts.drill ? (xpDrilled(it.c) ? 'rep' : 'drill') : wasNew ? 'nw' : dayIdx(it.p0.last) === today ? 'rep' : 'rev';
+    if (snap.xk === 'drill') xpDrilled(it.c, 1);
+    snap.bump[XPK] = xpOf(snap.xk, ok, tier);
+    xpOpen(); bumpDaily(snap.bump);
     // the first 正解 / もう一度 / 難しい on a new card: めくる says on the next card what it did (簡単 says it on its button)
     const tk = 'g' + g;
     if (card && wasNew && g < 4 && tutNew(tk) && !tutPend.some(p => p.k === tk)) { tutPend.push({k: tk, html: tutLine(g === 1 && Q.flash ? 'g1card' : tk, {ivl: ivlText(np.due - today)})}); snap.tk = tk; }
@@ -6105,12 +6224,14 @@ function undoAnswer(){
     // the answer had scheduled the card: put its record back, stamped so a sync doesn't bring the answer back
     setProg(it.c, h.prog ? {...h.prog, u: Date.now()} : {st:0, last: Date.now()});
     if (h.bump) bumpDaily(Object.fromEntries(Object.entries(h.bump).map(([k, v]) => [k, -v])));
+    if (h.xk === 'drill') xpDrilled(it.c, -1);   // drilled again, it earns its 1 again
     if (h.rt && RT[h.rt]?.length) { RT[h.rt].pop(); try { localStorage.setItem('tangoloop.rt', JSON.stringify(RT)); } catch(e) {} }
     if (h.tk) { const i = tutPend.findIndex(p => p.k === h.tk); if (i >= 0) tutPend.splice(i, 1); }   // its line, not said yet: not about anything now
   }
   Object.assign(it, {first: h.first, ok: h.ok, ms: h.ms, after: h.after, grade: h.grade, tier: h.tier, tries: h.tries, gaveUp: h.gaveUp, type: h.type, check: h.check});
   Object.assign(Q, {queue: h.queue, cleared: h.cleared, combo: h.combo, maxCombo: h.maxCombo, done: false, revealed: null});
-  if (Q.won && !h.practice && todayStat().g && !goalReached()) { bumpDaily({g: -1}); Q.won = false; }
+  if (Q.won && !h.practice && todayStat().g && !goalReached()) { bumpDaily({g: -1, [XPK]: -XP.goal}); Q.won = false; }
+  if (Q.xpSet) { bumpDaily({[XPK]: -Q.xpSet}); Q.xpSet = 0; }   // the set's 5 XP: given again when it ends again
   if (Q.pfKey) { bumpDaily({[Q.pfKey]: -1}); Q.pfKey = null; }   // the set's all-Perfect is counted again when it ends again   // only this set's goal, and only if the undone answer un-reaches it
   renderQ();
   toast(`「${it.c.w}」をやり直します`);
@@ -6120,9 +6241,10 @@ function mistap(it = Q?.cur){
   const lis2 = it === Q.cur && Q.lisNg >= 0, g = lis2 ? 2 : 3;   // 聞き取り's second pick: as if right then (難しい, 聞き取り again next time)
   const np = nextState(it.p0, g); if (lis2) np.nl = 1; setProg(it.c, np); it.after = np; it.first = g; it.ok = true;
   const hr = Q.hist?.findLast(x => x.it === it); if (hr) hr.res = true;
-  const h = Q.hist?.findLast(x => x.it === it && x.bump), kh = h?.bump.kc ? 1 : 0;   // a 知ってる check that was really right
-  bumpDaily(kh ? {c:1, rc: isReview(it.p0) ? 1 : 0, kh} : {c:1, rc: isReview(it.p0) ? 1 : 0});
-  if (h) { h.bump.c++; if (isReview(it.p0)) h.bump.rc++; if (kh) h.bump.kh = (h.bump.kh || 0) + 1; }
+  const h = Q.hist?.findLast(x => x.it === it && x.bump && 'n' in x.bump), kh = h?.bump.kc ? 1 : 0;   // a 知ってる check that was really right
+  const xd = h?.xk === 'rev' ? XP.rev - XP.miss : 0;   // its XP: a review's 正解 instead of its miss
+  bumpDaily({...(kh ? {c:1, rc: isReview(it.p0) ? 1 : 0, kh} : {c:1, rc: isReview(it.p0) ? 1 : 0}), ...(xd ? {[XPK]: xd} : {})});
+  if (h) { h.bump.c++; if (isReview(it.p0)) h.bump.rc++; if (kh) h.bump.kh = (h.bump.kh || 0) + 1; if (xd) h.bump[XPK] = (h.bump[XPK] || 0) + xd; }
   const qi = Q.items.indexOf(it), pos = Q.queue.indexOf(qi); if (pos >= 0) Q.queue.splice(pos, 1);
   Q.cleared++;
   nextQ(); toast('正解に直しました');
@@ -6265,6 +6387,10 @@ function renderResults(){
   // 実績: an all-Perfect set and a day back after a break are counted, then what the records reach now is this set's (kept on Q:
   // drawing the results again, or 1問もどす and back, shows the same badges; one already stored is never shown twice)
   if (!prac) { achCount(its); Q.ach = [...(Q.ach || []), ...achGrant(false)]; }
+  // XP: a set finished (not 練習 nor 苦手を特訓) earns 5, once; the set's XP is its answers', that and the goal's (when it was reached here)
+  if (!prac && !Q.opts.drill && !Q.xpSet) { Q.xpSet = XP.set; xpOpen(); bumpDaily({[XPK]: XP.set}); }
+  const xpGain = prac ? 0 : (Q.hist || []).reduce((a, h) => a + (h.bump?.[XPK] || 0), 0) + (Q.xpSet || 0) + (Q.won ? XP.goal : 0);
+  const xpNow = xpTotal(), ky1 = kyuOf(xpNow), ky0 = kyuOf(Math.max(0, xpNow - xpGain)), kyUp = !prac && ky1.kyu < ky0.kyu ? ky1 : null;
   // a set of new words only is not a test: you graded each card yourself, so it shows how (N語 めくった in four grades), not a %
   const fr = !prac && its.every(x => !x.sameDay && !isReview(x.p0)), gn = [0, 1, 2, 3, 4].map(g => its.filter(x => x.first === g).length);
   if (!prac && TUT?.on && !TUT.f1 && tutOn()) { TUT.f1 = Date.now(); tutSave(); }   // a new learner finished a first set (kept for later)
@@ -6305,7 +6431,8 @@ function renderResults(){
   if (first) tutMark('res1');
   const line = first ? '' : mkSay(sc, {n: sc === 'res_fresh' ? n : st.n, pct, w: comeback}) || (sc === 'res_low' ? 'まちがえた単語は、また出すから大丈夫' : 'さ、次めくろ！');
   // the results' めくる is glad (its face for a good set) — after a set mostly missed, it cheers you on
-  const achH = prac ? '' : achSayHTML(Q.ach, first);   // badges got: they and めくる's line about them, in めくる's place
+  const achH = prac ? '' : achSayHTML(Q.ach, first, kyUp);   // badges got and a 級 up: they and めくる's one line about them, in めくる's place
+  const xpH = prac ? '' : xpResHTML(xpGain, ky0, ky1);
   const mkLine = prac ? '' : achH || `<section class="k-say rs-say" aria-label="めくるから">${mekuru(sc === 'res_low' ? 'cheer' : 'happy')}<p class="k-bubble" role="status">${first || kPhrases(line)}</p></section>`;
 
   // what the hero's button starts and the ways on under it. go(): its words, decks and time, as the home's button says them
@@ -6400,7 +6527,7 @@ function renderResults(){
     : `<ul class="rs-wl">${restI.map(wRow).join('')}</ul>${practice}`;
   const words = `<section class="k-sec rs-sec"><div class="k-sec-h has-sub"><h2 class="k-sec-t">このセットの単語</h2><p class="k-sec-s">タップすると、例文や派生語まで見られる</p></div>${list}</section>`;
   const dock = m ? `<div class="rs-dock" aria-hidden="true"><button class="rs-dock-btn" data-act="resDock" tabindex="-1">${K_ICO.play}<span class="t">${esc(m.main)}</span><span class="r">${m.k ? `${m.k}問、${aboutMin(m.k)}` : ''}</span></button></div>` : '';
-  $('#screen').innerHTML = `<div class="screen-in res v2">${top}${cele}${notice}${hero}${inst ? `<div class="rs-inst">${inst}</div>${achH}` : mkLine}
+  $('#screen').innerHTML = `<div class="screen-in res v2">${top}${cele}${notice}${hero}${xpH}${inst ? `<div class="rs-inst">${inst}</div>${achH}` : mkLine}
     ${statsH}${speed}${words}<section class="k-sec rs-sec"><button class="rs-home rb" data-act="quitQuiz">${homeLbl}</button></section>${dock}</div>`;
   // a short screen: the card would sit below the first screen; めくる's line instead, the home has the card from now
   const ic = inst && $('#screen .rs-inst'); if (ic && ic.getBoundingClientRect().top + 64 > innerHeight) ic.outerHTML = achH ? '' : mkLine;
