@@ -2155,6 +2155,8 @@ html{touch-action:manipulation}
 .k-bd.yet .md::after{inset:0;border:1.5px dashed var(--md-yet-ring)}
 .k-bd.yet .kj{color:var(--md-yet-kj)}
 .k-bd.yet .n{color:var(--ink-2)}
+.k-bd.hid .kj{font-family:var(--f-ui);font-size:26px;font-weight:800}   /* a secret one: a plain 「？」 (the brush letter would tell) */
+.k-bdg + .k-bdg{margin-top:18px}   /* the 記録 tab's second block of kinds, one row's gap below the first */
 /* the sheet of every badge */
 .k-ach-sum{margin:0 0 4px;font-size:var(--fs-body);color:var(--ink-2);font-feature-settings:"palt"}
 .k-ach-sum b{font-family:var(--f-en);font-weight:800;color:var(--ink)}
@@ -2162,6 +2164,7 @@ html{touch-action:manipulation}
 .k-ach-c{margin-top:22px}
 .k-ach-c .k-bdg{padding:0;margin-top:12px}
 .k-ach-h{margin:0;font-size:var(--fs-name);font-weight:800;font-feature-settings:"palt"}
+.k-ach-left{margin-left:8px;font-size:var(--fs-sub);font-weight:700;color:var(--ink-2)}   /* ひみつの称号 あと3個 */
 .k-ach-s{margin:2px 0 0;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.4;font-feature-settings:"palt"}
 .k-ach-c + .btn{margin-top:26px}
 /* the two numbers right under a heading (これまで, この30日の復習): no line on top */
@@ -2206,6 +2209,8 @@ html{touch-action:manipulation}
 .rs-ach-md .k-bd{width:80px}
 .rs-ach-more{margin:10px max(var(--pad),env(safe-area-inset-left,0px)) 0;text-align:center;font-size:var(--fs-sub);color:var(--ink-2);font-feature-settings:"palt"}
 .rs-ach .k-say{margin-top:14px}
+.rs-ach-sec{display:table;margin:0 auto 14px;padding:6px 14px;border-radius:var(--r-pill);background:var(--ink);color:var(--bg);font-size:var(--fs-sub);font-weight:800;line-height:1.3;font-feature-settings:"palt"}   /* ひみつの称号を見つけた！ */
+.dj-ach{margin-top:22px}
 .rs-ach.kyu .k-say{margin-top:0}
 @media (prefers-reduced-motion: no-preference){ .rs-ach .k-bd .md{animation:rs-pop .5s var(--ease-out) both} .rs-ach .k-bd + .k-bd .md{animation-delay:.08s} }
 /* the onboarding's nickname */
@@ -2763,6 +2768,14 @@ const MK_LINES = {
   "{k}個いっぺんに達成！記録タブがにぎやかになる",
   "実績{k}個！ぼくの余白が足りなくなりそう",
   "{name}、実績{k}個！今日はお祭りだね"
+ ],
+ "res_secret": [
+  "ひみつの称号「{b}」、見つけちゃったね！",
+  "「{b}」！これ、ひみつの称号なんだ。よく見つけたね",
+  "ひみつの「{b}」が出てきた！記録タブで、こっそり光ってる",
+  "「{b}」……ぼくの裏にも書いてなかったやつだ",
+  "{name}、ひみつの称号「{b}」を見つけた！だれにも言わないでおくね",
+  "「{b}」だって！{name}、ひみつの扉をひとつ開けたね"
  ],
  "res_kyu": [
   "{q}に上がったよ！ぼくの角も、ちょっと立った",
@@ -4891,31 +4904,54 @@ function profSave(){
   closeSheet(); render();
 }
 
-/* 実績: about 20 badges in 5 kinds. What the records can tell (連続 by the 自己ベスト, 覚えた語数, a deck all 学習済み, a 虹色★ block,
-   back after 3+ days off) is worked out from them; 全問Perfect is counted per set in daily (pf_<device>, so two devices' sets on
-   one day add up). S.ach {id: {d: day, q: 1 when it was already had}} keeps only when each was got, in its own synced document
-   'ach' (an older version leaves it alone): the earlier day wins when two devices meet. The first time (and after records come
-   in from another device) everything already reached is put in quietly; a set's results show what that set earned */
+/* 実績 (the owner calls them 称号): about 40 badges in 10 kinds, 7 of them ひみつ (secret: 「？？？」 — name, hint and letter — until
+   got). What the records can tell (連続 by the 自己ベスト, 学習した日 and 答えた数 from daily, 覚えた語数, a deck all 学習済み, a 虹色★
+   block or a whole deck of them, back after 3+ days off, a word missed 5+ times now 覚えた, a 300-question day, New Year's Day, the
+   dojo passed) is worked out from them; 全問Perfect is counted per set in daily (pf_<device>, so two devices' sets on one day add
+   up); 夜ふかし / 早起き are a number in daily (ow / lk, put on an answer given at that hour: daily keeps the larger of each field, so
+   a count, not a bool); 連続正解 runs on this device only (localStorage, across sets, 練習 left out; its best reaches the badge).
+   S.ach {id: {d: day, q: 1 when it was already had}} keeps only when each was got, in its own synced document 'ach' (an older
+   version leaves it alone): the earlier day wins when two devices meet. The first time (again when the list grows: ACH_V, and
+   after records come in from another device) everything already reached is put in quietly; a set's results show what that set earned */
 const DEV = (() => { let d = lsGet('tangoloop.dev'); if (!/^[a-z0-9]{4,8}$/.test(d || '')) { d = Math.random().toString(36).slice(2, 8).padEnd(4, '0'); lsSet('tangoloop.dev', d); } return d; })();
 const ACH_BOOKS = ['j1', 'j2', 'j3', 'idioms', 'tagi'];
+const ACH_V = '2', ACH_VK = 'tangoloop.achv';   // 2: 称号をふやす (docs/features/titles_more.md) — what old records reach comes in quietly once
 const ACH_CAT = [
   {k: 'streak', t: '続けた', s: '連続記録の自己ベストで決まる'},
+  {k: 'days', t: '学習した日', s: '1問でも学習した日を、合わせて数える'},
+  {k: 'ans', t: '答えた数', s: '練習のほかで答えた問題を、合わせて数える'},
   {k: 'master', t: '覚えた', s: '「覚えた」は、3週間あけても答えられた単語'},
   {k: 'book', t: '単語帳', s: '見出し語を、ぜんぶ学習済みにする'},
   {k: 'pf', t: '腕前', s: '5問以上のセットで、答えが全部Perfect'},
+  {k: 'run', t: '連続正解', s: 'セットをまたいで続けて数える。練習は数えない、まちがえたら0から'},
+  {k: 'dojo', t: '道場', s: ''},
   {k: 'fun', t: 'ほかにも', s: ''},
+  {k: 'secret', t: 'ひみつの称号', s: ''},
 ];
+const ACH_GRID = [['streak', 'master', 'book', 'pf'], ['days', 'ans', 'run', 'dojo']];   // the 記録 tab: two blocks of 4 kinds
 let ACH_L = null;
 function achList(){
   if (ACH_L) return ACH_L;
   const L = [];
-  for (const n of [3, 7, 30, 50, 100, 365]) L.push({id: 's' + n, cat: 'streak', n, kj: '続', c: 'var(--orange)', name: [`連続${n}日`], unit: '日', say: `連続${n}日`});
+  for (const n of [3, 7, 14, 30, 50, 100, 200, 365]) L.push({id: 's' + n, cat: 'streak', n, kj: '続', c: 'var(--orange)', name: [`連続${n}日`], unit: '日', say: `連続${n}日`});
+  for (const n of [10, 50, 100, 200]) L.push({id: 'dy' + n, cat: 'days', n, kj: '日', c: 'var(--c-today)', name: [`${n}日`, '学習した'], unit: '日', say: `${n}日学習した`});
+  for (const n of [1000, 5000, 10000, 50000]) L.push({id: 'q' + n, cat: 'ans', n, kj: '答', c: 'var(--c-miss)', name: [`${nLoc(n)}問`, '答えた'], unit: '問', say: `${nLoc(n)}問答えた`});
   for (const n of [100, 500, 1000, 2000, 3000]) L.push({id: 'm' + n, cat: 'master', n, kj: '覚', c: 'var(--blue-hero)', name: [`${nLoc(n)}語`, '覚えた'], unit: '語', say: `${nLoc(n)}語覚えた`});
   for (const id of ACH_BOOKS) { const d = deckById(id); if (!d || !d.builtin) continue; const b = bookOf(d);
     L.push({id: 'b_' + id, cat: 'book', deck: id, kj: b.kj, c: `var(--c-${b.k})`, name: [b.nm, 'ぜんぶ', '学習済み'], unit: '語', say: `${b.nm}ぜんぶ学習済み`}); }
   for (const n of [1, 10, 50]) L.push({id: 'p' + n, cat: 'pf', n, kj: '完', c: 'var(--md-pf)', name: [`${n}セット`, '全問Perfect'], unit: 'セット', say: `${n}セット全問Perfect`});
+  for (const n of [50, 100]) L.push({id: 'r' + n, cat: 'run', n, kj: '連', c: 'var(--obi-tagi)', name: [`${n}問連続`, '正解'], unit: '問', say: `${n}問連続で正解`});
+  L.push({id: 'dj1', cat: 'dojo', kj: '段', c: 'var(--dj-seal)', name: ['道場で', '初段に合格'], hint: ['道場に', '1つ合格'], say: '道場で初段に合格'});
   L.push({id: 'rb', cat: 'fun', kj: '虹', c: 'var(--rb-5)', name: ['はじめての', '虹色★'], hint: ['ブロックを', '派生語まで'], say: 'はじめての虹色★'});
   L.push({id: 'cb', cat: 'fun', kj: '再', c: 'var(--c-today)', name: ['休み明けに', '戻ってきた'], hint: ['3日以上', 'あけて学習'], say: '休み明けに戻ってきた'});
+  const X = (id, kj, c, name) => L.push({id: 'x_' + id, cat: 'secret', secret: 1, kj, c, name, say: name.join('')});
+  X('foe', '敵', 'var(--h-hyojun)', ['宿敵を', 'たおした']);   // a word missed 5 times or more, now 覚えた
+  X('300', '猛', 'var(--c-hatten)', ['1日で', '300問']);
+  X('ny', '元', 'var(--c-kiso)', ['元日に', '勉強した']);
+  X('owl', '夜', 'var(--md-pf)', ['夜ふかし']);   // answered 2:00–3:59
+  X('lark', '朝', 'var(--obi-juku)', ['早起き']);   // answered 5:00–6:59
+  X('rbk', '冊', 'var(--rb-6)', ['一冊まるごと', '虹色★']);
+  X('kw', '極', 'var(--logo)', ['極に合格']);
   return ACH_L = L;
 }
 /* a block with its headwords, derivatives and other meanings all learned (the 虹色★ of the deck page) */
@@ -4924,28 +4960,56 @@ function rainbowAny(){
     for (const x of deckSections(d)) if (secStudied(x) === x.heads.length && x.heads.length && blockInfo(x, d).all) return true; }
   return false;
 }
+/* one of the 5 books with every block 虹色★ */
+function rainbowBook(){
+  for (const id of ACH_BOOKS) { const d = deckById(id); if (!d) continue; const s = deckStats(d); if (!s.total || s.r < s.total) continue;
+    const xs = deckSections(d).filter(x => x.heads.length); if (xs.length && xs.every(x => blockInfo(x, d).all)) return true; }
+  return false;
+}
+/* 宿敵: a word (a derivative or another meaning too) missed 5 times or more that is 覚えた now */
+const foeAny = () => cardsOf(decks().map(d => d.id), true).some(c => { const p = prog(c); return wrongCount(p) >= 5 && status(p) === 'master'; });
+/* 連続正解 on this device: n the run now, b its best (a miss sets n to 0) */
+const RUN_KEY = 'tangoloop.run';
+function runGet(){ let o = null; try { o = JSON.parse(lsGet(RUN_KEY) || 'null'); } catch(e) {} return o && typeof o.n === 'number' ? {n: o.n, b: Math.max(o.n, o.b || 0)} : {n: 0, b: 0}; }
+const runSet = o => lsSet(RUN_KEY, JSON.stringify(o));
+const runAdd = (r, ok) => runSet(ok ? {n: r.n + 1, b: Math.max(r.b, r.n + 1)} : {n: 0, b: r.b});
+function achHour(){ return new Date().getHours(); }   // the device's clock (a function, so a test can set the hour)
 const isPfKey = f => f === 'pf' || f.startsWith('pf_');
-/* what the records say now: the numbers each badge is reached by */
+/* what the records say now: the numbers each badge is reached by (the slow ones, null, worked out when asked) */
 function achCtx(){
   const st = streakInfo(), mAll = cardsOf(decks().map(d => d.id)).filter(c => status(prog(c)) === 'master').length, books = {};
   for (const id of ACH_BOOKS) { const d = deckById(id); if (d) { const s = deckStats(d); books[id] = {left: s.total - s.r, total: s.total}; } }
-  let pf = 0, cb = false; const on = [];
+  let pf = 0, cb = false, ans = 0, d300 = false, ny = false, owl = false, lark = false; const on = [];
   for (const [k, d] of Object.entries(S.daily)) { if (!d) continue;
     for (const [f, v] of Object.entries(d)) if (isPfKey(f) && v > 0) pf += v;
     if (d.cb > 0) cb = true;
-    if ((d.n || 0) + (d.sw || 0) > 0) on.push(Math.round(Date.parse(k) / DAY)); }
+    const n = Math.max(0, d.n || 0); ans += n; if (n >= 300) d300 = true; if (d.ow > 0) owl = true; if (d.lk > 0) lark = true;
+    if (n + (d.sw || 0) > 0) { on.push(Math.round(Date.parse(k) / DAY)); if (k.endsWith('-01-01')) ny = true; } }
   on.sort((a, b) => a - b);
   for (let i = 1; i < on.length && !cb; i++) if (on[i] - on[i - 1] - 1 >= 3) cb = true;   // a study day after 3 days or more without one
-  return {st, mAll, books, pf, cb, rb: null};
+  return {st, mAll, books, pf, cb, rb: null, days: on.length, ans, d300, ny, owl, lark, run: runGet(), dan: danN(), kw: djE('kw').p != null, foe: null, rbk: null};
 }
 /* one badge against the records: ok, and how far it is (left, in its unit) */
 function achTest(b, x){
   if (b.cat === 'streak') return {ok: x.st.best >= b.n, left: Math.max(1, b.n - x.st.n)};
+  if (b.cat === 'days') return {ok: x.days >= b.n, left: Math.max(1, b.n - x.days)};
+  if (b.cat === 'ans') return {ok: x.ans >= b.n, left: Math.max(1, b.n - x.ans)};
   if (b.cat === 'master') return {ok: x.mAll >= b.n, left: Math.max(1, b.n - x.mAll)};
   if (b.cat === 'book') { const k = x.books[b.deck]; return {ok: !!k && k.total > 0 && k.left <= 0, left: k ? Math.max(1, k.left) : 0}; }
   if (b.cat === 'pf') return {ok: x.pf >= b.n, left: Math.max(1, b.n - x.pf)};
-  if (b.id === 'rb') { if (x.rb === null) x.rb = rainbowAny(); return {ok: x.rb}; }
-  if (b.id === 'cb') return {ok: x.cb};
+  if (b.cat === 'run') return {ok: x.run.b >= b.n, left: Math.max(1, b.n - x.run.n)};   // あと: from the run now
+  switch (b.id) {
+    case 'dj1': return {ok: x.dan > 0};
+    case 'rb': if (x.rb === null) x.rb = rainbowAny(); return {ok: x.rb};
+    case 'cb': return {ok: x.cb};
+    case 'x_foe': if (x.foe === null) x.foe = foeAny(); return {ok: x.foe};
+    case 'x_300': return {ok: x.d300};
+    case 'x_ny': return {ok: x.ny};
+    case 'x_owl': return {ok: x.owl};
+    case 'x_lark': return {ok: x.lark};
+    case 'x_rbk': if (x.rbk === null) x.rbk = rainbowBook(); return {ok: x.rbk};
+    case 'x_kw': return {ok: x.kw};
+  }
   return {ok: false};
 }
 /* stores what is reached and not stored yet; quiet (and the very first time): as already had, nothing to celebrate. Returns the new ones */
@@ -4971,47 +5035,59 @@ function achCount(its){
     for (const [k, d] of Object.entries(S.daily)) { const i = Math.round(Date.parse(k) / DAY); if (i < t && d && (d.n || 0) + (d.sw || 0) > 0 && (last === null || i > last)) last = i; }
     if (last !== null && t - last - 1 >= 3) bumpDaily({cb: 1}); }
 }
-/* the round badge: its kind's colour and brush letter (the 虹色★ is the deck page's medal); not got yet: a dashed ring, faint */
+/* the round badge: its kind's colour and brush letter (the 虹色★ is the deck page's medal); not got yet: a dashed ring, faint;
+   a secret one not got: 「？」 and 「？？？」, nothing else */
 function medalHTML(b, got, sub = ''){
-  const md = got && b.id === 'rb' ? `<span class="md rbw">${blockBadge(1, true)}</span>` : `<span class="md"${got ? ` style="--m:${b.c}"` : ''}><span class="kj">${b.kj}</span></span>`;
-  return `<div class="k-bd${got ? '' : ' yet'}" role="img" aria-label="${esc(b.say)}、${got ? '取った' : 'まだ'}${sub ? '、' + esc(sub.replace(/<[^>]+>/g, '')) : ''}">${md}<p class="n" aria-hidden="true">${b.name.map(p => `<span class="k-ph">${esc(p)}</span>`).join('')}</p>${sub ? `<p class="p" aria-hidden="true">${sub}</p>` : ''}</div>`;
+  const hid = b.secret && !got, name = hid ? ['？？？'] : b.name, say = hid ? 'ひみつの称号' : b.say;
+  const md = got && b.id === 'rb' ? `<span class="md rbw">${blockBadge(1, true)}</span>` : `<span class="md"${got ? ` style="--m:${b.c}"` : ''}><span class="kj">${hid ? '？' : b.kj}</span></span>`;
+  return `<div class="k-bd${got ? '' : ' yet'}${hid ? ' hid' : ''}" role="img" aria-label="${esc(say)}、${got ? '取った' : 'まだ'}${sub ? '、' + esc(sub.replace(/<[^>]+>/g, '')) : ''}">${md}<p class="n" aria-hidden="true">${name.map(p => `<span class="k-ph">${esc(p)}</span>`).join('')}</p>${sub ? `<p class="p" aria-hidden="true">${sub}</p>` : ''}</div>`;
 }
 const achDay = e => { if (!e) return ''; if (e.q) return 'もう取っていた'; const d = new Date(e.d * DAY); return `${d.getUTCMonth() + 1}月${d.getUTCDate()}日`; };
 const achLeft = (b, t) => t.left ? `あと${nLoc(t.left)}${b.unit}` : '';
-/* the 記録 tab's grid: per kind, the highest one got (top row) and the next one (bottom row, faint with あと…); the rest is in the sheet */
+const achHint = b => b.hint ? b.hint.map(p => `<span class="k-ph">${p}</span>`).join('') : '';
+/* the 記録 tab's grid, two blocks of 4 kinds: per kind, the highest one got (top row) and the next one (bottom row, faint with
+   あと…); the rest (ほかにも, the secret ones) is in the sheet */
 function achGrid(){
-  const x = achCtx(), L = achList(), A = S.ach || {}, top = [], next = [];
-  for (const cat of ['streak', 'master', 'book', 'pf']) {
-    const bs = L.filter(b => b.cat === cat), got = b => !!A[b.id] || achTest(b, x).ok;
-    let hi = null, nx = null;
-    if (cat === 'book') {
-      const have = bs.filter(got); hi = have.sort((a, b) => (A[b.id]?.d ?? 1e9) - (A[a.id]?.d ?? 1e9))[0] || null;   // the latest got
-      const not = bs.filter(b => !got(b)), act = activeIds();
-      nx = not.find(b => act.includes(b.deck) && x.books[b.deck]?.left < x.books[b.deck]?.total) || not.find(b => act.includes(b.deck)) || not[0] || null;
-    } else { hi = bs.filter(got).at(-1) || null; nx = bs.find(b => !got(b)) || null; }
-    top.push(hi ? medalHTML(hi, true) : '<div class="k-bd none"></div>');
-    next.push(nx ? medalHTML(nx, false, achLeft(nx, achTest(nx, x))) : '<div class="k-bd none"></div>');
-  }
-  return `<div class="k-bdg">${top.some(h => !h.includes('none')) ? top.join('') : ''}${next.join('')}</div>`;
+  const x = achCtx(), L = achList(), A = S.ach || {};
+  return ACH_GRID.map(cats => { const top = [], next = [];
+    for (const cat of cats) {
+      const bs = L.filter(b => b.cat === cat), got = b => !!A[b.id] || achTest(b, x).ok;
+      let hi = null, nx = null;
+      if (cat === 'book') {
+        const have = bs.filter(got); hi = have.sort((a, b) => (A[b.id]?.d ?? 1e9) - (A[a.id]?.d ?? 1e9))[0] || null;   // the latest got
+        const not = bs.filter(b => !got(b)), act = activeIds();
+        nx = not.find(b => act.includes(b.deck) && x.books[b.deck]?.left < x.books[b.deck]?.total) || not.find(b => act.includes(b.deck)) || not[0] || null;
+      } else { hi = bs.filter(got).at(-1) || null; nx = bs.find(b => !got(b)) || null; }
+      top.push(hi ? medalHTML(hi, true) : '<div class="k-bd none"></div>');
+      next.push(nx ? medalHTML(nx, false, achLeft(nx, achTest(nx, x)) || achHint(nx)) : '<div class="k-bd none"></div>');
+    }
+    return `<div class="k-bdg">${top.some(h => !h.includes('none')) ? top.join('') : ''}${next.some(h => !h.includes('none')) ? next.join('') : ''}</div>`; }).join('');
 }
-/* 実績 › : every badge by kind, the day each was got or how far it is */
+/* 実績 › : every badge by kind, the day each was got or how far it is; the secret ones say only how many are still hidden */
 function achSheet(){
-  const x = achCtx(), L = achList(), A = S.ach || {}, n = L.filter(b => A[b.id] || achTest(b, x).ok).length;
+  const x = achCtx(), L = achList(), A = S.ach || {}, got = b => !!A[b.id] || achTest(b, x).ok, n = L.filter(got).length;
   const cats = ACH_CAT.map(c => { const bs = L.filter(b => b.cat === c.k); if (!bs.length) return '';
-    return `<section class="k-ach-c"><h4 class="k-ach-h">${c.t}</h4>${c.s ? `<p class="k-ach-s">${esc(c.s)}</p>` : ''}<div class="k-bdg">${bs.map(b => { const t = achTest(b, x), got = !!A[b.id] || t.ok;
-      return medalHTML(b, got, got ? achDay(A[b.id]) || '今日' : b.hint ? b.hint.map(p => `<span class="k-ph">${p}</span>`).join('') : achLeft(b, t)); }).join('')}</div></section>`; }).join('');
+    const hidden = c.k === 'secret' ? bs.filter(b => !got(b)).length : -1;
+    const h = hidden < 0 ? esc(c.t) : `${esc(c.t)}<span class="k-ach-left">${hidden ? `あと${hidden}個` : 'ぜんぶ見つけた'}</span>`;
+    return `<section class="k-ach-c"><h4 class="k-ach-h">${h}</h4>${c.s ? `<p class="k-ach-s">${esc(c.s)}</p>` : ''}<div class="k-bdg">${bs.map(b => { const t = achTest(b, x), g = got(b);
+      return medalHTML(b, g, g ? achDay(A[b.id]) || '今日' : b.secret ? '' : achHint(b) || achLeft(b, t)); }).join('')}</div></section>`; }).join('');
   openSheet(`<div class="sheet-h"><h3>実績</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <p class="k-ach-sum">${L.length}個のうち、<b>${n}</b>個取った</p>${cats}<button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
+}
+/* the badges a set (or a dojo test) earned, up to 4 (a secret one first, under 「ひみつの称号を見つけた！」) */
+function achMdHTML(list){
+  const sec = list.filter(b => b.secret), ls = [...sec, ...list.filter(b => !b.secret)];
+  return `${sec.length ? '<p class="rs-ach-sec">ひみつの称号を見つけた！</p>' : ''}<div class="rs-ach-md">${ls.slice(0, 4).map(b => medalHTML(b, true)).join('')}</div>${ls.length > 4 ? `<p class="rs-ach-more">ほかに${ls.length - 4}個、記録タブの実績で見られる</p>` : ''}`;
 }
 /* the results' めくる when a set earned badges: the badges, and one line (glad) — several at once are said once */
 function achSayHTML(list, first = '', kyu = null){
   const n = list?.length || 0; if (!n && !kyu) return '';
-  const q = kyu?.name, v = {k: n, b: list?.[0]?.say, q};
+  const sec = (list || []).find(b => b.secret), q = kyu?.name, v = {k: n, b: (sec || list?.[0])?.say, q};
   const t = first || (kyu && n ? mkSay(n > 1 ? 'res_kyu_badges' : 'res_kyu_badge', v) || `${q}に上がって、実績も取ったよ！`
     : kyu ? mkSay(kyu.kyu === 1 ? 'res_kyu1' : 'res_kyu', v) || `${q}に上がったよ！`
+    : sec ? mkSay('res_secret', v) || `ひみつの称号「${sec.say}」を見つけたよ！`
     : n > 1 ? mkSay('res_badges', v) || `実績を${n}個取ったよ！` : mkSay('res_badge', v) || `「${list[0].say}」を取ったよ！`);
-  const shown = (list || []).slice(0, 4);
-  return `<section class="rs-ach${n ? '' : ' kyu'}" aria-label="${n ? '取った実績' : '級が上がった'}">${n ? `<div class="rs-ach-md">${shown.map(b => medalHTML(b, true)).join('')}</div>` : ''}${n > 4 ? `<p class="rs-ach-more">ほかに${n - 4}個、記録タブの実績で見られる</p>` : ''}
+  return `<section class="rs-ach${n ? '' : ' kyu'}${sec ? ' sec' : ''}" aria-label="${n ? '取った実績' : '級が上がった'}">${n ? achMdHTML(list) : ''}
     <div class="k-say">${mekuru('happy')}<p class="k-bubble" role="status">${first || kPhrases(t)}</p></div></section>`;
 }
 /* ---------- XP と級（docs/features/xp_kyu.md） ---------- */
@@ -5271,7 +5347,7 @@ function djFinish(quit = false){
   const id = DJ.id, R = DJ.R, e = djE(id), got = DJ.qs.filter(q => q.ok).length, asked = DJ.qs.filter(q => q.ok !== null).length;
   const pass = !quit && (id === 'kw' ? asked >= R.n && DJ.miss <= R.miss : got >= R.pass), first = pass && e.p == null;
   if (!quit) djSet(id, {b: Math.max(e.b ?? 0, got), ...(first ? {p: dayIdx()} : {})});
-  DJ.done = true; DJ.res = {got, asked, pass, first, kwNew: first && id !== 'kw' && djOpen('kw') && djE('kw').s == null};
+  DJ.done = true; DJ.res = {got, asked, pass, first, kwNew: first && id !== 'kw' && djOpen('kw') && djE('kw').s == null, ach: quit ? [] : achGrant(false)};   // 実績: 道場で初段, 極に合格
   if (quit) { closeScreen(); toast('途中でやめたので不合格、明日また挑戦できる', null, 3500); return; }
   djResults(); flush();
 }
@@ -5295,7 +5371,7 @@ function djResults(){
       <span class="m">${c.isD ? `← ${esc(c.parent.w)}　` : ''}${esc(right)}</span></span><span class="nx">${QI.chev}</span></span></button></li>`; };
   const words = missed.length ? `<section class="k-sec rs-sec"><div class="k-sec-h has-sub"><h2 class="k-sec-t">まちがえた単語</h2><p class="k-sec-s">${kPhrases('苦手に入れた、苦手を特訓で出る')}</p></div><ul class="rs-wl">${missed.map(row).join('')}</ul></section>` : '';
   $('#screen').innerHTML = `<div class="screen-in res v2 dj"><div class="qtop"><button class="iconbtn qx" data-act="quitQuiz" aria-label="閉じる"><span>${QI.x}</span></button></div>
-    ${hero}${up}${say}${r.kwNew ? djNoticeHTML('kw') : ''}${stats}${words}<section class="k-sec rs-sec"><button class="rs-home rb" data-act="quitQuiz">単語帳へもどる</button></section></div>`;
+    ${hero}${up}${r.ach?.length ? `<section class="rs-ach dj-ach" aria-label="取った実績">${achMdHTML(r.ach)}</section>` : ''}${say}${r.kwNew ? djNoticeHTML('kw') : ''}${stats}${words}<section class="k-sec rs-sec"><button class="rs-home rb" data-act="quitQuiz">単語帳へもどる</button></section></div>`;
   $('#screen').scrollTop = 0;
 }
 /* the 記録 tab's profile: the 段 large, and the 道場's list (none before a dojo has come) */
@@ -6379,11 +6455,13 @@ function answer(ok, grade){
     snap.xk = Q.opts.drill ? (xpDrilled(it.c) ? 'rep' : 'drill') : wasNew ? 'nw' : dayIdx(it.p0.last) === today ? 'rep' : 'rev';
     if (snap.xk === 'drill') xpDrilled(it.c, 1);
     snap.bump[XPK] = xpOf(snap.xk, ok, tier);
+    const hr = achHour(); if (hr >= 2 && hr < 4) snap.bump.ow = 1; else if (hr >= 5 && hr < 7) snap.bump.lk = 1;   // 夜ふかし / 早起き (2:00–3:59 is still the day before: the day starts at 4:00)
     xpOpen(); bumpDaily(snap.bump);
     // the first 正解 / もう一度 / 難しい on a new card: めくる says on the next card what it did (簡単 says it on its button)
     const tk = 'g' + g;
     if (card && wasNew && g < 4 && tutNew(tk) && !tutPend.some(p => p.k === tk)) { tutPend.push({k: tk, html: tutLine(g === 1 && Q.flash ? 'g1card' : tk, {ivl: ivlText(np.due - today)})}); snap.tk = tk; }
   }
+  if (snap.first === null && !practice) { snap.run = runGet(); runAdd(snap.run, ok); }   // 連続正解: a word's first answer in a set, across sets (1問もどす puts it back)
   const idx = Q.items.indexOf(it), qp = Q.queue.indexOf(idx); if (qp >= 0) Q.queue.splice(qp, 1);   // the front of the queue; an answer to a question no longer queued adds nothing
   it.tries++;
   let back = -1;
@@ -6616,6 +6694,7 @@ function undoAnswer(){
     setProg(it.c, h.prog ? {...h.prog, u: Date.now()} : {st:0, last: Date.now()});
     if (h.bump) bumpDaily(Object.fromEntries(Object.entries(h.bump).map(([k, v]) => [k, -v])));
     if (h.xk === 'drill') xpDrilled(it.c, -1);   // drilled again, it earns its 1 again
+    if (h.run) runSet(h.run);   // 連続正解 as it was before this answer
     if (h.rt && RT[h.rt]?.length) { RT[h.rt].pop(); try { localStorage.setItem('tangoloop.rt', JSON.stringify(RT)); } catch(e) {} }
     if (h.tk) { const i = tutPend.findIndex(p => p.k === h.tk); if (i >= 0) tutPend.splice(i, 1); }   // its line, not said yet: not about anything now
   }
@@ -6632,6 +6711,7 @@ function mistap(it = Q?.cur){
   const lis2 = it === Q.cur && Q.lisNg >= 0, g = lis2 ? 2 : 3;   // 聞き取り's second pick: as if right then (難しい, 聞き取り again next time)
   const np = nextState(it.p0, g); if (lis2) np.nl = 1; setProg(it.c, np); it.after = np; it.first = g; it.ok = true;
   const hr = Q.hist?.findLast(x => x.it === it); if (hr) hr.res = true;
+  if (hr?.run && hr === Q.hist.at(-1)) runAdd(hr.run, true);   // 連続正解: the miss didn't break the run after all (nothing answered since)
   const h = Q.hist?.findLast(x => x.it === it && x.bump && 'n' in x.bump), kh = h?.bump.kc ? 1 : 0;   // a 知ってる check that was really right
   const xd = h?.xk === 'rev' ? XP.rev - XP.miss : 0;   // its XP: a review's 正解 instead of its miss
   bumpDaily({...(kh ? {c:1, rc: isReview(it.p0) ? 1 : 0, kh} : {c:1, rc: isReview(it.p0) ? 1 : 0}), ...(xd ? {[XPK]: xd} : {})});
@@ -7894,7 +7974,7 @@ const ACT = {
       for (const deck of Object.keys(S.prog)) markDirty('prog_'+deck);
       for (const id of Object.keys(S.custom)) { S.custom[id].upd = now; markDirty('deck_'+id); }
       for (const deck of Object.keys(S.notes)) markDirty('note_'+deck);
-      if (S.ach) markDirty('ach'); else achGrant(true);   // a backup from before 実績: what it reaches, quietly
+      if (S.ach) markDirty('ach'); achGrant(true);   // a backup from before 実績 (or before a badge was added): what it reaches, quietly
       if (S.dojo) markDirty('dojo');
       markDirty('meta', true); invalidateDecks(); saveNow(); closeSheet(); render(); toast('バックアップから戻しました');
     } catch(e) { $('#rinfo').innerHTML = '<span style="color:var(--again-t)">このアプリのバックアップとして読み取れませんでした。</span>'; }
@@ -8103,7 +8183,7 @@ function start(data){
   if (data && data.tab) { route.tab = data.tab; route.deck = data.deck || null; }
   tutInit();                                                                  // めくるの一言: on for a learner with nothing on record yet
   if (!S.settings.onboarded && hasProgress()) S.settings.onboarded = true;   // people who already study skip the welcome
-  if (!S.ach) achGrant(true);   // 実績, the first time: everything the records already reach is put in quietly (no celebrations)
+  if (!S.ach || lsGet(ACH_VK) !== ACH_V) { achGrant(true); lsSet(ACH_VK, ACH_V); }   // 実績, the first time and when the list grows: everything the records already reach is put in quietly (no celebrations)
   applyZoom(); render(); initSync(); initFirebase();
   if (!S.settings.onboarded) onboard();
   if (lsGet('kiwami.updated')) { lsSet('kiwami.updated', ''); setTimeout(() => toast('新しい版になりました'), 600); }
