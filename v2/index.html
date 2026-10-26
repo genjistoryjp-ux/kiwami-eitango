@@ -93,7 +93,7 @@
   --ok:#1E9E5A; --ok-ink:#0E7642; --ok-tint:#E6F5EC; --ok-solid:#0E7642; --ng:#E5484D; --ng-ink:#C8303A; --ng-tint:#FDEDED;
   --step-todo:#E7E7EA; --step-redo:#F7C8CA; --line-card:rgba(18,18,22,.14); --scrim:rgba(18,18,22,.46); --grab:rgba(18,18,22,.16); --card-bg:#FFFFFF;
   --f-en:"Figtree",sans-serif; --f-ipa:"Noto Sans","Noto Sans JP",sans-serif;   /* 発音記号: Figtree has no ɪ ə */
-  --fs-word:40px; --fs-entry:26px; --fs-answer:22px;
+  --fs-word:40px; --fs-entry:26px; --fs-answer:22px; --fs-stat:26px;
 }
 /* dark: the deck colours and the hero stay (white text on them either way); the page, its text and the tints go dark */
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
@@ -1736,19 +1736,19 @@ html{touch-action:manipulation}
    The study screen (.screen-in.study.v2) and its sheet (.fb.v2). The page is always white (the book's colour only on its small 帯),
    the word in the middle at about みかん's size, the options at the bottom under the thumb. Right and wrong have colours of their own
    (--ok / --ng), never the blue (what you press) nor the orange (the streak). */
-#screen:has(> .study.v2){background:var(--n-bg)}
+#screen:has(> .study.v2),#screen:has(> .res.v2){background:var(--n-bg)}
 .study.v2{word-break:auto-phrase;padding-bottom:calc(22px + env(safe-area-inset-bottom,0px))}
 .study.v2 button{font-feature-settings:"palt"}
 /* the top bar: × (36 seen, 44 to press, its left edge on the 16px line), 9/12 in the middle, 1問もどす as the home's pill */
-.study.v2 .qtop{position:relative;display:flex;align-items:center;justify-content:space-between;gap:0;height:44px;padding:0;flex:none}
-.study.v2 .qx{width:44px;height:44px;margin-left:-4px;padding:0;border-radius:0;color:var(--ink);background:none;display:grid;place-items:center}
-.study.v2 .qx span{width:36px;height:36px;border-radius:50%;background:var(--fill);display:grid;place-items:center}
-.study.v2 .qx svg{width:20px;height:20px}
+.study.v2 .qtop,.res.v2 .qtop{position:relative;display:flex;align-items:center;justify-content:space-between;gap:0;height:44px;padding:0;flex:none}
+.study.v2 .qx,.res.v2 .qx{width:44px;height:44px;margin-left:-4px;padding:0;border-radius:0;color:var(--ink);background:none;display:grid;place-items:center}
+.study.v2 .qx span,.res.v2 .qx span{width:36px;height:36px;border-radius:50%;background:var(--fill);display:grid;place-items:center}
+.study.v2 .qx svg,.res.v2 .qx svg{width:20px;height:20px}
 .study.v2 .qcount{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:0;margin:0;font-family:var(--f-ui);font-size:var(--fs-name);font-weight:700;color:var(--ink-2);font-feature-settings:"palt";letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
 .study.v2 .qcount b{color:var(--ink);font-weight:800}
-.study.v2 .qundo{height:44px;padding:0;border:0;border-radius:0;background:none;color:var(--ink);font-size:var(--fs-body)}
-.study.v2 .qundo span{height:36px;display:flex;align-items:center;gap:4px;padding:0 13px 0 10px;border-radius:var(--r-pill);background:var(--fill);font-weight:700}
-.study.v2 .qundo svg{width:18px;height:18px;flex:none}
+.study.v2 .qundo,.res.v2 .qundo{height:44px;padding:0;border:0;border-radius:0;background:none;color:var(--ink);font-size:var(--fs-body)}
+.study.v2 .qundo span,.res.v2 .qundo span{height:36px;display:flex;align-items:center;gap:4px;padding:0 13px 0 10px;border-radius:var(--r-pill);background:var(--fill);font-weight:700}
+.study.v2 .qundo svg,.res.v2 .qundo svg{width:18px;height:18px;flex:none}
 /* the steps: one bar a question (ok green, ng red, now blue, a missed one back later pale red, still to come grey); opaque and above
    the sheet's scrim, so they stay bright while the sheet is up */
 .study.v2 .segs{position:relative;z-index:46;flex:none;display:grid;grid-template-columns:repeat(var(--n),1fr);column-gap:3px;gap:0 3px;height:6px;margin-top:6px}
@@ -2021,8 +2021,118 @@ html{touch-action:manipulation}
 .fb.v2 .retype input:focus{border-color:var(--blue)}
 .fb.v2 .retype input.ng{border-color:var(--ng);background:var(--ng-tint)}
 .fb.v2 .retype .btn{min-height:56px;padding:0 22px}
+/* ===== 結果画面（S/result/notes.md）: .screen-in.res.v2. The top bar is the study screen's (without 9/12); the hero is the home's,
+   always blue (the score is its star: a book's red or green would read as × or ○); the rest is rows of small grey names over bold
+   figures, no boxes. Its own parts start with rs- ===== */
+.res.v2{padding-bottom:calc(34px + env(safe-area-inset-bottom,0px));word-break:auto-phrase}
+.res.v2 button{font-feature-settings:"palt"}
+.res.v2.dock-on{padding-bottom:calc(98px + env(safe-area-inset-bottom,0px))}
+.res.v2 .k-hero{margin:0}
+.res.v2 .k-sec-h,.res.v2 .k-say{padding-left:0;padding-right:0}
+.rs-first{margin-top:12px}
+.rs-cele + .rs-first,.rs-notice + .rs-first{margin-top:22px}
+.k-hero-title .unit.pct{font-family:"Figtree",var(--f-ui)}
+.rs-hero .k-hero-sub + .k-hero-sub{margin-top:2px}
+.rs-hero .k-sub-act + .k-sub-act{margin-top:8px}
+.rs-say,.rs-inst{margin-top:22px}
+.rs-sec{margin-top:var(--sec-gap)}
+.res.v2 .k-sec-h.has-sub{margin-bottom:6px}
+/* the numbers (Strava's row): 3 columns, a grey name, a bold Figtree figure with a small unit */
+.rs-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:12px;margin-top:26px}
+.rs-stats .l{margin:0;font-size:var(--fs-sub);color:var(--ink-2);white-space:nowrap;font-feature-settings:"palt"}
+.rs-stats .v{margin:3px 0 0;font-size:var(--fs-body);font-weight:700;line-height:1.1;white-space:nowrap;font-feature-settings:"palt"}
+.rs-stats .v b{font-family:"Figtree",var(--f-ui);font-size:var(--fs-stat);font-weight:800;letter-spacing:-.01em;margin-right:1px}
+/* the answers' speed: the same name over figure, in equal columns; a 0 in grey */
+.rs-spd{display:grid;grid-template-columns:repeat(var(--cols,5),minmax(0,1fr))}
+.rs-spd .k{margin:0;font-size:var(--fs-sub);color:var(--ink-2);white-space:nowrap;font-feature-settings:"palt"}
+.rs-spd .n{margin:3px 0 0;font-family:"Figtree",var(--f-ui);font-size:var(--fs-stat);font-weight:800;line-height:1.1;letter-spacing:-.01em}
+.rs-spd .n.zero{color:var(--ink-2)}
+/* the words: ○ / × (the study screen's colours), the word as asked (tend to do), its other meanings as a tag, when it comes back, › */
+.rs-wl{margin:0;padding:0;list-style:none}
+.rs-wl.rest{margin-top:12px}
+.rs-wr{width:100%;display:flex;align-items:center;gap:12px;padding:0;text-align:left;color:var(--ink)}
+.rs-mk{width:24px;height:24px;flex:none}
+.rs-mk.ok{color:var(--ok)} .rs-mk.ng{color:var(--ng)}
+.rs-mk.redo{display:grid;place-items:center;color:var(--ink-2)} .rs-mk.redo svg{width:22px;height:22px}
+.rs-wr .b{flex:1;min-width:0;min-height:66px;display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)}
+.rs-wl li:first-child .b{border-top:0}
+.rs-wr .t{flex:1;min-width:0}
+.rs-wr .w{display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;row-gap:4px;font-family:var(--f-en);font-size:17px;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.rs-wr .w i{font-style:italic;font-weight:600;color:var(--ink-2)}
+.rs-wr .tag{font-family:var(--f-ui);font-size:var(--fs-min);font-weight:700;color:var(--ink-2);background:var(--fill);border-radius:var(--r-pill);padding:2px 8px 1px;white-space:nowrap;line-height:1.45;font-feature-settings:"palt"}
+.rs-wr .m{display:block;margin-top:2px;font-size:var(--fs-body);color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-feature-settings:"palt"}
+.rs-wr .nx{flex:none;display:flex;align-items:center;font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);white-space:nowrap;font-feature-settings:"palt"}
+.rs-wr .nx svg{width:18px;height:18px;color:var(--ink-3);margin-right:-5px}
+/* 練習 (a row button with its time) and ホームへ */
+.rs-row{width:100%;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0;border-top:1px solid var(--hair);font-size:var(--fs-body);font-weight:700;color:var(--blue);text-align:left}
+.rs-row .r{display:flex;align-items:center;gap:2px;flex:none;font-weight:500;color:var(--ink-2)}
+.rs-row svg{width:18px;height:18px;color:var(--blue);margin-right:-5px}
+.rs-home{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border-radius:var(--r-pill);background:var(--fill);color:var(--ink);font-size:var(--fs-name);font-weight:700;text-align:center}
+.rs-row:active,.rs-home:active,.rs-wr:active .b{opacity:.7}
+/* the goal reached: the top bar pill's ring, closed and large (88), the streak at the hero's figure size, the week */
+.rs-cele{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:10px}
+.rs-ring{width:88px;height:88px}
+.rs-cele-t{display:flex;align-items:baseline;justify-content:center;margin:14px 0 0;font-weight:800;line-height:1;font-feature-settings:"palt"}
+.rs-cele-t .pre{font-size:var(--fs-hero-pre);margin-right:3px}
+.rs-cele-t .num{font-family:"Figtree",var(--f-ui);font-size:var(--fs-hero-num);letter-spacing:-.01em}
+.rs-cele-t .unit{font-size:var(--fs-hero-unit);margin-left:2px}
+.rs-cele-s{margin:8px 0 0;font-size:var(--fs-body);color:var(--ink-2);font-feature-settings:"palt"}
+.rs-cele-s + .rs-cele-s{margin-top:2px}
+.rs-week{display:flex;gap:12px;margin:16px 0 0;padding:0;list-style:none}
+.rs-week li{display:flex;flex-direction:column;align-items:center;gap:5px;width:30px}
+.rs-week .d{font-size:var(--fs-min);font-weight:700;color:var(--ink-2);line-height:1.2;white-space:nowrap;font-feature-settings:"palt"}
+.rs-week .dot{width:30px;height:30px;border-radius:50%;background:var(--fill);color:var(--ink-3);display:grid;place-items:center}
+.rs-week .dot svg{width:18px;height:18px}
+.rs-week .on .dot{background:var(--orange-track);color:var(--orange)}
+.rs-week .fz .dot{background:var(--blue-tint);color:var(--blue)}
+.rs-week .now .d{color:var(--ink)}
+.rs-week .now .dot{background:var(--orange);color:#fff}
+/* its moves (about 1.2 s; the hero's button works from the start): the ring closes from where today stood before the set, the
+   flame pops, the streak turns over, today's dot lights up. The end state is the plain style above; 動きを減らす shows only that */
+.rs-ring .arc{stroke-dashoffset:0;animation:rs-ring .6s cubic-bezier(.2,.7,.3,1) both}
+.rs-ring .flame{transform-box:fill-box;transform-origin:center;animation:rs-pop .25s ease-out .6s both}
+.rs-tick{position:relative;display:inline-block;clip-path:inset(0 -8px)}
+.rs-tick .old{position:absolute;left:0;top:0;opacity:0;animation:rs-out .3s ease-in .8s both}
+.rs-tick .new{display:inline-block;animation:rs-in .3s ease-out .8s both}
+.rs-week .now .dot{animation:rs-lit .2s ease-out 1s both}
+.rs-week .now .dot svg{animation:rs-pop .2s ease-out 1s both}
+@keyframes rs-ring{from{stroke-dashoffset:var(--from,59.69)}to{stroke-dashoffset:0}}
+@keyframes rs-pop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes rs-out{from{transform:translateY(0);opacity:1}to{transform:translateY(-100%);opacity:0}}
+@keyframes rs-in{from{transform:translateY(100%);opacity:0}to{transform:none;opacity:1}}
+@keyframes rs-lit{from{background:var(--orange-track)}to{background:var(--orange)}}
+@media (prefers-reduced-motion:reduce){.rs-cele *{animation:none!important}}
+/* 今日の分の復習 完了: one quiet grey line (it comes every day) */
+.rs-notice{display:flex;align-items:center;gap:12px;min-height:56px;margin-top:12px;padding:10px 14px;border-radius:var(--r-card);background:var(--fill)}
+.rs-notice .ic{width:28px;height:28px;border-radius:50%;background:var(--blue-hero);color:var(--on-blue);display:grid;place-items:center;flex:none}
+.rs-notice .ic svg{width:16px;height:16px;stroke-width:2.8}
+.rs-notice .t{margin:0;font-size:var(--fs-body);font-weight:700;line-height:1.35;font-feature-settings:"palt"}
+.rs-notice .s{margin:1px 0 0;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.35;font-feature-settings:"palt"}
+/* the dock: the hero's button again once it has gone off the top (as the home's tab bar: 82 high, the bottom 22 the home bar's) */
+.rs-dock{position:fixed;left:0;right:0;bottom:0;z-index:42;min-height:82px;background:var(--tabbar-bg);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--hair);display:flex;align-items:center;padding:0 max(var(--pad),env(safe-area-inset-right,0px)) max(22px,env(safe-area-inset-bottom,0px)) max(var(--pad),env(safe-area-inset-left,0px));transform:translateY(100%);visibility:hidden;transition:transform .22s ease,visibility 0s linear .22s}
+.rs-dock.on{transform:none;visibility:visible;transition:transform .22s ease}
+.rs-dock-btn{flex:1;max-width:528px;margin:0 auto;min-height:48px;border-radius:var(--r-pill);background:var(--blue-hero);color:var(--on-blue);display:flex;align-items:center;gap:8px;padding:0 18px 0 16px;text-align:left}
+.rs-dock-btn svg{width:20px;height:20px;flex:none;fill:currentColor}
+.rs-dock-btn .t{flex:1;min-width:0;font-size:var(--fs-name);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs-dock-btn .r{flex:none;font-size:var(--fs-sub);font-weight:500;color:rgba(255,255,255,.88)}
+/* a word's sheet: the study screen's miss sheet inside the usual sheet (white, its corners, its grab) */
+.sheet:has(> .sheet-in > .rs-sheet){background:var(--n-bg);border-radius:var(--r-hero) var(--r-hero) 0 0;padding-bottom:0}
+.sheet-in:has(> .rs-sheet){padding:0;gap:0}
+.sheet-in:has(> .rs-sheet) > .grab{flex:none;width:36px;height:5px;margin:7px auto 0;border-radius:3px;background:var(--grab)}
+.fb.v2.rs-sheet{position:static;inset:auto;z-index:auto;max-height:none;min-height:0;box-shadow:none;background:none;animation:none}
+.fb.v2.rs-sheet .fb-in{padding-bottom:0}
+.fb.v2.rs-sheet .fb-sc{padding-top:6px;overflow:visible}
+.fb.v2.rs-sheet .fb-actions{position:sticky;bottom:0;background:var(--n-bg);padding-bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+.fb.v2.rs-sheet .cmp-row.ok small{display:block;margin-top:2px;font-size:var(--fs-min);color:var(--ink-2)}
+.fb.v2 .mk.r{background:var(--fill);color:var(--ink-2)}
 @media (max-width:350px){
-  .study.v2 .qundo span{padding:0 10px 0 8px}
+  .rs-stats{column-gap:8px}
+  .rs-stats .l,.rs-spd .k{font-size:var(--fs-min)}
+  .rs-stats .v b,.rs-spd .n{font-size:22px}
+  .rs-week{gap:8px}
+}
+@media (max-width:350px){
+  .study.v2 .qundo span,.res.v2 .qundo span{padding:0 10px 0 8px}
   .study.v2 .grade b{font-size:var(--fs-body)}
   .study.v2 .grade small,.study.v2 .grade small.jp{font-size:var(--fs-min)}
   .fb.v2 .f-row{grid-template-columns:70px minmax(0,1fr)}
@@ -5571,6 +5681,39 @@ function reveal(noProg = false){
   if (isNew && !Q.opts.practice && tutNew('b1')) tutSay('b1', tutLine('b1'), $('#screen .qstage'));   // the first new card's back: which one to press
 }
 const GRADE_FEEL = {1: 'まだムリ', 2: 'あやしい', 3: '覚えた', 4: '知ってた'};
+/* a word tapped on the results: the same sheet as a miss in study (S/quiz wrong) — how it went and when it comes back, the word
+   with its 帯 and No., its meaning in the green box, that meaning's example, the table (factsHTML), 閉じる */
+function resWordHTML(it){
+  const c = it.c, s0 = c.s?.[it.si] || c.s?.[0], pos0 = s0?.p || c.p, fresh = !isReview(it.p0) && !it.sameDay && !Q?.opts.practice;
+  const good = fresh ? it.first !== 1 : it.ok;
+  const mk = good ? `<span class="mk o">${QI.check}</span>` : fresh ? `<span class="mk r">${QI.redo}</span>` : `<span class="mk x">${QI.cross}</span>`;
+  const verdict = fresh ? GRADE_FEEL[it.first] || '覚えた' : it.ok ? '正解' : 'まちがい';
+  const when = it.after ? `<span class="ivl">次は${ivlText(it.after.due - dayIdx())}</span>` : '';
+  const no = (c.n && !c.isD) || obiTag(c) ? `<span class="no">${obiTag(c)}${c.n && !c.isD ? `No.${c.n}` : ''}</span>` : '';
+  const head = `<div class="fb-word"><div class="e-line">${wordHTML(c, s0, 'e-word')}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(pos0)}" aria-label="発音">${QI.say}</button>${no}</div><div class="e-pron">${ipaHTML(c)}</div></div>`;
+  const pos = pos0 && !c.isD ? `<span class="pos">${esc(pos0)}</span>` : '';
+  const mean = `<div class="cmp"><div class="cmp-row ok"><span class="cmp-l">意味</span><p class="cmp-t">${pos}<b>${c.isD ? `${esc(c.m)}` : esc(studyMain(c))}</b></p>${c.isD ? `<small>← <span lang="en">${esc(c.parent.w)}</span></small>` : ''}</div></div>`;
+  const ex = s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null;
+  const exLine = ex ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${markWord(ex.e, c.w)}</div><div class="fb-ja">${esc(ex.j)}</div></div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '';
+  return `<div class="fb v2 rs-sheet ${good ? 'ok' : 'ng'}"><div class="fb-in"><div class="fb-sc">
+    <div class="fb-head"><span class="fb-tt">${mk}${verdict}</span><span class="sp"></span>${when}</div>
+    ${head}${mean}<div class="fb-body">${exLine}${factsHTML(it, null, '')}</div></div>
+    <div class="fb-actions"><button class="btn btn-primary" data-act="closeSheet">閉じる</button></div></div></div>`;
+}
+/* 結果 (docs/ui_redesign/S/result): the study screen's top bar (× and 1問もどす), then — only when it happened — the day's goal
+   reached (the top bar's ring closing, the streak counting up, the week) or 今日の分の復習 完了 as a quiet line; the hero, always
+   blue (the score is the star here: a book's red or green would read as × or ○), with the set's score, today's road and the one
+   button for what comes next on the cover(s) of what it starts, the other ways on under it; めくるの一言; the numbers; the answers'
+   speed; the words (missed first, 練習 right under them); ホームへ. Scrolled past the hero's button, it comes up again in a dock.
+   Every set (練習, 苦手を特訓, a 100語 block) keeps its own buttons, laid out the same way. The class .rb marks the buttons that
+   start or leave (tests find them by it), .rb.main the one in the hero */
+const RS_ICO = {
+  ok: '<svg class="rs-mk ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" role="img" aria-label="正解"><circle cx="12" cy="12" r="7.6"/></svg>',
+  ng: '<svg class="rs-mk ng" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" role="img" aria-label="まちがい"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12.5l4 4 8-8.5"/></svg>',
+  flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2c.4 2.6-1 4.2-2.3 5.6C8.4 10.3 7 11.9 7 14.2 7 17.2 9.2 19.5 12 19.5s5-2.3 5-5.1c0-1.8-.8-3.3-1.8-4.4-.3 1.2-1 2-2 2.4.4-2.6-.1-6.3-1.2-9.2z"/></svg>',
+};
+let resIO = null;   // the dock's watcher on the hero's button
 function renderResults(){
   const its = Q.items, n = its.length, ok = its.filter(x => x.ok).length, today = dayIdx();
   const dur = Date.now() - Q.start; sfx('done'); haptic(true); tutDrop(); tutPend.length = 0;   // a grade's line left over: next time that grade comes
@@ -5578,91 +5721,156 @@ function renderResults(){
   if (!Q.opts.practice && !Q.timed) { Q.timed = true; bumpDaily({wt: Math.min(dur, n * 30000), wn: n}); }
   const learned = its.filter(x => !isReview(x.p0)).length, reviewed = its.filter(x => isReview(x.p0) && !x.sameDay).length;
   const before = streakInfo(), won = checkGoal(), st = won ? streakInfo() : before;
-  if (won) { Q.won = true; haptic(true); }
-  // the day's goal reached: the streak in big type, counting up by one (no extra screen, no extra tap)
-  const win = won ? `<div class="stk-win stk-big" role="status"><span class="stk-flame">${I.flame}</span>
-    <div class="stk-nrow"><b class="stk-n num" id="stkn">${st.n - 1}</b><span>日連続</span></div>
-    <div class="stk-msg">${milestoneText(st.n) || '今日の目標を達成！'}</div>${weekRow(st)}${st.freeze > before.freeze ? '<span>お休みチケットを1枚もらいました</span>' : ''}</div>` : '';
+  if (won) { Q.won = true; setTimeout(() => { if (Q?.won && Q.done) haptic(true); }, lessMotion() ? 0 : 600); }   // with the flame
   const prac = !!Q.opts.practice, pct = Math.round(ok / n * 100);
-  // a set of new words only is not a test: you graded each card yourself, so it shows how (N語 めくった in four colours), not a %
+  // a set of new words only is not a test: you graded each card yourself, so it shows how (N語 めくった in four grades), not a %
   const fr = !prac && its.every(x => !x.sameDay && !isReview(x.p0)), gn = [0, 1, 2, 3, 4].map(g => its.filter(x => x.first === g).length);
   if (!prac && TUT?.on && !TUT.f1 && tutOn()) { TUT.f1 = Date.now(); tutSave(); }   // a new learner finished a first set (kept for later)
-  const more = counts(Q.opts.deckIds || activeIds()), rem = more.due + more.newToday, hasMore = rem > 0;
-  const nd = prac || hasMore ? null : nextDeck(Q.opts.deckIds || activeIds(), more);
-  const dl = Q.opts.drill ? drillCards(Q.opts.drill, Q.opts.deckIds || activeIds()) : null;   // 苦手を特訓: what one more drill set would hold
+  const ids = Q.opts.deckIds || activeIds();
+  const more = counts(ids), rem = more.due + more.newToday, hasMore = rem > 0;
+  const nd = prac || hasMore ? null : nextDeck(ids, more);
+  const dl = Q.opts.drill ? drillCards(Q.opts.drill, ids) : null;   // 苦手を特訓: what one more drill set would hold
   const missed = its.filter(x => x.first === 1);
   // めくる names up to 2 words that were shaky last time (もう一度 — also a new word's first もう一度) and right at once now
   const comeback = [...new Set(its.filter(x => !x.sameDay && missedLast(x.p0) && x.first > 1).map(x => x.c.w))].slice(0, 2).join(' と ');
-  // the words, the ones missed at first on top; a tap opens the explanation (resWord)
-  // (new words only: by the day each comes back, もう一度 marked ↻ — asked again, not wrong; about 7 days reads 1週間後)
+  // the words: the ones missed at first on top, then the rest in the order asked (new words only: by the day each comes back)
   const order = [...its.keys()].sort(fr ? (a, b) => (its[a].after?.due ?? 0) - (its[b].after?.due ?? 0) || its[a].first - its[b].first || a - b
     : (a, b) => (its[a].first === 1 ? 0 : 1) - (its[b].first === 1 ? 0 : 1) || a - b);
   const ivlW = d => fr && d >= 6 && d <= 8 ? '1週間後' : ivlText(d);
-  const rows = order.map(i => { const x = its[i], mark = fr ? `<span class="mk g${x.first}" aria-label="${GRADE_FEEL[x.first] || ''}">${x.first === 1 ? I.redo : '○'}</span>` : `<span class="mk ${x.ok?'o':'x'}">${x.ok?'○':'×'}</span>`;
-    return `<button class="rrow" data-act="resWord" data-i="${i}">${mark}
-    <span class="rword"><b lang="en">${esc(x.c.w)}</b><span>${x.c.isD ? `← ${esc(x.c.parent.w)}　` : ''}${studyMeaningHTML(x.c)}</span></span><span class="ivl">${x.after ? ivlW(x.after.due - today) : ''}</span>${I.right}</button>`; }).join('');
-  // the speed grades this set earned, and once ever what they mean
+  // the speed grades this set earned (0s too: every step shows), and once ever what they mean
   const tiers = !prac && its.some(x => x.tier > 0), miss = missed.filter(x => isReview(x.p0)).length;
-  const tierRow = tiers ? `<span class="tiers">${[4, 3, 2, 1].map(t => [t, its.filter(x => x.tier === t).length]).filter(([, k]) => k).map(([t, k]) => `<span class="rate t${t}">${RATE_NAME[t]} <b class="num">${k}</b></span>`).join('')}${miss ? `<span class="rate tx">まちがい <b class="num">${miss}</b></span>` : ''}</span>` : '';
-  const tierHint = tiers && !lsGet('tangoloop.tierhint') ? '<div class="res-note">速く正解するほど評価が上がって（Good → Perfect）、次の復習が先にのびます</div>' : '';
+  const tierHint = tiers && !lsGet('tangoloop.tierhint') ? '速く正解するほど評価が上がって（Good → Perfect）、次の復習が先にのびます' : '';
   if (tierHint) lsSet('tangoloop.tierhint', '1');
-  // under the ring, a few quiet rows instead of tiles: what the set held, how far today's goal still is (or the streak once
-  // it is reached, unless the celebration above shows it), the speed grades, the longest run of right answers, the time — one fact a row
-  const fact = (k, v) => `<div class="lg-row"><span>${k}</span><span class="lg-v">${v}</span></div>`, nb = (v, u) => `<b class="num">${v}</b>${u ? `<small>${u}</small>` : ''}`;
-  const secs = Math.round(dur / 1000), took = secs < 60 ? nb(secs, '秒') : nb(Math.floor(secs / 60), '分') + nb(String(secs % 60).padStart(2, '0'), '秒');
-  const goalRow = !won && !before.done && rem > 0 ? fact('今日の目標まで', `<small>あと</small>${nb(rem, '語')}`) : won || fr ? '' : fact('連続記録', nb(st.n, '日'));
-  const facts = fr ? goalRow + fact('かかった時間', took)
-    : (prac ? fact('1回目で正解', `${nb(ok)}<small>/ ${n}語</small>`) : (learned ? fact('新しく覚えた', nb(`+${learned}`, '語')) : '') + (reviewed ? fact('復習した', nb(reviewed, '語')) : ''))
-      + goalRow + (tiers ? fact('答えの速さ', tierRow) : '') + (Q.maxCombo >= 2 ? fact('連続正解', `<small>最大</small>${nb(Q.maxCombo, '問')}`) : '') + fact('かかった時間', took);
+  const secs = Math.round(dur / 1000);
   const sets = setsFor(more.due) + setsFor(more.newToday), nextN = setN(more.due || more.newToday);
   // reviews past the day's goal left after a set of reviews: once you went past the goal (続ける / 次の10問, noChecks) the next
   // set is reviews again, new words one tap below; right after the goal's last review set new words stay first (the day's
   // plan) and the rest of the reviews is the tap below
   const revMore = !prac && !fr && reviewed > 0 && !more.due ? more.dueAll : 0, goOn = !!revMore && !!Q.opts.noChecks;
-  const revBtn = main => `<button class="btn ${main ? 'btn-primary btn-block btn-big' : 'btn-ghost btn-block'}" data-act="studyReview" data-more="1">${I.play}${main ? `<span class="nw">復習の続き ${setN(revMore)}問</span><small>のこり${revMore}語</small>` : `復習を続ける（のこり${revMore}語）`}</button>`;
-  const nextBtn = hasMore && goOn ? `${revBtn(true)}<button class="btn btn-ghost btn-block" data-act="goNew">${I.play}新しい単語へ ${setN(more.newToday)}問</button>`
-    : hasMore ? `<button class="btn btn-primary btn-block btn-big" data-act="${more.due ? 'studyReview' : 'goNew'}">${I.play}<span class="nw">${more.due ? (reviewed ? '復習の続き' : '復習をはじめる') : '新しい単語へ'} ${nextN}問</span>${before.done ? `<small>今日あと${rem}問</small>` : sets <= 1 ? `<small>終えると連続${before.n + 1}日</small>` : `<small class="sets">目標まで あと${sets}セット</small>`}</button>${revMore ? revBtn(false) : ''}`
-    // the goal reached: reviews still left come first (the next deck below them), then the next deck, then more new words
-    : `<div class="res-done">${I.check}今日の目標は達成</div>${more.dueAll ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}<span class="nw">復習の続き ${setN(more.dueAll)}問</span><small>のこり${more.dueAll}語</small></button>${nd ? nextDeckBtn(nd, 'btn-ghost') : ''}`
-      : nd ? nextDeckBtn(nd, 'btn-primary btn-big') : more.fresh + more.queued + more.dnew ? `<button class="btn btn-primary btn-block btn-big" data-act="studyMore">${I.play}次の${S.settings.setSize}問<small>新しい単語</small></button>` : ''}`;
-  const homeLbl = backLabel(), home = `<button class="btn btn-ghost btn-block" data-act="quitQuiz">${homeLbl}</button>`;
-  const pc = k => Math.round(k / n * 1000) / 10;
+  const homeLbl = backLabel();
   // 復習 完了: today's reviews (all decks in use) were left when this set started and none are left now — any kind of set,
-  // decided from the set itself, so 1問もどす, drawing again or another device can't make it wrong. Under the goal's banner
-  // it isn't repeated; on a lighter day (休み明け) it says "today's share" and where the rest went
+  // decided from the set itself, so 1問もどす, drawing again or another device can't make it wrong. The goal's banner
+  // says enough (reaching it finishes the reviews too); on a lighter day (休み明け) it says "today's share" and where the rest went
   const allDue = Q.opts.deckIds || Q.opts.only ? counts(activeIds()) : more;
   const rvDone = !prac && Q.due0 > 0 && Q.day0 === today && allDue.due === 0;
   if (rvDone && !todayStat().rv) bumpDaily({rv: 1});
-  const rvBanner = rvDone && !won ? `<div class="rv-done" role="status"><span class="rv-ico">${I.check}</span><div><b>${allDue.dueAll ? '今日の分の復習 完了' : '今日の復習 完了'}</b><span>${allDue.dueAll ? `のこり${allDue.dueAll}語は明日から少しずつ` : allDue.newToday ? `次は新しい単語を${allDue.newToday}語` : 'おつかれさま'}</span></div></div>` : '';
+  // today's road, as on the home: 済み, 復習, 新しい (the decks in use)
+  const td = todayStat(), done = (td.rn || 0) + (td.nw || 0), left = allDue.due + allDue.newToday, goalN = done + left;
   // めくる: the very first set's results say what comes tomorrow (once); a set of new words gets its own lines, not a score's
   const sc = won ? 'res_goal' : fr && MK_LINES.res_fresh ? 'res_fresh' : pct >= 50 && rvDone && allDue.newToday && MK_LINES.res_review_done ? 'res_review_done' : pct >= 50 && comeback && MK_LINES.res_comeback ? 'res_comeback' : pct === 100 ? 'res_perfect' : pct >= 80 ? 'res_great' : pct >= 50 ? 'res_ok' : 'res_low';
-  const inst = won ? instHTML('res') : '';   // ホーム画面に入れとこ at the goal (iPhone Safari), in view under the banner, with its own めくる
-  const first = !inst && fr && tutNew('res1') ? tutLine('res1', {n, when: firstRev(Q.opts.deckIds || activeIds()), how: isCardMode() ? '' : '（4択）'}) : '';
+  const inst = won ? instHTML('res') : '';   // ホーム画面に入れとこ at the goal (iPhone Safari), in view under the hero, with its own めくる
+  const first = !inst && fr && tutNew('res1') ? tutLine('res1', {n, when: firstRev(ids), how: isCardMode() ? '' : '（4択）'}) : '';
   if (first) tutMark('res1');
-  const mkLine = prac ? '' : `<div class="res-mk">${mekuru(sc === 'res_low' ? 'cheer' : sc === 'res_ok' ? 'normal' : 'happy')}<span>${first || esc(mkSay(sc, {n: sc === 'res_fresh' ? n : st.n, pct, w: comeback}) || (sc === 'res_low' ? 'まちがえた単語は、また出すから大丈夫' : 'さ、次めくろ！'))}</span></div>`;
-  const secRem = Q.opts.only && !prac ? secLeft(Q.opts.deckIds, Q.opts.only) : 0;
-  const mainBtn = !Q.opts.only || prac ? nextBtn
-    : secRem ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}${esc(Q.opts.sec)}の続き<small>${(nx => `${nx.rev ? '復習 ' : ''}${nx.n}問`)(secNext(Q.opts.deckIds, Q.opts.only))}</small></button>`
-    : `<div class="res-done">${I.check}${esc(Q.opts.sec)}をひととおり学習しました</div>${nextBtn}`;
-  // 練習 keeps its two buttons; 苦手を特訓 offers one more drill set (or the usual set) and no 練習
-  const btns = prac ? `<button class="btn btn-primary btn-block btn-big" data-act="practiceAgain">${I.play}もう一度<small>${Q.opts.practice === 'today' && todayCards().length > n ? `今日の単語から${n}問` : `同じ${n}語で練習`}</small></button>${home}`
-    : dl?.length ? `<button class="btn btn-primary btn-block btn-big" data-act="again">${I.play}苦手をもう1セット<small>${Math.min(S.settings.setSize, dl.length)}語</small></button>${hasMore ? `<div class="btn-row"><button class="btn btn-ghost" data-act="againNormal">ふつうの学習へ</button><button class="btn btn-ghost" data-act="quitQuiz">${homeLbl}</button></div>` : home}`
-    : dl ? `<div class="res-done">${I.check}苦手はぜんぶ終わり</div>${nextBtn}${home}`
-    : `${mainBtn}${(k => k ? `<button class="btn btn-ghost btn-block" data-act="studyCheck">${I.play}今日のおさらい ${k}語</button>` : '')(sameDayWaiting(Q.opts.deckIds || activeIds()).length)}<div class="btn-row">${missed.length ? `<button class="btn btn-ghost" data-act="practiceMiss">${fr ? 'まだムリ' : 'まちがえた'}${missed.length}語を練習</button>` : '<button class="btn btn-ghost" data-act="practiceSet">同じ単語で練習</button>'}<button class="btn btn-ghost" data-act="quitQuiz">${homeLbl}</button></div>`;
-  $('#screen').innerHTML = `<div class="screen-in res">
-    <div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="閉じる">${I.close}</button><span style="flex:1"></span><button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>1問もどす</span></button></div>
-    <div class="res-h">${win}${inst}${inst ? '' : mkLine}
-      ${fr ? `<div class="res-fr"><div class="fring" style="--a:${pc(gn[4])}%;--b:${pc(gn[4] + gn[3])}%;--c:${pc(gn[4] + gn[3] + gn[2])}%" role="img" aria-label="${n}語めくった。${[4, 3, 2, 1].map(g => `${GRADE_FEEL[g]}${gn[g]}`).join('、')}"><div><b>${n}</b><span>語 めくった</span></div></div>
-        <ul class="flg" aria-hidden="true">${[[4, 'e'], [3, 'g'], [2, 'h'], [1, 'a']].map(([g, k]) => `<li${gn[g] ? '' : ' class="z"'}><i class="${k}"></i>${GRADE_FEEL[g]}<b>${gn[g]}</b></li>`).join('')}</ul></div>`
-      : `<div class="ring-score${won ? ' sm' : ''}" style="--p:${pct}"><div><b class="big">${pct}<small>%</small></b><span>1回目で正解</span></div></div>`}
-      ${rvBanner}<div class="ledger res-facts">${facts}</div>${tierHint}
-      ${prac ? '<div class="res-note">練習なので、復習日と学習の記録は変わりません</div>' : ''}</div>
-    ${fr ? '<div class="rl-h"><b>次に出る日</b><small>タップで説明</small></div>' : ''}<div class="words rlist">${rows}</div>
-    <div class="res-btns">${btns}</div></div>`;
-  // a short screen: the card would sit under the buttons held at the bottom; めくる's line instead, the home has the card from now
-  const ic = inst && $('#screen .res-h > .inst'); if (ic && ic.getBoundingClientRect().top + 64 > $('#screen .res-btns').getBoundingClientRect().top + 26) ic.outerHTML = mkLine;
+  const line = first ? '' : mkSay(sc, {n: sc === 'res_fresh' ? n : st.n, pct, w: comeback}) || (sc === 'res_low' ? 'まちがえた単語は、また出すから大丈夫' : 'さ、次めくろ！');
+  // the results' めくる is glad (its face for a good set) — after a set mostly missed, it cheers you on
+  const mkLine = prac ? '' : `<section class="k-say rs-say" aria-label="めくるから">${mekuru(sc === 'res_low' ? 'cheer' : 'happy')}<p class="k-bubble" role="status">${first || kPhrases(line)}</p></section>`;
+
+  // what the hero's button starts and the ways on under it. go(): its words, decks and time, as the home's button says them
+  const go = (act, main, kind, k, tail = '', x = {}) => { const pv = setPreview(kind, ids), b = booksText(pv.decks);
+    return {act, main, decks: pv.decks, k, lines: [`${b ? `${b}${/new|moreNew/.test(kind) ? 'の続き' : ''}から` : ''}${k}問`, aboutMin(k) + tail], ...x}; };
+  const sub = (act, label, k, x = {}) => ({act, label, k, ...x});
+  const fromSet = cs => { const by = new Map(); for (const c of cs) { const id = c.deck || c.parent?.deck; by.set(id, (by.get(id) || 0) + 1); } return [...by].sort((a, b) => b[1] - a[1]).map(([id]) => deckById(id)).filter(Boolean); };
+  const revTail = k => `、復習はのこり${k}語`;
+  const nextBtn = () => {
+    if (hasMore && goOn) return {main: go('studyReview', '復習の続きをやる', 'more', setN(revMore), revTail(revMore), {more: 1}), subs: [sub('goNew', `新しい単語へ ${setN(more.newToday)}問`, setN(more.newToday))]};
+    if (hasMore) return {main: more.due ? go('studyReview', reviewed ? '復習の続きをやる' : '復習をはじめる', 'review', nextN, before.done ? `、今日あと${rem}問` : sets <= 1 ? `、終えると連続${before.n + 1}日` : revTail(more.due))
+        : go('goNew', '新しい単語へ', 'new', nextN, before.done ? `、今日あと${rem}問` : sets <= 1 ? `、終えると連続${before.n + 1}日` : ''),
+      subs: revMore ? [sub('studyReview', `復習を続ける（のこり${revMore}語）`, setN(revMore), {more: 1})] : []};
+    // the goal reached: reviews still left come first (the next deck below them), then the next deck, then more new words
+    const ndGo = nd && {act: 'nextDeck', id: nd.to.id, main: `${bookName(nd.to)}もはじめる`, decks: [nd.to], k: setN(S.settings.setSize),
+      lines: [`${bookName(nd.to)}の最初から${setN(S.settings.setSize)}語`, nd.left ? `${bookName(nd.from)}の新しい単語は、のこり${nd.left}語` : `${bookName(nd.from)}は、ひととおり学習した`]};
+    if (more.dueAll) return {main: go('studyMore', '復習の続きをやる', 'more', setN(more.dueAll), revTail(more.dueAll)), subs: nd ? [sub('nextDeck', `${bookName(nd.to)}もはじめる`, setN(S.settings.setSize), {id: nd.to.id})] : []};
+    if (nd) return {main: ndGo, subs: []};
+    if (more.fresh + more.queued + more.dnew) return {main: go('studyMore', 'もっと覚える', 'moreNew', S.settings.setSize), subs: []};
+    return {main: null, subs: []};
+  };
+  let plan, note = '';   // note: a line in the hero when a block or 苦手 is all done
+  if (prac) {
+    const k = Q.opts.practice === 'today' && todayCards().length > n;
+    plan = {main: {act: 'practiceAgain', main: 'もう一度', decks: fromSet(its.map(x => x.c)), k: n, lines: [k ? `今日の単語から${n}問` : `同じ${n}語で練習`, aboutMin(n)]}, subs: []};
+  } else if (dl?.length) {
+    const k = Math.min(S.settings.setSize, dl.length);
+    plan = {main: {act: 'again', main: '苦手をもう1セット', decks: fromSet(dl.slice(0, k)), k, lines: [`苦手から${k}語`, aboutMin(k)]}, subs: hasMore ? [sub('againNormal', 'ふつうの学習へ', 0)] : []};
+  } else if (dl) { plan = nextBtn(); note = '苦手はぜんぶ終わり'; }
+  else if (Q.opts.only) {
+    const secRem = secLeft(Q.opts.deckIds, Q.opts.only);
+    if (secRem) { const nx = secNext(Q.opts.deckIds, Q.opts.only);
+      plan = {main: {act: 'again', main: `${Q.opts.sec}の続き`, decks: (Q.opts.deckIds || []).map(deckById).filter(Boolean), k: nx.n, lines: [nx.rev ? `復習から${nx.n}問` : `新しい単語を${nx.n}問`, aboutMin(nx.n)]}, subs: []}; }
+    else { plan = nextBtn(); note = `${Q.opts.sec}をひととおり学習しました`; }
+  } else plan = nextBtn();
+  const plain = !prac && !dl;   // the usual set: today's おさらい, and 練習 under the words
+  const sdk = plain ? sameDayWaiting(ids).length : 0;
+  if (sdk) plan.subs.push(sub('studyCheck', `今日のおさらい ${sdk}語`, Math.min(10, sdk)));
+
+  // ── the parts ──
+  const top = `<div class="qtop"><button class="iconbtn qx" data-act="quitQuiz" aria-label="閉じる"><span>${QI.x}</span></button>
+    <button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}><span>${QI.undo}1問もどす</span></button></div>`;
+  // the goal reached: the ring of the top bar's pill closes from where today stood before this set, the flame pops, the streak
+  // turns over to the new day, today's dot lights up (about 1.2 s; the buttons work from the start; still with 動きを減らす)
+  const before0 = goalN ? Math.max(0, Math.min(1, (done - learned - reviewed) / goalN)) : 0;
+  const WD = '日月火水木金土', week = [...Array(7)].map((_, k) => { const d = today - 6 + k, now = d === today;
+    const cls = now ? 'now' : st.on.has(d) ? 'on' : st.frozen.has(d) ? 'fz' : 'off', wd = now ? '今日' : WD[new Date(d * DAY).getUTCDay()];
+    return `<li class="${cls}" aria-label="${wd}：${{now: '目標を達成', on: '学習した', fz: 'お休みチケット', off: '記録なし'}[cls]}"><span class="d" aria-hidden="true">${wd}</span><span class="dot" aria-hidden="true">${cls === 'now' ? RS_ICO.flame : cls === 'on' ? RS_ICO.check : cls === 'fz' ? K_ICO.ticket : ''}</span></li>`; }).join('');
+  const cele = won ? `<section class="rs-cele" role="status" aria-label="今日の目標を達成。連続${st.n}日">
+    <svg class="rs-ring" viewBox="0 0 88 88" fill="none" aria-hidden="true" style="--from:${(238.76 * (1 - before0)).toFixed(2)}"><circle cx="44" cy="44" r="38" stroke="var(--orange-track)" stroke-width="8"/>
+      <circle class="arc" cx="44" cy="44" r="38" stroke="var(--orange)" stroke-width="8" stroke-linecap="round" stroke-dasharray="238.76" transform="rotate(-90 44 44)"/>
+      <g class="flame"><svg x="18" y="17" width="52" height="52" viewBox="0 0 24 24" fill="var(--orange-track)" stroke="var(--orange)" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3.2c.4 2.6-1 4.2-2.3 5.6C8.4 10.3 7 11.9 7 14.2 7 17.2 9.2 19.5 12 19.5s5-2.3 5-5.1c0-1.8-.8-3.3-1.8-4.4-.3 1.2-1 2-2 2.4.4-2.6-.1-6.3-1.2-9.2z"/></svg></g></svg>
+    <p class="rs-cele-t" aria-hidden="true"><span class="pre">連続</span><span class="num rs-tick"><span class="old">${Math.max(0, st.n - 1)}</span><span class="new">${st.n}</span></span><span class="unit">日になった！</span></p>
+    <p class="rs-cele-s">今日の目標の${goalN}語を達成</p>${st.freeze > before.freeze ? '<p class="rs-cele-s">お休みチケットを1枚もらいました</p>' : ''}
+    <ol class="rs-week" aria-label="この7日">${week}</ol></section>` : '';
+  const notice = rvDone && !won ? `<section class="rs-notice" role="status"><span class="ic">${RS_ICO.check}</span><div><p class="t">${allDue.dueAll ? '今日の分の復習 完了' : '今日の復習 完了'}</p>
+    <p class="s">${allDue.dueAll ? `復習ののこり${allDue.dueAll}語は、明日から少しずつ` : allDue.newToday ? `次は新しい単語を${allDue.newToday}語` : 'おつかれさま'}</p></div></section>` : '';
+  // the hero: the score in one big line, how it was counted, how far today's goal is; today's road; the button
+  const title = fr ? `<p class="k-hero-title"><span class="n">${n}</span><span class="unit">語</span><span class="post">めくった</span></p>`
+    : `<p class="k-hero-title"><span class="n">${pct}</span><span class="unit pct">%</span><span class="post">正解</span></p><p class="k-hero-sub">${kPhrases(`1回目で、${ok === n ? `${n}語ぜんぶ` : `${n}語中${ok}語`}`)}</p>`;
+  const goalLine = prac ? '練習なので、復習日と学習の記録は変わりません' : won || st.done || !left ? 'ここからは、やりたい分だけ' : `目標の${goalN}語まで、あと${left}語`;
+  const segs = [['done', done, `済み${done}語`], ['rev', allDue.due, `復習${allDue.due}語`], ['new', allDue.newToday, `新しい${allDue.newToday}語`]].filter(x => x[1] > 0);
+  const seg = prac || !goalN ? '' : !left ? `<div class="k-seg" role="img" aria-label="今日の目標${goalN}語が済み"><div class="k-seg-bar" style="grid-template-columns:1fr"><i class="done"></i></div><div class="k-seg-lab" style="grid-template-columns:1fr"><span class="done">済み${done}語</span></div></div>`
+    : `<div class="k-seg" role="img" aria-label="今日の目標${goalN}語のうち、${segs.map(x => x[2]).join('、')}"><div class="k-seg-bar" style="grid-template-columns:${segs.map(x => x[1] + 'fr').join(' ')}">${segs.map(x => `<i class="${x[0]}"></i>`).join('')}</div>
+      <div class="k-seg-lab" style="grid-template-columns:${segs.map(x => `minmax(max-content,${x[1]}fr)`).join(' ')}">${segs.map(x => `<span class="${x[0]}">${x[2]}</span>`).join('')}</div></div>`;
+  const m = plan.main, attrs = o => ` data-act="${o.act}"${o.more ? ' data-more="1"' : ''}${o.id ? ` data-id="${esc(o.id)}"` : ''}`;
+  const play = m ? `<button class="k-play rb main"${attrs(m)}>${K_ICO.play}<span class="k-play-t"><span class="k-play-main">${esc(m.main)}</span><span class="k-play-sub">${m.lines.map(l => `<span class="ln">${kPhrases(l)}</span>`).join('')}</span></span></button>` : '';
+  const subs = plan.subs.map(o => `<button class="k-sub-act rb"${attrs(o)}><span>${esc(o.label)}</span><span class="r">${o.k ? aboutMin(o.k) : ''}${K_ICO.chev}</span></button>`).join('');
+  const covers = m?.decks?.length ? m.decks : fromSet(its.map(x => x.c));
+  const hero = `<section class="rs-first"><article class="k-hero rs-hero" aria-label="このセットの結果"><div class="k-hero-top">${heroCovers(covers)}<div class="k-hero-txt">${title}
+      <p class="k-hero-sub">${kPhrases(goalLine)}</p>${note ? `<p class="k-hero-sub">${kPhrases(note)}</p>` : ''}</div></div>
+    ${seg}${play || !prac ? `<div class="k-hero-act">${play}${prac ? '' : `<button class="k-more" data-act="homeMore" aria-label="ほかのやり方">${K_ICO.more}</button>`}</div>` : ''}${subs}</article></section>`;
+  // the numbers: a small grey name over a bold figure, no boxes (3 at most)
+  const nb = (v, u) => `<b>${v}</b>${u}`, took = secs < 60 ? nb(secs, '秒') : nb(Math.floor(secs / 60), '分') + (secs % 60 ? nb(secs % 60, '秒') : '');
+  const stats = [prac ? ['練習した', nb(n, '語')] : null, reviewed && !prac ? ['このセットで復習', nb(reviewed, '語')] : null, learned && !prac ? ['新しく覚えた', nb(learned, '語')] : null,
+    !fr && Q.maxCombo >= 2 ? ['最大連続正解', nb(Q.maxCombo, '問')] : null, ['かかった時間', took]].filter(Boolean);
+  if (stats.length > 3) stats.splice(stats.findIndex(x => x[0] === '最大連続正解'), 1);
+  const statsH = `<section class="rs-stats" aria-label="このセットの数字">${stats.map(([k, v]) => `<div><p class="l">${k}</p><p class="v">${v}</p></div>`).join('')}</section>`;
+  // the answers' speed (Perfect … Good, まちがい), or how a set of new words went (知ってた … まだムリ): the same row of names and figures
+  const cols = fr ? [4, 3, 2, 1].map(g => [GRADE_FEEL[g], gn[g]]) : tiers ? [...[4, 3, 2, 1].map(t => [RATE_NAME[t], its.filter(x => x.tier === t).length]), ['まちがい', miss]] : [];
+  const speed = cols.length ? `<section class="k-sec rs-sec"><div class="k-sec-h${tierHint ? ' has-sub' : ''}"><h2 class="k-sec-t">${fr ? '手ごたえ' : '答えの速さ'}</h2>${tierHint ? `<p class="k-sec-s">${tierHint}</p>` : ''}</div>
+    <div class="rs-spd" style="--cols:${cols.length}">${cols.map(([k, v]) => `<div><p class="k">${k}</p><p class="n${v ? '' : ' zero'}">${v}</p></div>`).join('')}</div></section>` : '';
+  // the words: as the study screen shows them (tend to do), another meaning as a grey tag, when each comes back; a tap opens its sheet
+  const wRow = i => { const x = its[i], c = x.c, f = formOf(c, c.s?.[x.si] || c.s?.[0]), tag = studyNote(c);
+    const mk = fr ? (x.first === 1 ? `<span class="rs-mk redo" role="img" aria-label="${GRADE_FEEL[1]}">${QI.redo}</span>` : RS_ICO.ok.replace('aria-label="正解"', `aria-label="${GRADE_FEEL[x.first] || '覚えた'}"`)) : x.ok ? RS_ICO.ok : RS_ICO.ng;
+    return `<li><button class="rs-wr" data-act="resWord" data-i="${i}">${mk}<span class="b"><span class="t"><span class="w" lang="en">${f ? `<span>${esc(f).replace(/ do$/, ' <i>do</i>')}</span>` : esc(c.w)}${tag ? `<span class="tag" lang="ja">${tag}</span>` : ''}</span>
+      <span class="m">${c.isD ? `← ${esc(c.parent.w)}　` : ''}${esc(studyMain(c))}</span></span><span class="nx">${x.after ? `次は${ivlW(x.after.due - today)}` : ''}${QI.chev}</span></span></button></li>`; };
+  const missI = order.filter(i => its[i].first === 1), restI = order.filter(i => its[i].first !== 1);
+  const rowAct = (act, t, k) => `<button class="rs-row rb" data-act="${act}"><span>${t}</span><span class="r">${aboutMin(k)}${QI.chev}</span></button>`;
+  const practice = !plain ? '' : missed.length ? rowAct('practiceMiss', `${fr ? 'まだムリ' : 'まちがえた'}${missed.length}語を練習`, missed.length) : rowAct('practiceSet', '同じ単語で練習', n);
+  const list = missI.length ? `<ul class="rs-wl">${missI.map(wRow).join('')}</ul>${practice}${restI.length ? `<ul class="rs-wl rest">${restI.map(wRow).join('')}</ul>` : ''}`
+    : `<ul class="rs-wl">${restI.map(wRow).join('')}</ul>${practice}`;
+  const words = `<section class="k-sec rs-sec"><div class="k-sec-h has-sub"><h2 class="k-sec-t">このセットの単語</h2><p class="k-sec-s">タップすると、例文や派生語まで見られる</p></div>${list}</section>`;
+  const dock = m ? `<div class="rs-dock" aria-hidden="true"><button class="rs-dock-btn" data-act="resDock" tabindex="-1">${K_ICO.play}<span class="t">${esc(m.main)}</span><span class="r">${m.k ? `${m.k}問、${aboutMin(m.k)}` : ''}</span></button></div>` : '';
+  $('#screen').innerHTML = `<div class="screen-in res v2">${top}${cele}${notice}${hero}${inst ? `<div class="rs-inst">${inst}</div>` : mkLine}
+    ${statsH}${speed}${words}<section class="k-sec rs-sec"><button class="rs-home rb" data-act="quitQuiz">${homeLbl}</button></section>${dock}</div>`;
+  // a short screen: the card would sit below the first screen; めくる's line instead, the home has the card from now
+  const ic = inst && $('#screen .rs-inst'); if (ic && ic.getBoundingClientRect().top + 64 > innerHeight) ic.outerHTML = mkLine;
+  // the dock: only once the hero's button has gone off the top (never the same button twice in view)
+  resIO?.disconnect(); resIO = null;
+  const pb = $('#screen .rs-hero .rb.main'), dk = $('#screen .rs-dock');
+  if (pb && dk && typeof IntersectionObserver === 'function') {
+    const db = dk.querySelector('button'), box = $('#screen .res.v2');
+    resIO = new IntersectionObserver(([e]) => { const on = !e.isIntersecting && e.boundingClientRect.bottom <= 0;
+      dk.classList.toggle('on', on); dk.setAttribute('aria-hidden', on ? 'false' : 'true'); db.tabIndex = on ? 0 : -1; box.classList.toggle('dock-on', on); });
+    resIO.observe(pb);
+  }
   Q.done = true; Q.lockUntil = performance.now() + 400;
-  if (won) setTimeout(() => { const el = $('#stkn'); if (el) { el.textContent = st.n; el.classList.add('pop'); } }, 400);
   flush();                                         // set end: save to the cloud now
 }
 
@@ -6450,10 +6658,9 @@ const ACT = {
   practiceAgain: () => { if (!Q || locked()) return; if (Q.opts.practice === 'today') return ACT.practiceToday();
     startQuiz({cards: shuffle(Q.items.map(x => x.c)), practice: 'set', deckIds: Q.opts.deckIds}); },
   practiceMiss: () => { if (!Q || locked()) return; startQuiz({cards: shuffle(Q.items.filter(x => x.first === 1).map(x => x.c)), practice: 'set', deckIds: Q.opts.deckIds}); },
-  // a word on the results: its explanation as in study (meanings not met yet stay ？？？)
-  resWord: t => { const it = Q?.items[+t.dataset.i]; if (!it) return;
-    openSheet(`<div class="sheet-h"><h3 lang="en">${esc(it.c.w)}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-      <div class="fb-word">${ipaHTML(it.c)}<button class="say" data-act="say" data-w="${esc(it.c.w)}" data-p="${esc((it.c.s[it.si] || it.c.s[0]).p)}" aria-label="発音">${I.say}</button></div>${detailHTML(it)}`); },
+  // a word on the results: its sheet as a miss's in study (S/quiz wrong), meanings not met yet stay ？？？
+  resWord: t => { const it = Q?.items[+t.dataset.i]; if (it) openSheet(resWordHTML(it)); },
+  resDock: () => $('#screen .res .rb.main')?.click(),   // the dock's button is the hero's
   streakSheet: () => streakSheet(),
   // 苦手を特訓: the decks in use, or one deck (its page's まちがえた単語: data-id)
   drill: t => { const ids = t.dataset.id ? [t.dataset.id] : null, cards = drillCards(t.dataset.kind, ids || activeIds()); if (!cards.length) return toast('対象の単語はありません');
