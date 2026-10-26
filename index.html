@@ -86,6 +86,8 @@
   --fs-word:40px; --fs-entry:26px; --fs-answer:22px; --fs-stat:26px;
   --track-off:rgba(18,18,22,.2); --opts-track:rgba(18,18,22,.06);   /* 設定: a switch off, the groove of a choice */
   --blue-2:#AAB5EF;   /* 学習中 (記録): the app blue at 40% on white; the plain bars of the reviews chart */
+  --hm-1:#D5DBF8; --hm-2:#AAB5EF; --hm-3:#6A7DE4; --hm-4:#2A45D8;   /* the 20 weeks' squares: the app blue, deeper the more studied (0 is --step-todo) */
+  --md-pf:var(--c-nigate); --md-yet-ring:rgba(18,18,22,.26); --md-yet-kj:rgba(18,18,22,.2);   /* 実績: the 全問Perfect badge, a badge not got yet */
 }
 /* dark: the deck colours and the hero stay (white text on them either way); the page, its text and the tints go dark */
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
@@ -98,6 +100,7 @@
   --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20;
   --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
   --blue-2:#4B5389; --track-off:rgba(255,255,255,.22); --opts-track:rgba(255,255,255,.08);
+  --hm-1:#262D55; --hm-2:#3B4688; --hm-3:#5F6FCB; --hm-4:#8E9DFF; --md-pf:#4A4752; --md-yet-ring:rgba(255,255,255,.26); --md-yet-kj:rgba(255,255,255,.2);
 }}
 :root[data-theme="dark"]{
   --bg:#111114; --ink:#ECECF1; --ink-2:#A6A6B0; --ink-3:#777781; --ink-tab:#9D9DA7; --fill:#1F1F25; --hair:rgba(255,255,255,.10); --track:rgba(255,255,255,.20);
@@ -109,6 +112,7 @@
   --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20;
   --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
   --blue-2:#4B5389; --track-off:rgba(255,255,255,.22); --opts-track:rgba(255,255,255,.08);
+  --hm-1:#262D55; --hm-2:#3B4688; --hm-3:#5F6FCB; --hm-4:#8E9DFF; --md-pf:#4A4752; --md-yet-ring:rgba(255,255,255,.26); --md-yet-kj:rgba(255,255,255,.2);
 }
 .v2{font-family:var(--f-ui); color:var(--ink); line-height:1.45; text-autospace:no-autospace}   /* the new look sets figures tight (Figtree, palt), as the mockups do */
 body.v2bg{background:var(--bg)}
@@ -574,7 +578,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .ob-logo{width:56px;height:56px;border-radius:14px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:30px;font-weight:700;align-self:center}
 .ob h3{text-align:center;font-size:22px}
 .ob-f{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-.ob-f legend{font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:6px;padding:0}
+.ob-f legend,.ob-lab{font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:6px;padding:0}
 .ob-opt{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer}
 .ob-opt span{display:flex;flex-direction:column}
 .ob-opt small{font-size:12px;color:var(--muted)}
@@ -1358,7 +1362,8 @@ html{touch-action:manipulation}
 .k-bk-now svg{width:15px;height:15px;flex:none;color:var(--c-kiso);fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .k-bar-row{display:flex;align-items:center;gap:8px;margin-top:14px}
 .k-bar{flex:1;height:5px;border-radius:var(--r-bar);background:var(--track);overflow:hidden}
-.k-bar i{display:block;height:100%;min-width:8px;background:var(--blue);border-radius:var(--r-bar)}
+.k-bar i{display:block;height:100%;min-width:8px;background:var(--blue-2);border-radius:var(--r-bar);overflow:hidden}   /* 学習済み: the light part is 学習中, the deep part (b) 覚えた */
+.k-bar i b{display:block;height:100%;background:var(--blue)}
 .k-bar i.zero{min-width:0}
 .k-bar-n{width:84px;flex:none;text-align:right;font-size:var(--fs-min);font-weight:700;color:var(--ink-2);white-space:nowrap}
 .k-foot{width:100%;min-height:48px;margin-top:14px;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;font-size:var(--fs-body);font-weight:700;color:var(--blue);text-align:left;font-feature-settings:"palt"}
@@ -2106,6 +2111,99 @@ html{touch-action:manipulation}
 .k-xl{position:relative;height:22px;margin:6px 30px 0 0;font-size:var(--fs-min);font-weight:500;color:var(--ink-2);font-feature-settings:"palt"}
 .k-xl span{position:absolute;top:0;white-space:nowrap;transform:translateX(-50%)}
 .k-xl span.l0{transform:none;left:0}
+/* ===== プロフィールと実績（docs/features/profile_achievements.md、見本 S/stats と S/settings）=====
+   the icon (めくる in its colour on its tint), the profile's head, the badges' grid, the 20 weeks' squares, the edit sheet,
+   the settings row, the results' badges */
+.k-av{position:relative;display:block;flex:none;width:36px;height:36px;border-radius:50%;overflow:hidden;background:color-mix(in srgb,var(--av) 13%,var(--bg))}
+.k-av img{position:absolute;width:97.4%;height:97.4%;left:3.9%;top:2.6%;display:block}   /* めくるの絵の真ん中（200の箱で94,97）を丸の真ん中に */
+.k-av.lg{width:76px;height:76px}
+.k-av.md{width:52px;height:52px}
+.k-av.me{width:44px;height:44px}
+.k-face.k-av{width:36px;height:36px}
+/* the profile's head (S/stats .prof) */
+.k-prof{padding:18px max(var(--pad),env(safe-area-inset-left,0px)) 0}
+.k-prof .top{display:flex;align-items:center;gap:14px}
+.k-prof .info{flex:1;min-width:0}
+.k-prof .nm{margin:0;font-size:var(--fs-sec);font-weight:800;line-height:1.25;font-feature-settings:"palt";overflow-wrap:anywhere}
+.k-prof-set{min-height:44px;margin:-10px 0 -8px;font-size:var(--fs-name);font-weight:700;color:var(--blue);text-align:left}
+.k-prof-goal{display:flex;align-items:center;height:44px;margin:-2px 0 -8px}
+.k-prof-goal .pill,.k-prof-edit .pill{display:inline-flex;align-items:center;gap:5px;border-radius:var(--r-pill);background:var(--fill);color:var(--ink);font-weight:700;font-feature-settings:"palt";white-space:nowrap}
+.k-prof-goal .pill{height:28px;padding:0 11px 0 8px;font-size:var(--fs-sub)}
+.k-prof-goal svg,.k-prof-edit svg{width:16px;height:16px;flex:none;color:var(--ink-2);fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.k-prof-goal .k{color:var(--ink-2);font-weight:500}
+.k-prof .since{font-size:var(--fs-sub);color:var(--ink-2);margin-top:5px;font-feature-settings:"palt"}
+.k-prof-edit{height:44px;display:flex;align-items:center;align-self:flex-start;margin-top:-4px;flex:none}
+.k-prof-edit .pill{height:36px;padding:0 14px 0 11px;font-size:var(--fs-body)}
+.k-prof-edit svg{width:17px;height:17px;color:var(--ink)}
+.k-prof .k-pst{margin:16px 0 0;padding-top:13px;border-top:1px solid var(--hair)}
+/* 実績: 4 columns; got = its kind's colour and brush letter, not yet = a dashed ring, faint */
+.k-bdg{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 4px;padding:0 max(var(--pad),env(safe-area-inset-left,0px))}
+.k-bd{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.k-bd .md{width:64px;height:64px;border-radius:50%;background:var(--m,var(--blue));position:relative;display:grid;place-items:center;flex:none}
+.k-bd .md::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1.5px solid rgba(255,255,255,.42)}
+.k-bd .md .kj{font-family:var(--f-cover);font-size:32px;line-height:1;color:#fff}
+.k-bd .md.rbw{background:none}
+.k-bd .md.rbw::after{display:none}
+.k-bd .md.rbw svg{width:64px;height:64px;display:block}
+.k-bd .n{max-width:76px;margin:8px 0 0;font-size:var(--fs-min);font-weight:700;line-height:1.35;font-feature-settings:"palt"}
+.k-bd .p{max-width:80px;margin:1px 0 0;font-size:var(--fs-min);color:var(--ink-2);line-height:1.35;font-feature-settings:"palt"}
+.k-bd.yet .md{background:var(--bg)}
+.k-bd.yet .md::after{inset:0;border:1.5px dashed var(--md-yet-ring)}
+.k-bd.yet .kj{color:var(--md-yet-kj)}
+.k-bd.yet .n{color:var(--ink-2)}
+/* the sheet of every badge */
+.k-ach-sum{margin:0 0 4px;font-size:var(--fs-body);color:var(--ink-2);font-feature-settings:"palt"}
+.k-ach-sum b{font-family:var(--f-en);font-weight:800;color:var(--ink)}
+.k-ach-c{margin-top:22px}
+.k-ach-c .k-bdg{padding:0;margin-top:12px}
+.k-ach-h{margin:0;font-size:var(--fs-name);font-weight:800;font-feature-settings:"palt"}
+.k-ach-s{margin:2px 0 0;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.4;font-feature-settings:"palt"}
+.k-ach-c + .btn{margin-top:26px}
+/* the two numbers right under a heading (これまで, この30日の復習): no line on top */
+.k-wd2.top0{margin-top:0;border-top:0}
+.k-wd2.top0 > div{padding-top:2px}
+/* the 20 weeks: a column a week, Sunday on top */
+.k-heat{margin:16px max(var(--pad),env(safe-area-inset-left,0px)) 0}
+.k-heat .g{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));grid-template-rows:repeat(7,auto);grid-auto-flow:column;gap:3px}
+.k-heat i{display:block;min-width:0;aspect-ratio:1;border-radius:3px;background:var(--step-todo)}
+.k-heat .l1{background:var(--hm-1)} .k-heat .l2{background:var(--hm-2)} .k-heat .l3{background:var(--hm-3)} .k-heat .l4{background:var(--hm-4)}
+.k-heat .g i.now{outline:1.5px solid var(--ink);outline-offset:1px}
+.k-heat .g i.fut{background:transparent}
+.k-heat .ft{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;font-size:var(--fs-min);color:var(--ink-2);font-feature-settings:"palt"}
+.k-heat .key{display:inline-flex;align-items:center;gap:3px}
+.k-heat .key i{width:10px;height:10px;border-radius:2px}
+.k-heat .key i:first-child{margin-left:3px} .k-heat .key i:last-child{margin-right:3px}
+/* the edit sheet */
+.k-pf-top{display:flex;justify-content:center;margin:2px 0 6px}
+.k-pf-h{display:block;margin:18px 0 8px;font-size:var(--fs-name);font-weight:800;font-feature-settings:"palt"}
+.k-pf-s{margin:8px 0 0;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.45;font-feature-settings:"palt"}
+.k-input{display:block;width:100%;height:48px;padding:0 14px;border:1.5px solid transparent;border-radius:12px;background:var(--fill);color:var(--ink);font:inherit;font-size:16px;font-weight:500}
+.k-input:focus{outline:none;border-color:var(--blue)}
+.k-input::placeholder{color:var(--ink-3)}
+.k-pf-icons{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.k-pf-icons button{display:grid;place-items:center;min-height:60px;border-radius:50%}
+.k-pf-icons .k-av{box-shadow:0 0 0 2px var(--bg),0 0 0 2px transparent;transition:box-shadow var(--dur-1) var(--ease-io)}
+.k-pf-icons [aria-checked="true"] .k-av{box-shadow:0 0 0 2px var(--bg),0 0 0 4.5px var(--ink)}
+.k-pf .k-grp{margin:0}
+.k-pf-save{margin-top:22px}
+@media (max-width:360px){ .k-av.md{width:44px;height:44px} .k-pf-icons button{min-height:52px} }
+/* the settings' first row (S/settings .me) */
+.k-merow{display:flex;align-items:center;gap:12px;width:calc(100% - 2 * max(var(--pad),env(safe-area-inset-left,0px)));min-height:64px;margin:12px max(var(--pad),env(safe-area-inset-left,0px)) 0;padding:10px 14px;background:var(--fill);border-radius:var(--r-card);text-align:left;color:var(--ink)}
+.k-merow .k-face{width:44px;height:44px;font-size:18px;flex:none}
+.k-merow .txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.k-merow .nm{font-size:var(--fs-name);font-weight:700;line-height:1.4;font-feature-settings:"palt";overflow-wrap:anywhere}
+.k-merow .nt{font-size:var(--fs-sub);color:var(--ink-2);line-height:1.4;margin-top:1px;font-feature-settings:"palt"}
+.k-merow > .k-chev{width:18px;height:18px;margin-right:-5.5px;color:var(--ink-3);flex:none}
+.k-merow + .k-sec.k-first{margin-top:var(--sec-gap)}
+/* the results: the badges this set earned, then めくる glad */
+.rs-ach{margin-top:22px}
+.rs-ach-md{display:flex;justify-content:center;gap:4px 10px;flex-wrap:wrap;padding:0 max(var(--pad),env(safe-area-inset-left,0px))}
+.rs-ach-md .k-bd{width:80px}
+.rs-ach-more{margin:10px max(var(--pad),env(safe-area-inset-left,0px)) 0;text-align:center;font-size:var(--fs-sub);color:var(--ink-2);font-feature-settings:"palt"}
+.rs-ach .k-say{margin-top:14px}
+@media (prefers-reduced-motion: no-preference){ .rs-ach .k-bd .md{animation:rs-pop .5s var(--ease-out) both} .rs-ach .k-bd + .k-bd .md{animation-delay:.08s} }
+/* the onboarding's nickname */
+.ob-nick{margin-top:0}
 @media (max-width:360px){
   .k-stk{gap:12px} .k-stk-ring{width:96px;height:96px}
   .k-pst > div{padding-left:10px}
@@ -2251,7 +2349,8 @@ const BRAND = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc
 if (BRAND) document.documentElement.style.setProperty('--brand', `url(${BRAND})`);   // once, for the small 極 on every 表紙 (deckCover)
 /* めくる, the app's character: a vocab card on its ring, doodled in a notebook margin. normal / happy (a good set) / cheer (after misses, back after a break) */
 const MEKURU = {"normal": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+DQogIDxkZWZzPg0KICAgIDxmaWx0ZXIgaWQ9Im5tLWRyaWZ0IiB4PSItMjAlIiB5PSItMzAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNjAlIj4NCiAgICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjAyMiIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iNyIgcmVzdWx0PSJ0Ii8+DQogICAgICA8ZmVEaXNwbGFjZW1lbnRNYXAgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0idCIgc2NhbGU9IjIuNiIgeENoYW5uZWxTZWxlY3Rvcj0iUiIgeUNoYW5uZWxTZWxlY3Rvcj0iRyIvPg0KICAgIDwvZmlsdGVyPjxmaWx0ZXIgaWQ9Im5tLW1rIiB4PSItMjAlIiB5PSItMzAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNjAlIj4NCiAgICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjAzIiBudW1PY3RhdmVzPSIxIiBzZWVkPSIxMCIgcmVzdWx0PSJ0Ii8+DQogICAgICA8ZmVEaXNwbGFjZW1lbnRNYXAgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0idCIgc2NhbGU9IjIuNCIgeENoYW5uZWxTZWxlY3Rvcj0iUiIgeUNoYW5uZWxTZWxlY3Rvcj0iRyIgcmVzdWx0PSJkIi8+DQogICAgICA8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIxIiBzZWVkPSIxMiIgcmVzdWx0PSJnIi8+DQogICAgICA8ZmVEaXNwbGFjZW1lbnRNYXAgaW49ImQiIGluMj0iZyIgc2NhbGU9IjAuOSIgeENoYW5uZWxTZWxlY3Rvcj0iUiIgeUNoYW5uZWxTZWxlY3Rvcj0iRyIvPg0KICAgIDwvZmlsdGVyPjxtYXNrIGlkPSJubS1ob2xlIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSItODAiIHk9Ii04MCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyNDAiPg0KICAgICAgPHJlY3QgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjZmZmIi8+DQogICAgICA8Y2lyY2xlIGN4PSIxMi42IiBjeT0iMTIuOSIgcj0iNC4xIiBmaWxsPSIjMDAwIi8+DQogICAgPC9tYXNrPjxtYXNrIGlkPSJubS1za2lwIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSItODAiIHk9Ii04MCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyNDAiPg0KICAgICAgPHJlY3QgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIiBmaWxsPSIjZmZmIi8+DQogICAgICA8cGF0aCBkPSJNNS42IDkuOCBDNi44IDUgMTQgNCAxOC4yIDcgQzIxLjggOS44IDIxLjIgMTcgMTcuNiAxOS42IEMxMy42IDIyLjIgNy40IDIxLjQgNS42IDE3LjYgQzQuOCAxNS40IDUgMTIgNS42IDkuOCBaIiBmaWxsPSIjMDAwIi8+DQogICAgPC9tYXNrPjxtYXNrIGlkPSJubS1mcm9udCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxwYXRoIGQ9Ik04LjYgLTIuNyAyMCA0MS45IDI0LjEgNDAuNiAyOC4xIDM5IDMxLjkgMzcgMzUuNSAzNC42IDM4LjggMzIgNDEuOSAyOSA0NC43IDI1LjggNDcuMiAyMi4zIDQ5LjQgMTguNiA1MS4yIDE0LjcgNTIuNiAxMC43IDUzLjcgNi42IFoiIGZpbGw9IiNmZmYiLz4NCiAgICA8L21hc2s+PHBhdGggaWQ9Im5tLXJpbmciIGQ9Ik0tNS45IC0xMS4xIEMtNi4yIC05LjcgLTcuOCAtNS4zIC03LjYgLTIuNiBDLTcuNCAwLjIgLTYuNCAzLjEgLTUgNS40IEMtMy42IDcuNyAtMS41IDEwIDAuOCAxMS40IEMzLjIgMTIuOCA2LjIgMTMuOSA5IDE0IEMxMS44IDE0LjEgMTUuMiAxMy4zIDE3LjYgMTEuOCBDMjAuMSAxMC4zIDIyLjMgNy43IDIzLjYgNS4yIEMyNC44IDIuNiAyNS4yIC0wLjcgMjUgLTMuNSBDMjQuNyAtNi4yIDIzLjYgLTkuMiAyMi4xIC0xMS41IEMyMC42IC0xMy44IDE4LjMgLTE1LjkgMTUuOSAtMTcuMyBDMTMuNCAtMTguNiAxMC4zIC0xOS42IDcuNSAtMTkuNiBDNC42IC0xOS42IDEuMyAtMTguOCAtMS4zIC0xNy4zIEMtMy45IC0xNS43IC02LjQgLTEzLjIgLTcuOSAtMTAuNSBDLTkuNCAtNy44IC05LjggLTIuNiAtMTAuMiAtMS4xIi8+PHBhdGggaWQ9Im5tLW0wIiBkPSJNMjMgNS4yIFE3Mi4zIDIuMSAxMjEuNiAxLjgiLz48cGF0aCBpZD0ibm0tbTEiIGQ9Ik0xMjEuNiAxLjggUTYxLjYgOCAxLjggMTYuNCIvPjxwYXRoIGlkPSJubS1tMiIgZD0iTTEuOCAxNi40IFE2NC41IDEzLjkgMTI3LjIgMTMuMiIvPjxwYXRoIGlkPSJubS1tMyIgZD0iTTEyNy4yIDEzLjIgUTY2LjggMTkuNiA2LjggMjkuMiIvPjxwYXRoIGlkPSJubS1tNCIgZD0iTTYuOCAyOS4yIFE2My43IDI2LjQgMTIwLjYgMjYuNCIvPjxwYXRoIGlkPSJubS1tNSIgZD0iTTEyMC42IDI2LjQgUTU4LjkgMzIuOCAtMi42IDQxLjQiLz48cGF0aCBpZD0ibm0tbTYiIGQ9Ik0tMi42IDQxLjQgUTYzLjQgMzkuMSAxMjkuNCAzOC42Ii8+PHBhdGggaWQ9Im5tLW03IiBkPSJNMTI5LjQgMzguNiBRNjYuMyA0My43IDMuNiA1MiIvPjxwYXRoIGlkPSJubS1tOCIgZD0iTTMuNiA1MiBRNjMuNSA0OS4xIDEyMy40IDQ5Ii8+PHBhdGggaWQ9Im5tLW05IiBkPSJNMTIzLjQgNDkgUTYxLjggNTYgMC40IDY1LjIiLz48cGF0aCBpZD0ibm0tbTEwIiBkPSJNMC40IDY1LjIgUTU5LjYgNjIuNyAxMTguOCA2MiIvPjxwYXRoIGlkPSJubS1tMTEiIGQ9Ik0xMTguOCA2MiBRNjIuOSA2Ny4zIDcuNCA3NS44Ii8+PHBhdGggaWQ9Im5tLW0xMiIgZD0iTTcuNCA3NS44IFE1NS41IDczLjIgMTAzLjYgNzMuNCIvPg0KICA8L2RlZnM+DQogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI5LjAzIDYxLjQwKSBzY2FsZSgxLjIpIHJvdGF0ZSgtMyA2MyA0MCkiPg0KICAgIDwhLS0gcmluZywgdGhlIHN0cmV0Y2ggYmVoaW5kIHRoZSBjYXJkIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YyNzAxRiIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTEuOTkiIHk9Ii0xLjY3Ii8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTEuMjAiIHk9Ii0xLjAwIi8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTAuNDAiIHk9Ii0wLjMzIi8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iMC40MCIgeT0iMC4zMyIvPjx1c2UgaHJlZj0iI25tLXJpbmciIHg9IjEuMjAiIHk9IjEuMDAiLz48dXNlIGhyZWY9IiNubS1yaW5nIiB4PSIxLjk5IiB5PSIxLjY3Ii8+PC9nPjwvZz4NCg0KICAgIDwhLS0gdGhlIGNhcmQ6IG5vdGVib29rIHBhcGVyIGluc2lkZSB0aGUgcGVuIGxpbmUsIHdpdGggdGhlIHB1bmNoZWQgaG9sZSAtLT4NCiAgICA8ZyBtYXNrPSJ1cmwoI25tLWhvbGUpIiBmaWx0ZXI9InVybCgjbm0tZHJpZnQpIj4NCiAgICAgIDxwYXRoIGZpbGw9IiNGQUY3RUUiIGQ9Ik0yIDEuMiBDNDAgLTAuMiA5MCAtMiAxMjIuNCAtMy4zIEMxMjYgLTMuNCAxMjcuMyAtMS42IDEyNy40IDIuNCBMMTI3LjYgNTkuNSBMMTA4LjYgNzguNSBDODAgNzguOSA0MCA3OS40IDUuNCA3OS42IEMyLjIgNzkuNiAxIDc4IDAuOSA3NSBDMC4zIDU1IC0wLjIgMjUgLTAuMSA1IEMtMC4xIDIuNiAwLjYgMS4zIDIgMS4yIFoiLz4NCiAgICA8L2c+DQoNCiAgICA8IS0tIGJsdWUgY2hpc2VsIG1hcmtlciwgemlnemFnOyB3aGVyZSBwYXNzZXMgb3ZlcmxhcCBpdCBnb2VzIGRhcmtlciAtLT4NCiAgICA8ZyBmaWx0ZXI9InVybCgjbm0tbWspIj48ZyBtYXNrPSJ1cmwoI25tLXNraXApIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQjQ1RDMiIHN0cm9rZS13aWR0aD0iMi42Ij4NCiAgICAgIDxnIG9wYWNpdHk9IjAuODYiPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItNC42OCIgeT0iNS45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMy45MCIgeT0iNC45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMy4xMiIgeT0iMy45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMi4zNCIgeT0iMi45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMS41NiIgeT0iMi4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMC43OCIgeT0iMS4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSItMC4wMCIgeT0iMC4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIwLjc4IiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIxLjU2IiB5PSItMi4wMCIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIyLjM0IiB5PSItMi45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIzLjEyIiB5PSItMy45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSIzLjkwIiB5PSItNC45OSIvPjx1c2UgaHJlZj0iI25tLW0wIiB4PSI0LjY4IiB5PSItNS45OSIvPjwvZz48ZyBvcGFjaXR5PSIwLjgyIj48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTMuOTMiIHk9IjYuODAiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTMuMjciIHk9IjUuNjciLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTIuNjIiIHk9IjQuNTMiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTEuOTYiIHk9IjMuNDAiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTEuMzEiIHk9IjIuMjciLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTAuNjUiIHk9IjEuMTMiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iLTAuMDAiIHk9IjAuMDAiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMC42NSIgeT0iLTEuMTMiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMS4zMSIgeT0iLTIuMjciLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMS45NiIgeT0iLTMuNDAiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMi42MiIgeT0iLTQuNTMiLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMy4yNyIgeT0iLTUuNjciLz48dXNlIGhyZWY9IiNubS1tMSIgeD0iMy45MiIgeT0iLTYuODAiLz48L2c+PGcgb3BhY2l0eT0iMC44OCI+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii00LjQxIiB5PSI2Ljc5Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0zLjY4IiB5PSI1LjY2Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0yLjk0IiB5PSI0LjUzIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0yLjIxIiB5PSIzLjQwIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0xLjQ3IiB5PSIyLjI2Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9Ii0wLjc0IiB5PSIxLjEzIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjAuNzQiIHk9Ii0xLjEzIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjEuNDciIHk9Ii0yLjI2Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjIuMjEiIHk9Ii0zLjQwIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjIuOTQiIHk9Ii00LjUzIi8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjMuNjgiIHk9Ii01LjY2Ii8+PHVzZSBocmVmPSIjbm0tbTIiIHg9IjQuNDEiIHk9Ii02Ljc5Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODMiPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMy40MCIgeT0iNi40MCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMi43OCIgeT0iNS4yNCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMi4xNyIgeT0iNC4wNyIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMS41NSIgeT0iMi45MSIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMC45MyIgeT0iMS43NSIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSItMC4zMSIgeT0iMC41OCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIwLjMxIiB5PSItMC41OCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIwLjkzIiB5PSItMS43NSIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIxLjU1IiB5PSItMi45MSIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIyLjE3IiB5PSItNC4wNyIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIyLjc4IiB5PSItNS4yNCIvPjx1c2UgaHJlZj0iI25tLW0zIiB4PSIzLjQwIiB5PSItNi40MCIvPjwvZz48ZyBvcGFjaXR5PSIwLjg1Ij48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTQuNzAiIHk9IjYuNzIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTMuOTgiIHk9IjUuNjgiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTMuMjYiIHk9IjQuNjUiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTIuNTMiIHk9IjMuNjIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTEuODEiIHk9IjIuNTgiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTEuMDkiIHk9IjEuNTUiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iLTAuMzYiIHk9IjAuNTIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMC4zNiIgeT0iLTAuNTIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMS4wOSIgeT0iLTEuNTUiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMS44MSIgeT0iLTIuNTgiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMi41MyIgeT0iLTMuNjIiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMy4yNiIgeT0iLTQuNjUiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iMy45OCIgeT0iLTUuNjgiLz48dXNlIGhyZWY9IiNubS1tNCIgeD0iNC43MCIgeT0iLTYuNzIiLz48L2c+PGcgb3BhY2l0eT0iMC44MSI+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii00LjExIiB5PSI2LjU3Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0zLjQyIiB5PSI1LjQ4Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0yLjc0IiB5PSI0LjM4Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0yLjA1IiB5PSIzLjI5Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0xLjM3IiB5PSIyLjE5Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9Ii0wLjY4IiB5PSIxLjEwIi8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjAuNjgiIHk9Ii0xLjEwIi8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjEuMzciIHk9Ii0yLjE5Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjIuMDUiIHk9Ii0zLjI5Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjIuNzQiIHk9Ii00LjM4Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjMuNDIiIHk9Ii01LjQ4Ii8+PHVzZSBocmVmPSIjbm0tbTUiIHg9IjQuMTEiIHk9Ii02LjU3Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODciPjx1c2UgaHJlZj0iI25tLW02IiB4PSItNC41MSIgeT0iNS45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMy43NiIgeT0iNC45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMy4wMSIgeT0iMy45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMi4yNiIgeT0iMi45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMS41MCIgeT0iMi4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSItMC43NSIgeT0iMS4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIwLjAwIiB5PSItMC4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIwLjc1IiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIxLjUwIiB5PSItMi4wMCIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIyLjI2IiB5PSItMi45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIzLjAxIiB5PSItMy45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSIzLjc2IiB5PSItNC45OSIvPjx1c2UgaHJlZj0iI25tLW02IiB4PSI0LjUxIiB5PSItNS45OSIvPjwvZz48ZyBvcGFjaXR5PSIwLjg2Ij48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTMuODgiIHk9IjcuMDAiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTMuMjMiIHk9IjUuODMiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTIuNTkiIHk9IjQuNjYiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTEuOTQiIHk9IjMuNTAiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTEuMjkiIHk9IjIuMzMiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iLTAuNjUiIHk9IjEuMTciLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMC4wMCIgeT0iLTAuMDAiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMC42NSIgeT0iLTEuMTciLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMS4yOSIgeT0iLTIuMzMiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMS45NCIgeT0iLTMuNTAiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMi41OSIgeT0iLTQuNjYiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMy4yMyIgeT0iLTUuODMiLz48dXNlIGhyZWY9IiNubS1tNyIgeD0iMy44OCIgeT0iLTcuMDAiLz48L2c+PGcgb3BhY2l0eT0iMC44MiI+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0zLjk1IiB5PSI2LjMyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0zLjIzIiB5PSI1LjE3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0yLjUxIiB5PSI0LjAyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0xLjc5IiB5PSIyLjg3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0xLjA4IiB5PSIxLjcyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9Ii0wLjM2IiB5PSIwLjU3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjAuMzYiIHk9Ii0wLjU3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjEuMDgiIHk9Ii0xLjcyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjEuNzkiIHk9Ii0yLjg3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjIuNTEiIHk9Ii00LjAyIi8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjMuMjMiIHk9Ii01LjE3Ii8+PHVzZSBocmVmPSIjbm0tbTgiIHg9IjMuOTUiIHk9Ii02LjMyIi8+PC9nPjxnIG9wYWNpdHk9IjAuODgiPjx1c2UgaHJlZj0iI25tLW05IiB4PSItNC4zNSIgeT0iNS45OSIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMy41NiIgeT0iNC45MCIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMi43NyIgeT0iMy44MSIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMS45OCIgeT0iMi43MiIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMS4xOSIgeT0iMS42MyIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSItMC40MCIgeT0iMC41NCIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIwLjQwIiB5PSItMC41NCIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIxLjE5IiB5PSItMS42MyIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIxLjk4IiB5PSItMi43MiIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIyLjc3IiB5PSItMy44MSIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSIzLjU2IiB5PSItNC45MCIvPjx1c2UgaHJlZj0iI25tLW05IiB4PSI0LjM1IiB5PSItNS45OSIvPjwvZz48ZyBvcGFjaXR5PSIwLjgzIj48dXNlIGhyZWY9IiNubS1tMTAiIHg9Ii0zLjgzIiB5PSI2LjkxIi8+PHVzZSBocmVmPSIjbm0tbTEwIiB4PSItMy4xOSIgeT0iNS43NiIvPjx1c2UgaHJlZj0iI25tLW0xMCIgeD0iLTIuNTUiIHk9IjQuNjEiLz48dXNlIGhyZWY9IiNubS1tMTAiIHg9Ii0xLjkxIiB5PSIzLjQ1Ii8+PHVzZSBocmVmPSIjbm0tbTEwIiB4PSItMS4yOCIgeT0iMi4zMCIvPjx1c2UgaHJlZj0iI25tLW0xMCIgeD0iLTAuNjQiIHk9IjEuMTUiLz48dXNlIGhyZWY9IiNubS1tMTAiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjbm0tbTEwIiB4PSIwLjY0IiB5PSItMS4xNSIvPjx1c2UgaHJlZj0iI25tLW0xMCIgeD0iMS4yOCIgeT0iLTIuMzAiLz48dXNlIGhyZWY9IiNubS1tMTAiIHg9IjEuOTEiIHk9Ii0zLjQ1Ii8+PHVzZSBocmVmPSIjbm0tbTEwIiB4PSIyLjU1IiB5PSItNC42MSIvPjx1c2UgaHJlZj0iI25tLW0xMCIgeD0iMy4xOSIgeT0iLTUuNzYiLz48dXNlIGhyZWY9IiNubS1tMTAiIHg9IjMuODMiIHk9Ii02LjkxIi8+PC9nPjxnIG9wYWNpdHk9IjAuODUiPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iLTQuMjUiIHk9IjYuMzAiLz48dXNlIGhyZWY9IiNubS1tMTEiIHg9Ii0zLjU0IiB5PSI1LjI1Ii8+PHVzZSBocmVmPSIjbm0tbTExIiB4PSItMi44MyIgeT0iNC4yMCIvPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iLTIuMTIiIHk9IjMuMTUiLz48dXNlIGhyZWY9IiNubS1tMTEiIHg9Ii0xLjQyIiB5PSIyLjEwIi8+PHVzZSBocmVmPSIjbm0tbTExIiB4PSItMC43MSIgeT0iMS4wNSIvPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iLTAuMDAiIHk9IjAuMDAiLz48dXNlIGhyZWY9IiNubS1tMTEiIHg9IjAuNzEiIHk9Ii0xLjA1Ii8+PHVzZSBocmVmPSIjbm0tbTExIiB4PSIxLjQyIiB5PSItMi4xMCIvPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iMi4xMiIgeT0iLTMuMTUiLz48dXNlIGhyZWY9IiNubS1tMTEiIHg9IjIuODMiIHk9Ii00LjIwIi8+PHVzZSBocmVmPSIjbm0tbTExIiB4PSIzLjU0IiB5PSItNS4yNSIvPjx1c2UgaHJlZj0iI25tLW0xMSIgeD0iNC4yNSIgeT0iLTYuMzAiLz48L2c+PGcgb3BhY2l0eT0iMC44MSI+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSItMy41NiIgeT0iNi45OSIvPjx1c2UgaHJlZj0iI25tLW0xMiIgeD0iLTIuOTciIHk9IjUuODMiLz48dXNlIGhyZWY9IiNubS1tMTIiIHg9Ii0yLjM4IiB5PSI0LjY2Ii8+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSItMS43OCIgeT0iMy41MCIvPjx1c2UgaHJlZj0iI25tLW0xMiIgeD0iLTEuMTkiIHk9IjIuMzMiLz48dXNlIGhyZWY9IiNubS1tMTIiIHg9Ii0wLjU5IiB5PSIxLjE3Ii8+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSItMC4wMCIgeT0iMC4wMCIvPjx1c2UgaHJlZj0iI25tLW0xMiIgeD0iMC41OSIgeT0iLTEuMTciLz48dXNlIGhyZWY9IiNubS1tMTIiIHg9IjEuMTkiIHk9Ii0yLjMzIi8+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSIxLjc4IiB5PSItMy41MCIvPjx1c2UgaHJlZj0iI25tLW0xMiIgeD0iMi4zOCIgeT0iLTQuNjYiLz48dXNlIGhyZWY9IiNubS1tMTIiIHg9IjIuOTciIHk9Ii01LjgzIi8+PHVzZSBocmVmPSIjbm0tbTEyIiB4PSIzLjU2IiB5PSItNi45OSIvPjwvZz4NCiAgICA8L2c+PC9nPg0KDQogICAgPCEtLSB0aGUgYmVudCBjb3JuZXI6IGl0cyBiYWNrIGlzIHBsYWluIHBhcGVyIC0tPg0KICAgIDxwYXRoIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiIGZpbGw9IiNGQUY3RUUiIGQ9Ik0xMDguNiA3OC40IEMxMDkuMiA3Mi42IDExMi4yIDY5IDExNi44IDY3LjQgQzEyMC42IDY2LjIgMTI0LjQgNjMuNCAxMjcuNyA1OS42IEwxMjcuNiA1OS41IEwxMDguNiA3OC41IFoiLz4NCg0KICAgIDwhLS0gYmFsbHBvaW50IC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI0MjUyQyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMS45Ij48cGF0aCBkPSJNLTEuNiAxLjYgQzMwIDAuNCA4NSAtMS42IDEyMiAtMy40IEMxMjUuOCAtMy42IDEyNy41IC0xLjggMTI3LjUgMi40IEMxMjcuNyAyMiAxMjcuOSA0MiAxMjcuNiA2MC4xIi8+PHBhdGggZD0iTTEuMiAtMS40IEMwLjUgMTggMC4yIDUwIDAuOSA3NC42IEMxLjEgNzguNiAyLjkgNzkuOCA2LjggNzkuNyBDNDAgNzkuNCA4MCA3OC44IDEwOS4yIDc4LjQiLz48cGF0aCBkPSJNMTA4LjIgNzguOCBDMTE0IDczIDEyMC42IDY2LjQgMTI3LjkgNTkuMyIvPjxwYXRoIGQ9Ik0xMDguNiA3OC40IEMxMDkuMiA3Mi42IDExMi4yIDY5IDExNi44IDY3LjQgQzEyMC42IDY2LjIgMTI0LjQgNjMuNCAxMjcuNyA1OS42Ii8+PHBhdGggZD0iTTkgMTAuNiBDOS42IDcuNCAxNS4yIDYuOCAxNi45IDEwLjQgQzE4LjQgMTMuOCAxNS44IDE3LjUgMTIuMiAxNy4yIEM4LjggMTYuOSA3LjYgMTMuNCA5LjUgMTAuOCBDMTAuOSA5IDEzLjkgOC43IDE1LjcgOS44Ii8+PC9nPg0KICAgICAgPGcgc3Ryb2tlLXdpZHRoPSIyLjYiPjxwYXRoIGQ9Ik0tMS42IDEuNiBDMzAgMC40IDg1IC0xLjYgMTIyIC0zLjQgQzEyNS44IC0zLjYgMTI3LjUgLTEuOCAxMjcuNSAyLjQgQzEyNy43IDIyIDEyNy45IDQyIDEyNy42IDYwLjEiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTEuMiAtMS40IEMwLjUgMTggMC4yIDUwIDAuOSA3NC42IEMxLjEgNzguNiAyLjkgNzkuOCA2LjggNzkuNyBDNDAgNzkuNCA4MCA3OC44IDEwOS4yIDc4LjQiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTEwOC4yIDc4LjggQzExNCA3MyAxMjAuNiA2Ni40IDEyNy45IDU5LjMiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTEwOC42IDc4LjQgQzEwOS4yIDcyLjYgMTEyLjIgNjkgMTE2LjggNjcuNCBDMTIwLjYgNjYuMiAxMjQuNCA2My40IDEyNy43IDU5LjYiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTkgMTAuNiBDOS42IDcuNCAxNS4yIDYuOCAxNi45IDEwLjQgQzE4LjQgMTMuOCAxNS44IDE3LjUgMTIuMiAxNy4yIEM4LjggMTYuOSA3LjYgMTMuNCA5LjUgMTAuOCBDMTAuOSA5IDEzLjkgOC43IDE1LjcgOS44IiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjwvZz4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMS4yIj48cGF0aCBkPSJNMTE0LjYgNzMuNCBMMTEyLjggNzEuMiIvPjwvZz4NCiAgICA8L2c+DQoNCiAgICA8IS0tIGZhY2UsIHdoaXRlIGdlbCBwZW4gb3ZlciB0aGUgbWFya2VyIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkRGNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4NCiAgICAgIA0KICAgICAgPHBhdGggc3Ryb2tlLXdpZHRoPSI3LjQiIGQ9Ik03Mi4yIDI2LjggUTcyLjkgMjkuOCA3Mi42IDMzLjIiLz4NCiAgICAgIDxwYXRoIHN0cm9rZS13aWR0aD0iNi4yIiBkPSJNNzIuOSAyNy40IEw3My4zIDMwLjIiLz4NCiAgICAgIDxwYXRoIHN0cm9rZS13aWR0aD0iNi45IiBkPSJNOTEuNiAyNy42IFE5MiAyOS42IDkxLjggMzEuNiIvPg0KICAgICAgPHBhdGggc3Ryb2tlLXdpZHRoPSIzLjUiIGQ9Ik04MC40IDQ0LjQgQzgyLjggNDUuOCA4NS42IDQ1LjQgODcuNiA0My4yIEM4OC4xIDQyLjYgODguNSA0MS45IDg4LjcgNDEuMSIvPg0KICAgIA0KICAgIDwvZz4NCg0KICAgIDwhLS0gcmluZywgdGhlIHN0cmV0Y2ggdGhhdCBjb21lcyBvdXQgb2YgdGhlIGhvbGUgdG93YXJkcyB5b3UgLS0+DQogICAgPGcgbWFzaz0idXJsKCNubS1mcm9udCkiPjxnIGZpbHRlcj0idXJsKCNubS1kcmlmdCkiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YyNzAxRiIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTEuOTkiIHk9Ii0xLjY3Ii8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTEuMjAiIHk9Ii0xLjAwIi8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iLTAuNDAiIHk9Ii0wLjMzIi8+PHVzZSBocmVmPSIjbm0tcmluZyIgeD0iMC40MCIgeT0iMC4zMyIvPjx1c2UgaHJlZj0iI25tLXJpbmciIHg9IjEuMjAiIHk9IjEuMDAiLz48dXNlIGhyZWY9IiNubS1yaW5nIiB4PSIxLjk5IiB5PSIxLjY3Ii8+PC9nPjwvZz48L2c+DQogIDwvZz4NCjwvc3ZnPg0K", "happy": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+DQogIDxkZWZzPg0KICAgIDxmaWx0ZXIgaWQ9ImhwLWRyaWZ0IiB4PSItMjAlIiB5PSItMzAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNjAlIj4NCiAgICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjAyMiIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMTkiIHJlc3VsdD0idCIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9InQiIHNjYWxlPSIyLjYiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciLz4NCiAgICA8L2ZpbHRlcj48ZmlsdGVyIGlkPSJocC1tayIgeD0iLTIwJSIgeT0iLTMwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTYwJSI+DQogICAgICA8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMyIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMjIiIHJlc3VsdD0idCIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9InQiIHNjYWxlPSIyLjQiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciIHJlc3VsdD0iZCIvPg0KICAgICAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOSIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMjQiIHJlc3VsdD0iZyIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJkIiBpbjI9ImciIHNjYWxlPSIwLjkiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciLz4NCiAgICA8L2ZpbHRlcj48bWFzayBpZD0iaHAtaG9sZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxyZWN0IHg9Ii04MCIgeT0iLTgwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iI2ZmZiIvPg0KICAgICAgPGNpcmNsZSBjeD0iMTIuNCIgY3k9IjEzLjQiIHI9IjQuMSIgZmlsbD0iIzAwMCIvPg0KICAgIDwvbWFzaz48bWFzayBpZD0iaHAtc2tpcCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxyZWN0IHg9Ii04MCIgeT0iLTgwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iI2ZmZiIvPg0KICAgICAgPHBhdGggZD0iTTUuMiAxMC40IEM2LjQgNS4yIDE0IDQuMiAxOC40IDcuNCBDMjIuMiAxMC40IDIxLjYgMTggMTcuOCAyMC42IEMxMy42IDIzLjQgNyAyMi4yIDUuMiAxOC4yIEM0LjQgMTUuOCA0LjYgMTIuOCA1LjIgMTAuNCBaIiBmaWxsPSIjMDAwIi8+DQogICAgPC9tYXNrPjxtYXNrIGlkPSJocC1mcm9udCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxwYXRoIGQ9Ik0tMi40IDYuOSAzOS44IDI1LjQgNDEuMyAyMS40IDQyLjUgMTcuMyA0My4yIDEzIDQzLjYgOC44IDQzLjYgNC41IDQzLjIgMC4yIDQyLjMgLTQgNDEuMSAtOC4xIDM5LjUgLTEyIDM3LjYgLTE1LjkgMzUuMyAtMTkuNSAzMi43IC0yMi45IFoiIGZpbGw9IiNmZmYiLz4NCiAgICA8L21hc2s+PHBhdGggaWQ9ImhwLXJpbmciIGQ9Ik0tMTguMyAxMy40IEMtMTcuMyAxNC41IC0xNC42IDE4LjQgLTEyLjMgMjAgQy05LjkgMjEuNiAtNi45IDIyLjUgLTQuMSAyMi43IEMtMS40IDIzIDEuNyAyMi43IDQuMyAyMS43IEM2LjkgMjAuNyA5LjcgMTguOSAxMS41IDE2LjYgQzEzLjMgMTQuNCAxNC43IDExLjEgMTQuOSA4LjIgQzE1LjEgNS4zIDE0LjIgMS45IDEyLjggLTAuNyBDMTEuNCAtMy4yIDkgLTUuNSA2LjUgLTcgQzQuMSAtOC40IDEgLTkuMSAtMS44IC05LjEgQy00LjYgLTkuMiAtNy44IC04LjcgLTEwLjMgLTcuNSBDLTEyLjkgLTYuMyAtMTUuNiAtNC4yIC0xNy4yIC0xLjcgQy0xOC45IDAuNyAtMjAuMSA0IC0yMC4zIDcuMSBDLTIwLjQgMTAuMiAtMTkuOCAxMy44IC0xOC4zIDE2LjYgQy0xNi45IDE5LjUgLTEyLjYgMjIuOCAtMTEuNSAyNC4xIi8+PHBhdGggaWQ9ImhwLW0wIiBkPSJNMjMgNS42IFE3NS4yIDIuNiAxMjcuNCAyLjQiLz48cGF0aCBpZD0iaHAtbTEiIGQ9Ik0xMjcuNCAyLjQgUTY2LjggOC43IDYuNCAxNy4yIi8+PHBhdGggaWQ9ImhwLW0yIiBkPSJNNi40IDE3LjIgUTYzLjggMTQuOCAxMjEuMiAxNC4yIi8+PHBhdGggaWQ9ImhwLW0zIiBkPSJNMTIxLjIgMTQuMiBRNTkuMyAyMC4zIC0yLjIgMjkuNiIvPjxwYXRoIGlkPSJocC1tNCIgZD0iTS0yLjIgMjkuNiBRNjEuNCAyNi44IDEyNSAyNi44Ii8+PHBhdGggaWQ9ImhwLW01IiBkPSJNMTI1IDI2LjggUTYzLjcgMzMuMiAyLjYgNDEuOCIvPjxwYXRoIGlkPSJocC1tNiIgZD0iTTIuNiA0MS44IFE2MS4yIDM5LjUgMTE5LjggMzkiLz48cGF0aCBpZD0iaHAtbTciIGQ9Ik0xMTkuOCAzOSBRNTkuNCA0NC4xIC0wLjYgNTIuNCIvPjxwYXRoIGlkPSJocC1tOCIgZD0iTS0wLjYgNTIuNCBRNTUuOSA0OS41IDExMi40IDQ5LjQiLz48cGF0aCBpZD0iaHAtbTkiIGQ9Ik0xMTIuNCA0OS40IFE1OC45IDU2LjQgNS44IDY1LjYiLz48cGF0aCBpZD0iaHAtbTEwIiBkPSJNNS44IDY1LjYgUTUxLjkgNjMuMiA5OCA2Mi42Ii8+PHBhdGggaWQ9ImhwLW0xMSIgZD0iTTk4IDYyLjYgUTQ5LjYgNjggMS42IDc2LjYiLz48cGF0aCBpZD0iaHAtbTEyIiBkPSJNMS42IDc2LjYgUTQ0LjEgNzQgODYuNiA3NC4yIi8+DQogIDwvZGVmcz4NCiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzUuMzUgNTIuMTcpIHNjYWxlKDEuMTcpIHJvdGF0ZSgtMTMgNjMgNDApIj4NCiAgICA8IS0tIHJpbmcsIHRoZSBzdHJldGNoIGJlaGluZCB0aGUgY2FyZCAtLT4NCiAgICA8ZyBmaWx0ZXI9InVybCgjaHAtZHJpZnQpIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiNGMjcwMUYiIHN0cm9rZS13aWR0aD0iNC40IiBzdHJva2UtbGluZWNhcD0icm91bmQiPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0xLjk5IiB5PSItMS42NyIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0xLjIwIiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0wLjQwIiB5PSItMC4zMyIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9IjAuNDAiIHk9IjAuMzMiLz48dXNlIGhyZWY9IiNocC1yaW5nIiB4PSIxLjIwIiB5PSIxLjAwIi8+PHVzZSBocmVmPSIjaHAtcmluZyIgeD0iMS45OSIgeT0iMS42NyIvPjwvZz48L2c+DQoNCiAgICA8IS0tIHRoZSBjYXJkOiBub3RlYm9vayBwYXBlciBpbnNpZGUgdGhlIHBlbiBsaW5lLCB3aXRoIHRoZSBwdW5jaGVkIGhvbGUgLS0+DQogICAgPGcgbWFzaz0idXJsKCNocC1ob2xlKSIgZmlsdGVyPSJ1cmwoI2hwLWRyaWZ0KSI+DQogICAgICA8cGF0aCBmaWxsPSIjRkFGN0VFIiBkPSJNMi4yIDEuOCBDNDAgMC40IDkwIC0xLjQgMTIxLjYgLTIuNiBDMTI1LjQgLTIuNyAxMjcuMSAtMC44IDEyNy4yIDMgTDEyNy41IDQwIEw5MSA3OS40IEM3MCA3OS44IDQwIDgwLjIgNS42IDgwLjIgQzIuNCA4MC4yIDEuMSA3OC42IDEgNzUuNiBDMC40IDU1IC0wLjEgMjUgMCA1LjQgQzAgMyAwLjggMS45IDIuMiAxLjggWiIvPg0KICAgIDwvZz4NCg0KICAgIDwhLS0gYmx1ZSBjaGlzZWwgbWFya2VyLCB6aWd6YWc7IHdoZXJlIHBhc3NlcyBvdmVybGFwIGl0IGdvZXMgZGFya2VyIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNocC1taykiPjxnIG1hc2s9InVybCgjaHAtc2tpcCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJCNDVEMyIgc3Ryb2tlLXdpZHRoPSIyLjYiPg0KICAgICAgPGcgb3BhY2l0eT0iMC44NSI+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0zLjcyIiB5PSI3LjMxIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0zLjE1IiB5PSI2LjE4Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0yLjU4IiB5PSI1LjA2Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0yLjAwIiB5PSIzLjkzIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0xLjQzIiB5PSIyLjgxIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0wLjg2IiB5PSIxLjY5Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9Ii0wLjI5IiB5PSIwLjU2Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjAuMjkiIHk9Ii0wLjU2Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjAuODYiIHk9Ii0xLjY5Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjEuNDMiIHk9Ii0yLjgxIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjIuMDAiIHk9Ii0zLjkzIi8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjIuNTgiIHk9Ii01LjA2Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjMuMTUiIHk9Ii02LjE4Ii8+PHVzZSBocmVmPSIjaHAtbTAiIHg9IjMuNzIiIHk9Ii03LjMxIi8+PC9nPjxnIG9wYWNpdHk9IjAuODMiPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItNC40NSIgeT0iNi4zNSIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMy43MCIgeT0iNS4yOSIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMi45NiIgeT0iNC4yMyIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMi4yMiIgeT0iMy4xNyIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMS40OCIgeT0iMi4xMiIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSItMC43NCIgeT0iMS4wNiIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIwLjAwIiB5PSItMC4wMCIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIwLjc0IiB5PSItMS4wNiIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIxLjQ4IiB5PSItMi4xMiIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIyLjIyIiB5PSItMy4xNyIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIyLjk2IiB5PSItNC4yMyIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSIzLjcwIiB5PSItNS4yOSIvPjx1c2UgaHJlZj0iI2hwLW0xIiB4PSI0LjQ1IiB5PSItNi4zNSIvPjwvZz48ZyBvcGFjaXR5PSIwLjg4Ij48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTMuODYiIHk9IjYuNDMiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTMuMjIiIHk9IjUuMzYiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTIuNTgiIHk9IjQuMjkiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTEuOTMiIHk9IjMuMjEiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTEuMjkiIHk9IjIuMTQiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iLTAuNjQiIHk9IjEuMDciLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMC4wMCIgeT0iLTAuMDAiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMC42NCIgeT0iLTEuMDciLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMS4yOSIgeT0iLTIuMTQiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMS45MyIgeT0iLTMuMjEiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMi41OCIgeT0iLTQuMjkiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMy4yMiIgeT0iLTUuMzYiLz48dXNlIGhyZWY9IiNocC1tMiIgeD0iMy44NiIgeT0iLTYuNDMiLz48L2c+PGcgb3BhY2l0eT0iMC44MiI+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii00LjkzIiB5PSI2LjMwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii00LjEwIiB5PSI1LjI1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii0zLjI4IiB5PSI0LjIwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii0yLjQ2IiB5PSIzLjE1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii0xLjY0IiB5PSIyLjEwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9Ii0wLjgyIiB5PSIxLjA1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjAuODIiIHk9Ii0xLjA1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjEuNjQiIHk9Ii0yLjEwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjIuNDYiIHk9Ii0zLjE1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjMuMjgiIHk9Ii00LjIwIi8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjQuMTAiIHk9Ii01LjI1Ii8+PHVzZSBocmVmPSIjaHAtbTMiIHg9IjQuOTMiIHk9Ii02LjMwIi8+PC9nPjxnIG9wYWNpdHk9IjAuODYiPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMy43MyIgeT0iNi40NSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMy4wNSIgeT0iNS4yOCIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMi4zNyIgeT0iNC4xMSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMS42OSIgeT0iMi45MyIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMS4wMiIgeT0iMS43NiIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSItMC4zNCIgeT0iMC41OSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIwLjM0IiB5PSItMC41OSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIxLjAyIiB5PSItMS43NiIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIxLjY5IiB5PSItMi45MyIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIyLjM3IiB5PSItNC4xMSIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIzLjA1IiB5PSItNS4yOCIvPjx1c2UgaHJlZj0iI2hwLW00IiB4PSIzLjczIiB5PSItNi40NSIvPjwvZz48ZyBvcGFjaXR5PSIwLjgxIj48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTQuMDMiIHk9IjYuMjEiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTMuMzAiIHk9IjUuMDgiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTIuNTYiIHk9IjMuOTUiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTEuODMiIHk9IjIuODIiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTEuMTAiIHk9IjEuNjkiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iLTAuMzciIHk9IjAuNTYiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMC4zNyIgeT0iLTAuNTYiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMS4xMCIgeT0iLTEuNjkiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMS44MyIgeT0iLTIuODIiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMi41NiIgeT0iLTMuOTUiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iMy4zMCIgeT0iLTUuMDgiLz48dXNlIGhyZWY9IiNocC1tNSIgeD0iNC4wMyIgeT0iLTYuMjEiLz48L2c+PGcgb3BhY2l0eT0iMC44NyI+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0zLjcxIiB5PSI2Ljk4Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0zLjA5IiB5PSI1LjgxIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0yLjQ3IiB5PSI0LjY1Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0xLjg1IiB5PSIzLjQ5Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0xLjI0IiB5PSIyLjMzIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9Ii0wLjYyIiB5PSIxLjE2Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjAuNjIiIHk9Ii0xLjE2Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjEuMjQiIHk9Ii0yLjMzIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjEuODUiIHk9Ii0zLjQ5Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjIuNDciIHk9Ii00LjY1Ii8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjMuMDkiIHk9Ii01LjgxIi8+PHVzZSBocmVmPSIjaHAtbTYiIHg9IjMuNzEiIHk9Ii02Ljk4Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODUiPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItNC4zNiIgeT0iNi4yMyIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMy42MyIgeT0iNS4xOSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMi45MSIgeT0iNC4xNSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMi4xOCIgeT0iMy4xMSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMS40NSIgeT0iMi4wOCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMC43MyIgeT0iMS4wNCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSItMC4wMCIgeT0iMC4wMCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIwLjczIiB5PSItMS4wNCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIxLjQ1IiB5PSItMi4wOCIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIyLjE4IiB5PSItMy4xMSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIyLjkxIiB5PSItNC4xNSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSIzLjYzIiB5PSItNS4xOSIvPjx1c2UgaHJlZj0iI2hwLW03IiB4PSI0LjM2IiB5PSItNi4yMyIvPjwvZz48ZyBvcGFjaXR5PSIwLjgzIj48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTQuMTYiIHk9IjYuNjYiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTMuNDciIHk9IjUuNTUiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTIuNzciIHk9IjQuNDQiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTIuMDgiIHk9IjMuMzMiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTEuMzkiIHk9IjIuMjIiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTAuNjkiIHk9IjEuMTEiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iLTAuMDAiIHk9IjAuMDAiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMC42OSIgeT0iLTEuMTEiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMS4zOSIgeT0iLTIuMjIiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMi4wOCIgeT0iLTMuMzMiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMi43NyIgeT0iLTQuNDQiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iMy40NyIgeT0iLTUuNTUiLz48dXNlIGhyZWY9IiNocC1tOCIgeD0iNC4xNiIgeT0iLTYuNjYiLz48L2c+PGcgb3BhY2l0eT0iMC44OCI+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii00Ljg3IiB5PSI2LjQ3Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii00LjA2IiB5PSI1LjM5Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii0zLjI1IiB5PSI0LjMxIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii0yLjQ0IiB5PSIzLjIzIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii0xLjYyIiB5PSIyLjE2Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9Ii0wLjgxIiB5PSIxLjA4Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjAuODEiIHk9Ii0xLjA4Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjEuNjIiIHk9Ii0yLjE2Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjIuNDQiIHk9Ii0zLjIzIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjMuMjUiIHk9Ii00LjMxIi8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjQuMDYiIHk9Ii01LjM5Ii8+PHVzZSBocmVmPSIjaHAtbTkiIHg9IjQuODciIHk9Ii02LjQ3Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODIiPjx1c2UgaHJlZj0iI2hwLW0xMCIgeD0iLTMuNTEiIHk9IjYuMzQiLz48dXNlIGhyZWY9IiNocC1tMTAiIHg9Ii0yLjg4IiB5PSI1LjE5Ii8+PHVzZSBocmVmPSIjaHAtbTEwIiB4PSItMi4yNCIgeT0iNC4wNCIvPjx1c2UgaHJlZj0iI2hwLW0xMCIgeD0iLTEuNjAiIHk9IjIuODgiLz48dXNlIGhyZWY9IiNocC1tMTAiIHg9Ii0wLjk2IiB5PSIxLjczIi8+PHVzZSBocmVmPSIjaHAtbTEwIiB4PSItMC4zMiIgeT0iMC41OCIvPjx1c2UgaHJlZj0iI2hwLW0xMCIgeD0iMC4zMiIgeT0iLTAuNTgiLz48dXNlIGhyZWY9IiNocC1tMTAiIHg9IjAuOTYiIHk9Ii0xLjczIi8+PHVzZSBocmVmPSIjaHAtbTEwIiB4PSIxLjYwIiB5PSItMi44OCIvPjx1c2UgaHJlZj0iI2hwLW0xMCIgeD0iMi4yNCIgeT0iLTQuMDQiLz48dXNlIGhyZWY9IiNocC1tMTAiIHg9IjIuODgiIHk9Ii01LjE5Ii8+PHVzZSBocmVmPSIjaHAtbTEwIiB4PSIzLjUxIiB5PSItNi4zNCIvPjwvZz48ZyBvcGFjaXR5PSIwLjg2Ij48dXNlIGhyZWY9IiNocC1tMTEiIHg9Ii00LjM1IiB5PSI2Ljk1Ii8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSItMy42OCIgeT0iNS44OCIvPjx1c2UgaHJlZj0iI2hwLW0xMSIgeD0iLTMuMDEiIHk9IjQuODEiLz48dXNlIGhyZWY9IiNocC1tMTEiIHg9Ii0yLjM0IiB5PSIzLjc0Ii8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSItMS42NyIgeT0iMi42NyIvPjx1c2UgaHJlZj0iI2hwLW0xMSIgeD0iLTEuMDAiIHk9IjEuNjAiLz48dXNlIGhyZWY9IiNocC1tMTEiIHg9Ii0wLjMzIiB5PSIwLjUzIi8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSIwLjMzIiB5PSItMC41MyIvPjx1c2UgaHJlZj0iI2hwLW0xMSIgeD0iMS4wMCIgeT0iLTEuNjAiLz48dXNlIGhyZWY9IiNocC1tMTEiIHg9IjEuNjciIHk9Ii0yLjY3Ii8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSIyLjM0IiB5PSItMy43NCIvPjx1c2UgaHJlZj0iI2hwLW0xMSIgeD0iMy4wMSIgeT0iLTQuODEiLz48dXNlIGhyZWY9IiNocC1tMTEiIHg9IjMuNjgiIHk9Ii01Ljg4Ii8+PHVzZSBocmVmPSIjaHAtbTExIiB4PSI0LjM1IiB5PSItNi45NSIvPjwvZz48ZyBvcGFjaXR5PSIwLjgxIj48dXNlIGhyZWY9IiNocC1tMTIiIHg9Ii00LjU2IiB5PSI2LjI3Ii8+PHVzZSBocmVmPSIjaHAtbTEyIiB4PSItMy44MCIgeT0iNS4yMiIvPjx1c2UgaHJlZj0iI2hwLW0xMiIgeD0iLTMuMDQiIHk9IjQuMTgiLz48dXNlIGhyZWY9IiNocC1tMTIiIHg9Ii0yLjI4IiB5PSIzLjEzIi8+PHVzZSBocmVmPSIjaHAtbTEyIiB4PSItMS41MiIgeT0iMi4wOSIvPjx1c2UgaHJlZj0iI2hwLW0xMiIgeD0iLTAuNzYiIHk9IjEuMDQiLz48dXNlIGhyZWY9IiNocC1tMTIiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjaHAtbTEyIiB4PSIwLjc2IiB5PSItMS4wNCIvPjx1c2UgaHJlZj0iI2hwLW0xMiIgeD0iMS41MiIgeT0iLTIuMDkiLz48dXNlIGhyZWY9IiNocC1tMTIiIHg9IjIuMjgiIHk9Ii0zLjEzIi8+PHVzZSBocmVmPSIjaHAtbTEyIiB4PSIzLjA0IiB5PSItNC4xOCIvPjx1c2UgaHJlZj0iI2hwLW0xMiIgeD0iMy44MCIgeT0iLTUuMjIiLz48dXNlIGhyZWY9IiNocC1tMTIiIHg9IjQuNTYiIHk9Ii02LjI3Ii8+PC9nPg0KICAgIDwvZz48L2c+DQoNCiAgICA8IS0tIHRoZSBiZW50IGNvcm5lcjogaXRzIGJhY2sgaXMgcGxhaW4gcGFwZXIgLS0+DQogICAgPHBhdGggZmlsdGVyPSJ1cmwoI2hwLWRyaWZ0KSIgZmlsbD0iI0ZBRjdFRSIgZD0iTTkxIDc5LjMgQzg4LjQgNzAgODkuNiA1OC40IDk2LjYgNTAuNiBDMTA0LjYgNDUuNCAxMTYgNDIuNiAxMjcuNiA0MC4yIEwxMjcuNSA0MCBMOTEgNzkuNCBaIi8+DQoNCiAgICA8IS0tIGJhbGxwb2ludCAtLT4NCiAgICA8ZyBmaWx0ZXI9InVybCgjaHAtZHJpZnQpIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNDI1MkMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+DQogICAgICA8ZyBzdHJva2Utd2lkdGg9IjEuOSI+PHBhdGggZD0iTS0xLjQgMi4yIEMzMCAxIDg1IC0wLjkgMTIxLjIgLTIuNyBDMTI1IC0yLjkgMTI3LjIgLTEgMTI3LjMgMyBDMTI3LjUgMTYgMTI3LjYgMjkgMTI3LjUgNDAuNiIvPjxwYXRoIGQ9Ik0xLjQgLTAuOCBDMC42IDE4IDAuMyA1MCAxIDc1LjIgQzEuMiA3OS4yIDMgODAuNCA3IDgwLjMgQzM1IDgwLjEgNjUgNzkuOCA5MS42IDc5LjQiLz48cGF0aCBkPSJNOTAuNiA3OS42IEMxMDMgNjYgMTE1IDUzIDEyNy44IDM5LjgiLz48cGF0aCBkPSJNOTEgNzkuMyBDODguNCA3MCA4OS42IDU4LjQgOTYuNiA1MC42IEMxMDQuNiA0NS40IDExNiA0Mi42IDEyNy42IDQwLjIiLz48cGF0aCBkPSJNOC44IDExIEM5LjQgNy44IDE1IDcuMiAxNi43IDEwLjggQzE4LjIgMTQuMiAxNS42IDE3LjkgMTIgMTcuNiBDOC42IDE3LjMgNy40IDEzLjggOS4zIDExLjIgQzEwLjcgOS40IDEzLjcgOS4xIDE1LjUgMTAuMiIvPjwvZz4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMi42Ij48cGF0aCBkPSJNLTEuNCAyLjIgQzMwIDEgODUgLTAuOSAxMjEuMiAtMi43IEMxMjUgLTIuOSAxMjcuMiAtMSAxMjcuMyAzIEMxMjcuNSAxNiAxMjcuNiAyOSAxMjcuNSA0MC42IiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik0xLjQgLTAuOCBDMC42IDE4IDAuMyA1MCAxIDc1LjIgQzEuMiA3OS4yIDMgODAuNCA3IDgwLjMgQzM1IDgwLjEgNjUgNzkuOCA5MS42IDc5LjQiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTkwLjYgNzkuNiBDMTAzIDY2IDExNSA1MyAxMjcuOCAzOS44IiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik05MSA3OS4zIEM4OC40IDcwIDg5LjYgNTguNCA5Ni42IDUwLjYgQzEwNC42IDQ1LjQgMTE2IDQyLjYgMTI3LjYgNDAuMiIgc3Ryb2tlLWRhc2hhcnJheT0iOSA5OTkiLz48cGF0aCBkPSJNOC44IDExIEM5LjQgNy44IDE1IDcuMiAxNi43IDEwLjggQzE4LjIgMTQuMiAxNS42IDE3LjkgMTIgMTcuNiBDOC42IDE3LjMgNy40IDEzLjggOS4zIDExLjIgQzEwLjcgOS40IDEzLjcgOS4xIDE1LjUgMTAuMiIgc3Ryb2tlLWRhc2hhcnJheT0iOSA5OTkiLz48L2c+DQogICAgICA8ZyBzdHJva2Utd2lkdGg9IjEuMiI+DQogICAgICAgIDxwYXRoIGQ9Ik05NS42IDcwLjIgTDkzLjQgNjcuNCIvPjxwYXRoIGQ9Ik0xMDEuOCA2My44IEw5OSA2MC40Ii8+PHBhdGggZD0iTTEwOC40IDU2LjYgTDEwNi40IDU0LjIiLz4NCiAgICAgIDwvZz4NCiAgICA8L2c+DQoNCiAgICA8IS0tIGZhY2UsIHdoaXRlIGdlbCBwZW4gb3ZlciB0aGUgbWFya2VyIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNocC1kcmlmdCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkRGNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4NCiAgICAgIA0KICAgICAgPHBhdGggc3Ryb2tlLXdpZHRoPSI3LjYiIGQ9Ik02MC42IDI0IFE2MS4yIDI3LjYgNjAuOCAzMS42Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjYuNCIgZD0iTTYxLjMgMjUgTDYxLjUgMjgiLz4NCiAgICAgIDxwYXRoIHN0cm9rZS13aWR0aD0iNy4yIiBkPSJNODAgMjMgUTgwLjYgMjYuNCA4MC4zIDMwIi8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjMuNiIgZD0iTTYxLjYgNDAuNCBDNjcuNiA0MyA3Ni4yIDQzIDgyLjYgMzguNiBDODQuMiAzNy40IDg1LjYgMzUuNiA4Ni4yIDMzLjQiLz4NCiAgICANCiAgICA8L2c+DQoNCiAgICA8IS0tIHJpbmcsIHRoZSBzdHJldGNoIHRoYXQgY29tZXMgb3V0IG9mIHRoZSBob2xlIHRvd2FyZHMgeW91IC0tPg0KICAgIDxnIG1hc2s9InVybCgjaHAtZnJvbnQpIj48ZyBmaWx0ZXI9InVybCgjaHAtZHJpZnQpIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiNGMjcwMUYiIHN0cm9rZS13aWR0aD0iNC40IiBzdHJva2UtbGluZWNhcD0icm91bmQiPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0xLjk5IiB5PSItMS42NyIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0xLjIwIiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9Ii0wLjQwIiB5PSItMC4zMyIvPjx1c2UgaHJlZj0iI2hwLXJpbmciIHg9IjAuNDAiIHk9IjAuMzMiLz48dXNlIGhyZWY9IiNocC1yaW5nIiB4PSIxLjIwIiB5PSIxLjAwIi8+PHVzZSBocmVmPSIjaHAtcmluZyIgeD0iMS45OSIgeT0iMS42NyIvPjwvZz48L2c+PC9nPg0KICA8L2c+DQo8L3N2Zz4NCg==", "cheer": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+DQogIDxkZWZzPg0KICAgIDxmaWx0ZXIgaWQ9ImNoLWRyaWZ0IiB4PSItMjAlIiB5PSItMzAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNjAlIj4NCiAgICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjAyMiIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMzEiIHJlc3VsdD0idCIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9InQiIHNjYWxlPSIyLjYiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciLz4NCiAgICA8L2ZpbHRlcj48ZmlsdGVyIGlkPSJjaC1tayIgeD0iLTIwJSIgeT0iLTMwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTYwJSI+DQogICAgICA8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMyIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMzQiIHJlc3VsdD0idCIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9InQiIHNjYWxlPSIyLjQiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciIHJlc3VsdD0iZCIvPg0KICAgICAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOSIgbnVtT2N0YXZlcz0iMSIgc2VlZD0iMzYiIHJlc3VsdD0iZyIvPg0KICAgICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJkIiBpbjI9ImciIHNjYWxlPSIwLjkiIHhDaGFubmVsU2VsZWN0b3I9IlIiIHlDaGFubmVsU2VsZWN0b3I9IkciLz4NCiAgICA8L2ZpbHRlcj48bWFzayBpZD0iY2gtaG9sZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxyZWN0IHg9Ii04MCIgeT0iLTgwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iI2ZmZiIvPg0KICAgICAgPGNpcmNsZSBjeD0iMTIuOCIgY3k9IjEyLjYiIHI9IjQuMSIgZmlsbD0iIzAwMCIvPg0KICAgIDwvbWFzaz48bWFzayBpZD0iY2gtc2tpcCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxyZWN0IHg9Ii04MCIgeT0iLTgwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iI2ZmZiIvPg0KICAgICAgPHBhdGggZD0iTTUuOCA5LjQgQzcgNC40IDE0LjYgMy40IDE4LjggNi42IEMyMi40IDkuNiAyMS44IDE3LjIgMTguMiAxOS44IEMxNCAyMi40IDcuNiAyMS40IDUuOCAxNy40IEM1IDE1LjIgNS4yIDExLjggNS44IDkuNCBaIiBmaWxsPSIjMDAwIi8+DQogICAgPC9tYXNrPjxtYXNrIGlkPSJjaC1mcm9udCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTgwIiB5PSItODAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMjQwIj4NCiAgICAgIDxwYXRoIGQ9Ik0xMS42IC0zLjUgMTUuMSA0Mi40IDE5LjMgNDEuOSAyMy41IDQxIDI3LjYgMzkuNyAzMS41IDM4IDM1LjMgMzYgMzguOSAzMy42IDQyLjIgMzAuOSA0NS4yIDI3LjkgNDggMjQuNiA1MC41IDIxLjEgNTIuNiAxNy40IDU0LjMgMTMuNSBaIiBmaWxsPSIjZmZmIi8+DQogICAgPC9tYXNrPjxwYXRoIGlkPSJjaC1yaW5nIiBkPSJNLTEuMSAtMTQuMSBDLTEuNyAtMTIuOCAtMy45IC04LjkgLTQuMyAtNi4yIEMtNC43IC0zLjUgLTQuMyAtMC41IC0zLjMgMi4xIEMtMi40IDQuNiAtMC44IDcuMiAxLjMgOSBDMy4zIDEwLjggNi4xIDEyLjQgOC45IDEyLjkgQzExLjYgMTMuNSAxNSAxMy4zIDE3LjYgMTIuMyBDMjAuMiAxMS40IDIyLjggOS4zIDI0LjUgNy4xIEMyNi4yIDQuOSAyNy4zIDEuOCAyNy43IC0wLjkgQzI4IC0zLjYgMjcuNSAtNi43IDI2LjUgLTkuMyBDMjUuNSAtMTEuOCAyMy45IC0xNC40IDIxLjggLTE2LjMgQzE5LjcgLTE4LjEgMTYuOSAtMTkuNyAxNC4xIC0yMC4zIEMxMS4zIC0yMC45IDcuOSAtMjAuOCA1IC0xOS45IEMyLjIgLTE5IC0wLjkgLTE3LjEgLTIuOSAtMTQuOCBDLTQuOSAtMTIuNSAtNi41IC03LjYgLTcuMiAtNi4xIi8+PHBhdGggaWQ9ImNoLW0wIiBkPSJNMjMgNC44IFE3Mi45IDEuOCAxMjIuOCAxLjYiLz48cGF0aCBpZD0iY2gtbTEiIGQ9Ik0xMjIuOCAxLjYgUTYxLjYgNy43IDAuNiAxNiIvPjxwYXRoIGlkPSJjaC1tMiIgZD0iTTAuNiAxNiBRNjAuNSAxMy42IDEyMC40IDEzIi8+PHBhdGggaWQ9ImNoLW0zIiBkPSJNMTIwLjQgMTMgUTYyLjkgMTkuMyA1LjggMjguOCIvPjxwYXRoIGlkPSJjaC1tNCIgZD0iTTUuOCAyOC44IFE2Ny4yIDI2IDEyOC42IDI2Ii8+PHBhdGggaWQ9ImNoLW01IiBkPSJNMTI4LjYgMjYgUTY1LjMgMzIuNCAyLjIgNDEiLz48cGF0aCBpZD0iY2gtbTYiIGQ9Ik0yLjIgNDEgUTYzLjQgMzguNyAxMjQuNiAzOC4yIi8+PHBhdGggaWQ9ImNoLW03IiBkPSJNMTI0LjYgMzguMiBRNjAuNyA0My4zIC0yLjggNTEuNiIvPjxwYXRoIGlkPSJjaC1tOCIgZD0iTS0yLjggNTEuNiBRNTguOSA0OC43IDEyMC42IDQ4LjYiLz48cGF0aCBpZD0iY2gtbTkiIGQ9Ik0xMjAuNiA0OC42IFE2My40IDU1LjYgNi42IDY0LjgiLz48cGF0aCBpZD0iY2gtbTEwIiBkPSJNNi42IDY0LjggUTYxLjQgNjIuMyAxMTYuMiA2MS42Ii8+PHBhdGggaWQ9ImNoLW0xMSIgZD0iTTExNi4yIDYxLjYgUTU5LjEgNjcgMi40IDc1LjYiLz48cGF0aCBpZD0iY2gtbTEyIiBkPSJNMi40IDc1LjYgUTUxLjUgNzMgMTAwLjYgNzMuMiIvPg0KICA8L2RlZnM+DQogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI0LjI1IDY2LjIzKSBzY2FsZSgxLjE4KSByb3RhdGUoOCA2MyA0MCkiPg0KICAgIDwhLS0gcmluZywgdGhlIHN0cmV0Y2ggYmVoaW5kIHRoZSBjYXJkIC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNjaC1kcmlmdCkiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YyNzAxRiIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iLTEuOTkiIHk9Ii0xLjY3Ii8+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iLTEuMjAiIHk9Ii0xLjAwIi8+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iLTAuNDAiIHk9Ii0wLjMzIi8+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iMC40MCIgeT0iMC4zMyIvPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9IjEuMjAiIHk9IjEuMDAiLz48dXNlIGhyZWY9IiNjaC1yaW5nIiB4PSIxLjk5IiB5PSIxLjY3Ii8+PC9nPjwvZz4NCg0KICAgIDwhLS0gdGhlIGNhcmQ6IG5vdGVib29rIHBhcGVyIGluc2lkZSB0aGUgcGVuIGxpbmUsIHdpdGggdGhlIHB1bmNoZWQgaG9sZSAtLT4NCiAgICA8ZyBtYXNrPSJ1cmwoI2NoLWhvbGUpIiBmaWx0ZXI9InVybCgjY2gtZHJpZnQpIj4NCiAgICAgIDxwYXRoIGZpbGw9IiNGQUY3RUUiIGQ9Ik0yIDEgQzQwIC0wLjIgOTAgLTEuOCAxMjIuMiAtMi44IEMxMjUuOSAtMi45IDEyNy40IC0xLjIgMTI3LjUgMi44IEwxMjcuNyA1NiBMMTA0IDc5LjIgQzc1IDc5LjYgNDAgODAgNS40IDgwLjEgQzIuMiA4MC4xIDEgNzguNSAwLjkgNzUuNSBDMC4zIDU1IC0wLjIgMjUgLTAuMSA0LjggQy0wLjEgMi40IDAuNiAxLjEgMiAxIFoiLz4NCiAgICA8L2c+DQoNCiAgICA8IS0tIGJsdWUgY2hpc2VsIG1hcmtlciwgemlnemFnOyB3aGVyZSBwYXNzZXMgb3ZlcmxhcCBpdCBnb2VzIGRhcmtlciAtLT4NCiAgICA8ZyBmaWx0ZXI9InVybCgjY2gtbWspIj48ZyBtYXNrPSJ1cmwoI2NoLXNraXApIiBmaWxsPSJub25lIiBzdHJva2U9IiMyQjQ1RDMiIHN0cm9rZS13aWR0aD0iMi42Ij4NCiAgICAgIDxnIG9wYWNpdHk9IjAuODQiPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItNC4zOCIgeT0iNi4wMyIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMy41OCIgeT0iNC45MyIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMi43OSIgeT0iMy44NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMS45OSIgeT0iMi43NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMS4xOSIgeT0iMS42NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSItMC40MCIgeT0iMC41NSIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIwLjQwIiB5PSItMC41NSIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIxLjE5IiB5PSItMS42NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIxLjk5IiB5PSItMi43NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIyLjc5IiB5PSItMy44NCIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSIzLjU4IiB5PSItNC45MyIvPjx1c2UgaHJlZj0iI2NoLW0wIiB4PSI0LjM4IiB5PSItNi4wMyIvPjwvZz48ZyBvcGFjaXR5PSIwLjg3Ij48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTMuNTkiIHk9IjYuNDciLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTIuOTQiIHk9IjUuMzAiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTIuMjgiIHk9IjQuMTIiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTEuNjMiIHk9IjIuOTQiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTAuOTgiIHk9IjEuNzciLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iLTAuMzMiIHk9IjAuNTkiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMC4zMyIgeT0iLTAuNTkiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMC45OCIgeT0iLTEuNzciLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMS42MyIgeT0iLTIuOTQiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMi4yOCIgeT0iLTQuMTIiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMi45NCIgeT0iLTUuMzAiLz48dXNlIGhyZWY9IiNjaC1tMSIgeD0iMy41OSIgeT0iLTYuNDciLz48L2c+PGcgb3BhY2l0eT0iMC44MiI+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii00LjQyIiB5PSI2LjU1Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0zLjY4IiB5PSI1LjQ2Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0yLjk1IiB5PSI0LjM3Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0yLjIxIiB5PSIzLjI3Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0xLjQ3IiB5PSIyLjE4Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9Ii0wLjc0IiB5PSIxLjA5Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjAuNzQiIHk9Ii0xLjA5Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjEuNDciIHk9Ii0yLjE4Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjIuMjEiIHk9Ii0zLjI3Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjIuOTUiIHk9Ii00LjM3Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjMuNjgiIHk9Ii01LjQ2Ii8+PHVzZSBocmVmPSIjY2gtbTIiIHg9IjQuNDIiIHk9Ii02LjU1Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODYiPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMy40NSIgeT0iNi43NyIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMi44OCIgeT0iNS42NCIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMi4zMCIgeT0iNC41MSIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMS43MyIgeT0iMy4zOSIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMS4xNSIgeT0iMi4yNiIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMC41OCIgeT0iMS4xMyIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSItMC4wMCIgeT0iMC4wMCIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIwLjU4IiB5PSItMS4xMyIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIxLjE1IiB5PSItMi4yNiIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIxLjczIiB5PSItMy4zOSIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIyLjMwIiB5PSItNC41MSIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIyLjg4IiB5PSItNS42NCIvPjx1c2UgaHJlZj0iI2NoLW0zIiB4PSIzLjQ1IiB5PSItNi43NyIvPjwvZz48ZyBvcGFjaXR5PSIwLjgzIj48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTQuNTAiIHk9IjYuNDMiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTMuNzUiIHk9IjUuMzYiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTMuMDAiIHk9IjQuMjkiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTIuMjUiIHk9IjMuMjIiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTEuNTAiIHk9IjIuMTQiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTAuNzUiIHk9IjEuMDciLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iLTAuMDAiIHk9IjAuMDAiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMC43NSIgeT0iLTEuMDciLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMS41MCIgeT0iLTIuMTQiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMi4yNSIgeT0iLTMuMjIiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMy4wMCIgeT0iLTQuMjkiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iMy43NSIgeT0iLTUuMzYiLz48dXNlIGhyZWY9IiNjaC1tNCIgeD0iNC41MCIgeT0iLTYuNDMiLz48L2c+PGcgb3BhY2l0eT0iMC44OCI+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii00LjE3IiB5PSI2Ljk0Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0zLjQ4IiB5PSI1Ljc5Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0yLjc4IiB5PSI0LjYzIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0yLjA5IiB5PSIzLjQ3Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0xLjM5IiB5PSIyLjMxIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9Ii0wLjcwIiB5PSIxLjE2Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjAuNzAiIHk9Ii0xLjE2Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjEuMzkiIHk9Ii0yLjMxIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjIuMDkiIHk9Ii0zLjQ3Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjIuNzgiIHk9Ii00LjYzIi8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjMuNDgiIHk9Ii01Ljc5Ii8+PHVzZSBocmVmPSIjY2gtbTUiIHg9IjQuMTciIHk9Ii02Ljk0Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODEiPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItNC40NiIgeT0iNS43MSIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMy42NSIgeT0iNC42NyIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMi44NCIgeT0iMy42NCIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMi4wMyIgeT0iMi42MCIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMS4yMiIgeT0iMS41NiIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSItMC40MSIgeT0iMC41MiIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIwLjQxIiB5PSItMC41MiIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIxLjIyIiB5PSItMS41NiIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIyLjAzIiB5PSItMi42MCIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIyLjg0IiB5PSItMy42NCIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSIzLjY1IiB5PSItNC42NyIvPjx1c2UgaHJlZj0iI2NoLW02IiB4PSI0LjQ2IiB5PSItNS43MSIvPjwvZz48ZyBvcGFjaXR5PSIwLjg0Ij48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTQuMTAiIHk9IjcuMTAiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTMuNDciIHk9IjYuMDEiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTIuODQiIHk9IjQuOTIiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTIuMjEiIHk9IjMuODIiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTEuNTgiIHk9IjIuNzMiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTAuOTUiIHk9IjEuNjQiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iLTAuMzIiIHk9IjAuNTUiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMC4zMiIgeT0iLTAuNTUiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMC45NSIgeT0iLTEuNjQiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMS41OCIgeT0iLTIuNzMiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMi4yMSIgeT0iLTMuODIiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMi44NCIgeT0iLTQuOTIiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iMy40NyIgeT0iLTYuMDEiLz48dXNlIGhyZWY9IiNjaC1tNyIgeD0iNC4xMCIgeT0iLTcuMTAiLz48L2c+PGcgb3BhY2l0eT0iMC44NyI+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii00LjIyIiB5PSI2LjUwIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0zLjUyIiB5PSI1LjQyIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0yLjgxIiB5PSI0LjMzIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0yLjExIiB5PSIzLjI1Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0xLjQxIiB5PSIyLjE3Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9Ii0wLjcwIiB5PSIxLjA4Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjAuNzAiIHk9Ii0xLjA4Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjEuNDEiIHk9Ii0yLjE3Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjIuMTEiIHk9Ii0zLjI1Ii8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjIuODEiIHk9Ii00LjMzIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjMuNTIiIHk9Ii01LjQyIi8+PHVzZSBocmVmPSIjY2gtbTgiIHg9IjQuMjIiIHk9Ii02LjUwIi8+PC9nPjxnIG9wYWNpdHk9IjAuODIiPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMy41MiIgeT0iNi42MiIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMi45MyIgeT0iNS41MiIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMi4zNSIgeT0iNC40MSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMS43NiIgeT0iMy4zMSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMS4xNyIgeT0iMi4yMSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSItMC41OSIgeT0iMS4xMCIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIwLjAwIiB5PSItMC4wMCIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIwLjU5IiB5PSItMS4xMCIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIxLjE3IiB5PSItMi4yMSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIxLjc2IiB5PSItMy4zMSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIyLjM1IiB5PSItNC40MSIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIyLjkzIiB5PSItNS41MiIvPjx1c2UgaHJlZj0iI2NoLW05IiB4PSIzLjUyIiB5PSItNi42MiIvPjwvZz48ZyBvcGFjaXR5PSIwLjg2Ij48dXNlIGhyZWY9IiNjaC1tMTAiIHg9Ii00LjU5IiB5PSI2LjU1Ii8+PHVzZSBocmVmPSIjY2gtbTEwIiB4PSItMy44MiIgeT0iNS40NiIvPjx1c2UgaHJlZj0iI2NoLW0xMCIgeD0iLTMuMDYiIHk9IjQuMzciLz48dXNlIGhyZWY9IiNjaC1tMTAiIHg9Ii0yLjI5IiB5PSIzLjI4Ii8+PHVzZSBocmVmPSIjY2gtbTEwIiB4PSItMS41MyIgeT0iMi4xOCIvPjx1c2UgaHJlZj0iI2NoLW0xMCIgeD0iLTAuNzYiIHk9IjEuMDkiLz48dXNlIGhyZWY9IiNjaC1tMTAiIHg9IjAuMDAiIHk9Ii0wLjAwIi8+PHVzZSBocmVmPSIjY2gtbTEwIiB4PSIwLjc2IiB5PSItMS4wOSIvPjx1c2UgaHJlZj0iI2NoLW0xMCIgeD0iMS41MyIgeT0iLTIuMTgiLz48dXNlIGhyZWY9IiNjaC1tMTAiIHg9IjIuMjkiIHk9Ii0zLjI4Ii8+PHVzZSBocmVmPSIjY2gtbTEwIiB4PSIzLjA2IiB5PSItNC4zNyIvPjx1c2UgaHJlZj0iI2NoLW0xMCIgeD0iMy44MiIgeT0iLTUuNDYiLz48dXNlIGhyZWY9IiNjaC1tMTAiIHg9IjQuNTkiIHk9Ii02LjU1Ii8+PC9nPjxnIG9wYWNpdHk9IjAuODMiPjx1c2UgaHJlZj0iI2NoLW0xMSIgeD0iLTMuOTUiIHk9IjYuMzIiLz48dXNlIGhyZWY9IiNjaC1tMTEiIHg9Ii0zLjIzIiB5PSI1LjE3Ii8+PHVzZSBocmVmPSIjY2gtbTExIiB4PSItMi41MSIgeT0iNC4wMiIvPjx1c2UgaHJlZj0iI2NoLW0xMSIgeD0iLTEuNzkiIHk9IjIuODciLz48dXNlIGhyZWY9IiNjaC1tMTEiIHg9Ii0xLjA4IiB5PSIxLjcyIi8+PHVzZSBocmVmPSIjY2gtbTExIiB4PSItMC4zNiIgeT0iMC41NyIvPjx1c2UgaHJlZj0iI2NoLW0xMSIgeD0iMC4zNiIgeT0iLTAuNTciLz48dXNlIGhyZWY9IiNjaC1tMTEiIHg9IjEuMDgiIHk9Ii0xLjcyIi8+PHVzZSBocmVmPSIjY2gtbTExIiB4PSIxLjc5IiB5PSItMi44NyIvPjx1c2UgaHJlZj0iI2NoLW0xMSIgeD0iMi41MSIgeT0iLTQuMDIiLz48dXNlIGhyZWY9IiNjaC1tMTEiIHg9IjMuMjMiIHk9Ii01LjE3Ii8+PHVzZSBocmVmPSIjY2gtbTExIiB4PSIzLjk1IiB5PSItNi4zMiIvPjwvZz48ZyBvcGFjaXR5PSIwLjg4Ij48dXNlIGhyZWY9IiNjaC1tMTIiIHg9Ii00LjQ1IiB5PSI1LjkxIi8+PHVzZSBocmVmPSIjY2gtbTEyIiB4PSItMy42NCIgeT0iNC44NCIvPjx1c2UgaHJlZj0iI2NoLW0xMiIgeD0iLTIuODMiIHk9IjMuNzYiLz48dXNlIGhyZWY9IiNjaC1tMTIiIHg9Ii0yLjAyIiB5PSIyLjY5Ii8+PHVzZSBocmVmPSIjY2gtbTEyIiB4PSItMS4yMSIgeT0iMS42MSIvPjx1c2UgaHJlZj0iI2NoLW0xMiIgeD0iLTAuNDAiIHk9IjAuNTQiLz48dXNlIGhyZWY9IiNjaC1tMTIiIHg9IjAuNDAiIHk9Ii0wLjU0Ii8+PHVzZSBocmVmPSIjY2gtbTEyIiB4PSIxLjIxIiB5PSItMS42MSIvPjx1c2UgaHJlZj0iI2NoLW0xMiIgeD0iMi4wMiIgeT0iLTIuNjkiLz48dXNlIGhyZWY9IiNjaC1tMTIiIHg9IjIuODMiIHk9Ii0zLjc2Ii8+PHVzZSBocmVmPSIjY2gtbTEyIiB4PSIzLjY0IiB5PSItNC44NCIvPjx1c2UgaHJlZj0iI2NoLW0xMiIgeD0iNC40NSIgeT0iLTUuOTEiLz48L2c+DQogICAgPC9nPjwvZz4NCg0KICAgIDwhLS0gdGhlIGJlbnQgY29ybmVyOiBpdHMgYmFjayBpcyBwbGFpbiBwYXBlciAtLT4NCiAgICA8cGF0aCBmaWx0ZXI9InVybCgjY2gtZHJpZnQpIiBmaWxsPSIjRkFGN0VFIiBkPSJNMTA0IDc5LjEgQzEwMy42IDcyLjYgMTA2LjIgNjYuNiAxMTEuNCA2My40IEMxMTYuNiA2MS4yIDEyMi40IDU5LjIgMTI3LjggNTYuMiBMMTI3LjcgNTYgTDEwNCA3OS4yIFoiLz4NCg0KICAgIDwhLS0gYmFsbHBvaW50IC0tPg0KICAgIDxnIGZpbHRlcj0idXJsKCNjaC1kcmlmdCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI0MjUyQyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMS45Ij48cGF0aCBkPSJNLTEuNSAxLjUgQzMwIDAuMyA4NSAtMS40IDEyMS44IC0yLjkgQzEyNS42IC0zLjEgMTI3LjYgLTEuMyAxMjcuNiAyLjggQzEyNy44IDIwIDEyNy45IDM4IDEyNy43IDU2LjYiLz48cGF0aCBkPSJNMS4xIC0xLjUgQzAuNSAxOCAwLjIgNTAgMC45IDc1LjIgQzEuMSA3OS4yIDIuOSA4MC4zIDYuOCA4MC4yIEM0MCA4MCA3NSA3OS42IDEwNC42IDc5LjEiLz48cGF0aCBkPSJNMTAzLjYgNzkuNCBDMTExIDcyIDExOSA2NCAxMjggNTUuOCIvPjxwYXRoIGQ9Ik0xMDQgNzkuMSBDMTAzLjYgNzIuNiAxMDYuMiA2Ni42IDExMS40IDYzLjQgQzExNi42IDYxLjIgMTIyLjQgNTkuMiAxMjcuOCA1Ni4yIi8+PHBhdGggZD0iTTkuMiAxMC40IEM5LjggNy4yIDE1LjQgNi42IDE3LjEgMTAuMiBDMTguNiAxMy42IDE2IDE3LjMgMTIuNCAxNyBDOSAxNi43IDcuOCAxMy4yIDkuNyAxMC42IEMxMS4xIDguOCAxNC4xIDguNSAxNS45IDkuNiIvPjwvZz4NCiAgICAgIDxnIHN0cm9rZS13aWR0aD0iMi42Ij48cGF0aCBkPSJNLTEuNSAxLjUgQzMwIDAuMyA4NSAtMS40IDEyMS44IC0yLjkgQzEyNS42IC0zLjEgMTI3LjYgLTEuMyAxMjcuNiAyLjggQzEyNy44IDIwIDEyNy45IDM4IDEyNy43IDU2LjYiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PHBhdGggZD0iTTEuMSAtMS41IEMwLjUgMTggMC4yIDUwIDAuOSA3NS4yIEMxLjEgNzkuMiAyLjkgODAuMyA2LjggODAuMiBDNDAgODAgNzUgNzkuNiAxMDQuNiA3OS4xIiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik0xMDMuNiA3OS40IEMxMTEgNzIgMTE5IDY0IDEyOCA1NS44IiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik0xMDQgNzkuMSBDMTAzLjYgNzIuNiAxMDYuMiA2Ni42IDExMS40IDYzLjQgQzExNi42IDYxLjIgMTIyLjQgNTkuMiAxMjcuOCA1Ni4yIiBzdHJva2UtZGFzaGFycmF5PSI5IDk5OSIvPjxwYXRoIGQ9Ik05LjIgMTAuNCBDOS44IDcuMiAxNS40IDYuNiAxNy4xIDEwLjIgQzE4LjYgMTMuNiAxNiAxNy4zIDEyLjQgMTcgQzkgMTYuNyA3LjggMTMuMiA5LjcgMTAuNiBDMTEuMSA4LjggMTQuMSA4LjUgMTUuOSA5LjYiIHN0cm9rZS1kYXNoYXJyYXk9IjkgOTk5Ii8+PC9nPg0KICAgICAgPGcgc3Ryb2tlLXdpZHRoPSIxLjQiPjxwYXRoIGQ9Ik0xMTAuNiA3Mi42IEwxMDguNiA3MC4yIi8+PHBhdGggZD0iTTExNi40IDY3LjIgTDExNC40IDY1Ii8+PC9nPg0KICAgIDwvZz4NCg0KICAgIDwhLS0gZmFjZSwgd2hpdGUgZ2VsIHBlbiBvdmVyIHRoZSBtYXJrZXIgLS0+DQogICAgPGcgZmlsdGVyPSJ1cmwoI2NoLWRyaWZ0KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGREY1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPg0KICAgICAgDQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjciIGQ9Ik02OC4yIDMzIFE2OC42IDM0LjggNjguNCAzNi42Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjYuNiIgZD0iTTg3LjQgMzIuMiBMODcuNiAzNS42Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjIuOCIgZD0iTTY0LjYgMjUuNiBMNzAuMiAyMy40Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjIuOCIgZD0iTTg1LjYgMjIuNCBMOTEuMiAyNC42Ii8+DQogICAgICA8cGF0aCBzdHJva2Utd2lkdGg9IjMuNCIgZD0iTTc0LjIgNDUuNiBDNzcgNDguNCA4MiA0OC42IDg1IDQ1LjYiLz4NCiAgICANCiAgICA8L2c+DQoNCiAgICA8IS0tIHJpbmcsIHRoZSBzdHJldGNoIHRoYXQgY29tZXMgb3V0IG9mIHRoZSBob2xlIHRvd2FyZHMgeW91IC0tPg0KICAgIDxnIG1hc2s9InVybCgjY2gtZnJvbnQpIj48ZyBmaWx0ZXI9InVybCgjY2gtZHJpZnQpIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiNGMjcwMUYiIHN0cm9rZS13aWR0aD0iNC40IiBzdHJva2UtbGluZWNhcD0icm91bmQiPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9Ii0xLjk5IiB5PSItMS42NyIvPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9Ii0xLjIwIiB5PSItMS4wMCIvPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9Ii0wLjQwIiB5PSItMC4zMyIvPjx1c2UgaHJlZj0iI2NoLXJpbmciIHg9IjAuNDAiIHk9IjAuMzMiLz48dXNlIGhyZWY9IiNjaC1yaW5nIiB4PSIxLjIwIiB5PSIxLjAwIi8+PHVzZSBocmVmPSIjY2gtcmluZyIgeD0iMS45OSIgeT0iMS42NyIvPjwvZz48L2c+PC9nPg0KICA8L2c+DQo8L3N2Zz4NCg=="};
-/* what めくる says: {scene: [line…]}; a line can hold {n} (streak days), {pct} or {w} (words, res_comeback). The last 40 shown are not repeated. */
+/* what めくる says: {scene: [line…]}; a line can hold {n} (streak days), {pct} or {w} (words, res_comeback), {b} {k} (実績) and {name}
+   (the nickname: without one, the lines that say it are left out, so めくる never says a name it doesn't have). The last 40 shown are not repeated. */
 const MK_LINES = {
  "res_perfect": [
   "{pct}%！記録係、今の書いといて！紙ならある",
@@ -2264,7 +2363,9 @@ const MK_LINES = {
   "完ぺきすぎて、ぼくの裏面の答えに出番なし",
   "ace it は「満点とる」って意味。まさに今",
   "flawless＝傷なし。ぼくの角よりきれい",
-  "なん…だと…？ 全問正解…？"
+  "なん…だと…？ 全問正解…？",
+  "{name}、全問正解！ぼくの裏面、出番なしだった",
+  "さすが{name}。速すぎて紙がめくれそう"
  ],
  "res_great": [
   "まちがえたやつ、ぼくが職員室に呼び出しとく",
@@ -2281,7 +2382,9 @@ const MK_LINES = {
   "ほぼ満点！取りこぼしは、おかわりで出すね",
   "{pct}%！めくる手が速すぎて風きた",
   "好プレー連発！ミスはリプレイ判定へ回します",
-  "thrill＝ぞくぞく。今のセット、スリラー級"
+  "thrill＝ぞくぞく。今のセット、スリラー級",
+  "{name}、今のセットかなりいい感じ",
+  "ナイス{name}！ミスはおかわりで出すね"
  ],
  "res_ok": [
   "半分以上はもう友だち。残りは顔見知り",
@@ -2293,7 +2396,8 @@ const MK_LINES = {
   "いい勝負！単語チームも今日は粘ってきた",
   "{pct}%。半分以上めくれたら紙的には上出来",
   "まちがえた分、また会える。ちょっと得した",
-  "まずまず。紙で言うと、ややしわしわ"
+  "まずまず。紙で言うと、ややしわしわ",
+  "{name}、半分以上はもう友だち。残りはまた会おう"
  ],
  "res_low": [
   "ミスした単語たち、いま裏で反省会してる",
@@ -2310,7 +2414,8 @@ const MK_LINES = {
   "{pct}%。月曜1限の目覚めぐあいと同じ",
   "mistake の後は retake。また来るよ",
   "大丈夫、ぼくも裏面たまに忘れる",
-  "あきらめたら、そこで単語帳終了ですよ"
+  "あきらめたら、そこで単語帳終了ですよ",
+  "{name}、大丈夫。まちがえた分は、ぼくがまた出す"
  ],
  "res_goal": [
   "{n}日連続！夏休みの日記より続いてる",
@@ -2322,7 +2427,8 @@ const MK_LINES = {
   "{n}日連続！紙吹雪…あ、ぼくのじゃないよ",
   "{n}日連続！ぼくの余白に正の字書いとく",
   "{n}日連続。皆勤賞の賞状、ぼくが描こうか",
-  "{n}日目のハンコ、ぼくの裏面に押しとくね"
+  "{n}日目のハンコ、ぼくの裏面に押しとくね",
+  "{name}、{n}日連続！カレンダーさんも二度見してる"
  ],
  "swipe_done": [
   "よけられた子たち、卒業式みたいな顔してる",
@@ -2363,21 +2469,25 @@ const MK_LINES = {
   "逃げちゃダメだ…復習から逃げちゃダメだ…",
   "ムーンウォーク練習中。後ろに進む＝復習ね",
   "Bad は昔のスラングで『最高』。きみは Bad",
-  "片手だけ白い手袋してみた。めくりやすい"
+  "片手だけ白い手袋してみた。めくりやすい",
+  "{name}、今日もいっしょにめくろ",
+  "{name}が来ると、ぼくの角がぴんとする"
  ],
  "home_morning": [
   "おはよ。寝ぐせでちょっと反ってる",
   "early bird だね。虫じゃなく単語とろ",
   "朝ごはん中？トーストの横にぼくも置いて",
   "おはよ。寝ぐせのまま1枚いっとく？",
-  "寝ぼけは英語で groggy。響きもねむい"
+  "寝ぼけは英語で groggy。響きもねむい",
+  "おはよう{name}。朝の単語は、よく効くよ"
  ],
  "home_night": [
   "night owl＝夜型。ほー、なるほど",
   "夜のライトだと裏面ちょっと透けるの内緒ね",
   "夜はみんなリングにぶら下がって寝るんだ",
   "晩ごはん何だった？ぼくはインクの香り",
-  "お風呂あがり？髪かわかす間に3枚どう？"
+  "お風呂あがり？髪かわかす間に3枚どう？",
+  "{name}、夜もがんばるね。ぼくも起きてる"
  ],
  "home_latenight": [
   "せっかちなぼくでも、寝るのは急いでほしい",
@@ -2391,14 +2501,16 @@ const MK_LINES = {
   "おかえり！久々にめくられるの、緊張する",
   "long time no see！文法ゆるい挨拶",
   "おかえり！控え室で角そろえて待ってたよ",
-  "おかえり。留守中、穴から外を見張ってた"
+  "おかえり。留守中、穴から外を見張ってた",
+  "おかえり{name}！ちゃんと待ってたよ"
  ],
  "home_done": [
   "今日はもう放課後。{n}日連続、帰ってよし",
   "今日の分おわり。ぼく、もう裏返って寝る",
   "もう done。ステーキなら well done",
   "{n}日目、もう済んでる。今日は紙を干す日",
-  "今日はもう試合終了！ぼくはクールダウン中"
+  "今日はもう試合終了！ぼくはクールダウン中",
+  "{name}、今日はもう放課後。{n}日連続、えらい"
  ],
  "res_comeback": [
   "前回あやしかった {w}、今回は一発！",
@@ -2512,10 +2624,27 @@ const MK_LINES = {
  ],
  "tut_blk1": [
   "{sec}、ぜんぶめくった！ 100語ずつ区切ってるから、小テストの範囲も単語帳から選べるよ"
+ ],
+ "res_badge": [
+  "「{b}」の実績、取ったよ！",
+  "「{b}」達成！ぼくの裏に記念スタンプ押しとく",
+  "やった、「{b}」！記録タブに飾っとくね",
+  "「{b}」ゲット。紙だけど、胸をはってる",
+  "{name}、「{b}」取ったよ！おめでとう",
+  "「{b}」だって！{name}、すごいじゃん"
+ ],
+ "res_badges": [
+  "実績を{k}個まとめて取ったよ！",
+  "{k}個いっぺんに達成！記録タブがにぎやかになる",
+  "実績{k}個！ぼくの余白が足りなくなりそう",
+  "{name}、実績{k}個！今日はお祭りだね"
  ]
 };
 function mkSay(scene, vars = {}){
-  const all = MK_LINES[scene] || []; if (!all.length) return '';
+  const nm = nickOf();
+  let all = MK_LINES[scene] || []; if (!nm && all.some(t => !t.includes('{name}'))) all = all.filter(t => !t.includes('{name}'));
+  if (!all.length) return '';
+  vars = {...vars, name: nm || 'きみ'};
   let recent = []; try { recent = JSON.parse(lsGet('tangoloop.mksaid') || '[]'); } catch(e) {}
   const fresh = all.filter(t => !recent.includes(t)), t = (fresh.length ? fresh : all)[Math.floor(Math.random() * (fresh.length || all.length))];
   lsSet('tangoloop.mksaid', JSON.stringify([...recent.filter(x => x !== t), t].slice(-40)));
@@ -3313,6 +3442,7 @@ function unpackMap(data, f, legacy){
 function docBodies(name){
   const upd = Date.now();
   if (name === 'meta') return [[name, {settings:S.settings, dj:JSON.stringify(S.daily), upd}]];
+  if (name === 'ach') return [[name, {aj:JSON.stringify(S.ach || {}), upd}]];   // 実績: its own document, so an older version (which reads only meta's settings and dj) leaves it alone
   if (name.startsWith('deck_')) {   // a big deck is cut into parts as well (deck_u…~1 …); the head is written last and says how many (np)
     const d = S.custom[name.slice(5)]; if (!d) return [];
     const {cards = [], np: _np, ...head} = d, P = [[]]; let size = byteLen(JSON.stringify(head));
@@ -3417,7 +3547,9 @@ async function pull(){
       // a new device that just logged in keeps the account's settings instead of pushing its own fresh defaults
       if (data.settings && (first || ru > lu)) {
         const ob = S.settings.onboarded, mine = S.settings.active.filter(x => S.custom[x] && !rDecks.has(x));   // decks made on this device, unknown to the account
+        const pf = first ? ['nick', 'icon', 'goal'].filter(k => S.settings[k] && !data.settings[k]).map(k => [k, S.settings[k]]) : [];   // the welcome's nickname, kept when the account has none
         S.settings = fixMode({...DEF, ...clone(data.settings)}); if (ob) S.settings.onboarded = true;
+        if (pf.length) { for (const [k, v] of pf) S.settings[k] = v; S.settings.upd = Date.now(); Sync.dirty.add('meta'); }
         if (mine.length) { S.settings.active = [...new Set([...S.settings.active, ...mine])]; S.settings.upd = Date.now(); Sync.dirty.add('meta'); }
         applyZoom(); changed = true;
       }
@@ -3426,6 +3558,10 @@ async function pull(){
       if (typeof data.dj !== 'string') Sync.dirty.add('meta');
       for (const [k,v] of Object.entries(rd)) { const m = mergeDay(S.daily[k], v); if (!sameObj(m, S.daily[k]||{})) { S.daily[k] = m; changed = true; } if (!sameObj(m, v)) Sync.dirty.add('meta'); }
       for (const k of Object.keys(S.daily)) if (!rd[k]) Sync.dirty.add('meta');
+    } else if (id === 'ach') {   // 実績: each badge's earlier day
+      let R = {}; try { R = JSON.parse(typeof data.aj === 'string' ? data.aj : '{}') || {}; } catch(e) {}
+      if (!S.ach || typeof S.ach !== 'object') S.ach = {};
+      const m = achMerge(S.ach, R); if (m.inL) changed = true; if (m.inR) Sync.dirty.add('ach');
     } else if (id.startsWith('deck_')) {
       const did = id.slice(5), L = S.custom[did], np = data.np || 1;
       let cards = data.cards || [];
@@ -3450,6 +3586,8 @@ async function pull(){
     }
   }
   if (!seen.has('meta')) Sync.dirty.add('meta');
+  if (!seen.has('ach') && S.ach && Object.keys(S.ach).length) Sync.dirty.add('ach');
+  if (changed && !(Q && !Q.done) && !SW) achGrant(true);   // records from another device (an older version's too): what they reach is put in quietly
   for (const deck of Object.keys(S.prog)) if (!seen.has('prog_'+deck) && Object.keys(S.prog[deck]).length) Sync.dirty.add('prog_'+deck);
   for (const did of Object.keys(S.custom)) if (!seen.has('deck_'+did)) Sync.dirty.add('deck_'+did);
   for (const deck of Object.keys(S.notes)) if (!seen.has('note_'+deck) && Object.keys(S.notes[deck]).length) Sync.dirty.add('note_'+deck);
@@ -3832,14 +3970,14 @@ function dayCheck(){ if (document.visibilityState !== 'hidden' && dayIdx() !== s
 document.addEventListener('visibilitychange', dayCheck);
 addEventListener('pageshow', dayCheck);
 /* the top bar (new look, on every tab): the 極 tile; the 連続 pill (its ring fills with today's words done ÷ today's goal,
-   then お休みチケット) that opens the streak sheet; the account's round face (logged in: the name's first letter) that opens
+   then お休みチケット) that opens the streak sheet; the account's round face (the icon chosen, else the nickname's or the account name's first letter) that opens
    where the record is saved, or the login (only where there is an account to log in to) */
 function topbar(){
   const st = streakInfo(), act = activeIds(), td = todayStat(), c = act.length ? counts(act) : null;
   const done = (td.rn || 0) + (td.nw || 0), left = c ? c.due + c.newToday : 0, fr = st.done ? 1 : done + left ? done / (done + left) : 0;
   const ring = `<svg viewBox="0 0 26 26" fill="none" aria-hidden="true"><circle cx="13" cy="13" r="11" stroke="var(--orange-track)" stroke-width="2.6"/>${fr > 0 ? `<circle cx="13" cy="13" r="11" stroke="var(--orange)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="${(69.1 * fr).toFixed(1)} 69.1" transform="rotate(-90 13 13)"/>` : ''}<path d="M13 6.9c.3 2-.8 3.2-1.8 4.3-1 1.1-2 2.3-2 4.1 0 2.3 1.7 4 3.8 4s3.8-1.7 3.8-3.9c0-1.4-.6-2.5-1.4-3.4-.2.9-.8 1.5-1.5 1.8.3-2-.1-4.8-.9-6.9z" stroke="var(--orange)" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
-  const u = Auth.user, name = u ? (u.displayName || u.email || '') : '';
-  const av = IS_WEB && FIREBASE || u ? `<button id="syncbtn" class="k-hit k-avatar" data-act="syncInfo" aria-label="${esc(name ? name + '、' : '')}保存の状態：${esc(syncLabel())}"><span class="k-face" aria-hidden="true">${name ? esc([...name][0]) : K_ICO.person}</span><span id="syncdot" class="syncdot ${Sync.state}" aria-hidden="true"></span><span class="synclab sr-only">${syncShort()}</span></button>` : '';
+  const u = Auth.user, name = u ? (u.displayName || u.email || '') : '', who = nickOf() || name;   // the nickname first, else the account's name
+  const av = IS_WEB && FIREBASE || u ? `<button id="syncbtn" class="k-hit k-avatar" data-act="syncInfo" aria-label="${esc(who ? who + '、' : '')}保存の状態：${esc(syncLabel())}">${faceHTML('k-face', name)}<span id="syncdot" class="syncdot ${Sync.state}" aria-hidden="true"></span><span class="synclab sr-only">${syncShort()}</span></button>` : '';
   return `<header class="k-top v2"><span class="k-logo" role="img" aria-label="極（きわみ）">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span>
     <div class="k-top-r"><button class="k-hit k-streak" data-act="streakSheet" aria-label="連続${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}、お休みチケット${st.freeze}枚"><span class="k-pill" aria-hidden="true"><span class="k-ring">${ring}</span>連続${st.n}日<span class="k-sep"></span><span class="k-tk">${K_ICO.ticket}お休み${st.freeze}枚</span></span></button>${av}</div></header>${iabNote()}`;
 }
@@ -4009,7 +4147,7 @@ function homeDeckCard(d, foot){
   const pct = round ? pctOf(st.m, st.total) : st.pct, what = round ? '覚えた' : '学習済み';
   const now = !st.total ? 'まだ単語がありません' : round ? `${K_ICO.redo}一周して、いまは復習中` : deckSections(d).length > 1 ? `いま ${secLabel(x)}（${secStudied(x)}/${x.heads.length}）` : `あと${st.total - st.r}語`;
   return `<div class="k-bk" style="--tint:var(--t-${b.k})"><button class="k-bk-main" data-act="openDeck" data-id="${esc(d.id)}">${bookCover(d, 'card', {paper: false})}<span class="k-bk-info"><span class="k-bk-name">${esc(d.name)}</span><span class="k-bk-now">${now}</span>
-    <span class="k-bar-row"><span class="k-bar" aria-hidden="true"><i${pct ? '' : ' class="zero"'} style="width:${pct}%"></i></span><span class="k-bar-n">${what} ${pct}%</span></span></span></button>${foot}</div>`;
+    <span class="k-bar-row">${kBar(st)}<span class="k-bar-n">${what} ${pct}%</span></span></span></button>${foot}</div>`;
 }
 let homeSaid = null;   // めくる's 休み明け line, the same one all day ({day, t})
 /* ホーム (E): the hero — the one button for what to do now, on the cover(s) of what it starts, with today's road under the
@@ -4150,7 +4288,7 @@ function deckNow(d){
 function libBook(d, going){
   const k = deckNow(d);
   return `<button class="k-lib-it" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}、${k.now.replace(/<[^>]+>/g, '')}、${k.what} ${k.pct}%${going ? '、新しい単語はここから' : ''}">${bookCover(d, 'lib')}<span class="k-lib-name" aria-hidden="true">${esc(d.name)}</span><span class="k-lib-now" aria-hidden="true">${k.now}</span>
-    <span class="k-bar-row" aria-hidden="true"><span class="k-bar"><i${k.pct ? '' : ' class="zero"'} style="width:${k.pct}%"></i></span><span class="k-bar-n">${k.what} ${k.pct}%</span></span></button>`;
+    <span class="k-bar-row" aria-hidden="true">${kBar(k.st)}<span class="k-bar-n">${k.what} ${k.pct}%</span></span></button>`;
 }
 const serBook = d => `<button class="k-ser-it" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}、${SER_LV[d.id] || ''}、${nLoc(d.cards.length)}語${S.settings.active.includes(d.id) ? '、使っている' : ''}">${bookCover(d, 'ser')}<span class="k-ser-name" aria-hidden="true">${esc(bookName(d))}</span><span class="k-ser-lv" aria-hidden="true">${SER_LV[d.id] || ''}</span><span class="k-ser-n num" aria-hidden="true">${nLoc(d.cards.length)}語</span></button>`;
 const plusRow = d => `<li><button class="k-row" data-act="openDeck" data-id="${esc(d.id)}">${bookCover(d, 'card')}<span class="k-row-t"><span class="k-row-name">${esc(d.name)}</span><span class="k-row-sub">${esc(DECK_WHAT[d.id] || d.tag || '')}、<span class="num">${nLoc(d.cards.length)}</span>語</span></span>${K_CHEV}</button></li>`;
@@ -4468,6 +4606,211 @@ function calBlock(st, fr){
 }
 const tktBlock = st => `<div class="k-tkt"><div class="top"><p class="n">お休みチケット ${st.freeze}枚</p><div class="ic" role="img" aria-label="2枚まで持てるうちの${st.freeze}枚">${[0, 1].map(i => `<span class="${i < st.freeze ? 'hv' : 'em'}">${K_TK}</span>`).join('')}</div></div>
   <p class="s"><span class="k-ph">1日休んでも、連続が切れない</span><br><span class="k-ph">7日続けるごとに1枚もらえる、</span><span class="k-ph">2枚まで持てる</span></p></div>`;
+/* the last 20 weeks, a square a day (weeks in columns, Sunday on top): how many questions (and sorted words), the app blue
+   deeper the more — as the 記録 tab showed it before the new look (0, under 10, under 30, under 60, 60 and up) */
+function heatBlock(){
+  const today = dayIdx(), dow = new Date(today * DAY).getUTCDay(), weeks = 20, start = today - dow - (weeks - 1) * 7;
+  let cells = '', on = 0;
+  for (let i = start; i < start + weeks * 7; i++) {
+    if (i > today) { cells += '<i class="fut"></i>'; continue; }
+    const d = S.daily[dayKey(i)] || {}, n = (d.n || 0) + (d.sw || 0), l = n === 0 ? 0 : n < 10 ? 1 : n < 30 ? 2 : n < 60 ? 3 : 4;
+    if (n) on++;
+    cells += `<i class="l${l}${i === today ? ' now' : ''}" title="${mdLabel(i)} ${n ? n + '問' : '学習なし'}"></i>`;
+  }
+  return `<div class="k-heat"><div class="g" role="img" aria-label="この20週の学習、${on}日学習した">${cells}</div>
+    <div class="ft" aria-hidden="true"><span>この20週で${on}日</span><span class="key">少${[0, 1, 2, 3, 4].map(l => `<i class="l${l}"></i>`).join('')}多</span></div></div>`;
+}
+/* a deck's bar (the home card, the shelf, the 記録 tab): 覚えた in the app blue, then the rest of 学習済み lighter, so a deck round
+   once stays full while its label says 覚えた % (a first-round deck: the same two, its label 学習済み %) */
+function kBar(st){
+  const t = st.total || 0, a = t ? st.m / t * 100 : 0, w = t ? st.r / t * 100 : 0;
+  return `<span class="k-bar" aria-hidden="true">${w > 0 ? `<i style="width:${w.toFixed(2)}%">${a > 0 ? `<b style="width:${Math.min(100, a / w * 100).toFixed(2)}%"></b>` : ''}</i>` : ''}</span>`;
+}
+/* ---------- プロフィールと実績（docs/features/profile_achievements.md） ---------- */
+/* the profile is three settings (synced with them, last change wins): nick (up to 10 letters, only this app and its account see
+   it), icon (めくる in one of 6 colours; none chosen: the face shows the name's first letter) and goal (shown only, for now) */
+const NICK_MAX = 10;
+const cleanNick = s => [...String(s ?? '').replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, '').trim()].slice(0, NICK_MAX).join('').trim();
+const nickOf = () => cleanNick(S.settings.nick);
+/* めくる's body line (#2B45D3 in src/chara) in another colour; the ring, the face and the paper stay, so it is still めくる */
+const AV = [['blue', '青', '#2B45D3'], ['purple', '紫', '#6B4FD8'], ['green', '緑', '#23885A'], ['orange', 'オレンジ', '#D9770F'], ['pink', 'ピンク', '#D4407A'], ['gray', '灰', '#5E5E68']];
+const avOf = k => AV.find(a => a[0] === k) || AV[0];
+const AV_SRC = {};
+function avSrc(k){
+  const a = avOf(k); if (AV_SRC[a[0]] !== undefined) return AV_SRC[a[0]];
+  let s = MEKURU.happy || '';
+  if (s && a[0] !== 'blue') { try { s = 'data:image/svg+xml;base64,' + btoa(atob(s.split(',')[1]).split('#2B45D3').join(a[2])); } catch(e) { s = MEKURU.happy; } }
+  return AV_SRC[a[0]] = s;
+}
+/* the round icon: めくる in the colour chosen on its colour's tint (cls sets the size) */
+const avHTML = (k, cls = '') => { const a = avOf(k), src = avSrc(a[0]);
+  return `<span class="k-av${cls ? ' ' + cls : ''}" style="--av:${a[2]}" aria-hidden="true">${src ? `<img src="${src}" alt="" decoding="async">` : ''}</span>`; };
+/* the top bar's and the settings row's face: the icon once one is chosen, else the first letter of the nickname (or the account's name) */
+function faceHTML(cls, fallback = ''){
+  if (S.settings.icon && MEKURU.happy) return avHTML(S.settings.icon, cls);
+  const n = nickOf() || fallback;
+  return `<span class="${cls}" aria-hidden="true">${n ? esc([...n][0]) : K_ICO.person}</span>`;
+}
+const GOALS = [['kyotsu', '共通テスト', '共通テスト'], ['chuken', '中堅大', '中堅大（MARCH、関関同立など）'], ['nankan', '難関大', '難関大（早慶、旧帝大など）'], ['mada', 'まだ決めてない', 'まだ決めてない']];
+const goalOf = k => GOALS.find(g => g[0] === k);
+const K_FLAG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V3.8"/><path d="M6 4.5h11.5l-2.4 4.2 2.4 4.2H6"/></svg>';
+const K_PEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5h4l10.3-10.3a2.1 2.1 0 0 0-3-3L5.5 16.5z"/><path d="M14.3 7.7l3 3"/></svg>';
+/* the first day on record, 「2026年4月5日」 */
+function sinceText(){
+  const k = Object.keys(S.daily).filter(k => { const d = S.daily[k]; return d && ((d.n || 0) + (d.sw || 0) > 0); }).sort()[0]; if (!k) return '';
+  const d = new Date(k); return `${d.getUTCFullYear()}年${d.getUTCMonth() + 1}月${d.getUTCDate()}日`;
+}
+/* the edit sheet: nickname, icon, goal. Nothing changes until 保存する (at: 'goal' opens it at the goal) */
+let pfDraft = null;
+function profSheet(at){
+  pfDraft = {icon: S.settings.icon || '', goal: S.settings.goal || ''};   // no icon chosen yet: the blue one shows, and stays unchosen unless picked
+  openSheet(profSheetHTML());
+  if (at === 'goal') $('#pfgoal')?.scrollIntoView({block: 'start'});
+}
+function profSheetHTML(){
+  const nick = $('#pfnick') ? $('#pfnick').value : nickOf();
+  return `<div class="sheet-h"><h3>プロフィール</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="k-pf">
+      <div class="k-pf-top">${avHTML(pfDraft.icon, 'lg')}</div>
+      <label class="k-pf-h" for="pfnick">ニックネーム</label>
+      <input id="pfnick" class="k-input" type="text" maxlength="${NICK_MAX}" value="${esc(nick)}" placeholder="例：ゆうと" autocomplete="nickname" enterkeyhint="done" spellcheck="false">
+      <p class="k-pf-s"><span class="k-ph">ニックネームでOK（本名じゃなくていい）、</span><span class="k-ph">${NICK_MAX}文字まで、</span><span class="k-ph">ほかの人には見えない</span></p>
+      <p class="k-pf-h" id="pficon">アイコン</p>
+      <div class="k-pf-icons" role="radiogroup" aria-labelledby="pficon">${AV.map(([k, nm]) => `<button role="radio" aria-checked="${(pfDraft.icon || 'blue') === k}" aria-label="${nm}のめくる" data-act="pfIcon" data-v="${k}">${avHTML(k, 'md')}</button>`).join('')}</div>
+      <p class="k-pf-h" id="pfgoal">目標</p>
+      <div class="k-grp k-pick" role="radiogroup" aria-labelledby="pfgoal">${GOALS.map(([k, , long]) => `<button class="k-srow" role="radio" aria-checked="${pfDraft.goal === k}" data-act="pfGoal" data-v="${k}"><span class="txt"><span class="lab">${esc(long)}</span></span>${pfDraft.goal === k ? K_CHECK : ''}</button>`).join('')}</div>
+      <p class="k-pf-s">いまは表示だけ。学習の中身は変わらない</p>
+      <button class="btn btn-primary btn-block k-pf-save" data-act="pfSave">保存する</button>
+    </div>`;
+}
+function profSave(){
+  const nick = cleanNick($('#pfnick')?.value), s = S.settings;
+  if (nick !== (s.nick || '') || pfDraft.icon !== (s.icon || '') || pfDraft.goal !== (s.goal || '')) {
+    s.nick = nick; s.icon = pfDraft.icon; s.goal = pfDraft.goal; s.upd = Date.now(); save(); markDirty('meta', true);
+  }
+  closeSheet(); render();
+}
+
+/* 実績: about 20 badges in 5 kinds. What the records can tell (連続 by the 自己ベスト, 覚えた語数, a deck all 学習済み, a 虹色★ block,
+   back after 3+ days off) is worked out from them; 全問Perfect is counted per set in daily (pf_<device>, so two devices' sets on
+   one day add up). S.ach {id: {d: day, q: 1 when it was already had}} keeps only when each was got, in its own synced document
+   'ach' (an older version leaves it alone): the earlier day wins when two devices meet. The first time (and after records come
+   in from another device) everything already reached is put in quietly; a set's results show what that set earned */
+const DEV = (() => { let d = lsGet('tangoloop.dev'); if (!/^[a-z0-9]{4,8}$/.test(d || '')) { d = Math.random().toString(36).slice(2, 8).padEnd(4, '0'); lsSet('tangoloop.dev', d); } return d; })();
+const ACH_BOOKS = ['j1', 'j2', 'j3', 'idioms', 'tagi'];
+const ACH_CAT = [
+  {k: 'streak', t: '続けた', s: '連続記録の自己ベストで決まる'},
+  {k: 'master', t: '覚えた', s: '「覚えた」は、3週間あけても答えられた単語'},
+  {k: 'book', t: '単語帳', s: '見出し語を、ぜんぶ学習済みにする'},
+  {k: 'pf', t: '腕前', s: '5問以上のセットで、答えが全部Perfect'},
+  {k: 'fun', t: 'ほかにも', s: ''},
+];
+let ACH_L = null;
+function achList(){
+  if (ACH_L) return ACH_L;
+  const L = [];
+  for (const n of [3, 7, 30, 50, 100, 365]) L.push({id: 's' + n, cat: 'streak', n, kj: '続', c: 'var(--orange)', name: [`連続${n}日`], unit: '日', say: `連続${n}日`});
+  for (const n of [100, 500, 1000, 2000, 3000]) L.push({id: 'm' + n, cat: 'master', n, kj: '覚', c: 'var(--blue-hero)', name: [`${nLoc(n)}語`, '覚えた'], unit: '語', say: `${nLoc(n)}語覚えた`});
+  for (const id of ACH_BOOKS) { const d = deckById(id); if (!d || !d.builtin) continue; const b = bookOf(d);
+    L.push({id: 'b_' + id, cat: 'book', deck: id, kj: b.kj, c: `var(--c-${b.k})`, name: [b.nm, 'ぜんぶ', '学習済み'], unit: '語', say: `${b.nm}ぜんぶ学習済み`}); }
+  for (const n of [1, 10, 50]) L.push({id: 'p' + n, cat: 'pf', n, kj: '完', c: 'var(--md-pf)', name: [`${n}セット`, '全問Perfect'], unit: 'セット', say: `${n}セット全問Perfect`});
+  L.push({id: 'rb', cat: 'fun', kj: '虹', c: 'var(--rb-5)', name: ['はじめての', '虹色★'], hint: ['ブロックを', '派生語まで'], say: 'はじめての虹色★'});
+  L.push({id: 'cb', cat: 'fun', kj: '再', c: 'var(--c-today)', name: ['休み明けに', '戻ってきた'], hint: ['3日以上', 'あけて学習'], say: '休み明けに戻ってきた'});
+  return ACH_L = L;
+}
+/* a block with its headwords, derivatives and other meanings all learned (the 虹色★ of the deck page) */
+function rainbowAny(){
+  for (const d of decks()) { if (!deckStats(d).r) continue;
+    for (const x of deckSections(d)) if (secStudied(x) === x.heads.length && x.heads.length && blockInfo(x, d).all) return true; }
+  return false;
+}
+const isPfKey = f => f === 'pf' || f.startsWith('pf_');
+/* what the records say now: the numbers each badge is reached by */
+function achCtx(){
+  const st = streakInfo(), mAll = cardsOf(decks().map(d => d.id)).filter(c => status(prog(c)) === 'master').length, books = {};
+  for (const id of ACH_BOOKS) { const d = deckById(id); if (d) { const s = deckStats(d); books[id] = {left: s.total - s.r, total: s.total}; } }
+  let pf = 0, cb = false; const on = [];
+  for (const [k, d] of Object.entries(S.daily)) { if (!d) continue;
+    for (const [f, v] of Object.entries(d)) if (isPfKey(f) && v > 0) pf += v;
+    if (d.cb > 0) cb = true;
+    if ((d.n || 0) + (d.sw || 0) > 0) on.push(Math.round(Date.parse(k) / DAY)); }
+  on.sort((a, b) => a - b);
+  for (let i = 1; i < on.length && !cb; i++) if (on[i] - on[i - 1] - 1 >= 3) cb = true;   // a study day after 3 days or more without one
+  return {st, mAll, books, pf, cb, rb: null};
+}
+/* one badge against the records: ok, and how far it is (left, in its unit) */
+function achTest(b, x){
+  if (b.cat === 'streak') return {ok: x.st.best >= b.n, left: Math.max(1, b.n - x.st.n)};
+  if (b.cat === 'master') return {ok: x.mAll >= b.n, left: Math.max(1, b.n - x.mAll)};
+  if (b.cat === 'book') { const k = x.books[b.deck]; return {ok: !!k && k.total > 0 && k.left <= 0, left: k ? Math.max(1, k.left) : 0}; }
+  if (b.cat === 'pf') return {ok: x.pf >= b.n, left: Math.max(1, b.n - x.pf)};
+  if (b.id === 'rb') { if (x.rb === null) x.rb = rainbowAny(); return {ok: x.rb}; }
+  if (b.id === 'cb') return {ok: x.cb};
+  return {ok: false};
+}
+/* stores what is reached and not stored yet; quiet (and the very first time): as already had, nothing to celebrate. Returns the new ones */
+function achGrant(quiet = false){
+  const first = !S.ach || typeof S.ach !== 'object'; if (first) S.ach = {};
+  const x = achCtx(), today = dayIdx(), got = [];
+  for (const b of achList()) if (!S.ach[b.id] && achTest(b, x).ok) { S.ach[b.id] = quiet || first ? {d: today, q: 1} : {d: today}; got.push(b); }
+  if (got.length || first) { save(); markDirty('ach', true); }
+  return quiet || first ? [] : got;
+}
+/* two devices' badges: each one's earlier day (a day the same: got in a set beats already had) */
+function achMerge(L, R){
+  let inL = false, inR = false;
+  for (const [k, v] of Object.entries(R || {})) { if (!v || typeof v.d !== 'number') continue;
+    const l = L[k]; if (!l || v.d < l.d || (v.d === l.d && l.q && !v.q)) { L[k] = v.q ? {d: v.d, q: 1} : {d: v.d}; inL = true; } }
+  for (const [k, l] of Object.entries(L)) { const r = R?.[k]; if (!r || typeof r.d !== 'number' || r.d > l.d || (r.d === l.d && r.q && !l.q)) inR = true; }
+  return {inL, inR};   // inL: this device took something; inR: the account's copy lacks something of this device's
+}
+/* a set's end: an all-Perfect set (5 questions or more, every one Perfect at the first answer) and a study day after 3+ days off */
+function achCount(its){
+  if (!Q.pfKey && its.length >= 5 && its.every(x => x.tier === 4)) { Q.pfKey = 'pf_' + DEV; bumpDaily({[Q.pfKey]: 1}); }
+  if (!todayStat().cb) { const t = dayIdx(); let last = null;
+    for (const [k, d] of Object.entries(S.daily)) { const i = Math.round(Date.parse(k) / DAY); if (i < t && d && (d.n || 0) + (d.sw || 0) > 0 && (last === null || i > last)) last = i; }
+    if (last !== null && t - last - 1 >= 3) bumpDaily({cb: 1}); }
+}
+/* the round badge: its kind's colour and brush letter (the 虹色★ is the deck page's medal); not got yet: a dashed ring, faint */
+function medalHTML(b, got, sub = ''){
+  const md = got && b.id === 'rb' ? `<span class="md rbw">${blockBadge(1, true)}</span>` : `<span class="md"${got ? ` style="--m:${b.c}"` : ''}><span class="kj">${b.kj}</span></span>`;
+  return `<div class="k-bd${got ? '' : ' yet'}" role="img" aria-label="${esc(b.say)}、${got ? '取った' : 'まだ'}${sub ? '、' + esc(sub.replace(/<[^>]+>/g, '')) : ''}">${md}<p class="n" aria-hidden="true">${b.name.map(p => `<span class="k-ph">${esc(p)}</span>`).join('')}</p>${sub ? `<p class="p" aria-hidden="true">${sub}</p>` : ''}</div>`;
+}
+const achDay = e => { if (!e) return ''; if (e.q) return 'もう取っていた'; const d = new Date(e.d * DAY); return `${d.getUTCMonth() + 1}月${d.getUTCDate()}日`; };
+const achLeft = (b, t) => t.left ? `あと${nLoc(t.left)}${b.unit}` : '';
+/* the 記録 tab's grid: per kind, the highest one got (top row) and the next one (bottom row, faint with あと…); the rest is in the sheet */
+function achGrid(){
+  const x = achCtx(), L = achList(), A = S.ach || {}, top = [], next = [];
+  for (const cat of ['streak', 'master', 'book', 'pf']) {
+    const bs = L.filter(b => b.cat === cat), got = b => !!A[b.id] || achTest(b, x).ok;
+    let hi = null, nx = null;
+    if (cat === 'book') {
+      const have = bs.filter(got); hi = have.sort((a, b) => (A[b.id]?.d ?? 1e9) - (A[a.id]?.d ?? 1e9))[0] || null;   // the latest got
+      const not = bs.filter(b => !got(b)), act = activeIds();
+      nx = not.find(b => act.includes(b.deck) && x.books[b.deck]?.left < x.books[b.deck]?.total) || not.find(b => act.includes(b.deck)) || not[0] || null;
+    } else { hi = bs.filter(got).at(-1) || null; nx = bs.find(b => !got(b)) || null; }
+    top.push(hi ? medalHTML(hi, true) : '<div class="k-bd none"></div>');
+    next.push(nx ? medalHTML(nx, false, achLeft(nx, achTest(nx, x))) : '<div class="k-bd none"></div>');
+  }
+  return `<div class="k-bdg">${top.some(h => !h.includes('none')) ? top.join('') : ''}${next.join('')}</div>`;
+}
+/* 実績 › : every badge by kind, the day each was got or how far it is */
+function achSheet(){
+  const x = achCtx(), L = achList(), A = S.ach || {}, n = L.filter(b => A[b.id] || achTest(b, x).ok).length;
+  const cats = ACH_CAT.map(c => { const bs = L.filter(b => b.cat === c.k); if (!bs.length) return '';
+    return `<section class="k-ach-c"><h4 class="k-ach-h">${c.t}</h4>${c.s ? `<p class="k-ach-s">${esc(c.s)}</p>` : ''}<div class="k-bdg">${bs.map(b => { const t = achTest(b, x), got = !!A[b.id] || t.ok;
+      return medalHTML(b, got, got ? achDay(A[b.id]) || '今日' : b.hint ? b.hint.map(p => `<span class="k-ph">${p}</span>`).join('') : achLeft(b, t)); }).join('')}</div></section>`; }).join('');
+  openSheet(`<div class="sheet-h"><h3>実績</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <p class="k-ach-sum">${L.length}個のうち、<b>${n}</b>個取った</p>${cats}<button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
+}
+/* the results' めくる when a set earned badges: the badges, and one line (glad) — several at once are said once */
+function achSayHTML(list, first = ''){
+  if (!list?.length) return '';
+  const t = first || (list.length > 1 ? mkSay('res_badges', {k: list.length, b: list[0].say}) || `実績を${list.length}個取ったよ！` : mkSay('res_badge', {b: list[0].say}) || `「${list[0].say}」を取ったよ！`);
+  const shown = list.slice(0, 4);
+  return `<section class="rs-ach" aria-label="取った実績"><div class="rs-ach-md">${shown.map(b => medalHTML(b, true)).join('')}</div>${list.length > 4 ? `<p class="rs-ach-more">ほかに${list.length - 4}個、記録タブの実績で見られる</p>` : ''}
+    <div class="k-say">${mekuru('happy')}<p class="k-bubble" role="status">${first || kPhrases(t)}</p></div></section>`;
+}
 function viewStats(){
   const g = goalToday(), {st} = g, today = dayIdx();
   // the decks started (any word learned; else the ones in use): what 覚えた単語 counts
@@ -4479,17 +4822,32 @@ function viewStats(){
   for (const c of allD) { const s = status(prog(c)); if (s === 'master') dm++; else if (s === 'learn') dl++; }
   // all the decks for the numbers at the top
   const mAll = cardsOf(decks().map(d => d.id)).filter(c => status(prog(c)) === 'master').length;
-  let days = 0, time = 0; for (const d of Object.values(S.daily)) { if ((d.n || 0) + (d.sw || 0) > 0) days++; time += d.wt || d.t || 0; }
+  let days = 0, time = 0, tot = 0, totC = 0, rn = 0, rc = 0;
+  for (const [k, d] of Object.entries(S.daily)) { if (!d) continue; if ((d.n || 0) + (d.sw || 0) > 0) days++; time += d.wt || d.t || 0;
+    tot += d.n || 0; totC += d.c || 0; if (today - Math.round(Date.parse(k) / DAY) < 30) { rn += d.rn || 0; rc += d.rc || 0; } }   // as the 記録 tab counted before the new look
   const mins = Math.round(time / 60000), tm = mins >= 60 ? [Math.floor(mins / 60), '時間'] : [mins, '分'];
-  const top = `<div class="k-page-h"><h1 class="k-page-t">記録</h1></div>
-    <div class="k-pst"><div><p class="n">${nLoc(mAll)}<small>語</small></p><p class="l">覚えた単語</p></div><div><p class="n">${nLoc(days)}<small>日</small></p><p class="l">学習した日</p></div><div><p class="n">${nLoc(tm[0])}<small>${tm[1]}</small></p><p class="l">学習した時間</p></div></div>`;
+  // the profile: the icon, the nickname, the goal, the first day; under it the three numbers
+  const nick = nickOf(), gl = goalOf(S.settings.goal), since = sinceText();
+  const top = `<section class="k-prof" aria-label="プロフィール"><div class="top">${avHTML(S.settings.icon, 'lg')}
+      <div class="info"><h1 class="nm">${nick ? esc(nick) : '<button class="k-prof-set" data-act="profSheet">ニックネームを決める</button>'}</h1>
+        <button class="k-prof-goal" data-act="profSheet" data-f="goal" aria-label="${gl ? `目標 ${esc(gl[2])}、変える` : '目標を決める'}"><span class="pill">${K_FLAG}${gl ? `<span class="k">目標</span>${esc(gl[1])}` : '目標を決める'}</span></button>
+        ${since ? `<p class="since">${since}にはじめた</p>` : ''}</div>
+      <button class="k-prof-edit" data-act="profSheet" aria-label="プロフィールを編集"><span class="pill">${K_PEN}編集</span></button></div>
+    <div class="k-pst"><div><p class="n">${nLoc(mAll)}<small>語</small></p><p class="l">覚えた単語</p></div><div><p class="n">${nLoc(days)}<small>日</small></p><p class="l">学習した日</p></div><div><p class="n">${nLoc(tm[0])}<small>${tm[1]}</small></p><p class="l">学習した時間</p></div></div></section>`;
   const streak = `<section class="k-sec" aria-label="連続記録"><div class="k-sec-h"><h2 class="k-sec-t">連続記録</h2></div>${streakBlock(g)}${calBlock(st, g.fr)}${tktBlock(st)}</section>`;
+  const ach = `<section class="k-sec" aria-label="実績"><div class="k-sec-h"><h2 class="k-sec-t"><button data-act="achSheet">実績${K_ICO.chev}</button></h2></div>${achGrid()}</section>`;
+  // これまで: every question answered and how many right, and the last 20 weeks a square a day (the blue deeper the more)
+  const sofar = `<section class="k-sec" aria-label="これまで"><div class="k-sec-h"><h2 class="k-sec-t">これまで</h2></div>
+    <div class="k-wd2 top0"><div><p class="t">解いた問題</p><p class="n">${nLoc(tot)}<small>問</small></p></div><div><p class="t">正答率</p><p class="n">${tot ? Math.round(totC / tot * 100) : 0}<small>%</small></p></div></div>${heatBlock()}</section>`;
+  // この30日の復習: the reviews' share right (against the 復習の量's aim) and how many
   // 覚えた単語: one big number of the decks started, one stacked bar (覚えた, 学習中, まだ), then meanings and derivatives
-  const tot = all.length, pc = v => tot ? (v / tot * 100).toFixed(1) : 0;
+  const rev30 = `<section class="k-sec" aria-label="この30日の復習"><div class="k-sec-h"><h2 class="k-sec-t">この30日の復習</h2></div>
+    <div class="k-wd2 top0"><div><p class="t">正答率</p><p class="n">${rn ? Math.round(rc / rn * 100) : '—'}${rn ? '<small>%</small>' : ''}</p><p class="s">目安は${Math.round(S.settings.retention * 100)}%</p></div><div><p class="t">復習した回数</p><p class="n">${nLoc(rn)}<small>回</small></p></div></div></section>`;
+  const wt = all.length, pc = v => wt ? (v / wt * 100).toFixed(1) : 0;
   const words = `<section class="k-sec" aria-label="覚えた単語"><div class="k-sec-h has-sub"><h2 class="k-sec-t">覚えた単語</h2><p class="k-sec-s">「覚えた」は、3週間あけても答えられた単語</p></div>
-    <div class="k-wd">${kBig('', nLoc(m), '語', started.length ? `／${esc(booksText(started))}の${nLoc(tot)}語` : '')}
+    <div class="k-wd">${kBig('', nLoc(m), '語', started.length ? `／${esc(booksText(started))}の${nLoc(wt)}語` : '')}
       <div class="k-sbar" aria-hidden="true">${m ? `<i class="k" style="width:${pc(m)}%"></i>` : ''}${l ? `<i class="l" style="width:${pc(l)}%"></i>` : ''}</div>
-      <div class="k-lg"><span class="k">覚えた<b>${nLoc(m)}</b></span><span class="l">学習中<b>${nLoc(l)}</b></span><span class="m">まだ<b>${nLoc(tot - m - l)}</b></span></div></div>
+      <div class="k-lg"><span class="k">覚えた<b>${nLoc(m)}</b></span><span class="l">学習中<b>${nLoc(l)}</b></span><span class="m">まだ<b>${nLoc(wt - m - l)}</b></span></div></div>
     <div class="k-wd2"><div><p class="t">学習済みの意味</p><p class="n">${nLoc(sl)}<small>／${nLoc(stot)}</small></p><p class="s">意味をぜんぶ学習済み ${nLoc(sc)}語</p></div>
       <div><p class="t">覚えた派生語</p><p class="n">${nLoc(dm)}<small>／${nLoc(allD.length)}</small></p><p class="s">学習中 ${nLoc(dl)}語</p></div></div></section>`;
   // each deck started: its cover, what it is at (or when it is round once, for the one new words come from), its one bar, its words
@@ -4497,7 +4855,7 @@ function viewStats(){
   const dkRow = d => { const k = deckNow(d), s = k.st, pi = d === going ? paceInfo(S.settings.order === 'rand' ? act : [d.id]) : null;
     const parts = [['覚えた', s.m], ['学習中', s.r - s.m], ['まだ', s.total - s.r]].filter(x => x[1] > 0).map(([a, v]) => `${a}${nLoc(v)}語`).join('、');
     return `<button class="k-dk" data-act="openDeck" data-id="${esc(d.id)}">${bookCover(d, 'card', {paper: false})}<span class="i"><span class="nm">${esc(d.name)}</span><span class="now">${pi ? esc(paceLine(pi)) : k.now}</span>
-      <span class="k-bar-row"><span class="k-bar" aria-hidden="true"><i${k.pct ? '' : ' class="zero"'} style="width:${k.pct}%"></i></span><span class="k-bar-n">${k.what} ${k.pct}%</span></span>
+      <span class="k-bar-row">${kBar(k.st)}<span class="k-bar-n">${k.what} ${k.pct}%</span></span>
       <span class="r">${nLoc(s.total)}語のうち、${parts}</span></span></button>`; };
   const dks = started.filter(d => deckStats(d).r > 0);
   const books = dks.length ? `<section class="k-sec" aria-label="単語帳ごとの進み"><div class="k-sec-h"><h2 class="k-sec-t"><button data-act="tab" data-tab="decks">単語帳ごとの進み${K_ICO.chev}</button></h2></div><div class="k-dks">${dks.map(dkRow).join('')}</div></section>` : '';
@@ -4515,7 +4873,7 @@ function viewStats(){
         ${avg ? `<div class="avg" style="top:${(H - avg / tp * H).toFixed(1)}px"><span>平均</span></div>` : ''}</div>
       <div class="k-xl" aria-hidden="true">${xl.map(([i, t]) => `<span${i ? ` style="left:calc(3.5px + (100% - 7px) * ${i / 28})"` : ' class="l0"'}>${t}</span>`).join('')}</div></div></section>`;
   const say = MEKURU.happy ? `<section class="k-sec k-say" aria-label="めくるから">${mekuru('happy')}<p class="k-bubble">${kPhrases('覚えた単語も、忘れかけたころに、また出すよ')}</p></section>` : '';
-  return `${topbar()}${top}${streak}${words}${books}${fcs}${say}`;
+  return `${topbar()}${top}${streak}${ach}${sofar}${words}${books}${rev30}${fcs}${say}`;
 }
 function niceStep(max){ const raw = max/4; const p = Math.pow(10, Math.floor(Math.log10(raw))); for (const m of [1,2,5,10]) if (m*p >= raw) return m*p; return 10*p; }
 /* ---------- 新デザイン5: 設定タブ（S/settings/notes.md） ---------- */
@@ -4577,7 +4935,9 @@ function viewSettings(){
     : installEvt ? kGo('install', 'ホーム画面に追加', 'アイコンから1タップで開ける') : kGo('instSheet', 'ホーム画面に追加', 'アイコンから1タップで開ける');
   const saveRow = kGo('saveSheet', '記録の保存先', '', Auth.user ? 'アカウント' : 'この端末');
   const u = Auth.user;
+  const nick = nickOf();
   return `${topbar()}<div class="k-page-h"><h1 class="k-page-t">設定</h1></div>
+  <button class="k-merow" data-act="profSheet">${faceHTML('k-face', u ? u.displayName || '' : '')}<span class="txt"><span class="nm">${nick ? esc(nick) : 'ニックネームを決める'}</span><span class="nt">${nick ? 'ニックネームとアイコンを変える' : 'アイコンと目標も、ここで選べる'}</span></span>${K_CHEV}</button>
   ${kSec('学習', goalCard() + kGroup([kStepRow('setSize', '問', 5, '1セットの問題数'),
     kOpts('timeLimit', [[0, 'なし'], [5, '5秒'], [10, '10秒'], [15, '15秒']], '1問の制限時間', '速く正解するほど、次の復習が先にのびる'),
     kOpts('dir', Object.entries(DIR_LABEL), '出題の向き', '自動は、覚え具合で英→日と日→英を切りかえる', s.dir || 'auto'),
@@ -5750,7 +6110,8 @@ function undoAnswer(){
   }
   Object.assign(it, {first: h.first, ok: h.ok, ms: h.ms, after: h.after, grade: h.grade, tier: h.tier, tries: h.tries, gaveUp: h.gaveUp, type: h.type, check: h.check});
   Object.assign(Q, {queue: h.queue, cleared: h.cleared, combo: h.combo, maxCombo: h.maxCombo, done: false, revealed: null});
-  if (Q.won && !h.practice && todayStat().g && !goalReached()) { bumpDaily({g: -1}); Q.won = false; }   // only this set's goal, and only if the undone answer un-reaches it
+  if (Q.won && !h.practice && todayStat().g && !goalReached()) { bumpDaily({g: -1}); Q.won = false; }
+  if (Q.pfKey) { bumpDaily({[Q.pfKey]: -1}); Q.pfKey = null; }   // the set's all-Perfect is counted again when it ends again   // only this set's goal, and only if the undone answer un-reaches it
   renderQ();
   toast(`「${it.c.w}」をやり直します`);
 }
@@ -5901,6 +6262,9 @@ function renderResults(){
   const before = streakInfo(), won = checkGoal(), st = won ? streakInfo() : before;
   if (won) { Q.won = true; setTimeout(() => { if (Q?.won && Q.done) haptic(true); }, lessMotion() ? 0 : 600); }   // with the flame
   const prac = !!Q.opts.practice, pct = Math.round(ok / n * 100);
+  // 実績: an all-Perfect set and a day back after a break are counted, then what the records reach now is this set's (kept on Q:
+  // drawing the results again, or 1問もどす and back, shows the same badges; one already stored is never shown twice)
+  if (!prac) { achCount(its); Q.ach = [...(Q.ach || []), ...achGrant(false)]; }
   // a set of new words only is not a test: you graded each card yourself, so it shows how (N語 めくった in four grades), not a %
   const fr = !prac && its.every(x => !x.sameDay && !isReview(x.p0)), gn = [0, 1, 2, 3, 4].map(g => its.filter(x => x.first === g).length);
   if (!prac && TUT?.on && !TUT.f1 && tutOn()) { TUT.f1 = Date.now(); tutSave(); }   // a new learner finished a first set (kept for later)
@@ -5941,7 +6305,8 @@ function renderResults(){
   if (first) tutMark('res1');
   const line = first ? '' : mkSay(sc, {n: sc === 'res_fresh' ? n : st.n, pct, w: comeback}) || (sc === 'res_low' ? 'まちがえた単語は、また出すから大丈夫' : 'さ、次めくろ！');
   // the results' めくる is glad (its face for a good set) — after a set mostly missed, it cheers you on
-  const mkLine = prac ? '' : `<section class="k-say rs-say" aria-label="めくるから">${mekuru(sc === 'res_low' ? 'cheer' : 'happy')}<p class="k-bubble" role="status">${first || kPhrases(line)}</p></section>`;
+  const achH = prac ? '' : achSayHTML(Q.ach, first);   // badges got: they and めくる's line about them, in めくる's place
+  const mkLine = prac ? '' : achH || `<section class="k-say rs-say" aria-label="めくるから">${mekuru(sc === 'res_low' ? 'cheer' : 'happy')}<p class="k-bubble" role="status">${first || kPhrases(line)}</p></section>`;
 
   // what the hero's button starts and the ways on under it. go(): its words, decks and time, as the home's button says them
   const go = (act, main, kind, k, tail = '', x = {}) => { const pv = setPreview(kind, ids), b = booksText(pv.decks);
@@ -6035,10 +6400,10 @@ function renderResults(){
     : `<ul class="rs-wl">${restI.map(wRow).join('')}</ul>${practice}`;
   const words = `<section class="k-sec rs-sec"><div class="k-sec-h has-sub"><h2 class="k-sec-t">このセットの単語</h2><p class="k-sec-s">タップすると、例文や派生語まで見られる</p></div>${list}</section>`;
   const dock = m ? `<div class="rs-dock" aria-hidden="true"><button class="rs-dock-btn" data-act="resDock" tabindex="-1">${K_ICO.play}<span class="t">${esc(m.main)}</span><span class="r">${m.k ? `${m.k}問、${aboutMin(m.k)}` : ''}</span></button></div>` : '';
-  $('#screen').innerHTML = `<div class="screen-in res v2">${top}${cele}${notice}${hero}${inst ? `<div class="rs-inst">${inst}</div>` : mkLine}
+  $('#screen').innerHTML = `<div class="screen-in res v2">${top}${cele}${notice}${hero}${inst ? `<div class="rs-inst">${inst}</div>${achH}` : mkLine}
     ${statsH}${speed}${words}<section class="k-sec rs-sec"><button class="rs-home rb" data-act="quitQuiz">${homeLbl}</button></section>${dock}</div>`;
   // a short screen: the card would sit below the first screen; めくる's line instead, the home has the card from now
-  const ic = inst && $('#screen .rs-inst'); if (ic && ic.getBoundingClientRect().top + 64 > innerHeight) ic.outerHTML = mkLine;
+  const ic = inst && $('#screen .rs-inst'); if (ic && ic.getBoundingClientRect().top + 64 > innerHeight) ic.outerHTML = achH ? '' : mkLine;
   // the dock: only once the hero's button has gone off the top (never the same button twice in view)
   resIO?.disconnect(); resIO = null;
   const pb = $('#screen .rs-hero .rb.main'), dk = $('#screen .rs-dock');
@@ -6164,12 +6529,13 @@ function renderSwipeDone(){
   const play = unk.length ? `<button class="k-play rb main" data-act="learnUnknown">${K_ICO.play}<span class="k-play-t"><span class="k-play-main">${unk.length <= S.settings.setSize ? `知らない${unk.length}語を覚える` : `知らない単語から${k}語を覚える`}</span><span class="k-play-sub"><span class="ln">${aboutMin(k)}</span></span></span></button>` : '';
   const more = `<button class="k-sub-act rb" data-act="swipeMore"><span>続けて仕分ける</span><span class="r">${K_ICO.chev}</span></button>`;
   const say = mkSay('swipe_done') || '仕分けおつかれさま！';
+  SW.ach = [...(SW.ach || []), ...achGrant(false)];   // 実績 a sort can reach (a deck all 学習済み): shown as on a set's results
   $('#screen').innerHTML = `<div class="screen-in res v2 swd">
     <div class="qtop"><button class="iconbtn qx" data-act="quitSwipe" aria-label="閉じる"><span>${QI.x}</span></button><button class="qundo" data-act="swUndo" aria-label="1枚もどす（最後の仕分けを取り消す）" ${SW.hist.length ? '' : 'disabled'}><span>${QI.undo}1枚もどす</span></button></div>
     <section class="rs-first"><article class="k-hero rs-hero" aria-label="仕分けの結果"><div class="k-hero-top">${heroCovers(covers)}<div class="k-hero-txt"><p class="k-hero-title"><span class="n">${SW.hist.length}</span><span class="unit">語</span><span class="post">仕分けた</span></p>
       ${lines.map(l => `<p class="k-hero-sub">${kPhrases(l)}</p>`).join('')}</div></div>
       ${play ? `<div class="k-hero-act">${play}</div>${more}` : `<div class="k-hero-act"><button class="k-play rb main" data-act="swipeMore">${K_ICO.play}<span class="k-play-t"><span class="k-play-main">続けて仕分ける</span></span></button></div>`}</article></section>
-    <section class="k-say rs-say" aria-label="めくるから">${mekuru('happy')}<p class="k-bubble" role="status">${kPhrases(say)}</p></section>
+    ${achSayHTML(SW.ach) || `<section class="k-say rs-say" aria-label="めくるから">${mekuru('happy')}<p class="k-bubble" role="status">${kPhrases(say)}</p></section>`}
     <section class="rs-stats" aria-label="仕分けた数"><div><p class="l">知ってる</p><p class="v"><b>${known}</b>語</p></div><div><p class="l">知らない</p><p class="v"><b>${unk.length}</b>語</p></div></section>
     ${unk.length ? `<section class="k-sec rs-sec"><div class="k-sec-h"><h2 class="k-sec-t">知らない単語</h2></div><ul class="rs-wl">${unk.slice(0, 30).map(c => `<li><div class="rs-wr">${RS_ICO.ng.replace('aria-label="まちがい"', 'aria-label="知らない"')}<span class="b"><span class="t"><span class="w" lang="en">${esc(c.w)}</span><span class="m">${studyMeaningHTML(c)}</span></span></span></div></li>`).join('')}</ul></section>` : ''}
     <section class="k-sec rs-sec"><button class="rs-home rb" data-act="quitSwipe">${backLabel()}</button></section></div>`;
@@ -6972,6 +7338,7 @@ const ACT = {
   copyUrl: () => { const u = new URL(location.href); u.searchParams.delete('openExternalBrowser'); const s = u.href;
     try { navigator.clipboard.writeText(s).then(() => toast('URLをコピーしました。SafariやChromeに貼り付けて開いてね', null, 4000), () => toast(s, null, 8000)); } catch(e) { toast(s, null, 8000); } },
   obStart: t => {
+    obNick();
     const deck = document.querySelector('input[name="obdeck"]:checked')?.value || 'j1';
     const n = +(document.querySelector('input[name="obnew"]:checked')?.value || 20);
     setSetting('active', [deck]); setSetting('newPerDay', n); setSetting('onboarded', true);
@@ -6979,7 +7346,15 @@ const ACT = {
     if (t.dataset.mode === 'swipe') startSwipe([deck], true); else startQuiz({});
   },
   showOnboard: () => howSheet(),
-  obSkip: () => { setSetting('onboarded', true); closeSheet(); render(); },
+  obSkip: () => { obNick(); setSetting('onboarded', true); closeSheet(); render(); },
+  // プロフィールと実績
+  profSheet: t => profSheet(t?.dataset?.f),
+  pfIcon: t => { if (!pfDraft) return; const v = t.dataset.v; pfDraft.icon = v;
+    document.querySelectorAll('.k-pf-icons [role="radio"]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === v)));
+    const tp = $('.k-pf-top'); if (tp) tp.innerHTML = avHTML(v, 'lg'); },
+  pfGoal: t => { if (!pfDraft) return; pfDraft.goal = t.dataset.v; openSheet(profSheetHTML(), false, true); $(`.k-pf [data-act="pfGoal"][data-v="${t.dataset.v}"]`)?.focus({preventScroll: true}); },
+  pfSave: () => profSave(),
+  achSheet: () => achSheet(),
   backup: () => offerFile(`kyokutan-backup-${dayKey(dayIdx())}.json`, backupJSON()),
   restoreSheet: () => openSheet(`<div class="sheet-h"><h3>バックアップから戻す</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <p class="small muted">書き出した .json ファイルを選ぶか、中身を貼り付けてください。今の記録は置き換わります。</p>
@@ -6993,6 +7368,7 @@ const ACT = {
       for (const deck of Object.keys(S.prog)) markDirty('prog_'+deck);
       for (const id of Object.keys(S.custom)) { S.custom[id].upd = now; markDirty('deck_'+id); }
       for (const deck of Object.keys(S.notes)) markDirty('note_'+deck);
+      if (S.ach) markDirty('ach'); else achGrant(true);   // a backup from before 実績: what it reaches, quietly
       markDirty('meta', true); invalidateDecks(); saveNow(); closeSheet(); render(); toast('バックアップから戻しました');
     } catch(e) { $('#rinfo').innerHTML = '<span style="color:var(--again-t)">このアプリのバックアップとして読み取れませんでした。</span>'; }
   },
@@ -7001,7 +7377,7 @@ const ACT = {
     <button class="btn btn-danger btn-block" data-act="resetGo">リセットする</button><button class="btn btn-ghost btn-block" data-act="backup">バックアップをとる</button><button class="btn btn-ghost btn-block" data-act="closeSheet">やめる</button>`),
   resetGo: () => { const now = Date.now();
     for (const deck of Object.keys(S.prog)) { for (const k of Object.keys(S.prog[deck])) S.prog[deck][k] = {st:0, last:now}; markDirty('prog_'+deck); }
-    S.daily = {}; S.settings.upd = now; markDirty('meta', true); saveNow(); closeSheet(); render(); toast('リセットしました'); },
+    S.daily = {}; S.ach = {}; S.settings.upd = now; markDirty('meta', true); markDirty('ach', true); saveNow(); closeSheet(); render(); toast('リセットしました'); },
 };
 document.addEventListener('click', e => {
   // a settings row flips its switch wherever it is tapped, as in the iPhone's Settings
@@ -7011,7 +7387,8 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('contextmenu', e => { const t = e.target.closest('.wrow'); if (!t) return; e.preventDefault(); const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c); });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && e.target.id === 'q' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); e.target.blur(); return; }   // not while a Japanese word is being converted
+  if (e.key === 'Enter' && e.target.id === 'q' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); e.target.blur(); return; }
+  if (e.key === 'Enter' && (e.target.id === 'obnick' || e.target.id === 'pfnick') && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); e.target.blur(); return; }   // not while a Japanese word is being converted
   if (e.key === 'Enter' && e.target.id === 'dq' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); route.dq = e.target.value; clearTimeout(dictT); dictRun(); e.target.blur(); return; }
   if (e.key === 'Enter' && (e.target.id === 'dfw' || e.target.id === 'dfm') && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); $(e.target.id === 'dfw' ? '#dfm' : '#dfe')?.focus(); return; }   // on to the next field (例文: Enter adds)
   if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229 && e.target.tagName === 'INPUT' && e.target.closest?.('#newdeckform')) {   // not a submit: on to the next field
@@ -7127,7 +7504,9 @@ function forgetChart(){
 }
 const hasProgress = () => Object.values(S.prog).some(d => d && Object.keys(d).length);
 /* the first run: only what to choose, with the start buttons stuck to the bottom of the sheet (the longer story is 「アプリのしくみ」).
-   Both choices come before the chart, so on a 375×812 phone the 1日の目標 is in view above the buttons; the chart is below them */
+   Both choices come before the chart, so on a 375×812 phone the 1日の目標 is in view above the buttons; the nickname (なんて呼べばいい？, may be left empty) and the chart are below them */
+/* the welcome's なんて呼べばいい？: kept when anything is typed (it can be left empty) */
+function obNick(){ const n = cleanNick($('#obnick')?.value); if (n && n !== S.settings.nick) setSetting('nick', n); }
 function onboard(){
   const opts = [['junior','中学基礎','中学〜高校基礎'], ['j1','受験英単語 基礎','高校の基本〜共通テスト'], ['j2','受験英単語 標準','共通テスト〜中堅大'], ['j3','受験英単語 発展','難関大・英検2級〜準1級の入口'], ['tagi','必修多義語','知っている基本語の、入試で問われる意味'], ['theme','テーマ別 長文頻出語','環境・医療・経済などの専門語']]
     .filter(([id]) => deckById(id));
@@ -7148,6 +7527,8 @@ function onboard(){
     <fieldset class="ob-f"><legend>1日の目標（新しい単語）</legend><div class="ob-row">
       ${[10, 20, 30].map(n => `<label class="ob-chip"><input type="radio" name="obnew" value="${n}" ${n === 20 ? 'checked' : ''}><span>${n}語<small>${{10: 'ゆったり', 20: 'ふつう', 30: 'がっつり'}[n]}</small></span></label>`).join('')}
     </div><p class="ob-note">2日目からは、これに①復習のぶんが少し足されます</p></fieldset>
+    <div class="ob-f"><label class="ob-lab" for="obnick">なんて呼べばいい？</label><input id="obnick" class="k-input ob-nick" type="text" maxlength="${NICK_MAX}" placeholder="ニックネームでOK（本名じゃなくていい）" autocomplete="nickname" enterkeyhint="done" spellcheck="false">
+      <p class="ob-note">ほかの人には見えない、飛ばしてもOK</p></div>
     ${forgetChart()}
     <div class="ob-go"><button class="btn ${back ? 'btn-soft' : 'btn-primary'} btn-big btn-block" data-act="obStart" data-mode="swipe">知ってる単語を仕分けて始める<small>最大50語</small></button>
       <button class="btn btn-ghost btn-block" data-act="obStart" data-mode="study">仕分けずに、すぐ覚えはじめる</button>
@@ -7194,6 +7575,7 @@ function start(data){
   if (data && data.tab) { route.tab = data.tab; route.deck = data.deck || null; }
   tutInit();                                                                  // めくるの一言: on for a learner with nothing on record yet
   if (!S.settings.onboarded && hasProgress()) S.settings.onboarded = true;   // people who already study skip the welcome
+  if (!S.ach) achGrant(true);   // 実績, the first time: everything the records already reach is put in quietly (no celebrations)
   applyZoom(); render(); initSync(); initFirebase();
   if (!S.settings.onboarded) onboard();
   if (lsGet('kiwami.updated')) { lsSet('kiwami.updated', ''); setTimeout(() => toast('新しい版になりました'), 600); }
