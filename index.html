@@ -2158,6 +2158,7 @@ html{touch-action:manipulation}
 /* the sheet of every badge */
 .k-ach-sum{margin:0 0 4px;font-size:var(--fs-body);color:var(--ink-2);font-feature-settings:"palt"}
 .k-ach-sum b{font-family:var(--f-en);font-weight:800;color:var(--ink)}
+.k-ach-sum b.jp{font-family:var(--f-ui)}
 .k-ach-c{margin-top:22px}
 .k-ach-c .k-bdg{padding:0;margin-top:12px}
 .k-ach-h{margin:0;font-size:var(--fs-name);font-weight:800;font-feature-settings:"palt"}
@@ -2227,11 +2228,107 @@ html{touch-action:manipulation}
   .rs-xp .q.up{animation:rs-pop .5s var(--ease-out) .9s both}
 }
 @keyframes rs-xfill{from{width:var(--from,0%)}}
-/* the profile: 3級, its bar, あと120XP (1級: 次は極み道場で初段) */
+/* the profile: 3級, its bar, あと120XP (1級: the line under it says how the 道場 comes) */
 .k-kyu{display:flex;align-items:center;gap:12px;margin-top:16px}
 .k-kyu .q{flex:none;font-size:var(--fs-name);font-weight:800;line-height:1.2;font-feature-settings:"palt"}
 .k-kyu .k-xbar{flex:1;min-width:48px;height:6px}
 .k-kyu .r{flex:none;font-size:var(--fs-min);font-weight:700;color:var(--ink-2);white-space:nowrap;font-feature-settings:"palt"}
+.k-kyu-s{margin:6px 0 0;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.45;font-feature-settings:"palt"}
+/* ===== 極み道場（docs/features/dojo.md）: a deck's dojo at the very bottom of its page, 極 at the top of the 単語帳 tab. A card of 墨
+   with the dojo's 看板 (a plank of paper, its 帯 in the deck's colour, the name in brush) and, once passed, a red 合格 seal. Its own
+   parts start with k-dj (the card, the list sheet) and dj- (the test and its results) ===== */
+:root{--dj-bg:#1C1B20;--dj-seal:#E5483F;--dj-kw:linear-gradient(90deg,var(--c-kiso) 0 20%,var(--c-hyojun) 20% 40%,var(--c-hatten) 40% 60%,var(--c-juku) 60% 80%,var(--c-tagi) 80%)}   /* 極's 帯: the 5 decks' colours side by side */
+.k-dj{position:relative;margin:26px max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
+.k-dj.kw{margin-top:14px}
+.k-dj-card{position:relative;overflow:hidden;border-radius:var(--r-card);background:var(--dj-bg);color:#fff;padding:16px 16px 16px}
+:root[data-theme="dark"] .k-dj-card{box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .k-dj-card{box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)} }
+.k-dj-top{display:flex;gap:14px;align-items:flex-start}
+.k-dj-sign{position:relative;flex:none;width:40px;height:108px;border-radius:2px;background:var(--paper);color:#121216;display:flex;justify-content:center;padding-top:15px;overflow:hidden}
+.k-dj-sign::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:var(--bk,var(--ink-2))}
+.k-dj-sign.kw::before{background:var(--dj-kw)}
+.k-dj-sign span{writing-mode:vertical-rl;font-family:var(--f-cover);font-size:19px;line-height:1;letter-spacing:.04em;white-space:nowrap}
+.k-dj-sign.l5 span{font-size:16px}
+.k-dj-sign.q{background:var(--fill);color:var(--ink-3)} .k-dj-sign.q::before{background:var(--track)}
+.k-dj-txt{flex:1;min-width:0;padding-top:1px}
+.k-dj.passed .k-dj-txt{padding-right:52px}
+.k-dj-t{margin:0;font-size:var(--fs-sec);font-weight:800;line-height:1.25;font-feature-settings:"palt"}
+.k-dj-s{margin:6px 0 0;font-size:var(--fs-sub);color:rgba(255,255,255,.78);line-height:1.5;font-feature-settings:"palt"}
+.k-dj-st{margin:8px 0 0;display:flex;flex-wrap:wrap;gap:0 10px;font-size:var(--fs-sub);font-weight:700;line-height:1.5;font-feature-settings:"palt"}
+.k-dj-st .b{font-weight:500;color:rgba(255,255,255,.78)}
+.k-seal{position:relative;display:grid;place-items:center;width:52px;height:52px;flex:none;border-radius:50%;border:2.5px solid var(--dj-seal);color:var(--dj-seal);font-family:var(--f-cover);font-size:16px;line-height:1;letter-spacing:.02em;rotate:-12deg}   /* rotate, not transform: the pop and the stamp scale it without undoing the tilt */
+.k-seal::after{content:"";position:absolute;inset:3px;border-radius:50%;border:1px solid var(--dj-seal);opacity:.55}
+.k-dj-card .k-seal{position:absolute;top:14px;right:14px}
+.k-dj-act{margin-top:16px;display:flex}
+.k-dj-act .k-play{--hero-bg:var(--bk,var(--dj-bg))}
+.k-dj-act .k-play.kw > svg{color:var(--dj-bg)}
+.k-dj-wait{flex:1;min-height:48px;display:flex;align-items:center;gap:8px;padding:6px 16px;border-radius:var(--r-pill);background:rgba(255,255,255,.10);font-size:var(--fs-body);font-weight:700;line-height:1.35;color:rgba(255,255,255,.86);font-feature-settings:"palt"}
+.k-dj-wait svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.k-dj .k-say{padding:0;margin-top:12px}
+/* the first time (data-new: it waits out of sight until it is scrolled to): the gate drops in, the card lands with a thud, a light runs
+   over it, paper bits fly, めくる says so. 動きを減らす: it only fades in (by script; every CSS animation is off then) */
+.k-dj[data-new] .k-dj-card,.k-dj[data-new] .k-say{opacity:0}
+.k-dj-fx{position:absolute;left:calc(-1 * max(var(--pad),env(safe-area-inset-left,0px)));right:calc(-1 * max(var(--pad),env(safe-area-inset-right,0px)));top:-150px;height:340px;overflow:hidden;pointer-events:none;z-index:2}   /* the page's width: the bits never make it scroll sideways */
+.k-dj-fx i{position:absolute;left:calc(50% - 3px);top:185px;width:6px;height:10px;border-radius:1px;background:var(--c,#fff);opacity:0}
+@media (prefers-reduced-motion: no-preference){
+  .k-dj.rise .k-dj-card{animation:dj-drop .62s cubic-bezier(.3,1.35,.5,1) var(--dt,0s) both}
+  .k-dj.rise .k-dj-sign{animation:dj-thud .32s ease-out calc(var(--dt,0s) + .38s) both}
+  .k-dj.rise .k-dj-card::after{content:"";position:absolute;top:0;bottom:0;left:0;width:46%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.26),transparent);transform:translateX(-120%) skewX(-12deg);animation:dj-sweep .75s ease-in-out calc(var(--dt,0s) + .55s) both;pointer-events:none}
+  .k-dj.rise .k-dj-fx i{animation:dj-bit 1.15s cubic-bezier(.15,.7,.35,1) calc(var(--dt,0s) + .42s + var(--d,0s)) both}
+  .k-dj.rise .k-say{animation:mkin .3s var(--ease-out) calc(var(--dt,0s) + 1s) both}
+  .k-dj.rise .k-seal{animation:rs-pop .4s var(--ease-out) calc(var(--dt,0s) + .7s) both}
+}
+@keyframes dj-drop{0%{opacity:0;transform:translateY(-70px) scale(1.06)}35%{opacity:1}62%{transform:translateY(5px) scale(1)}100%{opacity:1;transform:none}}
+@keyframes dj-thud{0%{transform:none}35%{transform:translateY(2px) scaleY(.96)}100%{transform:none}}
+@keyframes dj-sweep{to{transform:translateX(330%) skewX(-12deg)}}
+@keyframes dj-bit{0%{opacity:1;transform:translate(0,0) rotate(0) scale(.6)}45%{opacity:1;transform:translate(calc(var(--x) * .7),var(--y)) rotate(calc(var(--r) * .5)) scale(1)}100%{opacity:0;transform:translate(var(--x),calc(var(--y) + 70px)) rotate(var(--r)) scale(1)}}   /* up, then falling away */
+/* the 記録 tab's profile: the 段 large (brush), and the 道場's list › — the 級 row stays under it */
+.k-dan{width:100%;min-height:56px;display:flex;align-items:center;gap:12px;margin-top:14px;padding:0;text-align:left;color:var(--ink)}
+.k-dan .q{font-family:var(--f-cover);font-size:34px;line-height:1;letter-spacing:.02em}
+.k-dan .q.none{font-family:var(--f-ui);font-size:var(--fs-name);font-weight:800;color:var(--ink-2)}
+.k-dan .r{margin-left:auto;display:flex;align-items:center;gap:2px;flex:none;font-size:var(--fs-body);font-weight:700;color:var(--blue);white-space:nowrap;font-feature-settings:"palt"}
+.k-dan .r svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;margin-right:-5px}
+.k-dan + .k-kyu{margin-top:6px}
+/* the list sheet: a row a dojo — its 看板 small, its name, passed or not; one not seen yet is ？？？ */
+.k-djl{list-style:none;margin:10px 0 14px;padding:0}
+.k-djl-r{width:100%;min-height:64px;display:flex;align-items:center;gap:12px;padding:8px 0;text-align:left;color:var(--ink);border-top:1px solid var(--hair)}
+.k-djl li:first-child .k-djl-r{border-top:0}
+.k-dj-sign.mini{width:32px;height:46px;padding-top:10px}
+.k-dj-sign.mini::before{height:5px}
+.k-dj-sign.mini span{writing-mode:horizontal-tb;font-size:20px;letter-spacing:0}
+.k-dj-sign.mini.q span{font-family:var(--f-ui);font-size:16px;font-weight:800}
+.k-djl-t{flex:1;min-width:0}
+.k-djl-n{display:block;font-size:var(--fs-name);font-weight:700;line-height:1.3;font-feature-settings:"palt"}
+.k-djl-s{display:block;margin-top:1px;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.4;font-feature-settings:"palt"}
+.k-djl .k-seal{width:38px;height:38px;font-size:12px;border-width:2px}
+.k-djl .k-seal::after{inset:2px}
+.k-djl-r .k-chev{width:18px;height:18px;flex:none;color:var(--ink-3);margin-right:-5px}
+.k-djl-r.q .k-djl-n{color:var(--ink-2)}
+/* the test: the 4択 screen as it is, with 12 / 50 and the 6 seconds' bar (its seconds under it); no 1問もどす, no hints */
+.study.v2.dj .qclock{margin-bottom:12px}
+.study.v2.dj .qtimer i{transition:width .1s linear}
+.study.v2.dj .qtimer i.low{background:var(--ng)}
+.study.v2.dj .t-lab b{display:inline-block;margin:0 1px;font-family:var(--f-en);font-weight:800;color:var(--ink);min-width:.6em;text-align:center}
+.study.v2.dj .t-lab .mis{margin-left:auto}
+.study.v2.dj .segs.d100{gap:0 1px}
+.study.v2.dj .segs.d100 i{border-radius:1px}
+/* the results: the hero in 墨 (the score, the seal when passed), the 段 that came with it, the words missed */
+.res.v2.dj .k-hero{--hero-bg:var(--dj-bg)}
+.dj-hero .k-hero-top{align-items:center}
+.dj-hero .k-dj-sign{box-shadow:none}
+.dj-hero .k-hero-txt{flex:1}
+.dj-hero .k-seal{width:62px;height:62px;font-size:19px}
+.dj-up{display:flex;flex-direction:column;align-items:center;text-align:center;margin-top:24px}
+.dj-up .l{margin:0;font-size:var(--fs-body);font-weight:700;color:var(--ink-2);font-feature-settings:"palt"}
+.dj-up .q{margin:6px 0 0;font-family:var(--f-cover);font-size:56px;line-height:1.05;letter-spacing:.03em}
+.dj-up .s{margin:6px 0 0;font-size:var(--fs-sub);color:var(--ink-2);font-feature-settings:"palt"}
+@media (prefers-reduced-motion: no-preference){ .dj-up .q{animation:rs-pop .5s var(--ease-out) .25s both} .dj-hero .k-seal{animation:dj-stamp .38s cubic-bezier(.3,1.4,.5,1) .15s both} }
+@keyframes dj-stamp{0%{opacity:0;transform:scale(1.6)}100%{opacity:1;transform:scale(1)}}
+.dj-hero .k-hero-sub.dj-note{margin-top:2px;font-size:var(--fs-sub);color:rgba(255,255,255,.76)}
+.rs-dj{display:flex;align-items:center;gap:12px;margin-top:22px;padding:12px 12px 12px 14px;border-radius:var(--r-card);background:var(--dj-bg);color:#fff}
+.rs-dj .t{flex:1;min-width:0;margin:0;font-size:var(--fs-body);font-weight:700;line-height:1.4;font-feature-settings:"palt"}
+.rs-dj .t small{display:block;font-size:var(--fs-min);font-weight:500;color:rgba(255,255,255,.76)}
+.rs-dj button{flex:none;height:40px;padding:0 16px;border-radius:var(--r-pill);background:#fff;color:#121216;font-size:var(--fs-body);font-weight:800;font-feature-settings:"palt"}
 @media (max-width:360px){
   .k-stk{gap:12px} .k-stk-ring{width:96px;height:96px}
   .k-pst > div{padding-left:10px}
@@ -2676,9 +2773,9 @@ const MK_LINES = {
   "{q}だって！{name}、その調子でめくろ"
  ],
  "res_kyu1": [
-  "1級になったよ！次は極み道場で初段をめざそう",
-  "ついに1級！ここから先は、極み道場で腕だめし",
-  "{name}、1級おめでとう！次は極み道場で初段だね"
+  "1級になったよ！単語帳をぜんぶ学習済みにすると、道場があらわれる",
+  "ついに1級！ここから先は、道場で腕だめし",
+  "{name}、1級おめでとう！単語帳を終えたら、道場が待ってる"
  ],
  "res_kyu_badge": [
   "{q}に上がって、「{b}」も取ったよ！",
@@ -2689,6 +2786,45 @@ const MK_LINES = {
   "{q}に上がって、実績も{k}個取ったよ！",
   "{q}と実績{k}個！ぼくの裏面、お祝いでいっぱい",
   "{name}、{q}に上がって実績も{k}個！今日はお祭りだね"
+ ],
+ "dojo_appear": [
+  "{d}があらわれた！ぜんぶ学習済みにした人だけの場所",
+  "単語帳を終えたから、{d}がひらいたよ！",
+  "{d}、出現！合格すると段がもらえる",
+  "ぜんぶ終えたごほうび、{d}だよ！腕だめししてみよ",
+  "{name}、{d}があらわれたよ！ここからは腕前の勝負"
+ ],
+ "dojo_kw_appear": [
+  "5つの道場ぜんぶ合格！最後の、極の道場があらわれた",
+  "極の道場がひらいた！5冊ぜんぶから100問だよ",
+  "ついに極の道場！ここまで来た人は、ほとんどいない",
+  "{name}、極の道場があらわれたよ！最後の腕だめし"
+ ],
+ "dojo_pass": [
+  "{q}になったよ！{d}、合格おめでとう",
+  "合格！今日から{q}だね、ぼくも鼻が高い",
+  "{d}に合格して{q}！続けてきた分が、ちゃんと腕になってる",
+  "{q}、達成！ぼくの裏に合格のはんこ押しとく",
+  "{name}、{q}おめでとう！{d}を突破した"
+ ],
+ "dojo_kw_pass": [
+  "極になったよ！もう教えることは、なにもない",
+  "極の道場に合格！ぼく、感動で紙がしわしわ",
+  "ついに極！5冊ぶんの単語、ぜんぶきみのもの",
+  "{name}、極おめでとう！ここが、てっぺん"
+ ],
+ "dojo_repass": [
+  "腕だめしも合格！腕前、なまってないね",
+  "また合格！{n}問正解、さすが",
+  "合格キープ！忘れてない証拠だよ",
+  "{name}、今日も合格！その調子"
+ ],
+ "dojo_fail": [
+  "おしい！明日またここで待ってるね",
+  "今日はここまで、まちがえた単語は苦手に入れといた",
+  "道場は逃げないよ、明日また挑戦しよ",
+  "まちがえた単語を特訓したら、次はいける",
+  "{name}、今日のは練習試合、明日が本番だよ"
  ]
 };
 function mkSay(scene, vars = {}){
@@ -3498,7 +3634,8 @@ function unpackMap(data, f, legacy){
 function docBodies(name){
   const upd = Date.now();
   if (name === 'meta') return [[name, {settings:S.settings, dj:JSON.stringify(S.daily), upd}]];
-  if (name === 'ach') return [[name, {aj:JSON.stringify(S.ach || {}), upd}]];   // 実績: its own document, so an older version (which reads only meta's settings and dj) leaves it alone
+  if (name === 'ach') return [[name, {aj:JSON.stringify(S.ach || {}), upd}]];
+  if (name === 'dojo') return [[name, {oj:JSON.stringify(S.dojo || {}), upd}]];   // 極み道場: its own document too   // 実績: its own document, so an older version (which reads only meta's settings and dj) leaves it alone
   if (name.startsWith('deck_')) {   // a big deck is cut into parts as well (deck_u…~1 …); the head is written last and says how many (np)
     const d = S.custom[name.slice(5)]; if (!d) return [];
     const {cards = [], np: _np, ...head} = d, P = [[]]; let size = byteLen(JSON.stringify(head));
@@ -3618,6 +3755,10 @@ async function pull(){
       let R = {}; try { R = JSON.parse(typeof data.aj === 'string' ? data.aj : '{}') || {}; } catch(e) {}
       if (!S.ach || typeof S.ach !== 'object') S.ach = {};
       const m = achMerge(S.ach, R); if (m.inL) changed = true; if (m.inR) Sync.dirty.add('ach');
+    } else if (id === 'dojo') {   // 極み道場: the earlier pass and show, the best score, the latest try
+      let R = {}; try { R = JSON.parse(typeof data.oj === 'string' ? data.oj : '{}') || {}; } catch(e) {}
+      if (!S.dojo || typeof S.dojo !== 'object') S.dojo = {};
+      const m = djMerge(S.dojo, R); if (m.inL) changed = true; if (m.inR) Sync.dirty.add('dojo');
     } else if (id.startsWith('deck_')) {
       const did = id.slice(5), L = S.custom[did], np = data.np || 1;
       let cards = data.cards || [];
@@ -3643,6 +3784,7 @@ async function pull(){
   }
   if (!seen.has('meta')) Sync.dirty.add('meta');
   if (!seen.has('ach') && S.ach && Object.keys(S.ach).length) Sync.dirty.add('ach');
+  if (!seen.has('dojo') && S.dojo && Object.keys(S.dojo).length) Sync.dirty.add('dojo');
   if (changed && !(Q && !Q.done) && !SW) achGrant(true);   // records from another device (an older version's too): what they reach is put in quietly
   for (const deck of Object.keys(S.prog)) if (!seen.has('prog_'+deck) && Object.keys(S.prog[deck]).length) Sync.dirty.add('prog_'+deck);
   for (const did of Object.keys(S.custom)) if (!seen.has('deck_'+did)) Sync.dirty.add('deck_'+did);
@@ -3945,19 +4087,19 @@ function bindSheetDrag(sh){
   };
   sh.addEventListener('pointerup', end); sh.addEventListener('pointercancel', end);
 }
-function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); reloadIfQuiet(); }
+function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); reloadIfQuiet(); if (DJ?.wait && !DJ.done) setTimeout(djNext); }   // 道場: on after やめる？ is closed
 const sheetOpen = () => !!$('#sheetroot').firstChild;
 function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); viewKey = ''; tutDrop(); guard(); }   // viewKey: the home dock rises again when this closes
 /* closing a set's results goes back to where it started: a deck page (route stays on it), else the home */
 const backLabel = () => route.tab === 'decks' && route.deck ? '単語帳へもどる' : 'ホームへ';
-function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); tutDrop(); tutPend.length = 0; Q = null; SW = null; const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); reloadIfQuiet(); }
+function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); tutDrop(); tutPend.length = 0; Q = null; SW = null; if (DJ) { clearInterval(DJ.iv); clearTimeout(DJ.next); DJ = null; } const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); reloadIfQuiet(); }
 const layerOpen = () => sheetOpen() || !$('#screen').hidden || (route.tab === 'decks' && !!route.deck);
 addEventListener('popstate', e => {
   if (!IS_WEB) return;
   if (e.state?.kt) { HG = true; return; }   // forward onto the marker again
   HG = false;
   if (sheetOpen()) { if ($('#sheetroot .backdrop[data-act]')) ACT.closeSheet(); }   // the first-run welcome stays open
-  else if (!$('#screen').hidden) closeScreen();
+  else if (!$('#screen').hidden) { if (DJ && !DJ.done) djQuitAsk(); else closeScreen(); }   // 道場: quitting fails it, so it asks
   else if (route.tab === 'decks' && route.deck) ACT.backDecks();
   else { history.back(); return; }   // a marker left behind by ×: this back was meant for the page before
   if (layerOpen()) guard();
@@ -4007,7 +4149,7 @@ function render(){
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false'));
   renderSync(); shownDay = dayIdx();
   if (route.tab === 'decks' && route.deck) guard();
-  deckIO(v);
+  deckIO(v); djAfter(v);
   if (said && $('#mkbubble')) { $('#mkbubble').textContent = said; $('#mkbubble').hidden = false; $('#mkbubble').dataset.tap = 1; }
   // めくる waits at the home card's goal and talks only when tapped (a bubble of its own would cover the buttons above it)
   // the home's めくるの一言 (homeTip): up until a tap once it is in view above the tab bar (a line further down, e.g. 100語's
@@ -4370,7 +4512,7 @@ function shelvesHTML(){
   const order = [...SERIES, ...plus.map(d => d.id)], rank = d => { const i = order.indexOf(d.id); return i < 0 ? 99 : i; };
   const lib = act.map((d, i) => [d, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(([d]) => d);
   const sec = (h, body, sub = '') => `<section class="k-sec" aria-label="${h}"><div class="k-sec-h${sub ? ' has-sub' : ''}"><h2 class="k-sec-t">${h}</h2>${sub ? `<p class="k-sec-s">${sub}</p>` : ''}</div>${body}</section>`;
-  return sec('使っている単語帳', lib.length ? `<div class="k-lib">${lib.map(d => libBook(d, d === going)).join('')}</div>` : '<p class="k-empty">まだありません。下の本を押して、使う単語帳を選んでください。</p>')
+  return djCardHTML('kw') + sec('使っている単語帳', lib.length ? `<div class="k-lib">${lib.map(d => libBook(d, d === going)).join('')}</div>` : '<p class="k-empty">まだありません。下の本を押して、使う単語帳を選んでください。</p>')
     + (series.length ? sec('受験英単語シリーズ', `<div class="k-series">${series.map(serBook).join('')}</div>`, `中学から難関大まで、やさしい順に${series.length}冊`) : '')
     + (plus.length ? sec('＋αの単語帳', `<ul class="k-rows">${plus.map(plusRow).join('')}</ul>`) : '')
     + sec('自分の単語帳', `<div class="k-shelf books"><button class="k-book" data-act="makeDeck"><span class="k-make-art" aria-hidden="true">${K_PLUS}</span><span class="k-book-name act">自分でつくる</span></button>${mine.map(myBook).join('')}</div>`, '英単語を貼るだけで、単語帳ができる');
@@ -4537,7 +4679,7 @@ function viewDeck(){
     <div class="k-dh-cover">${bookCover(d, 'page')}</div><h1 class="k-dh-t">${esc(d.name)}</h1><p class="k-dh-meta">${meta}</p>${prog}
     <div class="k-dh-act">${play}${subs}</div></section>
   ${todo}${seg}${!list ? `<p class="k-dnote">${deckNote(d, xs, st)}</p>` : ''}
-  ${list ? listTab(d) : blockList(d, xs, here, mark)}
+  ${list ? listTab(d) : blockList(d, xs, here, mark)}${!list && d.builtin && ACH_BOOKS.includes(d.id) ? djCardHTML(d.id) : ''}
   ${on ? `<div class="k-quit-w"><button class="k-quit" data-act="toggleDeck" data-id="${id}"><span class="q1">この単語帳を使うのをやめる</span><span class="q2">やめても、学習の記録は残る</span></button></div>` : ''}
   <header class="k-mini" inert><div class="k-mini-in">${back}<p class="k-mini-t">${esc(d.name)}</p><div class="k-dh-r">${use}</div></div></header></div>
   ${list ? '<div class="dock-space"></div>' : ''}${dock ? `<div class="ctadock" id="deckdock">${dock}</div>` : ''}`;
@@ -4921,16 +5063,256 @@ function kyuOf(xp){
 const xpBar = (fr, from) => `<span class="k-xbar" aria-hidden="true"><i${fr > 0 ? '' : ' class="zero"'} style="width:${(fr * 100).toFixed(1)}%${from != null ? `;--from:${(from * 100).toFixed(1)}%` : ''}"></i></span>`;
 /* the 記録 tab's profile: 3級, the bar, あと120XP */
 function kyuRow(){
-  const k = kyuOf(xpTotal()), one = k.hi === null;
-  return `<div class="k-kyu" role="img" aria-label="${k.name}、${one ? '次は極み道場で初段' : `${k.kyu - 1}級まであと${nLoc(k.left)}XP`}、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${k.name}</span>${xpBar(k.fr)}<span class="r" aria-hidden="true">${one ? '次は極み道場で初段' : `あと${nLoc(k.left)}XP`}</span></div>`;
+  const k = kyuOf(xpTotal()), one = k.hi === null, hint = one ? djHint() : '';
+  return `<div class="k-kyu" role="img" aria-label="${k.name}、${one ? hint || '最上の級' : `${k.kyu - 1}級まであと${nLoc(k.left)}XP`}、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${k.name}</span>${xpBar(k.fr)}<span class="r" aria-hidden="true">${one ? '' : `あと${nLoc(k.left)}XP`}</span></div>${hint ? `<p class="k-kyu-s" aria-hidden="true">${kPhrases(hint)}</p>` : ''}`;
 }
 /* the results: +38 XP, the 級 and its bar (filling from where it stood before this set); a 級 up says so, 1級 points to the 道場 */
 function xpResHTML(gain, k0, k1){
   const up = k1.kyu < k0.kyu, one = k1.hi === null, from = up ? 0 : k0.fr;
-  const s = one ? `${up ? '<b>1級になった</b>、' : ''}次は極み道場で初段<br><span class="k-ph">道場は、もうすぐひらく</span>`
+  const h = djHint(), s = one ? `${up ? '<b>1級になった</b>、' : ''}${h ? kPhrases(h) : '段は、道場の合格で上がる'}`
     : up ? `<b>${k1.name}に上がった</b>、${k1.kyu - 1}級まであと${nLoc(k1.left)}XP` : `${k1.kyu - 1}級まで、あと${nLoc(k1.left)}XP`;
   return `<section class="rs-xp" aria-label="このセットで${nLoc(gain)}XP、${k1.name}${up ? 'に上がった' : ''}"><div class="hd" aria-hidden="true"><p class="g"><b>+${nLoc(gain)}</b>XP</p><p class="q${up ? ' up' : ''}">${k1.name}</p></div>
     ${xpBar(k1.fr, one && !up ? null : from)}<p class="s">${s}</p></section>`;
+}
+/* ---------- 極み道場（docs/features/dojo.md） ---------- */
+/* 段 is the skill: each dojo passed lifts it (初段 … 五段; the 極 dojo, 極), XP never does. A built-in deck's dojo (ACH_BOOKS) is
+   unseen until every headword is 学習済み, then comes in once with a show at the bottom of its page; the 5 passed bring 極's at the
+   top of the 単語帳 tab. A test is 4択 against 6 s a question, once a day each (dayIdx), and touches no schedule, no XP and no daily:
+   a word missed only gets the 苦手 mark (wk), as the 辞書 puts it. S.dojo {id: {p passed (day), b best, l last taken, s shown}} is
+   its own synced document 'dojo' (an older version leaves it alone); when two devices meet: the earlier p and s, the larger b, the later l */
+const DJ_IDS = [...ACH_BOOKS, 'kw'];
+const DJ_SEC = 6;
+const djRule = id => id === 'kw' ? {n: 100, miss: 2} : {n: 50, pass: 45};
+const DAN_NAME = ['', '初段', '二段', '三段', '四段', '五段'];
+const djE = id => S.dojo?.[id] || {};
+function djSet(id, o){ if (!S.dojo || typeof S.dojo !== 'object') S.dojo = {}; S.dojo[id] = {...djE(id), ...o}; save(); markDirty('dojo', true); }
+const djDeckDone = id => { const d = deckById(id); if (!d) return false; const s = deckStats(d); return s.total > 0 && s.r >= s.total; };
+const djOpen = id => id === 'kw' ? ACH_BOOKS.every(b => djE(b).p != null) : djDeckDone(id);
+const djSeen = id => djE(id).p != null || djE(id).s != null || djOpen(id);   // once seen it stays (a word put back to まだ doesn't hide it)
+const danN = () => ACH_BOOKS.filter(id => djE(id).p != null).length;
+const danName = () => djE('kw').p != null ? '極' : DAN_NAME[danN()];
+const djToday = id => djE(id).l === dayIdx();
+const djName = id => id === 'kw' ? '極の道場' : `${bookName(deckById(id))}の道場`;
+const djDayText = i => { const d = new Date(i * DAY); return `${d.getUTCMonth() + 1}月${d.getUTCDate()}日`; };
+/* the 段 a dojo's pass brought: the dojo passed in order of day (on one day, in the decks' order) */
+function djDan(id){
+  if (id === 'kw') return '極';
+  const ps = ACH_BOOKS.filter(b => djE(b).p != null).sort((a, b) => djE(a).p - djE(b).p || ACH_BOOKS.indexOf(a) - ACH_BOOKS.indexOf(b));
+  return DAN_NAME[ps.indexOf(id) + 1] || '';
+}
+/* 1級's line: how the 道場 comes, then what it is for ('' once there is a 段) */
+const djHint = () => danN() || djE('kw').p != null ? '' : DJ_IDS.some(djSeen) ? '道場に合格すると、初段になる' : '単語帳をぜんぶ学習済みにすると、道場があらわれる';
+/* two devices: per dojo, the earlier p and s, the larger b, the later l (a field left out on one side is the other's) */
+const DJ_F = {p: Math.min, b: Math.max, l: Math.max, s: Math.min};
+function djMerge(L, R){
+  let inL = false, inR = false; const num = v => typeof v === 'number' && isFinite(v);
+  for (const [k, r] of Object.entries(R || {})) { if (!r || typeof r !== 'object') continue; const l = L[k] ||= {};
+    for (const [f, pick] of Object.entries(DJ_F)) if (num(r[f])) { const v = num(l[f]) ? pick(l[f], r[f]) : r[f]; if (v !== l[f]) { l[f] = v; inL = true; } } }
+  for (const [k, l] of Object.entries(L)) for (const f of Object.keys(DJ_F)) if (num(l[f]) && l[f] !== R?.[k]?.[f]) inR = true;
+  return {inL, inR};   // inL: this device took something; inR: the account's copy lacks something of this device's
+}
+/* the questions, one word once (出題しない left out): a deck's 50 from its headwords — 多義語 asks any of a word's meanings (its
+   other meanings' cards); 極's 100 from the 5 decks: 20 derivatives, 20 other meanings, the rest headwords */
+function djPick(id){
+  const R = djRule(id), live = c => !prog(c)?.sus, root = c => normW((c.parent || c).w), used = new Set(), out = [];
+  const take = (cs, n) => { for (const c of shuffle(cs)) { if (out.length >= R.n || n <= 0) break; const k = root(c); if (used.has(k)) continue; used.add(k); out.push(c); n--; } };
+  if (id === 'kw') {
+    const ds = ACH_BOOKS.map(deckById).filter(Boolean);
+    take(ds.flatMap(d => d.dcards).filter(live), 20); take(ds.flatMap(d => d.scards || []).filter(live), 20); take(ds.flatMap(d => d.cards).filter(live), R.n);
+    return shuffle(out).map(c => ({c, si: 0}));
+  }
+  take(deckById(id).cards.filter(live), R.n);
+  return out.map(c => { if (id !== 'tagi' || c.s.length < 2) return {c, si: 0};
+    const i = Math.floor(Math.random() * c.s.length), sc = i && (c.sc || []).find(x => x.si === i);
+    return sc ? {c: sc, si: 0} : {c, si: i}; });
+}
+/* the dojo's 看板: a plank of paper, its 帯 in the deck's colour (極: the five side by side), the name in brush, top to bottom
+   (mini, in a list: the deck's one brush letter, as on its cover) */
+function djSign(id, mini = false){
+  const d = id === 'kw' ? null : deckById(id), t = mini ? (d ? bookOf(d).kj : '極') : d ? `${bookOf(d).obi}道場` : '極み道場';
+  return `<span class="k-dj-sign${d ? '' : ' kw'}${mini ? ' mini' : [...t].length > 4 ? ' l5' : ''}" aria-hidden="true"${d ? ` style="--bk:var(--c-${bookOf(d).k})"` : ''}><span>${esc(t)}</span></span>`;
+}
+const djRuleText = id => { const R = djRule(id); return id === 'kw' ? `5冊の見出し語、派生語、ほかの意味から${R.n}問、1問${DJ_SEC}秒、まちがいは${R.miss}つまで`
+  : `${id === 'tagi' ? '見出し語とほかの意味' : '見出し語'}から${R.n}問、1問${DJ_SEC}秒、${R.pass}問正解で合格`; };
+const DJ_WAIT = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.6V12l2.9 1.9"/></svg>';
+/* the paper bits of the show: a fan up from the card that falls away, in the deck's colours (seeded: the same every time) */
+function djBits(id){
+  const d = id === 'kw' ? null : deckById(id), cs = d ? [`var(--c-${bookOf(d).k})`, '#fff', 'var(--dj-seal)', 'var(--paper)', `var(--c-${bookOf(d).k})`]
+    : ['var(--c-kiso)', 'var(--c-hyojun)', 'var(--c-hatten)', 'var(--c-juku)', 'var(--c-tagi)', '#fff'];
+  let h = '';
+  for (let i = 0; i < 24; i++) { const a = -Math.PI * (0.08 + 0.84 * ((i * 7) % 24) / 23), r = 70 + (i * 37) % 80;
+    h += `<i style="--c:${cs[i % cs.length]};--x:${(Math.cos(a) * r * 1.6).toFixed(0)}px;--y:${(Math.sin(a) * r).toFixed(0)}px;--r:${(i * 97) % 600 - 300}deg;--d:${((i % 6) * .025).toFixed(3)}s${i % 4 === 1 ? ';width:5px;height:5px;border-radius:50%' : ''}"></i>`; }
+  return `<span class="k-dj-fx" aria-hidden="true">${h}</span>`;
+}
+/* the entrance: 看板, name, the rule, what passing brings (passed: 合格・初段 and the seal), the button — or, taken today, when again.
+   DJ_RV: the show just played here (its moves carry on through a redraw; めくる's line stays while the page does) */
+let DJ_RV = null, djIO = null;
+function djCardHTML(id){
+  if (!djSeen(id)) return '';
+  const e = djE(id), kw = id === 'kw', d = kw ? null : deckById(id), R = djRule(id), passed = e.p != null, open = djOpen(id);
+  const fresh = open && e.s == null, rv = DJ_RV?.id === id ? DJ_RV : null, dt = rv ? (Date.now() - rv.t0) / 1000 : 9, rise = dt < 2.4;
+  const best = e.b != null ? `<span class="b">最高${e.b}問</span>` : '';
+  const st = passed ? `<span>合格・${djDan(id)}</span>${best}` : `<span>合格すると${kw ? '極' : DAN_NAME[danN() + 1]}</span>${best}`;
+  const act = !open ? `<p class="k-dj-wait">${DJ_WAIT}<span>${kPhrases('見出し語をぜんぶ学習済みにすると、また挑戦できる')}</span></p>`
+    : djToday(id) ? `<p class="k-dj-wait">${DJ_WAIT}<span>${kPhrases('今日は挑戦した、明日また挑戦できる')}</span></p>`
+    : `<button class="k-play${kw ? ' kw' : ''}" data-act="djStart" data-id="${id}">${K_ICO.play}<span class="k-play-t"><span class="k-play-main">${passed ? 'もう一度挑戦する' : '挑戦する'}</span><span class="k-play-sub"><span class="ln">${R.n}問、約${Math.ceil(R.n * DJ_SEC / 60)}分</span></span></span></button>`;
+  return `<section class="k-dj${kw ? ' kw' : ''}${passed ? ' passed' : ''}${rise ? ' rise' : ''}" id="dj-${id}" aria-label="${esc(djName(id))}"${fresh ? ' data-new="1"' : ''} style="${d ? `--bk:var(--c-${bookOf(d).k});` : ''}${rise ? `--dt:${(-dt).toFixed(2)}s` : ''}">
+    <div class="k-dj-card"><div class="k-dj-top">${djSign(id)}<div class="k-dj-txt"><h2 class="k-dj-t">${esc(djName(id))}</h2><p class="k-dj-s">${kPhrases(djRuleText(id))}</p><p class="k-dj-st">${st}</p></div>${passed ? '<span class="k-seal" aria-hidden="true">合格</span>' : ''}</div>
+    <div class="k-dj-act">${act}</div></div>${rise ? djBits(id) : ''}${rv?.say ? `<div class="k-say">${mekuru('happy')}<p class="k-bubble" role="status">${kPhrases(rv.say)}</p></div>` : ''}</section>`;
+}
+/* after a page is drawn: a dojo that has come and never been shown waits out of sight; the page glides down to it (the deck's is at
+   the bottom) and the show plays once it is mostly in view, with nothing over the page */
+function djAfter(v){
+  const key = route.tab + '/' + (route.deck || '');
+  if (DJ_RV && DJ_RV.key !== key) DJ_RV = null;
+  djIO?.disconnect(); djIO = null;
+  const el = v.querySelector('.k-dj[data-new]'); if (!el) return;
+  const quiet = () => $('#screen').hidden && !sheetOpen();
+  if (!('IntersectionObserver' in window)) { if (quiet()) djReveal(el); return; }
+  djIO = new IntersectionObserver(es => { if (!es.some(x => x.isIntersecting) || !el.isConnected || !quiet()) return; djIO.disconnect(); djIO = null; djReveal(el); }, {threshold: 0.6});
+  djIO.observe(el);
+  if (quiet()) setTimeout(() => { if (el.isConnected && el.dataset.new && quiet()) el.scrollIntoView({behavior: lessMotion() ? 'auto' : 'smooth', block: 'center'}); }, lessMotion() ? 0 : 450);
+}
+function djReveal(el){
+  const id = el.id.slice(3), name = djName(id);
+  djSet(id, {s: dayIdx()});
+  DJ_RV = {id, t0: Date.now(), key: route.tab + '/' + (route.deck || ''), say: mkSay(id === 'kw' ? 'dojo_kw_appear' : 'dojo_appear', {d: name}) || `${name}があらわれた！`};
+  el.outerHTML = djCardHTML(id);
+  const nw = $('#dj-' + id); if (lessMotion() && nw?.animate) nw.animate([{opacity: 0, transform: 'translateY(8px)'}, {opacity: 1, transform: 'none'}], {duration: 500, easing: 'ease-out'});
+  haptic(true); setTimeout(() => sfx('done'), lessMotion() ? 0 : 420); srSay(`${name}があらわれた`);
+  setTimeout(() => document.querySelector(`#dj-${id} .k-dj-fx`)?.remove(), 2600);   // the bits, flown out past the page's edge, leave no box behind
+}
+/* the results of a set that made a deck all 学習済み: its dojo has come (shown on the page, once) */
+const djNoticeHTML = id => `<section class="rs-dj" role="status">${djSign(id, true)}<p class="t">${esc(djName(id))}があらわれた<small>${id === 'kw' ? '単語帳タブのいちばん上にある' : '単語帳のページの、いちばん下にある'}</small></p><button data-act="djGo" data-id="${id}">見に行く</button></section>`;
+/* before a test: the rules, plainly (quitting fails it, once a day) */
+function djStartSheet(id){
+  const R = djRule(id);
+  openSheet(`<div class="sheet-h"><h3>${esc(djName(id))}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="k-confirm"><p class="t">${kPhrases(id === 'kw' ? `${R.n}問、まちがいが${R.miss}つまでなら合格` : `${R.n}問のうち、${R.pass}問正解で合格`)}</p>
+      <p class="s">${kPhrases(`1問${DJ_SEC}秒、時間切れはまちがい`)}</p><p class="s">${kPhrases('ヒントと1問もどすは使えない、途中でやめると不合格')}</p>
+      <p class="s">${kPhrases('挑戦できるのは1日1回、まちがえた単語は苦手に入る')}</p><p class="s">${kPhrases('答えても、復習の予定は変わらない')}</p></div>
+    <button class="btn btn-primary btn-block" data-act="djBegin" data-id="${id}">はじめる</button><button class="btn btn-ghost btn-block" data-act="closeSheet">やめておく</button>`);
+}
+/* ---- the test ---- */
+let DJ = null;
+function djBegin(id){
+  closeSheet();
+  if (!djOpen(id)) return toast('いまは挑戦できない');
+  if (djToday(id)) return toast('今日はもう挑戦した、明日また挑戦できる');
+  const qs = djPick(id), R = djRule(id); if (qs.length < R.n) return toast('出題できる単語が足りない');
+  djSet(id, {l: dayIdx()});   // taken from the first question: quitting, or closing the app, has used today's one
+  DJ = {id, R, qs: qs.map(x => ({...x, ok: null, pick: -1, ms: 0})), i: 0, miss: 0, start: Date.now(), done: false};
+  audioCtx(); openScreen(); djRender(); prefetchAudio(DJ.qs.slice(1, 3).map(q => q.c));
+}
+function djRender(){
+  const q = DJ.qs[DJ.i], c = q.c, s = c.s[q.si] || c.s[0], n = DJ.R.n, kw = DJ.id === 'kw';
+  q.choices ||= pickChoices(c, 'e2j', q.si);
+  DJ.answered = false; DJ.wait = false;
+  const cells = DJ.qs.map((x, k) => x.ok === true ? 'ok' : x.ok === false ? 'ng' : k === DJ.i ? 'now' : '').map(x => x ? `<i class="${x}"></i>` : '<i></i>').join('');
+  const kind = c.isD ? '（派生語）' : c.isS || q.si > 0 ? '（ほかの意味）' : '';
+  const say = `<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(s.p)}" aria-label="発音を聞く">${QI.say}</button>`;
+  const card = `<div class="qpos"><span class="pos">${esc(s.p || '—')}</span></div><div class="w-line">${wordHTML(c, s)}${say}</div>${c.isD ? `<div class="qask">← ${esc(c.parent.w)}の派生語</div>` : ''}`;
+  $('#screen').innerHTML = `<div class="screen-in study v2 dj t-e2j">
+    <div class="qtop"><button class="iconbtn qx" data-act="djQuit" aria-label="やめる（不合格になる）"><span>${QI.x}</span></button><p class="qcount num" aria-label="${n}問のうち${DJ.i + 1}問目"><b>${DJ.i + 1}</b>/${n}</p><span></span></div>
+    <div class="segs dense${n > 60 ? ' d100' : ''}" role="progressbar" aria-label="道場の進み具合" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${DJ.i}" style="--n:${n}">${cells}</div>
+    <div class="qhead">${obiTag(c)}<span class="qtype">${esc(djName(DJ.id))}${kind}</span></div>
+    <div class="qstage"><div class="qcard" id="qcard"><div class="qcard-in">${card}</div></div></div>
+    <div class="qclock"><div class="qtimer" aria-hidden="true"><i id="qtbar"></i></div><p class="t-lab" id="qtlab">${QI.clock}<span>のこり<b id="djsec">${DJ_SEC}</b>秒</span>${kw ? `<span class="mis">まちがい ${DJ.miss}/${DJ.R.miss}</span>` : ''}</p></div>
+    <div id="qbody"><div class="choices" id="choices">${q.choices.map((o, i) => `<button class="choice" data-act="djChoose" data-i="${i}"><span class="key">${i + 1}</span><span class="ctext">${esc(o.text)}</span></button>`).join('')}</div>
+    <button class="dunno" data-act="djChoose" data-i="-1">わからない<span class="kbd">（0）</span></button></div></div>`;
+  fitCheck(); fitWord();
+  DJ.t0 = performance.now(); DJ.lock = DJ.t0 + 250;
+  djClock();
+  if (S.settings.autoSpeak) playWord(c.w, s.p);
+}
+/* the 6 seconds: they run on while the app is out of view (a test: no looking it up) */
+function djClock(){
+  clearInterval(DJ.iv); const t0 = DJ.t0, lim = DJ_SEC * 1000;
+  const iv = DJ.iv = setInterval(() => {
+    if (!DJ || DJ.iv !== iv || DJ.answered) return clearInterval(iv);
+    const left = Math.max(0, 1 - (performance.now() - t0) / lim), bar = $('#qtbar'), sec = $('#djsec');
+    if (bar) { bar.style.width = (left * 100).toFixed(1) + '%'; bar.className = left < 1 / 3 ? 'low' : ''; }
+    if (sec) sec.textContent = Math.ceil(left * DJ_SEC);
+    if (left <= 0) djAnswer(-1, true);
+  }, 100);
+}
+/* an answer (k: the option, -1 わからない or time's up): right or wrong shows, a miss gets the 苦手 mark; on by itself */
+function djAnswer(k, timeout = false){
+  if (!DJ || DJ.done || DJ.answered || (!timeout && performance.now() < DJ.lock)) return;
+  const q = DJ.qs[DJ.i], ok = !!q.choices[k]?.ok;
+  DJ.answered = true; clearInterval(DJ.iv);
+  Object.assign(q, {ok, pick: k, ms: Math.round(performance.now() - DJ.t0), to: timeout});
+  document.querySelectorAll('#choices .choice').forEach((b, j) => { const o = q.choices[j], key = b.querySelector('.key'); b.disabled = true;
+    if (o.ok) { b.classList.add('ok'); key.innerHTML = QI.check; } else if (j === k) { b.classList.add('ng'); key.innerHTML = QI.cross; } else b.classList.add('dim'); });
+  const dn = $('#qbody .dunno'); if (dn) dn.disabled = true;
+  if (!ok) { DJ.miss++; djWeak(q.c); }
+  if (timeout) $('#qtlab')?.replaceChildren(Object.assign(document.createElement('b'), {className: 'to', textContent: '時間切れ'}));
+  else { const m = $('#qtlab .mis'); if (m) m.textContent = `まちがい ${DJ.miss}/${DJ.R.miss}`; }
+  sfx(ok ? 'ok' : 'ng'); haptic(ok);
+  srSay(ok ? '正解' : `${timeout ? '時間切れ' : 'ちがいます'}。正解は ${q.choices.find(o => o.ok)?.text || ''}`);
+  DJ.next = setTimeout(djNext, ok ? 450 : 1300);
+}
+function djWeak(c){ const p = clone(prog(c)) || {st: 0}; if (p.wk) return; p.wk = Date.now(); p.u = p.wk; setProg(c, p); }   // the 辞書's 苦手に入れる: the record's schedule stays as it is
+function djNext(){
+  if (!DJ || DJ.done || !DJ.answered) return; clearTimeout(DJ.next);
+  if (sheetOpen()) { DJ.wait = true; return; }   // やめる？ is up: on once it is closed with 続ける
+  DJ.i++;
+  if (DJ.i >= DJ.R.n || (DJ.id === 'kw' && DJ.miss > DJ.R.miss)) return djFinish();   // 極: the 3rd miss ends it
+  djRender(); prefetchAudio(DJ.qs.slice(DJ.i + 1, DJ.i + 3).map(q => q.c));
+}
+function djQuitAsk(){
+  if (!DJ || DJ.done) return closeScreen();
+  openSheet(`<div class="sheet-h"><h3>やめる？</h3></div><div class="k-confirm"><p class="t">いまやめると、不合格になる</p><p class="s">${kPhrases('今日の1回を使ったことになる、明日また挑戦できる')}</p></div>
+    <button class="btn btn-danger btn-block" data-act="djQuitGo">やめる</button><button class="btn btn-ghost btn-block" data-act="djResume">続ける</button>`);
+}
+/* the end: the best kept, the day of the first pass (段 up); quitting keeps nothing but today's try */
+function djFinish(quit = false){
+  clearInterval(DJ.iv); clearTimeout(DJ.next);
+  const id = DJ.id, R = DJ.R, e = djE(id), got = DJ.qs.filter(q => q.ok).length, asked = DJ.qs.filter(q => q.ok !== null).length;
+  const pass = !quit && (id === 'kw' ? asked >= R.n && DJ.miss <= R.miss : got >= R.pass), first = pass && e.p == null;
+  if (!quit) djSet(id, {b: Math.max(e.b ?? 0, got), ...(first ? {p: dayIdx()} : {})});
+  DJ.done = true; DJ.res = {got, asked, pass, first, kwNew: first && id !== 'kw' && djOpen('kw') && djE('kw').s == null};
+  if (quit) { closeScreen(); toast('途中でやめたので不合格、明日また挑戦できる', null, 3500); return; }
+  djResults(); flush();
+}
+function djResults(){
+  const r = DJ.res, id = DJ.id, R = DJ.R, n = R.n, e = djE(id), missed = DJ.qs.map((q, i) => [q, i]).filter(([q]) => q.ok === false);
+  if (r.pass) { sfx('done'); haptic(true); }
+  const sub = r.pass ? (id === 'kw' ? `${n}問、まちがい${DJ.miss}つで合格` : `${n}問のうち、${R.pass}問正解で合格`)
+    : id === 'kw' ? `不合格、${r.asked}問目でまちがいが${DJ.miss}つになった` : `不合格、合格まであと${R.pass - r.got}問`;
+  const note = r.pass && !r.first ? `段は${djDan(id)}のまま、最高${e.b}問` : r.pass ? '' : '明日また挑戦できる';
+  const hero = `<section class="rs-first"><article class="k-hero rs-hero dj-hero" aria-label="${esc(djName(id))}、${n}問のうち${r.got}問正解、${r.pass ? '合格' : '不合格'}"><div class="k-hero-top">${djSign(id)}<div class="k-hero-txt" aria-hidden="true">
+    <p class="k-hero-title"><span class="n">${r.got}</span><span class="unit">問正解</span></p><p class="k-hero-sub">${kPhrases(sub)}</p>${note ? `<p class="k-hero-sub dj-note">${kPhrases(note)}</p>` : ''}</div>${r.pass ? '<span class="k-seal" aria-hidden="true">合格</span>' : ''}</div></article></section>`;
+  const dan = r.first ? danName() : djDan(id), v = {d: djName(id), q: dan, b: e.b, n: r.got};   // just passed: the 段 now (two on one day are told apart by the decks' order later)
+  const up = r.first ? `<section class="dj-up" role="status" aria-label="${dan}になった"><p class="l">${id === 'kw' ? '最後の道場に合格' : '段が上がった'}</p><p class="q">${dan}</p><p class="s">${id === 'kw' ? '5つの道場と極の道場、ぜんぶ合格' : `合格した道場 ${danN()}つ`}</p></section>` : '';
+  const line = r.first ? mkSay(id === 'kw' ? 'dojo_kw_pass' : 'dojo_pass', v) || `${dan}になったよ！`
+    : r.pass ? mkSay('dojo_repass', v) || '腕だめしも合格！' : mkSay('dojo_fail', v) || '明日また挑戦しよう';
+  const say = `<section class="k-say rs-say" aria-label="めくるから">${mekuru(r.pass ? 'happy' : 'cheer')}<p class="k-bubble" role="status">${kPhrases(line)}</p></section>`;
+  const secs = Math.round((Date.now() - DJ.start) / 1000), nb = (x, u) => `<b>${x}</b>${u}`;
+  const stats = `<section class="rs-stats" aria-label="このテストの数字"><div><p class="l">正解</p><p class="v">${nb(r.got, '問')}</p></div><div><p class="l">まちがい</p><p class="v">${nb(DJ.miss, '問')}</p></div><div><p class="l">かかった時間</p><p class="v">${secs < 60 ? nb(secs, '秒') : nb(Math.floor(secs / 60), '分') + (secs % 60 ? nb(secs % 60, '秒') : '')}</p></div></section>`;
+  const row = ([q, i]) => { const c = q.c, f = formOf(c, c.s[q.si] || c.s[0]), right = q.choices.find(o => o.ok)?.text || '';
+    return `<li><button class="rs-wr" data-act="djWord" data-i="${i}">${RS_ICO.ng}<span class="b"><span class="t"><span class="w" lang="en">${f ? `<span>${esc(f).replace(/ do$/, ' <i>do</i>')}</span>` : esc(c.w)}${q.to ? '<span class="tag" lang="ja">時間切れ</span>' : ''}</span>
+      <span class="m">${c.isD ? `← ${esc(c.parent.w)}　` : ''}${esc(right)}</span></span><span class="nx">${QI.chev}</span></span></button></li>`; };
+  const words = missed.length ? `<section class="k-sec rs-sec"><div class="k-sec-h has-sub"><h2 class="k-sec-t">まちがえた単語</h2><p class="k-sec-s">${kPhrases('苦手に入れた、苦手を特訓で出る')}</p></div><ul class="rs-wl">${missed.map(row).join('')}</ul></section>` : '';
+  $('#screen').innerHTML = `<div class="screen-in res v2 dj"><div class="qtop"><button class="iconbtn qx" data-act="quitQuiz" aria-label="閉じる"><span>${QI.x}</span></button></div>
+    ${hero}${up}${say}${r.kwNew ? djNoticeHTML('kw') : ''}${stats}${words}<section class="k-sec rs-sec"><button class="rs-home rb" data-act="quitQuiz">単語帳へもどる</button></section></div>`;
+  $('#screen').scrollTop = 0;
+}
+/* the 記録 tab's profile: the 段 large, and the 道場's list (none before a dojo has come) */
+function danRow(){
+  const dn = danName(); if (!dn && !DJ_IDS.some(djSeen)) return '';
+  return `<button class="k-dan" data-act="djList" aria-label="${dn ? `段は${dn}` : '段はまだ'}、道場の一覧"><span class="q${dn ? '' : ' none'}" aria-hidden="true">${dn || '段はまだ'}</span><span class="r" aria-hidden="true">道場${K_ICO.chev}</span></button>`;
+}
+/* the list: every dojo, passed (its day, its 段, the best) or not; one not come yet is ？？？ */
+function djListSheet(){
+  const dn = danName(), np = DJ_IDS.filter(id => djE(id).p != null).length;
+  const row = id => { const e = djE(id);
+    if (!djSeen(id)) return `<li><div class="k-djl-r q" role="img" aria-label="まだあらわれていない道場"><span class="k-dj-sign mini q" aria-hidden="true"><span>？</span></span><span class="k-djl-t" aria-hidden="true"><span class="k-djl-n">？？？</span><span class="k-djl-s">まだあらわれていない</span></span></div></li>`;
+    const s = e.p != null ? `${djDayText(e.p)}に合格、${djDan(id)}${e.b != null ? `、最高${e.b}問` : ''}` : e.b != null ? `まだ合格していない、最高${e.b}問` : 'まだ挑戦していない';
+    return `<li><button class="k-djl-r" data-act="djGo" data-id="${id}">${djSign(id, true)}<span class="k-djl-t"><span class="k-djl-n">${esc(djName(id))}</span><span class="k-djl-s">${s}</span></span>${e.p != null ? '<span class="k-seal" aria-hidden="true">合格</span>' : ''}${K_CHEV}</button></li>`; };
+  openSheet(`<div class="sheet-h"><h3>道場</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <p class="k-ach-sum">${dn ? `いまは<b class="jp">${dn}</b>、` : ''}6つのうち、<b>${np}</b>つ合格</p><p class="k-ach-s">${kPhrases('単語帳をぜんぶ学習済みにすると、その道場があらわれる、合格した数で段が上がる')}</p>
+    <ul class="k-djl">${DJ_IDS.map(row).join('')}</ul><button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
 }
 function viewStats(){
   const g = goalToday(), {st} = g, today = dayIdx();
@@ -4954,7 +5336,7 @@ function viewStats(){
         <button class="k-prof-goal" data-act="profSheet" data-f="goal" aria-label="${gl ? `目標 ${esc(gl[2])}、変える` : '目標を決める'}"><span class="pill">${K_FLAG}${gl ? `<span class="k">目標</span>${esc(gl[1])}` : '目標を決める'}</span></button>
         ${since ? `<p class="since">${since}にはじめた</p>` : ''}</div>
       <button class="k-prof-edit" data-act="profSheet" aria-label="プロフィールを編集"><span class="pill">${K_PEN}編集</span></button></div>
-    ${kyuRow()}<div class="k-pst"><div><p class="n">${nLoc(mAll)}<small>語</small></p><p class="l">覚えた単語</p></div><div><p class="n">${nLoc(days)}<small>日</small></p><p class="l">学習した日</p></div><div><p class="n">${nLoc(tm[0])}<small>${tm[1]}</small></p><p class="l">学習した時間</p></div></div></section>`;
+    ${danRow()}${kyuRow()}<div class="k-pst"><div><p class="n">${nLoc(mAll)}<small>語</small></p><p class="l">覚えた単語</p></div><div><p class="n">${nLoc(days)}<small>日</small></p><p class="l">学習した日</p></div><div><p class="n">${nLoc(tm[0])}<small>${tm[1]}</small></p><p class="l">学習した時間</p></div></div></section>`;
   const streak = `<section class="k-sec" aria-label="連続記録"><div class="k-sec-h"><h2 class="k-sec-t">連続記録</h2></div>${streakBlock(g)}${calBlock(st, g.fr)}${tktBlock(st)}</section>`;
   const ach = `<section class="k-sec" aria-label="実績"><div class="k-sec-h"><h2 class="k-sec-t"><button data-act="achSheet">実績${K_ICO.chev}</button></h2></div>${achGrid()}</section>`;
   // これまで: every question answered and how many right, and the last 20 weeks a square a day (the blue deeper the more)
@@ -6442,6 +6824,7 @@ function renderResults(){
   // the results' めくる is glad (its face for a good set) — after a set mostly missed, it cheers you on
   const achH = prac ? '' : achSayHTML(Q.ach, first, kyUp);   // badges got and a 級 up: they and めくる's one line about them, in めくる's place
   const xpH = prac ? '' : xpResHTML(xpGain, ky0, ky1);
+  const djH = prac ? '' : (Q.ach || []).filter(b => b.cat === 'book' && djOpen(b.deck) && djE(b.deck).s == null).map(b => djNoticeHTML(b.deck)).join('');   // 道場があらわれた
   const mkLine = prac ? '' : achH || `<section class="k-say rs-say" aria-label="めくるから">${mekuru(sc === 'res_low' ? 'cheer' : 'happy')}<p class="k-bubble" role="status">${first || kPhrases(line)}</p></section>`;
 
   // what the hero's button starts and the ways on under it. go(): its words, decks and time, as the home's button says them
@@ -6536,7 +6919,7 @@ function renderResults(){
     : `<ul class="rs-wl">${restI.map(wRow).join('')}</ul>${practice}`;
   const words = `<section class="k-sec rs-sec"><div class="k-sec-h has-sub"><h2 class="k-sec-t">このセットの単語</h2><p class="k-sec-s">タップすると、例文や派生語まで見られる</p></div>${list}</section>`;
   const dock = m ? `<div class="rs-dock" aria-hidden="true"><button class="rs-dock-btn" data-act="resDock" tabindex="-1">${K_ICO.play}<span class="t">${esc(m.main)}</span><span class="r">${m.k ? `${m.k}問、${aboutMin(m.k)}` : ''}</span></button></div>` : '';
-  $('#screen').innerHTML = `<div class="screen-in res v2">${top}${cele}${notice}${hero}${xpH}${inst ? `<div class="rs-inst">${inst}</div>${achH}` : mkLine}
+  $('#screen').innerHTML = `<div class="screen-in res v2">${top}${cele}${notice}${hero}${djH}${xpH}${inst ? `<div class="rs-inst">${inst}</div>${achH}` : mkLine}
     ${statsH}${speed}${words}<section class="k-sec rs-sec"><button class="rs-home rb" data-act="quitQuiz">${homeLbl}</button></section>${dock}</div>`;
   // a short screen: the card would sit below the first screen; めくる's line instead, the home has the card from now
   const ic = inst && $('#screen .rs-inst'); if (ic && ic.getBoundingClientRect().top + 64 > innerHeight) ic.outerHTML = achH ? '' : mkLine;
@@ -7486,6 +7869,18 @@ const ACT = {
   pfGoal: t => { if (!pfDraft) return; pfDraft.goal = t.dataset.v; openSheet(profSheetHTML(), false, true); $(`.k-pf [data-act="pfGoal"][data-v="${t.dataset.v}"]`)?.focus({preventScroll: true}); },
   pfSave: () => profSave(),
   achSheet: () => achSheet(),
+  // 極み道場
+  djStart: t => djStartSheet(t.dataset.id),
+  djBegin: t => djBegin(t.dataset.id),
+  djChoose: t => djAnswer(+t.dataset.i),
+  djQuit: () => djQuitAsk(),
+  djQuitGo: () => { closeSheet(); if (DJ && !DJ.done) djFinish(true); },
+  djResume: () => closeSheet(),
+  djWord: t => { const q = DJ?.qs[+t.dataset.i]; if (q) cardSheet(q.c.isS ? q.c.parent : q.c); },
+  djList: () => djListSheet(),
+  djGo: t => { const id = t.dataset.id; closeSheet(); if (!$('#screen').hidden) closeScreen();
+    if (id === 'kw') { route.tab = 'decks'; route.deck = null; route.dq = ''; render(); scrollTo(0, 0); } else ACT.openDeck({dataset: {id}});
+    const el = $('#dj-' + id); if (el && !el.dataset.new) el.scrollIntoView({block: 'center'}); },
   backup: () => offerFile(`kyokutan-backup-${dayKey(dayIdx())}.json`, backupJSON()),
   restoreSheet: () => openSheet(`<div class="sheet-h"><h3>バックアップから戻す</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <p class="small muted">書き出した .json ファイルを選ぶか、中身を貼り付けてください。今の記録は置き換わります。</p>
@@ -7500,6 +7895,7 @@ const ACT = {
       for (const id of Object.keys(S.custom)) { S.custom[id].upd = now; markDirty('deck_'+id); }
       for (const deck of Object.keys(S.notes)) markDirty('note_'+deck);
       if (S.ach) markDirty('ach'); else achGrant(true);   // a backup from before 実績: what it reaches, quietly
+      if (S.dojo) markDirty('dojo');
       markDirty('meta', true); invalidateDecks(); saveNow(); closeSheet(); render(); toast('バックアップから戻しました');
     } catch(e) { $('#rinfo').innerHTML = '<span style="color:var(--again-t)">このアプリのバックアップとして読み取れませんでした。</span>'; }
   },
@@ -7508,7 +7904,7 @@ const ACT = {
     <button class="btn btn-danger btn-block" data-act="resetGo">リセットする</button><button class="btn btn-ghost btn-block" data-act="backup">バックアップをとる</button><button class="btn btn-ghost btn-block" data-act="closeSheet">やめる</button>`),
   resetGo: () => { const now = Date.now();
     for (const deck of Object.keys(S.prog)) { for (const k of Object.keys(S.prog[deck])) S.prog[deck][k] = {st:0, last:now}; markDirty('prog_'+deck); }
-    S.daily = {}; S.ach = {}; S.settings.upd = now; markDirty('meta', true); markDirty('ach', true); saveNow(); closeSheet(); render(); toast('リセットしました'); },
+    S.daily = {}; S.ach = {}; S.dojo = {}; S.settings.upd = now; markDirty('meta', true); markDirty('ach', true); markDirty('dojo', true); saveNow(); closeSheet(); render(); toast('リセットしました'); },
 };
 document.addEventListener('click', e => {
   // a settings row flips its switch wherever it is tapped, as in the iPhone's Settings
@@ -7529,6 +7925,7 @@ document.addEventListener('keydown', e => {
     tutClose(); if (/^[0-4]$/.test(e.key) || ['ArrowLeft', 'ArrowRight', 'Escape'].includes(e.key)) { e.preventDefault(); return; } }
   if (sheetOpen()) { if (e.key === 'Escape') closeSheet(); return; }
   if ($('#screen').hidden) return;
+  if (DJ && !DJ.done) { if (e.key === 'Escape') djQuitAsk(); else if (/^[1-4]$/.test(e.key)) djAnswer(+e.key - 1); else if (e.key === '0') djAnswer(-1); return; }
   if (Q && !Q.done) {
     const it = Q.cur; const inInput = e.target.id === 'spellin' || e.target.id === 'retypein';
     if (e.key === 'Escape') return closeScreen();
