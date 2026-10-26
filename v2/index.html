@@ -75,10 +75,14 @@
   --n-bg:#FFFFFF; --n-ink:#121216; --ink-2:#5E5E68; --ink-3:#8C8C96; --ink-tab:#6E6E78; --fill:#F2F2F5; --hair:rgba(18,18,22,.09); --track:rgba(18,18,22,.18);
   --logo:#083FF9; --blue:#2A45D8; --blue-hero:#2A45D8; --blue-tint:#EAEEFD; --orange:#F07A1E; --orange-track:#FBDCC3; --on-blue:#FFFFFF;
   /* one colour a deck: its started cover (--c-), the hero behind it alone (--h-, 12%+ darker), its card's tint (--t-) */
-  --c-kiso:#2E7D5B; --c-hyojun:#C9472E; --c-hatten:#7B4A2D; --obi-juku:#8A6D1F; --obi-tagi:#A8486C; --obi-theme:#5E6B30; --obi-chu:#4F6475; --obi-my:#5F646C;
-  --c-juku:var(--obi-juku); --c-tagi:var(--obi-tagi); --c-theme:var(--obi-theme); --c-chu:var(--obi-chu); --c-my:var(--obi-my);
-  --h-kiso:#27694C; --h-hyojun:#A13925; --h-hatten:#6C4128; --h-juku:#735A1A; --h-tagi:#943F5F; --h-theme:#535E2A; --h-chu:#465867; --h-my:#52565D;
-  --t-kiso:#E6F1EB; --t-hyojun:#FAE9E4; --t-hatten:#F4ECE6; --t-juku:#F3EEE1; --t-tagi:#F7E9EE; --t-theme:#EFF1E5; --t-chu:#E8EDF1; --t-my:#EFEFF1;
+  --c-kiso:#2E7D5B; --c-hyojun:#C9472E; --c-hatten:#7B4A2D; --obi-juku:#8A6D1F; --obi-tagi:#A8486C; --obi-theme:#5E6B30; --obi-chu:#4F6475; --obi-toeic:#7A3F73; --obi-my:#55515A;
+  --c-juku:var(--obi-juku); --c-tagi:var(--obi-tagi); --c-theme:var(--obi-theme); --c-chu:var(--obi-chu); --c-toeic:var(--obi-toeic); --c-my:var(--obi-my);
+  --h-kiso:#27694C; --h-hyojun:#A13925; --h-hatten:#6C4128; --h-juku:#735A1A; --h-tagi:#943F5F; --h-theme:#535E2A; --h-chu:#465867; --h-toeic:#6B3765; --h-my:#4B4750;
+  --t-kiso:#E6F1EB; --t-hyojun:#FAE9E4; --t-hatten:#F4ECE6; --t-juku:#F3EEE1; --t-tagi:#F7E9EE; --t-theme:#EFF1E5; --t-chu:#E8EDF1; --t-toeic:#F4EAF2; --t-my:#EFEFF1;
+  /* a deck's own page (S/decks): its cover's colour × 0.70, so the big cover and its 帯 stand off it */
+  --d-kiso:#205840; --d-hyojun:#8D3220; --d-hatten:#56341F; --d-juku:#614C16; --d-tagi:#76324C; --d-theme:#424B22; --d-chu:#374652; --d-toeic:#552C51; --d-my:#3C393F;
+  --rb-1:#E5484D; --rb-2:#F76B15; --rb-3:#F5C518; --rb-4:#30A46C; --rb-5:#3E63DD; --rb-6:#8E4EC6;   /* the rainbow: a block's ★ medal only */
+  --ring-track:rgba(18,18,22,.10); --ring-star:rgba(18,18,22,.26); --seg-on:#FFFFFF; --now-mix:0%;   /* a block's ring: its track, the faint star inside */
   --c-nigate:#2E2C33; --c-miss:#5B4A9E; --c-today:#1F7584;   /* the もう一度やる sets: 苦手, 前回のミス, 今日の単語 */
   --paper:#FBFAF7; --paper-spine:rgba(18,18,22,.07); --paper-ink:#121216; --paper-ink-2:#5E5E68;   /* a deck not started: a white cover */
   --tabbar-bg:rgba(255,255,255,.94);
@@ -89,6 +93,8 @@
   --pad:16px; --shelf-gap:12px; --sec-gap:26px;
   --sh-book:0 1px 1.5px rgba(0,0,0,.14),0 8px 16px -6px rgba(0,0,0,.30);   /* shadows on book covers only */
   --sh-book-on-hero:0 1px 2px rgba(0,0,0,.28),0 10px 18px -6px rgba(0,0,0,.45);
+  --sh-book-lg:0 1.5px 2.5px rgba(0,0,0,.14),0 14px 26px -10px rgba(0,0,0,.34); --sh-book-on-hero-lg:0 2px 3px rgba(0,0,0,.28),0 18px 30px -10px rgba(0,0,0,.46);   /* the big covers (単語帳 tab) */
+  --fs-page:28px; --fs-book:24px;   /* a tab's big title (単語帳); a deck's name on its page */
   /* the study screen (S/quiz/notes.md): right and wrong (not of the blue or the orange family), the word sizes, the steps */
   --ok:#1E9E5A; --ok-ink:#0E7642; --ok-tint:#E6F5EC; --ok-solid:#0E7642; --ng:#E5484D; --ng-ink:#C8303A; --ng-tint:#FDEDED;
   --step-todo:#E7E7EA; --step-redo:#F7C8CA; --line-card:rgba(18,18,22,.14); --scrim:rgba(18,18,22,.46); --grab:rgba(18,18,22,.16); --card-bg:#FFFFFF;
@@ -99,18 +105,20 @@
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --n-bg:#111114; --n-ink:#ECECF1; --ink-2:#A6A6B0; --ink-3:#777781; --ink-tab:#9D9DA7; --fill:#1F1F25; --hair:rgba(255,255,255,.10); --track:rgba(255,255,255,.20);
   --blue:#8E9DFF; --blue-tint:#262D55; --orange-track:#5A3418;
-  --t-kiso:#16271F; --t-hyojun:#2E1B16; --t-hatten:#29201A; --t-juku:#28231A; --t-tagi:#2C1A21; --t-theme:#22251A; --t-chu:#1B2227; --t-my:#222226;
+  --t-kiso:#16271F; --t-hyojun:#2E1B16; --t-hatten:#29201A; --t-juku:#28231A; --t-tagi:#2C1A21; --t-theme:#22251A; --t-chu:#1B2227; --t-toeic:#2A1B28; --t-my:#222226;
   --paper:#E9E6DF; --paper-spine:rgba(18,18,22,.10); --tabbar-bg:rgba(17,17,20,.92);
-  --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6);
+  --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6); --sh-book-lg:0 1.5px 2.5px rgba(0,0,0,.45),0 14px 26px -10px rgba(0,0,0,.65);
+  --ring-track:rgba(255,255,255,.14); --ring-star:rgba(255,255,255,.30); --seg-on:#2E2E36; --now-mix:45%;
   --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20;
   --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
 }}
 :root[data-theme="dark"]{
   --n-bg:#111114; --n-ink:#ECECF1; --ink-2:#A6A6B0; --ink-3:#777781; --ink-tab:#9D9DA7; --fill:#1F1F25; --hair:rgba(255,255,255,.10); --track:rgba(255,255,255,.20);
   --blue:#8E9DFF; --blue-tint:#262D55; --orange-track:#5A3418;
-  --t-kiso:#16271F; --t-hyojun:#2E1B16; --t-hatten:#29201A; --t-juku:#28231A; --t-tagi:#2C1A21; --t-theme:#22251A; --t-chu:#1B2227; --t-my:#222226;
+  --t-kiso:#16271F; --t-hyojun:#2E1B16; --t-hatten:#29201A; --t-juku:#28231A; --t-tagi:#2C1A21; --t-theme:#22251A; --t-chu:#1B2227; --t-toeic:#2A1B28; --t-my:#222226;
   --paper:#E9E6DF; --paper-spine:rgba(18,18,22,.10); --tabbar-bg:rgba(17,17,20,.92);
-  --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6);
+  --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6); --sh-book-lg:0 1.5px 2.5px rgba(0,0,0,.45),0 14px 26px -10px rgba(0,0,0,.65);
+  --ring-track:rgba(255,255,255,.14); --ring-star:rgba(255,255,255,.30); --seg-on:#2E2E36; --now-mix:45%;
   --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20;
   --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
 }
@@ -1669,10 +1677,10 @@ html{touch-action:manipulation}
 
 /* 本の表紙 (CSS): 2 small letters on top, the brush letter, the 帯 with its name; 3 sizes, the same face everywhere */
 .k-cover{--w:64px;--h:86px;--top:7px;--left:10px;--kj-top:21px;--kj:38px;--obi:20px;position:relative;flex:none;display:block;width:var(--w);height:var(--h);border-radius:var(--r-book);background:var(--bk);box-shadow:var(--sh-book);color:#fff;overflow:hidden;text-align:left}
-.k-cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:rgba(0,0,0,.17);box-shadow:1px 0 0 rgba(255,255,255,.24);z-index:1}
-.k-cover .ser{position:absolute;top:var(--top);left:var(--left);font-size:var(--fs-min);font-weight:700;line-height:1;white-space:nowrap;color:#fff;font-feature-settings:"palt"}
-.k-cover .kj{position:absolute;left:6px;right:0;top:var(--kj-top);text-align:center;font-family:var(--f-cover);font-size:var(--kj);font-weight:400;line-height:1}
-.k-cover .obi{position:absolute;left:0;right:0;bottom:0;height:var(--obi);display:flex;align-items:center;padding:3px 4px 0 var(--left);font-size:var(--fs-min);font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;color:#fff;background:rgba(0,0,0,.17);font-feature-settings:"palt"}
+.k-cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--spine,6px);background:rgba(0,0,0,.17);box-shadow:1px 0 0 rgba(255,255,255,.24);z-index:1}
+.k-cover .ser{position:absolute;top:var(--top);left:var(--left);font-size:var(--cv-fs,var(--fs-min));font-weight:700;line-height:1;white-space:nowrap;color:#fff;font-feature-settings:"palt"}
+.k-cover .kj{position:absolute;left:var(--spine,6px);right:0;top:var(--kj-top);text-align:center;font-family:var(--f-cover);font-size:var(--kj);font-weight:400;line-height:1}
+.k-cover .obi{position:absolute;left:0;right:0;bottom:0;height:var(--obi);display:flex;align-items:center;padding:var(--obi-pt,3px) 4px 0 var(--left);font-size:var(--cv-fs,var(--fs-min));font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;color:#fff;background:rgba(0,0,0,.17);font-feature-settings:"palt"}
 .k-cover.paper{background:var(--paper);color:var(--paper-ink);box-shadow:var(--sh-book),inset 0 0 0 1px rgba(18,18,22,.05)}
 .k-cover.paper::before{background:var(--paper-spine);box-shadow:none}
 .k-cover.paper .ser{color:var(--paper-ink-2)}
@@ -1732,6 +1740,194 @@ html{touch-action:manipulation}
   .k-say .mekuru{width:54px;height:54px}
 }
 .k-mrow small{display:block;font-size:12px;font-weight:400;color:var(--muted)}
+/* ===== 新デザイン4: 単語帳タブ（S/decks/notes.md。値は 375px のもの）=====
+   The shelf (#view.v2.dk) and a deck's page (#view.v2.dk.dkp: its colour band with the big cover, 続きから, then the blocks or the
+   list). The parts the mockups don't show (単語一覧, the 辞書, the sheets opened on this tab: .sheet.v2) keep their markup; inside
+   these the old tokens take the new values, so they read as the same page. New parts start with k-. */
+#view.v2.dk{padding-left:0;padding-right:0}
+#view.v2.dk.dkp{padding-top:0}
+#view.v2.dk > .k-top,#view.v2.dk > .iab{margin-left:max(var(--pad),env(safe-area-inset-left,0px));margin-right:max(var(--pad),env(safe-area-inset-right,0px))}
+#view.v2.dk,.sheet.v2{--surface:var(--n-bg);--surface-2:var(--fill);--pop:var(--n-bg);--line:var(--hair);--muted:var(--ink-2);--faint:var(--ink-3);--accent:var(--blue);--accent-soft:var(--blue-tint);--accent-2:color-mix(in srgb,var(--blue) 40%,transparent);--f-word:var(--f-en);--f-num:var(--f-en);--st-master:var(--blue);--st-learn:color-mix(in srgb,var(--blue) 42%,var(--n-bg));--st-new:var(--track);word-break:auto-phrase}
+.k-pad{padding-left:max(var(--pad),env(safe-area-inset-left,0px));padding-right:max(var(--pad),env(safe-area-inset-right,0px))}
+.k-chev{width:20px;height:20px;flex:none;color:var(--ink-3);fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* the shelf: the big title, the 辞書's box, then shelves of different shapes (2 big covers a row, 4 in a row, rows, tiles) */
+.k-page-h{display:flex;align-items:center;min-height:44px;padding:12px max(var(--pad),env(safe-area-inset-left,0px)) 0}
+.k-page-t{margin:0;font-size:var(--fs-page);font-weight:800;letter-spacing:.01em;line-height:1.2;font-feature-settings:"palt"}
+#view.dk .dsearch{margin:0;padding:8px max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px));background:var(--bg)}
+#view.dk .dsearch.on{padding-bottom:8px}
+#view.dk .dsearch .search{height:44px;gap:8px;padding:0 0 0 14px;border:0;border-radius:var(--r-pill);background:var(--fill);color:var(--ink-2)}
+#view.dk .dsearch .search:focus-within{box-shadow:inset 0 0 0 1.5px var(--blue)}
+#view.dk .dsearch .search > .ico{width:20px;height:20px;stroke-width:2;color:var(--ink-2)}
+#view.dk .dsearch input{font-weight:500;color:var(--ink)}
+#view.dk .dsearch input::placeholder{color:var(--ink-2);font-size:var(--fs-body);font-weight:500}
+#view.dk .dsug{left:var(--pad);right:var(--pad);border:0;border-radius:var(--r-card);background:var(--n-bg);box-shadow:0 0 0 1px var(--hair),0 10px 28px rgba(18,18,22,.16)}
+#view.dk #dictres:not(:empty){padding:0 max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
+.k-empty{margin:0 max(var(--pad),env(safe-area-inset-left,0px));padding:14px 16px;border-radius:var(--r-card);background:var(--fill);color:var(--ink-2);font-size:var(--fs-body);line-height:1.6}
+/* 使っている単語帳: 2 big covers a row (165 at 375; they shrink with the column, so 320px and 文字「大」 keep 2) */
+.k-lib{display:grid;align-items:start;grid-template-columns:repeat(2,minmax(0,165px));justify-content:space-between;column-gap:13px;row-gap:22px;padding:0 max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
+.k-lib-it{display:block;min-width:0;text-align:left;container-type:inline-size}
+.k-cover.s-lib{--w:100cqw;--h:134.55cqw;--top:10.3cqw;--left:15.76cqw;--kj-top:30.9cqw;--kj:56.97cqw;--obi:29.7cqw;--cv-fs:13.33cqw;--spine:6.67cqw;--obi-pt:3.03cqw;box-shadow:var(--sh-book-lg)}
+.k-cover.s-lib.paper{box-shadow:var(--sh-book-lg),inset 0 0 0 1px rgba(18,18,22,.05)}
+.k-lib-name{display:block;margin-top:12px;font-size:var(--fs-name);font-weight:700;line-height:1.35;font-feature-settings:"palt";overflow-wrap:anywhere}
+.k-lib-now{display:block;margin-top:2px;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.4;font-feature-settings:"palt"}
+.k-lib-now svg{width:15px;height:15px;margin-right:4px;vertical-align:-2.5px;color:var(--c-kiso);fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.k-lib .k-bar-row{margin-top:10px}
+.k-lib .k-bar-n{width:auto}
+/* 受験英単語シリーズ: 4 covers in one row, the easiest first (76 at 375, smaller with the column) */
+.k-series{display:grid;align-items:start;grid-template-columns:repeat(4,minmax(0,76px));justify-content:space-between;column-gap:8px;padding:0 max(var(--pad),env(safe-area-inset-right,0px)) 4px max(var(--pad),env(safe-area-inset-left,0px))}
+.k-ser-it{display:block;min-width:0;text-align:left;container-type:inline-size}
+.k-cover.s-ser{--w:100cqw;--h:134.2cqw;--top:11.84cqw;--left:15.79cqw;--kj-top:34.2cqw;--kj:57.9cqw;--obi:28.95cqw;--spine:min(6px,7.9cqw)}
+.k-ser-name{display:block;margin-top:10px;font-size:var(--fs-sub);font-weight:700;line-height:1.35;font-feature-settings:"palt"}
+.k-ser-lv,.k-ser-n{display:block;font-size:var(--fs-min);color:var(--ink-2);line-height:1.45;font-feature-settings:"palt";white-space:nowrap}
+/* ＋αの単語帳: a cover, its name and what it is, › */
+.k-rows{list-style:none;margin:0;padding:0 max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
+.k-row{position:relative;width:100%;display:flex;align-items:center;gap:14px;padding:9px 0;text-align:left}
+.k-rows > li:first-child .k-row{padding-top:0}
+.k-rows > li + li .k-row::before{content:"";position:absolute;top:0;left:78px;right:calc(-1 * max(var(--pad),env(safe-area-inset-right,0px)));height:1px;background:var(--hair)}
+.k-row-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.k-row-name{font-size:var(--fs-name);font-weight:700;line-height:1.4;font-feature-settings:"palt";overflow-wrap:anywhere}
+.k-row-sub{font-size:var(--fs-sub);color:var(--ink-2);line-height:1.4;font-feature-settings:"palt"}
+/* 自分の単語帳: the ＋ tile first, then the decks you made (shelf covers) */
+.k-make-art{display:grid;place-items:center;width:88px;height:118px;border-radius:var(--r-book);background:var(--fill);color:var(--blue)}
+.k-make-art svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.k-book-name{display:block;margin-top:10px;font-size:var(--fs-sub);font-weight:700;line-height:1.35;font-feature-settings:"palt";overflow-wrap:anywhere}
+.k-book-name.act{color:var(--blue)}
+.k-book-sub{display:block;font-size:var(--fs-min);color:var(--ink-2);line-height:1.45}
+.k-book{text-align:left}
+.k-cover.s-mini{--w:33px;--h:44px;--left:5px;--kj-top:8px;--kj:21px;--obi:10px;--spine:3px}   /* the 辞書's 載っている単語帳: the brush letter only */
+.k-cover.s-mini .ser{display:none} .k-cover.s-mini .obi{font-size:0;padding:0}
+/* a deck's page: the band in the deck's colour (--d-, its cover x 0.70), edge to edge */
+.k-dpage{--hero-bg:var(--d-my)}
+.k-dh{background:var(--hero-bg);color:var(--on-blue);padding:calc(10px + env(safe-area-inset-top,0px)) max(var(--pad),env(safe-area-inset-right,0px)) 16px max(var(--pad),env(safe-area-inset-left,0px))}
+.k-dh-top{display:flex;align-items:center;justify-content:space-between;gap:8px;height:44px}
+.k-dh-r{display:flex;align-items:center;gap:2px;margin-right:-4px}
+.k-hit44{height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;flex:none;color:inherit}
+.k-back{margin-left:-4px}
+.k-circ{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center}
+.k-circ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.k-circ.k-dots svg{width:20px;height:20px;fill:currentColor;stroke:none}
+.k-using{height:36px;display:flex;align-items:center;gap:4px;padding:0 13px 0 10px;border-radius:var(--r-pill);background:rgba(255,255,255,.16);font-size:var(--fs-sub);font-weight:700;white-space:nowrap;font-feature-settings:"palt"}
+.k-using svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.k-dh-cover{display:flex;justify-content:center}
+.k-cover.s-page{--w:132px;--h:177px;--top:13.5px;--left:21px;--kj-top:40.5px;--kj:75px;--obi:39px;--cv-fs:18px;--spine:9px;--obi-pt:4.5px;box-shadow:var(--sh-book-on-hero-lg)}
+.k-cover.s-page.paper{box-shadow:var(--sh-book-on-hero-lg),inset 0 0 0 1px rgba(18,18,22,.05)}
+.k-dh-t{margin:16px 0 0;font-size:var(--fs-book);font-weight:800;line-height:1.25;letter-spacing:.01em;font-feature-settings:"palt";overflow-wrap:anywhere}
+.k-dh-meta{margin-top:3px;font-size:var(--fs-body);font-weight:500;color:rgba(255,255,255,.88);font-feature-settings:"palt"}
+.k-dh-prog{margin-top:16px}
+.k-dh-row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px 12px}
+.k-dh-row .k-hero-title{flex-wrap:nowrap}
+.k-dh-st{font-size:var(--fs-body);font-weight:500;color:rgba(255,255,255,.88);white-space:nowrap;font-feature-settings:"palt"}
+.k-dh-st svg{width:16px;height:16px;margin-right:4px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.k-dh .k-seg{margin-top:14px}
+.k-seg-bar .mem{background:#fff} .k-seg-bar .lrn{background:rgba(255,255,255,.46)} .k-seg-bar .yet{background:rgba(255,255,255,.22)}
+.k-seg-lab .mem{color:#fff} .k-seg-lab .lrn{color:rgba(255,255,255,.86)} .k-seg-lab .yet{color:rgba(255,255,255,.76)}
+.k-dh-act{margin-top:16px}
+.k-dh .k-play{width:100%;min-height:68px;padding:9px 18px}
+.k-dsub{width:100%;min-height:52px;margin-top:10px;border-radius:var(--r-pill);background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 14px 6px 20px;text-align:left;transition:transform .08s var(--ease-io)}
+.k-dsub:active{transform:scale(.98)}
+.k-dsub .t{display:flex;flex-direction:column;min-width:0;line-height:1.3}
+.k-dsub .t1{font-size:var(--fs-body);font-weight:700;font-feature-settings:"palt"}
+.k-dsub .t2{font-size:var(--fs-min);font-weight:500;color:rgba(255,255,255,.82);font-feature-settings:"palt"}
+.k-dsub svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.k-dh-cap{margin-top:10px;padding-left:20px;font-size:var(--fs-min);font-weight:500;color:rgba(255,255,255,.82);font-feature-settings:"palt"}
+/* the bar that comes down once the name has gone off the top: ‹, the name, ✓ 使っている */
+.k-mini{position:fixed;left:0;right:0;top:0;z-index:18;height:calc(54px + env(safe-area-inset-top,0px));padding:calc(10px + env(safe-area-inset-top,0px)) max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px));background:var(--hero-bg);color:#fff;opacity:0;visibility:hidden;transition:opacity .15s var(--ease-io),visibility .15s}
+.k-mini.on{opacity:1;visibility:visible}
+.k-mini-in{max-width:528px;height:44px;margin:0 auto;display:grid;grid-template-columns:minmax(112px,1fr) minmax(0,max-content) minmax(112px,1fr);align-items:center}
+.k-mini .k-back{justify-self:start}
+.k-mini .k-dh-r{justify-self:end}
+.k-mini-t{margin:0;font-size:var(--fs-name);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-feature-settings:"palt"}
+/* ブロック／単語一覧: it stops just under that bar (a hairline under it once it has) */
+.k-sent{height:1px;margin-bottom:-1px}
+.k-segw{position:sticky;top:calc(54px + env(safe-area-inset-top,0px));z-index:9;background:var(--bg);padding:12px max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
+.k-segw.stuck::after{content:"";position:absolute;left:0;right:0;top:100%;height:8px;background:var(--bg);border-bottom:1px solid var(--hair)}
+.k-segc{position:relative;isolation:isolate;height:44px;display:grid;grid-template-columns:1fr 1fr;border-radius:var(--r-pill);background:var(--fill)}
+.k-segc button{position:relative;height:44px;text-align:center;font-size:var(--fs-body);font-weight:700;color:var(--ink-2);font-feature-settings:"palt"}
+.k-segc button[aria-selected="true"]{color:var(--ink)}
+.k-segc button[aria-selected="true"]::before{content:"";position:absolute;inset:4px;z-index:-1;border-radius:var(--r-pill);background:var(--seg-on);border:1px solid var(--hair)}
+.k-dnote{margin:0;padding:10px max(var(--pad),env(safe-area-inset-right,0px)) 2px max(var(--pad),env(safe-area-inset-left,0px));font-size:var(--fs-sub);color:var(--ink-2);line-height:1.5;font-feature-settings:"palt"}
+/* the blocks: a ring of what is learned (headwords, other meanings, derivatives), the rainbow ★ once it closes; 「あと何」 under the No. */
+.k-blist{list-style:none;margin:0;padding:0}
+.k-blk{position:relative;width:100%;display:flex;align-items:center;gap:12px;min-height:68px;padding:12px max(var(--pad),env(safe-area-inset-right,0px)) 12px max(var(--pad),env(safe-area-inset-left,0px));text-align:left}
+.k-blist > li + li .k-blk::before{content:"";position:absolute;top:0;left:calc(max(var(--pad),env(safe-area-inset-left,0px)) + 52px);right:0;height:1px;background:var(--hair)}
+.k-badge{position:relative;width:40px;height:40px;flex:none}
+.k-badge svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.k-badge.ico{display:grid;place-items:center;border-radius:50%;background:var(--fill);color:var(--ink-2)}
+.k-badge.ico svg{position:static;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.k-blk-t{flex:1;min-width:0}
+.k-blk-no{display:flex;align-items:center;flex-wrap:wrap;gap:0 8px;font-family:var(--f-en);font-size:var(--fs-name);font-weight:700;line-height:1.3}
+.k-blk-no.jp{font-family:var(--f-ui)}
+.k-blk-sub{display:block;margin-top:1px;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.45;font-feature-settings:"palt"}
+.k-blk.star .k-blk-sub{color:var(--ink)}
+.k-now{display:inline-flex;align-items:center;gap:3px;font-family:var(--f-ui);font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);font-feature-settings:"palt"}
+.k-now svg{width:10px;height:10px;fill:color-mix(in srgb,var(--hero-bg),#fff var(--now-mix))}
+.k-drill{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.k-chip{position:relative;display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 14px;border-radius:var(--r-pill);background:var(--fill);font-size:var(--fs-sub);font-weight:700;color:var(--ink)}
+.k-chip::after{content:"";position:absolute;inset:-4px -2px}
+.k-chip b{font-family:var(--f-en);color:var(--blue)}
+.k-chip[disabled]{opacity:.45;pointer-events:none}
+.k-quit-w{padding:14px max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
+.k-quit{width:100%;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;color:var(--ink-2);font-feature-settings:"palt"}
+.k-quit .q1{font-size:var(--fs-body);font-weight:500}
+.k-quit .q2{font-size:var(--fs-min)}
+#view.dk .dk-list{margin-top:14px}
+#view.dk .dk-todo{margin-top:20px}
+/* 単語一覧, the 辞書's results, the parts kept from before: the new page's fills, pills and hairlines */
+:is(#view.dk,.sheet.v2) .btn{border-radius:var(--r-pill)}
+:is(#view.dk,.sheet.v2) .btn-primary{background:var(--blue-hero);color:var(--on-blue)}
+:is(#view.dk,.sheet.v2) .btn-ghost{background:var(--fill);border-color:transparent;color:var(--ink)}
+:is(#view.dk,.sheet.v2) .btn-soft{background:var(--blue-tint);color:var(--blue)}
+:is(#view.dk,.sheet.v2) .btn-go{min-height:54px;box-shadow:none;font-size:var(--fs-cta);font-weight:800}
+:is(#view.dk,.sheet.v2) :is(.input,.textarea,.select){border:1.5px solid transparent;border-radius:12px;background:var(--fill);color:var(--ink)}
+:is(#view.dk,.sheet.v2) :is(.input,.textarea,.select):focus{border-color:var(--blue)}
+:is(#view.dk,.sheet.v2) .fchip{border:0;border-radius:var(--r-pill);background:var(--fill)}
+:is(#view.dk,.sheet.v2) .fchip.on{background:var(--blue-tint)}
+:is(#view.dk,.sheet.v2) .link{color:var(--blue)}
+#view.dk .toolrow .search{height:44px;padding:0 14px;border:0;border-radius:var(--r-pill);background:var(--fill)}
+#view.dk .toolrow .search:focus-within{box-shadow:inset 0 0 0 1.5px var(--blue)}
+#view.dk .sheetbtn{height:44px;padding:0 16px;border:0;border-radius:var(--r-pill);background:var(--fill);font-size:var(--fs-sub)}
+#view.dk .sheetbtn[aria-pressed="true"]{background:var(--sheet);color:#fff}
+#view.dk .chip{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border:0;border-radius:var(--r-pill);background:var(--fill);color:var(--ink-2);font-size:var(--fs-sub)}
+#view.dk .chip[aria-pressed="true"]{background:var(--blue-tint);color:var(--blue)}
+#view.dk .blkchip{min-height:36px;background:var(--blue-tint);color:var(--blue)}
+#view.dk .words{border:0;border-radius:0;background:none;overflow:visible}
+#view.dk .wrow,#view.dk .drow{padding:12px 0;border-top:1px solid var(--hair)}
+#view.dk :is(.wrow,.drow):first-child{border-top:0}
+#view.dk .wword,#view.dk .dwl b{font-family:var(--f-en);font-weight:700;font-size:var(--fs-name)}
+#view.dk .more{border-top:1px solid var(--hair)}
+#view.dk .dmiss,#view.dk .dmiss.sm{border:0;border-radius:var(--r-card);background:var(--fill)}
+#view.dk .dmiss :is(.input,.btn-ghost){background:var(--n-bg)}
+#view.dk .ctadock .btn-big{min-height:54px;font-size:var(--fs-body)}
+/* the sheets opened on this tab: white, the hero's corners, a 21/800 title, × as a grey circle */
+.sheet.v2{background:var(--n-bg);color:var(--ink);border-radius:var(--r-hero) var(--r-hero) 0 0}
+.sheet.v2 .grab{width:36px;height:5px;border-radius:3px;background:var(--grab)}
+.sheet.v2 .sheet-h h3{font-size:var(--fs-sec);font-weight:800;letter-spacing:.01em;font-feature-settings:"palt"}
+.sheet.v2 .sheet-h .iconbtn,.sheet.v2 .bs-top > .iconbtn{width:36px;height:36px;border-radius:50%;background:var(--fill);color:var(--ink)}
+.sheet.v2 .sheet-h .iconbtn .ico,.sheet.v2 .bs-top > .iconbtn .ico{width:18px;height:18px;stroke-width:2.2}
+.sheet.v2 .bs-top > .iconbtn{margin:0}
+.sheet.v2 .kv div{border-radius:12px;background:var(--fill)}
+.sheet.v2 .mrow{min-height:52px}
+.sheet.v2 .ai-box,.sheet.v2 .plist{border-color:var(--hair)}
+.sheet.v2:has(.cardview),.sheet.v2:has(.cardview) .dacts{background:var(--n-bg)}
+.sheet.v2 .tcard.cardview{border:0;border-radius:0;background:none;box-shadow:none;padding:6px 0 2px}
+.sheet.v2 .tcard.holed::before,.sheet.v2 .tcard .ring{display:none}
+.sheet.v2 .cardview .qword{font-family:var(--f-en);font-weight:700;font-size:32px;letter-spacing:-.01em}
+.sheet.v2 .dplace{border:0;border-radius:var(--r-card);background:var(--fill)}
+.sheet.v2 .dacts{background:var(--n-bg)}
+.dplace > span.k-cover{flex:none;display:block;margin:0}
+/* a block's sheet: its ring (or the ★), its counts, which words, スタート */
+.sheet.v2 .bs-top .k-badge{width:56px;height:56px}
+.sheet.v2 .bs-t h3{font-family:var(--f-en);font-size:var(--fs-sec);font-weight:800}
+.sheet.v2 .bs-more.all{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--ink)}
+.sheet.v2 .ch{border:1.5px solid transparent;border-radius:var(--r-card);background:var(--fill)}
+.sheet.v2 .ch[aria-checked="true"]{border-color:var(--blue);background:var(--blue-tint);color:var(--blue)}
+.sheet.v2 .ch > b{font-family:var(--f-en);font-weight:800}
+.sheet.v2 .ch.weak:not([aria-checked="true"]):not([disabled]) > b{color:var(--ink)}
+.tab .t-f .cut{fill:none;stroke:var(--n-bg);stroke-width:1.5}   /* the 単語帳 tab chosen: its 帯 lines cut out of the fill */
+@media (max-width:360px){
+  .k-dh .k-play{padding:9px 14px}
+  .k-mini-in{grid-template-columns:minmax(96px,1fr) minmax(0,max-content) minmax(96px,1fr)}
+}
 /* ===== 新デザイン2: 問題の画面（S/quiz/notes.md。値は 375px のもの）=====
    The study screen (.screen-in.study.v2) and its sheet (.fb.v2). The page is always white (the book's colour only on its small 帯),
    the word in the middle at about みかん's size, the options at the bottom under the thumb. Right and wrong have colours of their own
@@ -2142,7 +2338,7 @@ html{touch-action:manipulation}
 </head><body><div id="app" lang="ja"><main class="wrap" id="view"></main></div>
 <nav class="tabbar v2" aria-label="メニュー"><div class="tabbar-in">
   <button class="tab" data-act="tab" data-tab="home"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7v9a1.4 1.4 0 0 1-1.4 1.4H15v-6.2H9V21H4.9a1.4 1.4 0 0 1-1.4-1.4z"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7v9a1.4 1.4 0 0 1-1.4 1.4H15v-6.2H9V21H4.9a1.4 1.4 0 0 1-1.4-1.4z"/></svg>ホーム</button>
-  <button class="tab" data-act="tab" data-tab="decks"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="4.4" height="16" rx="1"/><rect x="8.9" y="6.5" width="4.4" height="13.5" rx="1"/><path d="M18.6 20l-4.17-1.04 3.63-14.55 4.17 1.04z"/><path d="M3 8.2h4.4M8.9 10h4.4"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="4.4" height="16" rx="1"/><rect x="8.9" y="6.5" width="4.4" height="13.5" rx="1"/><path d="M18.6 20l-4.17-1.04 3.63-14.55 4.17 1.04z"/></svg>単語帳</button>
+  <button class="tab" data-act="tab" data-tab="decks"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="4.4" height="16" rx="1"/><rect x="8.9" y="6.5" width="4.4" height="13.5" rx="1"/><path d="M18.6 20l-4.17-1.04 3.63-14.55 4.17 1.04z"/><path d="M3 8.2h4.4M8.9 10h4.4"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="4.4" height="16" rx="1"/><rect x="8.9" y="6.5" width="4.4" height="13.5" rx="1"/><path d="M18.6 20l-4.17-1.04 3.63-14.55 4.17 1.04z"/><path class="cut" d="M3.4 8.2h3.6M9.3 10h3.6"/></svg>単語帳</button>
   <button class="tab" data-act="tab" data-tab="stats"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><path d="M5.5 20v-7M12 20V5M18.5 20v-10M3 20.5h18"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="12" width="3.2" height="8" rx="1"/><rect x="10.4" y="4" width="3.2" height="16" rx="1"/><rect x="16.8" y="9" width="3.2" height="11" rx="1"/><rect x="2.5" y="19.6" width="19" height="1.8" rx=".9"/></svg>記録</button>
   <button class="tab" data-act="tab" data-tab="settings"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.6" aria-hidden="true"><path d="M9.95 5.31 L10.39 2.84 L13.61 2.84 L14.05 5.31 L15.29 5.82 L17.33 4.38 L19.62 6.67 L18.18 8.71 L18.69 9.95 L21.16 10.39 L21.16 13.61 L18.69 14.05 L18.18 15.29 L19.62 17.33 L17.33 19.62 L15.29 18.18 L14.05 18.69 L13.61 21.16 L10.39 21.16 L9.95 18.69 L8.71 18.18 L6.67 19.62 L4.38 17.33 L5.82 15.29 L5.31 14.05 L2.84 13.61 L2.84 10.39 L5.31 9.95 L5.82 8.71 L4.38 6.67 L6.67 4.38 L8.71 5.82Z"/><circle cx="12" cy="12" r="3.1"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M9.95 5.31 L10.39 2.84 L13.61 2.84 L14.05 5.31 L15.29 5.82 L17.33 4.38 L19.62 6.67 L18.18 8.71 L18.69 9.95 L21.16 10.39 L21.16 13.61 L18.69 14.05 L18.18 15.29 L19.62 17.33 L17.33 19.62 L15.29 18.18 L14.05 18.69 L13.61 21.16 L10.39 21.16 L9.95 18.69 L8.71 18.18 L6.67 19.62 L4.38 17.33 L5.82 15.29 L5.31 14.05 L2.84 13.61 L2.84 10.39 L5.31 9.95 L5.82 8.71 L4.38 6.67 L6.67 4.38 L8.71 5.82Z M12 8.9a3.1 3.1 0 1 0 0 6.2a3.1 3.1 0 1 0 0-6.2z"/></svg>設定</button>
 </div></nav>
@@ -3664,7 +3860,8 @@ function guard(){ if (IS_WEB && !HG) { try { history.pushState({kt: 1}, ''); HG 
 function openSheet(html, modal=false, keep=false){
   const again = sheetOpen(), top = keep ? $('#sheetroot .sheet')?.scrollTop || 0 : 0;
   if (!again && !$('#toastroot .toast-btn')) { clearTimeout(toastT); $('#toastroot').innerHTML = ''; }   // a plain notice would cover the new sheet's field; an undo one stays
-  $('#sheetroot').innerHTML = `<div class="backdrop" ${modal ? '' : 'data-act="closeSheet"'}></div><div class="sheet" role="dialog" aria-modal="true"><div class="sheet-in">${modal ? '' : '<div class="grab"></div>'}${html}</div></div>`;
+  const v2 = route.tab === 'decks' && $('#screen').hidden;   // the 単語帳 tab's sheets: the new look (white, its title, its buttons)
+  $('#sheetroot').innerHTML = `<div class="backdrop" ${modal ? '' : 'data-act="closeSheet"'}></div><div class="sheet${v2 ? ' v2' : ''}" role="dialog" aria-modal="true"><div class="sheet-in">${modal ? '' : '<div class="grab"></div>'}${html}</div></div>`;
   if (again) $('#sheetroot').querySelectorAll('.sheet,.backdrop').forEach(e => e.style.animation = 'none');   // a sheet already up: a redraw never replays the slide-in / fade
   if (top) $('#sheetroot .sheet').scrollTop = top;   // the same sheet redrawn (出題しない, リセット, メモ): it stays where the user was
   document.body.classList.add('locked');
@@ -3750,7 +3947,8 @@ function render(){
   const said = $('#mkbubble')?.hidden === false && $('#mkbubble').dataset.tap ? $('#mkbubble').textContent : '';   // めくる keeps talking through a redraw (what it was tapped to say)
   const sel = a && v.contains(a) && a.dataset?.act ? ['act','k','v','d','f','c','id','tab'].filter(n => a.dataset[n] != null).map(n => `[data-${n}="${CSS.escape(a.dataset[n])}"]`).join('') : '';
   const dq = a && /^(dq|df[wme])$/.test(a.id) ? [a.id, a.selectionStart, a.selectionEnd] : null;   // the search box (and the 辞書's form) keep the keyboard and the caret
-  v.classList.toggle('v2', route.tab === 'home'); v.classList.toggle('home', route.tab === 'home'); document.body.classList.toggle('v2bg', route.tab === 'home');
+  const nw = route.tab === 'home' || route.tab === 'decks', dkp = route.tab === 'decks' && !!route.deck && !!deckById(route.deck);
+  v.classList.toggle('v2', nw); v.classList.toggle('home', route.tab === 'home'); v.classList.toggle('dk', route.tab === 'decks'); v.classList.toggle('dkp', dkp); document.body.classList.toggle('v2bg', nw);
   v.innerHTML = route.tab === 'home' ? viewHome()
     : route.tab === 'decks' ? (route.deck && deckById(route.deck) ? viewDeck() : viewDecks())
     : route.tab === 'stats' ? viewStats() : viewSettings();
@@ -3762,6 +3960,7 @@ function render(){
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false'));
   renderSync(); shownDay = dayIdx();
   if (route.tab === 'decks' && route.deck) guard();
+  deckIO(v);
   if (said && $('#mkbubble')) { $('#mkbubble').textContent = said; $('#mkbubble').hidden = false; $('#mkbubble').dataset.tap = 1; }
   // めくる waits at the home card's goal and talks only when tapped (a bubble of its own would cover the buttons above it)
   // the home's めくるの一言 (homeTip): up until a tap once it is in view above the tab bar (a line further down, e.g. 100語's
@@ -3925,13 +4124,16 @@ const K_ICO = {
    short name for the home's lines (「基礎と標準から12語」). A deck you made: grey, its first letter */
 const BOOK = {j1: ['受験', '基', '基礎', 'kiso', '基礎'], j2: ['受験', '標', '標準', 'hyojun', '標準'], j3: ['受験', '発', '発展', 'hatten', '発展'],
   idioms: ['必修', '熟', '英熟語', 'juku', '英熟語'], tagi: ['必修', '多', '多義語', 'tagi', '多義語'], theme: ['テーマ別', '題', '英単語', 'theme', 'テーマ別'],
-  junior: ['中学', '中', '中学基礎', 'chu', '中学基礎']};
+  junior: ['中学', '中', '中学基礎', 'chu', '中学基礎'], toeic: ['TOEIC', '頻', '頻出', 'toeic', 'TOEIC']};
 function bookOf(d){
   const b = BOOK[d.id]; if (b) return {ser: b[0], kj: b[1], obi: b[2], k: b[3], nm: b[4]};
-  return {ser: '自作', kj: ([...(d.name || '').trim()][0] || '?').toUpperCase(), obi: d.name || '', k: 'my', nm: d.name || ''};
+  const nm = (d.name || '').trim();
+  return {ser: '自作', kj: ([...nm][0] || '?').toUpperCase(), obi: nm.replace(/の?(単語帳|単語)$/, '') || nm, k: 'my', nm};
 }
 const bookName = d => bookOf(d).nm;
-/* the cover: size card (64×86) | hero (76×102) | shelf (88×118); a deck never started is white paper with its colour on the 帯 */
+/* the cover: size card (64×86) | hero (76×102) | shelf (88×118); on the 単語帳 tab also lib (165×222, the shelf's ×1.875, shrinking with
+   its column), ser (the hero's, shrinking), page (132×177) and mini (33×44, the brush letter only). A deck never started is white paper
+   with its colour on the 帯 */
 function bookCover(d, size = 'card', {cls = '', paper = !usesDeck(d.id), alt = ''} = {}){
   const b = bookOf(d);
   return `<span class="k-cover s-${size}${paper ? ' paper' : ''}${cls ? ' ' + cls : ''}" style="--bk:var(--c-${b.k})" ${alt ? `role="img" aria-label="${esc(alt)}"` : 'aria-hidden="true"'}><span class="ser">${esc(b.ser)}</span><span class="kj">${esc(b.kj)}</span><span class="obi">${esc(b.obi)}</span></span>`;
@@ -4127,28 +4329,37 @@ const cvOf = d => `var(--cv-${DECK_ICO[d.id] ? d.id : 'my'})`;
 function learnBar(m, r, t){ const w = v => v > 0 ? Math.max(1, v / (t || 1) * 100).toFixed(1) : 0;
   return `<span class="lbar" aria-hidden="true"><i class="m" style="width:${w(m)}%"></i><i class="l" style="width:${w(r - m)}%"></i></span>`; }
 const secMastered = x => x.heads.filter(c => status(prog(c)) === 'master').length;
-function useCard(d, going){
-  const st = deckStats(d), cur = curSection(d), many = deckSections(d).length > 1;
-  const where = !st.total ? '' : !cur ? '<span class="cur done nw">ぜんぶ学習ずみ</span>' : many ? `<span class="cur nw">いま${secLabel(cur)}</span>` : '';
-  return `<button class="ucard" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}、${st.r} / ${st.total}語 学習ずみ（${st.pct}%）${cur && many ? `、いま ${secSay(cur)}` : ''}${going ? '、進めている' : ''}">
-    ${deckCover(d, {pct: st.pct || null})}<span class="u-main"><span class="u-name">${esc(d.name)}${going ? '<span class="u-tag">進めている</span>' : ''}</span>
-    ${learnBar(st.m, st.r, st.total)}<span class="u-sub"><span class="nw"><b class="num">${st.r}</b> / ${st.total}語</span>${where}</span></span>${I.right}</button>`;
+/* ---------- 新デザイン4: 単語帳タブ（S/decks/notes.md） ---------- */
+/* the 単語帳 tab: the title, the 辞書's box, then shelves of different shapes — 使っている単語帳 (2 big covers a row, the easiest
+   first), 受験英単語シリーズ (4 in a row: what comes in which order), ＋αの単語帳 (rows that say what each is), 自分の単語帳 (自分でつくる,
+   then the decks you made). A cover opens the deck's page; a deck is started (and put to use) there, never from the shelf */
+const SER_LV = {junior: '中学〜高1', j1: '共通テスト', j2: '中堅大', j3: '難関大'};
+const DECK_WHAT = {junior: '中学から高1レベル', j1: '共通テストレベル', j2: '中堅大レベル', j3: '難関大レベル', idioms: '句動詞と熟語', tagi: '意味と語法', theme: '環境や医療など', toeic: 'ビジネス'};
+const nLoc = n => Number(n || 0).toLocaleString('en-US');
+const K_CHEV = '<svg class="k-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg>';
+const K_BACK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg>';
+const K_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4.2 4.2 8.8-9.2"/></svg>';
+const K_PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5v13M5.5 12h13"/></svg>';
+/* where a deck is, one short line and its bar: round once → 覚えた %, before that → 学習済み % (as on the home's deck card) */
+function deckNow(d){
+  const st = deckStats(d), x = curSection(d), round = st.total > 0 && !x;
+  const pct = round ? pctOf(st.m, st.total) : st.pct, what = round ? '覚えた' : '学習済み';
+  const now = !st.total ? 'まだ単語がありません' : round ? `${K_ICO.redo}一周して、いまは復習中` : !st.r ? 'まだ始めていない' : deckSections(d).length > 1 ? `いま ${secLabel(x)}` : `あと${st.total - st.r}語`;
+  return {st, x, round, pct, what, now};
 }
-function shelfBook(d){
-  const on = S.settings.active.includes(d.id), pct = deckPct(d);
-  return `<button class="sbook" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}${pct ? `、学習ずみ ${pct}%` : ''}${on ? '、使っている' : ''}">${deckCover(d, {pct: pct || null, on})}
-    <span class="sb-n">${esc(SERIES.includes(d.id) ? deckNick(d) : d.name).replace(' ', '<br>')}</span><span class="sb-s${on ? ' use' : ''}">${on ? '使っている' : esc(SHELF_SUB[d.id] || d.tag || '')}</span></button>`;
+function libBook(d, going){
+  const k = deckNow(d);
+  return `<button class="k-lib-it" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}、${k.now.replace(/<[^>]+>/g, '')}、${k.what} ${k.pct}%${going ? '、新しい単語はここから' : ''}">${bookCover(d, 'lib')}<span class="k-lib-name" aria-hidden="true">${esc(d.name)}</span><span class="k-lib-now" aria-hidden="true">${k.now}</span>
+    <span class="k-bar-row" aria-hidden="true"><span class="k-bar"><i${k.pct ? '' : ' class="zero"'} style="width:${k.pct}%"></i></span><span class="k-bar-n">${k.what} ${k.pct}%</span></span></button>`;
 }
-function myRow(d){
-  const st = deckStats(d), on = S.settings.active.includes(d.id);
-  return `<button class="ucard my" data-act="openDeck" data-id="${esc(d.id)}">${deckCover(d, {size: 'sm'})}<span class="u-main"><span class="u-name">${esc(d.name)}${on ? '<span class="u-tag">使っている</span>' : ''}</span>
-    <span class="u-sub"><span class="nw"><b class="num">${st.r}</b> / ${st.total}語 学習ずみ</span>${st.total ? `<span class="cur nw">${st.pct}%</span>` : ''}</span></span>${I.right}</button>`;
-}
+const serBook = d => `<button class="k-ser-it" data-act="openDeck" data-id="${esc(d.id)}" aria-label="${esc(d.name)}、${SER_LV[d.id] || ''}、${nLoc(d.cards.length)}語${S.settings.active.includes(d.id) ? '、使っている' : ''}">${bookCover(d, 'ser')}<span class="k-ser-name" aria-hidden="true">${esc(bookName(d))}</span><span class="k-ser-lv" aria-hidden="true">${SER_LV[d.id] || ''}</span><span class="k-ser-n num" aria-hidden="true">${nLoc(d.cards.length)}語</span></button>`;
+const plusRow = d => `<li><button class="k-row" data-act="openDeck" data-id="${esc(d.id)}">${bookCover(d, 'card')}<span class="k-row-t"><span class="k-row-name">${esc(d.name)}</span><span class="k-row-sub">${esc(DECK_WHAT[d.id] || d.tag || '')}、<span class="num">${nLoc(d.cards.length)}</span>語</span></span>${K_CHEV}</button></li>`;
+const myBook = d => `<button class="k-book" data-act="openDeck" data-id="${esc(d.id)}">${bookCover(d, 'shelf')}<span class="k-book-name">${esc(d.name)}</span><span class="k-book-sub num">${nLoc(d.cards.length)}語</span></button>`;
 /* the 単語帳 tab: the title, the 辞書's search box, then the shelves; while the box holds a word its results take their place */
 function viewDecks(){
   const x = dictQuery(route.dq);
   return `${topbar()}
-  <h1 class="pg-h">単語帳</h1>
+  <header class="k-page-h"><h1 class="k-page-t">単語帳</h1></header>
   ${dictBox(x)}
   <div id="dictres">${x ? dictResHTML() : ''}</div>
   <div id="shelves"${x ? ' hidden' : ''}>${shelvesHTML()}</div>`;
@@ -4156,20 +4367,25 @@ function viewDecks(){
 function shelvesHTML(){
   const ds = decks(), act = activeIds().map(deckById), built = ds.filter(d => d.builtin), mine = ds.filter(d => !d.builtin);
   const series = SERIES.map(id => built.find(d => d.id === id)).filter(Boolean), plus = built.filter(d => !SERIES.includes(d.id));
-  // 進めている: the deck new words come from first (単語帳の順: the first one in use not yet through); none when they come at
-  // random, or with one deck in use (nothing to tell it from)
+  // 新しい単語はここから: the deck new words come from first (単語帳の順: the first one in use not yet through); none when they
+  // come at random, or with one deck in use (said for screen readers; the line under each cover says where it is)
   const going = S.settings.order === 'rand' || act.length < 2 ? null : act.find(d => curSection(d));
-  return `<section class="blk" aria-label="使っている単語帳"><div class="blk-h"><h2>使っている単語帳</h2></div>
-    <div class="ucards">${act.length ? act.map(d => useCard(d, d === going)).join('') : '<div class="u-none">まだありません。下の表紙をタップして、使う単語帳を選んでください。</div>'}</div></section>
-  ${series.length ? `<section class="blk" aria-label="受験英単語シリーズ"><div class="blk-h"><h2>受験英単語シリーズ</h2></div>
-    <div class="shelf series">${series.map(shelfBook).join(`<span class="arw" aria-hidden="true">${I.right}</span>`)}</div></section>` : ''}
-  ${plus.length ? `<section class="blk" aria-label="熟語・多義語・テーマ"><div class="blk-h"><h2>熟語・多義語・テーマ</h2></div>
-    <div class="shelf">${plus.map(shelfBook).join('')}</div></section>` : ''}
-  <section class="blk" aria-label="自分でつくる"><div class="blk-h"><h2>自分でつくる</h2></div>
-    <div class="mk-tiles"><button class="mk-t" data-act="newDeck">${I.plus}新しい単語帳<small>1語ずつ追加</small></button>
-      <button class="mk-t" data-act="importSheet">${I.import}貼って取り込む<small>英単語のリストから</small></button>
-      <button class="mk-t ai-only" data-act="aiDeck">${I.spark}英文から自動でつくる</button></div>
-    ${mine.length ? `<div class="ucards">${mine.map(myRow).join('')}</div>` : ''}</section>`;
+  // in use: the easiest first, as the series below (the order they are used in is the home's)
+  const order = [...SERIES, ...plus.map(d => d.id)], rank = d => { const i = order.indexOf(d.id); return i < 0 ? 99 : i; };
+  const lib = act.map((d, i) => [d, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(([d]) => d);
+  const sec = (h, body, sub = '') => `<section class="k-sec" aria-label="${h}"><div class="k-sec-h${sub ? ' has-sub' : ''}"><h2 class="k-sec-t">${h}</h2>${sub ? `<p class="k-sec-s">${sub}</p>` : ''}</div>${body}</section>`;
+  return sec('使っている単語帳', lib.length ? `<div class="k-lib">${lib.map(d => libBook(d, d === going)).join('')}</div>` : '<p class="k-empty">まだありません。下の本を押して、使う単語帳を選んでください。</p>')
+    + (series.length ? sec('受験英単語シリーズ', `<div class="k-series">${series.map(serBook).join('')}</div>`, `中学から難関大まで、やさしい順に${series.length}冊`) : '')
+    + (plus.length ? sec('＋αの単語帳', `<ul class="k-rows">${plus.map(plusRow).join('')}</ul>`) : '')
+    + sec('自分の単語帳', `<div class="k-shelf books"><button class="k-book" data-act="makeDeck"><span class="k-make-art" aria-hidden="true">${K_PLUS}</span><span class="k-book-name act">自分でつくる</span></button>${mine.map(myBook).join('')}</div>`, '英単語を貼るだけで、単語帳ができる');
+}
+/* 自分でつくる: the three ways (a name and the words pasted; a list or a file; an English text, where Claude is there) */
+function makeDeckSheet(){
+  const row = (act, ico, t, s, cls = '') => `<button class="k-mrow${cls}" data-act="${act}">${ico}<span>${t}<small>${s}</small></span></button>`;
+  openSheet(`<div class="sheet-h"><h3>自分でつくる</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="k-menu">
+    ${row('newDeck', K_ICO.newW, '新しい単語帳', '名前を付けて英単語を貼る。1語ずつ足してもよい')}
+    ${row('importSheet', I.import, '貼って取りこむ', '英単語のリストやファイル（.txt .tsv .csv）から')}
+    ${row('aiDeck', I.spark, '英文から自動でつくる', 'Claudeが覚える単語を選んで、意味と例文を付ける', ' ai-only')}</div>`);
 }
 function filterCards(d){
   const q = route.q.trim().toLowerCase(), blk = route.sec != null ? deckSections(d)[route.sec] : null;
@@ -4222,32 +4438,56 @@ function syncDock(d){
   if (dk) { if (h) dk.innerHTML = h; else dk.remove(); }
   else if (h && $('#wordlist')) $('#view').insertAdjacentHTML('beforeend', `<div class="ctadock" id="deckdock">${h}</div>`);
 }
-/* 100語ずつ: the deck's blocks as a path of numbered circles, each ringed by its 覚えた / 学習中 share, いまここ (めくる peeks
-   over it) on the block you are on; まちがえた単語 at the end (this deck's 苦手 and 前回まちがえた; not called おさらい, which is
-   today's おさらい only). A block opens its sheet (secSheet) */
-const blockRing = (x, k = secStudied(x), m = secMastered(x)) => { const t = x.heads.length || 1, pm = Math.round(m / t * 100);
-  return `<span class="ndr" style="--m:${pm};--l:${Math.max(0, Math.round(k / t * 100) - pm)}"></span>`; };
-function pathTab(d, xs, cur){
-  const nodes = xs.map(x => {
-    const t = x.heads.length, k = secStudied(x), m = secMastered(x), full = k === t, here = x === cur, later = !k && !here, ex = full ? secExtra(x) : null, all = ex?.all;
-    const key = [m ? `<span><i class="m"></i>覚えた <b class="num">${m}</b></span>` : '', k - m ? `<span><i class="l"></i>学習中 <b class="num">${k - m}</b></span>` : '', here && t - k ? `<span><i></i>まだ <b class="num">${t - k}</b></span>` : ''].join('');
-    const rest = all ? '派生語とほかの意味まで<span class="nw">ぜんぶ学習ずみ</span>' : ex ? extraParts(ex).map(s => `<span class="nw">${s}</span>`).join('、') : '';
-    const nums = (key ? `<span class="dk-dots">${key}</span>` : '') + (rest ? `<small>${rest}</small>` : '');
-    return `<li><button class="bnode${full ? ' done' : ''}${all ? ' all' : ''}${here ? ' cur' : ''}${later ? ' later' : ''}" data-act="secSheet" data-i="${x.i}" aria-label="${secSay(x)}、${t}語中${k}語学習ずみ${all ? '、派生語と意味までぜんぶ学習ずみ' : ''}${here ? '、いまここ' : ''}">${here ? '<span class="curbg"></span>' : ''}
-      <span class="bnd num">${blockRing(x, k, m)}${x.i + 1}${full ? `<span class="ok">${all ? I.star : I.check}</span>` : ''}</span>
-      <span class="nt"><b class="num">${secLabel(x)}${here ? '<em class="here">いまここ</em>' : ''}</b>${here ? learnBar(m, k, t) : ''}${nums}</span>
-      ${t !== SEC_N ? `<span class="np"><b class="num">${t}</b>語</span>` : ''}${here ? mekuru('normal', 'mkpeek') : ''}</button></li>`;
-  }).join('');
-  const nWeak = drillCards('many', [d.id]).length, nRecent = drillCards('recent', [d.id]).length, min = S.settings.drillMin || 2;
-  return `<ol class="bpath">${nodes}
-    <li><div class="bnode stage"><span class="bnd">${I.star}</span><span class="stg"><b>まちがえた単語</b><small>${nWeak || nRecent ? 'この単語帳の中から特訓' : 'まだありません'}</small>
-      ${nWeak || nRecent ? `<span class="stg-ch"><button class="pbtn weak" data-act="drill" data-kind="many" data-id="${esc(d.id)}" aria-label="苦手（${min}回以上まちがえた）${nWeak}語" ${nWeak ? '' : 'disabled'}>苦手<b class="num">${nWeak}</b></button><button class="pbtn" data-act="drill" data-kind="recent" data-id="${esc(d.id)}" aria-label="前回まちがえた ${nRecent}語" ${nRecent ? '' : 'disabled'}>前回まちがえた<b class="num">${nRecent}</b></button></span>` : ''}</span></div></li></ol>`;
+/* ブロック (100語ずつ): one row a block — its ring, its No., what is left in it; ▶ いま on the block 続きから starts in (▶ ここから
+   before the deck is started); まちがえた単語 at the end (this deck's 苦手 and 前回まちがえた). A row opens its sheet (secSheet).
+   The ring: what the block holds that is learned (its headwords, other meanings and derivatives together), from the top clockwise;
+   closed, it becomes the rainbow medal with a white ★ and 3 short lines of confetti over it (the rainbow is used nowhere else) */
+const K_STAR = 'M20 11.1 L22.47 17.2 L29.04 17.66 L23.99 21.9 L25.58 28.29 L20 24.8 L14.42 28.29 L16.01 21.9 L10.96 17.66 L17.53 17.2 Z';
+const K_TRI = 'M2.2 1.3v7.4a.6.6 0 0 0 .9.5l5.9-3.7a.6.6 0 0 0 0-1L3.1.8a.6.6 0 0 0-.9.5z';
+const K_MEDAL = (() => {   // 6 sectors from 12 o'clock clockwise, each 1° over the next (no seam of the page between them)
+  const P = a => [20 + 20 * Math.sin(a * Math.PI / 180), 20 - 20 * Math.cos(a * Math.PI / 180)].map(v => v.toFixed(2)).join(' ');
+  return [1, 2, 3, 4, 5, 6].map(i => `<path d="M20 20 L${P((i - 1) * 60)} A20 20 0 0 1 ${P(i * 60 + 1)} Z" fill="var(--rb-${i})"/>`).join('');
+})();
+function blockBadge(f, all){
+  const st = s => `transform="translate(20 20.6) scale(${s}) translate(-20 -20.6)"`;
+  if (all) return `<svg viewBox="0 0 40 40" aria-hidden="true">${K_MEDAL}<path d="${K_STAR}" fill="rgba(18,18,22,.18)" stroke="rgba(18,18,22,.18)" stroke-width="3.6" stroke-linejoin="round" ${st(1.08)}/><path d="${K_STAR}" fill="#fff" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" ${st(1.08)}/>`
+    + '<g stroke-width="2" stroke-linecap="round"><path d="M9.44 .13 L7.56 -3.4" stroke="var(--rb-1)"/><path d="M20 -2.5 L20 -6.5" stroke="var(--rb-3)"/><path d="M30.56 .13 L32.44 -3.4" stroke="var(--rb-5)"/></g></svg>';
+  const L = 106.81, len = f > 0 ? Math.max(3, Math.min(L, f * L)) : 0;
+  return `<svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="17" stroke="var(--ring-track)" stroke-width="3.5"/><path d="${K_STAR}" stroke="var(--ring-star)" stroke-width="1.8" stroke-linejoin="round" ${st(.74)}/>${len ? `<circle cx="20" cy="20" r="17" stroke="var(--blue)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="${len.toFixed(1)} ${L}" transform="rotate(-90 20 20)"/>` : ''}</svg>`;
+}
+/* a block in numbers: f the ring's share; sub its line — not started 「見出し語100、派生語31、ほかの意味18」, under way
+   「派生語 あと12、ほかの意味 あと8」 (what is 0 is left out), all learned 「派生語とほかの意味まで、全部学習済み」 */
+function blockInfo(x, d){
+  const t = x.heads.length, k = secStudied(x), ex = secExtra(x), H = d.builtin ? '見出し語' : '単語';
+  const tot = t + ex.dT + ex.sT, got = k + ex.dT - ex.dLeft + ex.sT - ex.sLeft, all = k === t && ex.all;
+  const parts = !got ? [[H, t], ['派生語', ex.dT], ['ほかの意味', ex.sT]].filter(p => p[1]).map(([n, v]) => `${n}${v}`)
+    : [[H, t - k], ['派生語', ex.dLeft], ['ほかの意味', ex.sLeft]].filter(p => p[1]).map(([n, v]) => `${n} あと${v}`);
+  return {t, k, ex, f: tot ? got / tot : 0, all, sub: all ? (ex.dT || ex.sT ? '派生語とほかの意味まで、全部学習済み' : '全部学習済み') : parts.join('、')};
+}
+/* the line over the blocks: the whole deck's rest, said once (the sum of the rows' あと), folded at 、 when it doesn't fit */
+function deckNote(d, xs, st){
+  let dT = 0, sT = 0, dL = 0, sL = 0; for (const x of xs) { const e = secExtra(x); dT += e.dT; sT += e.sT; dL += e.dLeft; sL += e.sLeft; }
+  const H = d.builtin ? '見出し語' : '単語', ph = a => a.map(t => `<span class="k-ph">${t}</span>`).join('');
+  const and = ps => ps.filter(p => p[1]).map(([n, v]) => `${n}${nLoc(v)}`).join('と');
+  if (!st.r) return ph(['全部これから、', and([[H, st.total], ['派生語', dT], ['ほかの意味', sT]])]);
+  if (st.r < st.total) return ph([`${H}は${nLoc(st.r)}語済み、`, `のこり${nLoc(st.total - st.r)}語`]);
+  const rest = and([['派生語', dL], ['ほかの意味', sL]]);
+  return rest ? ph([`${H}は全部済み、`, `のこりは${rest}`]) : ph([dT || sT ? '派生語とほかの意味まで、全部学習済み' : '全部学習済み']);
+}
+function blockList(d, xs, here, mark){
+  const rows = xs.map(x => { const b = blockInfo(x, d), now = x === here;
+    return `<li><button class="k-blk${b.all ? ' star' : ''}" data-act="secSheet" data-i="${x.i}" aria-label="${secSay(x)}、${b.sub}${now ? `、${mark}` : ''}"><span class="k-badge" aria-hidden="true">${blockBadge(b.f, b.all)}</span>
+      <span class="k-blk-t" aria-hidden="true"><span class="k-blk-no num">${secLabel(x)}${now ? `<span class="k-now"><svg viewBox="0 0 10 10"><path d="${K_TRI}"/></svg>${mark}</span>` : ''}</span><span class="k-blk-sub">${b.sub}</span></span>${K_CHEV}</button></li>`; }).join('');
+  const nWeak = drillCards('many', [d.id]).length, nRecent = drillCards('recent', [d.id]).length, min = S.settings.drillMin || 2, id = esc(d.id);
+  const drill = nWeak || nRecent ? `<li><div class="k-blk"><span class="k-badge ico" aria-hidden="true">${I.target}</span><span class="k-blk-t"><span class="k-blk-no jp">まちがえた単語</span><span class="k-blk-sub">この単語帳の中から特訓</span>
+    <span class="k-drill"><button class="k-chip" data-act="drill" data-kind="many" data-id="${id}" aria-label="苦手（${min}回以上まちがえた）${nWeak}語" ${nWeak ? '' : 'disabled'}>苦手<b class="num">${nWeak}</b></button><button class="k-chip" data-act="drill" data-kind="recent" data-id="${id}" aria-label="前回まちがえた ${nRecent}語" ${nRecent ? '' : 'disabled'}>前回まちがえた<b class="num">${nRecent}</b></button></span></span></div></li>` : '';
+  return `<ul class="k-blist">${rows}${drill}</ul>`;
 }
 /* 単語一覧: the list as before — search, 赤シート, the filters, a key for the dots — narrowed to one block from its sheet */
 function listTab(d){
   const f = (id, label) => `<button class="chip" aria-pressed="${route.filter===id}" data-act="filter" data-f="${id}">${label}</button>`;
   const blk = route.sec != null ? deckSections(d)[route.sec] : null, min = S.settings.drillMin || 2;
-  return `<div class="sec dk-list">
+  return `<div class="sec dk-list k-pad">
     <div class="toolrow"><label class="search">${I.search}<input id="q" type="search" placeholder="英単語・意味で検索" value="${esc(route.q)}" autocomplete="off" enterkeyhint="search" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
       <button class="sheetbtn" data-act="red" aria-pressed="${route.red}">赤シート</button></div>
     ${route.red ? '<p class="small muted">単語をタップすると意味をのぞけます（もう一度タップで詳細）。のぞいた単語は下のボタンでまとめて学習できます。</p>' : ''}
@@ -4258,32 +4498,66 @@ function listTab(d){
     <div class="words ${route.red ? 'redsheet' : ''}" id="wordlist">${wordRows(d)}</div>
   </div>`;
 }
-/* the deck page: the deck's face (表紙, 学習ずみ, 覚えた + 学習中), 続きから, 高速仕分け and 使う / 使っている; then 100語ずつ
-   (the path) or 単語一覧. A deck of one block has no path: its list comes right away */
+/* what 続きから (studyDeck) would start, as pickSet chooses it (with the おさらい startQuiz adds to reviews): where (its block, else
+   the deck), what (復習, 新しい単語, 派生語, ほかの意味), how many. blk: the one block it starts in, for ▶ いま */
+function deckGo(d){
+  const k = counts([d.id]), cards = pickSet({deckIds: [d.id], extraNew: k.due === 0 && k.newToday === 0});
+  const have = new Set(cards), rev = cards.some(c => isReview(prog(c)));
+  const sd = !cards.length || rev ? sameDayWaiting([d.id]).filter(c => !have.has(c)).slice(0, cards.length ? 5 : 10).length : 0;
+  if (!cards.length && !sd) return null;
+  const xs = deckSections(d), bs = new Set(cards.map(c => xs.find(x => x.all.has(c))).filter(Boolean)), blk = bs.size === 1 ? [...bs][0] : null;
+  const kinds = !cards.length ? ['おさらい'] : rev ? ['復習'] : [cards.some(c => !c.isD && !c.isS) && '新しい単語', cards.some(c => c.isD) && '派生語', cards.some(c => c.isS) && 'ほかの意味'].filter(Boolean);
+  const where = !cards.length ? '今日の' : blk && xs.length > 1 ? `${secLabel(blk)}の` : d.builtin ? `${bookName(d)}の` : '';   // a deck you made: its name is just above
+  return {n: cards.length + sd, blk, line: `${where}${kinds.join('と')}`};
+}
+/* a deck's page (S/decks): the band in the deck's colour — ‹, ✓ 使っている (＋ 使う) and ⋯, the big cover, the name and what it is,
+   how far (覚えた % once round, else 学習済み %, and the bar), 続きから with what it starts, 高速仕分け (a deck you made: 単語を追加,
+   まとめて取りこむ) — then ブロック | 単語一覧 (it stops under the bar that comes down with the name), the line of what is left,
+   the blocks, 使うのをやめる. A deck of one block has no switch: its list comes right away */
 function viewDeck(){
-  const d = deckById(route.deck), st = deckStats(d), on = S.settings.active.includes(d.id), xs = deckSections(d), cur = curSection(d);
-  const tabs = xs.length > 1, list = !tabs || route.dtab === 'list' || route.sec != null, id = esc(d.id), dock = list ? deckDock(d) : '';   // a block picked for the list (route.sec) is shown in 単語一覧
-  // 続きから's small label is what the set starts with: studyDeck asks the deck's reviews first (any block), then new words
-  const k = counts([d.id]), rev = k.due || (!k.newToday && k.dueAll);   // as studyDeck's extraNew and pickSet's 復習が先
-  const go = !st.total ? `<button class="btn btn-primary btn-block btn-go" data-act="addCard" data-id="${id}">${I.plus}単語を追加</button>`
-    : `<button class="btn btn-primary btn-block btn-go" data-act="studyDeck" data-id="${id}">${I.play}${cur ? `${st.r ? '続きから' : 'はじめる'}${rev ? `<small class="num">復習 ${setN(rev)}問</small>` : tabs ? `<small class="num">${secLabel(cur)}</small>` : ''}` : 'この単語帳で学習'}</button>`;
-  return `<div class="dk-nav"><button class="back" data-act="backDecks">${I.left}単語帳</button><button class="iconbtn" data-act="deckMenu" data-id="${id}" aria-label="その他（書き出しなど）">${I.more}</button></div>
-  <section class="dk-head" style="--cv:${cvOf(d)}">${deckCover(d, {size: 'hero', ring: true, pct: st.pct})}
-    <div class="dk-info">${d.builtin ? '' : '<span class="dk-pre">自分でつくった単語帳</span>'}<h1>${esc(d.name)}</h1>
-      <div class="dk-n"><b class="num">${st.r}</b><span class="nw">/ ${st.total}語 学習ずみ</span><span class="pc num">${st.pct}%</span></div>
-      ${learnBar(st.m, st.r, st.total)}
-      ${st.r ? `<div class="dk-dots">${st.m ? `<span><i class="m"></i>覚えた <b class="num">${st.m}</b></span>` : ''}${st.r - st.m ? `<span><i class="l"></i>学習中 <b class="num">${st.r - st.m}</b></span>` : ''}</div>` : ''}</div>
-  </section>
-  ${d.builtin && d.desc ? `<p class="dk-desc">${esc(d.desc)}</p>` : ''}
-  <div class="dk-go">${go}</div>
-  <div class="dk-acts">${st.n ? `<button class="btn btn-ghost" data-act="swipeDeck" data-id="${id}">${I.swipe}高速仕分け</button>` : ''}<button class="btn btn-ghost btn-use" data-act="toggleDeck" data-id="${id}" aria-pressed="${on}">${on ? `${I.check}使っている` : `${I.plus}使う`}</button></div>
-  ${d.builtin ? '' : `<div class="mk-tiles dk-my"><button class="mk-t" data-act="addCard" data-id="${id}">${I.plus}単語を追加<small>1語ずつ</small></button><button class="mk-t" data-act="importSheet" data-id="${id}">${I.import}まとめて取り込む<small>英単語のリストから</small></button></div>`}
-  ${d.todo?.length ? `<div class="sec"><div class="sec-h"><h2>意味がまだの単語</h2><span class="sub">${d.todo.length}語。タップして意味を入れると出題されます</span></div>
-    <div class="fchips">${d.todo.map(c => `<button class="fchip" data-act="editCard" data-deck="${id}" data-k="${esc(c.k)}"><b>${esc(c.w)}</b></button>`).join('')}</div></div>` : ''}
-  ${tabs ? `<div class="dtabs" role="tablist"><button role="tab" aria-selected="${!list}" data-act="dtab" data-t="path">100語ずつ</button><button role="tab" aria-selected="${list}" data-act="dtab" data-t="list">単語一覧<small class="num">${st.total}</small></button></div>` : ''}
-  ${list ? listTab(d) : pathTab(d, xs, cur)}
-  ${on ? `<div class="dk-quit"><button data-act="toggleDeck" data-id="${id}"><span>この単語帳を使うのをやめる</span><small>（学習の記録は残ります）</small></button></div>` : ''}
+  const d = deckById(route.deck), st = deckStats(d), on = S.settings.active.includes(d.id), xs = deckSections(d), cur = curSection(d), id = esc(d.id);
+  const tabs = xs.length > 1, list = !tabs || route.dtab === 'list' || route.sec != null, dock = list ? deckDock(d) : '';   // a block picked for the list (route.sec) is shown in 単語一覧
+  const round = st.total > 0 && !cur, go = st.total ? deckGo(d) : null, here = go?.blk || null, mark = st.r ? 'いま' : 'ここから';
+  const use = on ? `<button class="k-hit44" data-act="toggleDeck" data-id="${id}" aria-pressed="true" aria-label="この単語帳を使っている（押すと、使うのをやめる）"><span class="k-using">${K_CHECK}使っている</span></button>`
+    : `<button class="k-hit44" data-act="toggleDeck" data-id="${id}" aria-pressed="false" aria-label="この単語帳を使う（新しい単語がここからも出る）"><span class="k-using">${K_PLUS}使う</span></button>`;
+  const back = `<button class="k-hit44 k-back" data-act="backDecks" aria-label="単語帳にもどる"><span class="k-circ">${K_BACK}</span></button>`;
+  const meta = `${DECK_WHAT[d.id] ? `${DECK_WHAT[d.id]}の` : d.builtin ? '' : '自分でつくった単語帳、'}<span class="num">${nLoc(st.total)}</span>語`;
+  // how far: the hero's big line and its bar (覚えた, 学習中, まだ in the same proportions as their labels)
+  const segs = [['mem', st.m, `覚えた${st.m}語`], ['lrn', st.r - st.m, `学習中${st.r - st.m}語`], ['yet', st.total - st.r, `まだ${st.total - st.r}語`]].filter(x => x[1] > 0);
+  const stLine = round ? `${K_ICO.redo}一周して、いまは復習中` : cur && tabs ? `いま ${secLabel(cur)}` : '';
+  const prog = !st.r ? '' : `<div class="k-dh-prog"><div class="k-dh-row"><p class="k-hero-title"><span class="pre">${round ? '覚えた' : '学習済み'}</span><span class="n">${round ? pctOf(st.m, st.total) : st.pct}</span><span class="unit">%</span></p>${stLine ? `<p class="k-dh-st">${stLine}</p>` : ''}</div>
+    <div class="k-seg" role="img" aria-label="${st.total}語のうち、${segs.map(x => x[2]).join('、')}"><div class="k-seg-bar" style="grid-template-columns:${segs.map(x => x[1] + 'fr').join(' ')}">${segs.map(x => `<i class="${x[0]}"></i>`).join('')}</div><div class="k-seg-lab" style="grid-template-columns:${segs.map(x => `minmax(max-content,${x[1]}fr)`).join(' ')}">${segs.map(x => `<span class="${x[0]}">${x[2]}</span>`).join('')}</div></div></div>`;
+  // the white button: 続きから / この単語帳をはじめる, what it starts and how long (an empty deck you made: 単語を追加)
+  const sub = !st.total ? ['1語ずつ、英単語と意味を入れる'] : go ? [go.line, `${go.n}問、${aboutMin(go.n)}`] : ['いまは出題できる単語がない'];
+  const play = `<button class="k-play" data-act="${st.total ? 'studyDeck' : 'addCard'}" data-id="${id}">${K_ICO.play}<span class="k-play-t"><span class="k-play-main">${!st.total ? '単語を追加' : !st.r ? 'この単語帳をはじめる' : '続きから'}</span><span class="k-play-sub">${sub.map(l => `<span class="ln">${kPhrases(l)}</span>`).join('')}</span></span></button>`;
+  const dsub = (act, t1, t2) => `<button class="k-dsub" data-act="${act}" data-id="${id}"><span class="t"><span class="t1">${t1}</span><span class="t2">${t2}</span></span>${K_ICO.chev}</button>`;
+  const subs = (st.n ? dsub('swipeDeck', '高速仕分け', '知ってる単語をよけて、覚える単語だけにする') : '')
+    + (d.builtin ? '' : (st.total ? dsub('addCard', '単語を追加', '1語ずつ、英単語と意味を入れる') : '') + dsub('importSheet', 'まとめて取りこむ', '英単語のリストやファイルから'));
+  const todo = d.todo?.length ? `<div class="sec k-pad dk-todo"><div class="sec-h"><h2>意味がまだの単語</h2><span class="sub">${d.todo.length}語。押して意味を入れると出題されます</span></div>
+    <div class="fchips">${d.todo.map(c => `<button class="fchip" data-act="editCard" data-deck="${id}" data-k="${esc(c.k)}"><b>${esc(c.w)}</b></button>`).join('')}</div></div>` : '';
+  const seg = tabs ? `<div class="k-sent" id="dksent" aria-hidden="true"></div><div class="k-segw" id="dtabs"><div class="k-segc" role="tablist" aria-label="表示"><button role="tab" aria-selected="${!list}" data-act="dtab" data-t="path"><span>ブロック</span></button><button role="tab" aria-selected="${list}" data-act="dtab" data-t="list"><span>単語一覧 <span class="num">${nLoc(st.total)}</span>語</span></button></div></div>` : '';
+  return `<div class="k-dpage" style="--hero-bg:var(--d-${bookOf(d).k})">
+  <section class="k-dh" aria-label="${esc(d.name)}"><div class="k-dh-top">${back}<div class="k-dh-r">${use}<button class="k-hit44" data-act="deckMenu" data-id="${id}" aria-label="その他（書き出しなど）"><span class="k-circ k-dots">${K_ICO.more}</span></button></div></div>
+    <div class="k-dh-cover">${bookCover(d, 'page')}</div><h1 class="k-dh-t">${esc(d.name)}</h1><p class="k-dh-meta">${meta}</p>${prog}
+    <div class="k-dh-act">${play}${subs}</div></section>
+  ${todo}${seg}${!list ? `<p class="k-dnote">${deckNote(d, xs, st)}</p>` : ''}
+  ${list ? listTab(d) : blockList(d, xs, here, mark)}
+  ${on ? `<div class="k-quit-w"><button class="k-quit" data-act="toggleDeck" data-id="${id}"><span class="q1">この単語帳を使うのをやめる</span><span class="q2">やめても、学習の記録は残る</span></button></div>` : ''}
+  <header class="k-mini" inert><div class="k-mini-in">${back}<p class="k-mini-t">${esc(d.name)}</p><div class="k-dh-r">${use}</div></div></header></div>
   ${list ? '<div class="dock-space"></div>' : ''}${dock ? `<div class="ctadock" id="deckdock">${dock}</div>` : ''}`;
+}
+/* the deck page's switch, where the page scrolls to so that it sits just under the bar that comes down (0: no switch) */
+const dtabsY = () => { const s = $('#dksent'); return s ? Math.max(0, s.getBoundingClientRect().top + scrollY - ($('.k-mini')?.offsetHeight || 54)) : 0; };
+/* the bar with the name comes down once the name has gone under it; the switch gets its hairline once it has stopped */
+let dkIO = null;
+function deckIO(v){
+  dkIO?.disconnect(); dkIO = null;
+  const t = v.querySelector('.k-dh-t'), mini = v.querySelector('.k-mini'), sent = v.querySelector('#dksent'), sw = v.querySelector('.k-segw');
+  if (!t || !mini || !('IntersectionObserver' in window)) return;
+  const h = mini.offsetHeight || 54;
+  dkIO = new IntersectionObserver(es => { for (const e of es) { const up = !e.isIntersecting && e.boundingClientRect.top < h;
+    if (e.target === t) { mini.classList.toggle('on', up); mini.inert = !up; } else sw?.classList.toggle('stuck', up); } }, {rootMargin: `-${h}px 0px 0px 0px`});
+  dkIO.observe(t); if (sent) dkIO.observe(sent);
 }
 /* a block's sheet: its ring and counts, then which words — おまかせ (the block's next set: its reviews, then new words, as
    before), まだの単語, 学習中 (a 練習: schedules stay), 苦手 — a choice with nothing in it can't be picked; one スタート */
@@ -4304,12 +4578,13 @@ function secSheet(d, i){
   const x = deckSections(d)[i]; if (!x) return;
   const t = x.heads.length, k = secStudied(x), m = secMastered(x), left = secLeft([d.id], x.all), nx = secNext([d.id], x.all);
   const nNew = t - k, nLearn = secLearning(x).length, nWeak = secWeak(d, x).length, ex = secExtra(x), done = !nNew && ex.all, more = extraParts(ex), nExtra = nNew ? 0 : secExtraCards(x).length;
-  const ch = (c, label, sub, n, unit, on, cls = '') => `<button class="ch${cls}" role="radio" aria-checked="${on}" data-act="secPick" data-c="${c}" ${n ? '' : 'disabled'}><span>${label}</span><b class="num">${n}<small>${unit}</small></b><small>${n ? sub : c === 'new' || c === 'extra' ? 'ぜんぶ学習ずみ' : 'まだありません'}</small></button>`;
+  const ch = (c, label, sub, n, unit, on, cls = '') => `<button class="ch${cls}" role="radio" aria-checked="${on}" data-act="secPick" data-c="${c}" ${n ? '' : 'disabled'}><span>${label}</span><b class="num">${n}<small>${unit}</small></b><small>${n ? sub : c === 'new' || c === 'extra' ? '全部学習済み' : 'まだありません'}</small></button>`;
   const auto = left ? nx.n : Math.min(S.settings.setSize, learnedIn(x.heads));
-  openSheet(`<div class="bs-top${done ? ' all' : ''}"><span class="bnd num">${blockRing(x, k, m)}${i + 1}</span>
+  const bi = blockInfo(x, d);
+  openSheet(`<div class="bs-top${done ? ' all' : ''}"><span class="k-badge" aria-hidden="true">${blockBadge(bi.f, bi.all)}</span>
       <div class="bs-t"><span class="dk-pre">${esc(d.name)}</span><h3 class="num">${secLabel(x)}</h3>
         <div class="dk-dots">${m ? `<span><i class="m"></i>覚えた <b class="num">${m}</b></span>` : ''}${k - m ? `<span><i class="l"></i>学習中 <b class="num">${k - m}</b></span>` : ''}${nNew ? `<span><i></i>まだ <b class="num">${nNew}</b></span>` : ''}</div>
-        ${done ? '<div class="bs-more all">派生語とほかの意味まで<span class="nw">ぜんぶ学習ずみ</span></div>' : more.length ? `<div class="bs-more">${more.map(s => `<span class="nw">${s}</span>`).join('、')}</div>` : ''}</div>
+        ${done ? '<div class="bs-more all">派生語とほかの意味まで、<span class="nw">全部学習済み</span></div>' : more.length ? `<div class="bs-more">${more.map(s => `<span class="nw">${s}</span>`).join('、')}</div>` : ''}</div>
       <button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="bs-q">どの単語をやる？</div>
     <div class="chs" role="radiogroup" aria-label="どの単語をやる？">${ch('auto', 'おまかせ', !left ? '覚えた単語で練習' : !nx.rev ? '新しい単語から' : nNew ? '復習 → 新しい単語' : '復習から', auto, '問', !!auto && (!!left || !nExtra))}${nNew || done ? ch('new', 'まだの単語', '新しく覚える', nNew, '語', !auto) : ch('extra', '派生語・意味', '1語に1つずつ', nExtra, '語', !!nExtra && (!left || !auto))}${ch('learn', '学習中', '覚えかけを練習', nLearn, '語', false)}${ch('weak', '苦手', `${S.settings.drillMin || 2}回以上まちがえた`, nWeak, '語', false, ' weak')}</div>
@@ -6452,7 +6727,7 @@ function dictRecentList(){ try { const a = JSON.parse(lsGet(DICT_KEY) || '[]'); 
 function dictRecent(e){ lsSet(DICT_KEY, JSON.stringify([{k: e.k, w: e.w}, ...dictRecentList().filter(x => x.k !== e.k)].slice(0, 20))); }
 /* the box: its × (44px) while it holds anything; on: results shown (the box stays at the top). #dsug: 最近しらべた単語 (dictSug) */
 function dictBox(x){
-  return `<div class="dsearch${x ? ' on' : ''}"><label class="search">${I.search}<input id="dq" type="search" placeholder="単語をさがす（英語でも日本語でも）" value="${esc(route.dq)}" autocomplete="off" enterkeyhint="search" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="単語をさがす（英語でも日本語でも）"><button type="button" class="dclr" data-act="dictClear" aria-label="入力を消す"${route.dq ? '' : ' hidden'}><i>${I.close}</i></button></label>
+  return `<div class="dsearch${x ? ' on' : ''}"><label class="search">${I.search}<input id="dq" type="search" placeholder="辞書で調べる（英語でも日本語でも）" value="${esc(route.dq)}" autocomplete="off" enterkeyhint="search" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="辞書で調べる（英語でも日本語でも）"><button type="button" class="dclr" data-act="dictClear" aria-label="入力を消す"${route.dq ? '' : ' hidden'}><i>${I.close}</i></button></label>
     <div class="dsug" id="dsug" hidden></div></div>`;
 }
 /* focused and empty: the last words opened, over the shelves (a tap on one keeps the focus until the entry opens: no blur first) */
@@ -6528,7 +6803,7 @@ function dictSheet(k, keep = false){
   // a derivative without a headword of its own: back to the word it comes from
   const par = e.heads.length ? [] : [...new Map([...e.ders.map(d => d.parent), ...e.fams.map(x => x.c)].map(x => [normW(x.w), x])).values()].slice(0, 2);
   const parHTML = par.map(x => `<button class="dpar" data-act="dictOpen" data-k="${esc(normW(x.w))}">← <b lang="en">${esc(x.w)}</b><span>（${esc(x.m)}）の派生語</span></button>`).join('');
-  const lab = g => g.cs.map(x => { const d = deckById(x.deck); return d ? `<span class="nw"><i style="--cv:${cvOf(d)}"></i>${esc(d.name)}${dictPlace(x) ? ` ${esc(dictPlace(x))}` : ''}</span>` : ''; }).join('');
+  const lab = g => g.cs.map(x => { const d = deckById(x.deck); return d ? `<span class="nw"><i style="--cv:var(--c-${bookOf(d).k})"></i>${esc(d.name)}${dictPlace(x) ? ` ${esc(dictPlace(x))}` : ''}</span>` : ''; }).join('');
   const mean = gs.length > 1 ? gs.map(g => `<div class="dgrp"><div class="dgrp-h">${lab(g)}</div>${sensesHTML(g.c, -1, 'all')}</div>`).join('') : sensesHTML(gs[0].c, -1, 'all');
   const ety = e.heads.map(etyHTML).find(Boolean) || (main.isD ? affixHTML(main) : '');
   const fam = new Map(), addF = (w, ps) => { const fk = normW(w); if (fk !== k && !fam.has(fk) && D.map.has(fk) && !par.some(x => normW(x.w) === fk)) fam.set(fk, {w, p: ps}); };
@@ -6538,7 +6813,7 @@ function dictSheet(k, keep = false){
   const places = new Map();
   for (const x of [...e.heads, ...e.ders, ...e.own]) { const d = deckById(x.deck); if (d && !places.has(d.id)) places.set(d.id, {d, sub: dictPlace(x)}); }
   for (const id of e.mine) { const d = deckById(id); if (d && !places.has(id)) places.set(id, {d, sub: 'この単語が入っています'}); }
-  const plHTML = places.size ? `<div class="dplaces"><div class="fam-h">載っている単語帳</div>${[...places.values()].map(({d, sub}) => `<button class="dplace" data-act="dictDeck" data-id="${esc(d.id)}" data-w="${esc(e.w)}">${deckCover(d, {size: 'sm'})}<span><b>${esc(d.name)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span>${I.right}</button>`).join('')}</div>` : '';
+  const plHTML = places.size ? `<div class="dplaces"><div class="fam-h">載っている単語帳</div>${[...places.values()].map(({d, sub}) => `<button class="dplace" data-act="dictDeck" data-id="${esc(d.id)}" data-w="${esc(e.w)}">${bookCover(d, 'mini', {paper: false})}<span><b>${esc(d.name)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span>${I.right}</button>`).join('')}</div>` : '';
   const inMine = dictInMine(e), canAdd = !!inMine || !!(e.heads.length || e.ders.length) || !e.own.length;   // a word only in another deck of yours is in your decks already
   const btns = (canAdd ? `<button class="btn ${inMine ? 'btn-ghost' : 'btn-primary'} add" data-act="dictAdd" data-k="${esc(k)}">${inMine ? '単語帳から外す' : `${I.plus}自分の単語帳に追加`}</button>` : '')
     + (c ? `<button class="btn ${wk ? 'btn-weak' : 'btn-ghost'}" data-act="dictWeak" data-k="${esc(k)}">${wk ? '苦手から外す' : '苦手に入れる'}</button>` : '');
@@ -6577,8 +6852,8 @@ const ACT = {
   sec: t => { const i = +t.dataset.i; route.sec = route.sec === i ? null : i; route.limit = 150; render(); },
   studySec: () => { const d = deckById(route.deck), x = d && deckSections(d)[route.sec]; if (x) studySection(d, x); },
   // the deck page: its two tabs (back to the tabs' top when the page was scrolled past them), a block's sheet, …
-  dtab: t => { const tb = $('.dtabs'), y = tb ? tb.getBoundingClientRect().top + scrollY - 8 : 0; route.dtab = t.dataset.t; if (route.dtab === 'path') route.sec = null;
-    render(); if (scrollY > y) scrollTo(0, y); },
+  dtab: t => { const y = dtabsY(); route.dtab = t.dataset.t; if (route.dtab === 'path') route.sec = null;
+    render(); if (y && scrollY > y) scrollTo(0, y); },
   secSheet: t => { const d = deckById(route.deck); if (d) secSheet(d, +t.dataset.i); },
   manySheet: () => manySheet(),
   homeMore: () => homeMore(),
@@ -6591,7 +6866,7 @@ const ACT = {
   secGo: t => { if (locked()) return; const d = deckById(route.deck), x = d && deckSections(d)[+t.dataset.i]; if (!x) return;
     secStart(d, x, $('#sheetroot .ch[aria-checked="true"]')?.dataset.c || 'auto'); closeSheet(); },
   secList: t => { route.sec = +t.dataset.i; route.dtab = 'list'; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; closeSheet(); render();
-    const tb = $('.dtabs'); if (tb) scrollTo(0, tb.getBoundingClientRect().top + scrollY - 8); },
+    const y = dtabsY(); if (y) scrollTo(0, y); },
   deckMenu: t => { const d = deckById(t.dataset.id); if (d) deckMenu(d); },
   paceSheet: () => paceSheet(),
   paceStep: t => { const [lo, hi] = STEP_RANGE.newPerDay; setSetting('newPerDay', clamp(S.settings.newPerDay + (+t.dataset.d), lo, hi)); render(); const b = $('#pacebox'); if (b) b.innerHTML = paceBody(); },
@@ -6718,6 +6993,7 @@ const ACT = {
   aiMnemonic: t => { const c = findCard(t.dataset.deck, t.dataset.k); if (c) aiMnemonic(c); },
   saveMemo: t => { const txt = $('#aiout')?.dataset.text; if (!txt) return; (S.notes[t.dataset.deck] ||= {})[t.dataset.k] = txt; save(); markDirty('note_' + t.dataset.deck, true); const c = findCard(t.dataset.deck, t.dataset.k); cardSheet(c, true); toast('メモを保存しました'); },
   newDeck: () => newDeckSheet(),
+  makeDeck: () => makeDeckSheet(),
   addCard: t => cardForm(t.dataset.id, null),
   editCard: t => cardForm(t.dataset.deck, findCard(t.dataset.deck, t.dataset.k)),
   delCard: t => { const d = S.custom[t.dataset.deck]; d.cards = d.cards.filter(c => c.k !== t.dataset.k); touchDeck(d.id); closeSheet(); render(); toast('削除しました'); },
