@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Charis+SIL&family=Literata:opsz,wght@7..72,500;7..72,600&family=Figtree:wght@500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;800&family=Yuji+Boku&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Charis+SIL&family=Literata:opsz,wght@7..72,500;7..72,600&family=Figtree:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Noto+Sans:wght@400;500&family=Noto+Sans+JP:wght@400;500;700;800&family=Yuji+Boku&display=swap">
 <style>
 /* Layout: one 560px study column. Every word lives on a ring-bound 単語カード; red ink + 赤シート for hiding answers; tab bar at the bottom. */
 /* Colour meanings (one each, everywhere):
@@ -89,6 +89,11 @@
   --pad:16px; --shelf-gap:12px; --sec-gap:26px;
   --sh-book:0 1px 1.5px rgba(0,0,0,.14),0 8px 16px -6px rgba(0,0,0,.30);   /* shadows on book covers only */
   --sh-book-on-hero:0 1px 2px rgba(0,0,0,.28),0 10px 18px -6px rgba(0,0,0,.45);
+  /* the study screen (S/quiz/notes.md): right and wrong (not of the blue or the orange family), the word sizes, the steps */
+  --ok:#1E9E5A; --ok-ink:#0E7642; --ok-tint:#E6F5EC; --ok-solid:#0E7642; --ng:#E5484D; --ng-ink:#C8303A; --ng-tint:#FDEDED;
+  --step-todo:#E7E7EA; --step-redo:#F7C8CA; --line-card:rgba(18,18,22,.14); --scrim:rgba(18,18,22,.46); --grab:rgba(18,18,22,.16); --card-bg:#FFFFFF;
+  --f-en:"Figtree",sans-serif; --f-ipa:"Noto Sans","Noto Sans JP",sans-serif;   /* 発音記号: Figtree has no ɪ ə */
+  --fs-word:40px; --fs-entry:26px; --fs-answer:22px;
 }
 /* dark: the deck colours and the hero stay (white text on them either way); the page, its text and the tints go dark */
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
@@ -97,6 +102,8 @@
   --t-kiso:#16271F; --t-hyojun:#2E1B16; --t-hatten:#29201A; --t-juku:#28231A; --t-tagi:#2C1A21; --t-theme:#22251A; --t-chu:#1B2227; --t-my:#222226;
   --paper:#E9E6DF; --paper-spine:rgba(18,18,22,.10); --tabbar-bg:rgba(17,17,20,.92);
   --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6);
+  --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20;
+  --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
 }}
 :root[data-theme="dark"]{
   --n-bg:#111114; --n-ink:#ECECF1; --ink-2:#A6A6B0; --ink-3:#777781; --ink-tab:#9D9DA7; --fill:#1F1F25; --hair:rgba(255,255,255,.10); --track:rgba(255,255,255,.20);
@@ -104,6 +111,8 @@
   --t-kiso:#16271F; --t-hyojun:#2E1B16; --t-hatten:#29201A; --t-juku:#28231A; --t-tagi:#2C1A21; --t-theme:#22251A; --t-chu:#1B2227; --t-my:#222226;
   --paper:#E9E6DF; --paper-spine:rgba(18,18,22,.10); --tabbar-bg:rgba(17,17,20,.92);
   --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6);
+  --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20;
+  --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
 }
 .v2{--bg:var(--n-bg); --ink:var(--n-ink); --f-ui:var(--n-f-ui); --fs-body:var(--n-fs-body); --fs-sub:var(--n-fs-sub); font-family:var(--f-ui); color:var(--ink); line-height:1.45; text-autospace:no-autospace}   /* the new look sets figures tight (Figtree, palt), as the mockups do */
 body.v2bg{background:var(--n-bg)}
@@ -1723,6 +1732,301 @@ html{touch-action:manipulation}
   .k-say .mekuru{width:54px;height:54px}
 }
 .k-mrow small{display:block;font-size:12px;font-weight:400;color:var(--muted)}
+/* ===== 新デザイン2: 問題の画面（S/quiz/notes.md。値は 375px のもの）=====
+   The study screen (.screen-in.study.v2) and its sheet (.fb.v2). The page is always white (the book's colour only on its small 帯),
+   the word in the middle at about みかん's size, the options at the bottom under the thumb. Right and wrong have colours of their own
+   (--ok / --ng), never the blue (what you press) nor the orange (the streak). */
+#screen:has(> .study.v2){background:var(--n-bg)}
+.study.v2{word-break:auto-phrase;padding-bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+.study.v2 button{font-feature-settings:"palt"}
+/* the top bar: × (36 seen, 44 to press, its left edge on the 16px line), 9/12 in the middle, 1問もどす as the home's pill */
+.study.v2 .qtop{position:relative;display:flex;align-items:center;justify-content:space-between;gap:0;height:44px;padding:0;flex:none}
+.study.v2 .qx{width:44px;height:44px;margin-left:-4px;padding:0;border-radius:0;color:var(--ink);background:none;display:grid;place-items:center}
+.study.v2 .qx span{width:36px;height:36px;border-radius:50%;background:var(--fill);display:grid;place-items:center}
+.study.v2 .qx svg{width:20px;height:20px}
+.study.v2 .qcount{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:0;margin:0;font-family:var(--f-ui);font-size:var(--fs-name);font-weight:700;color:var(--ink-2);font-feature-settings:"palt";letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.study.v2 .qcount b{color:var(--ink);font-weight:800}
+.study.v2 .qundo{height:44px;padding:0;border:0;border-radius:0;background:none;color:var(--ink);font-size:var(--fs-body)}
+.study.v2 .qundo span{height:36px;display:flex;align-items:center;gap:4px;padding:0 13px 0 10px;border-radius:var(--r-pill);background:var(--fill);font-weight:700}
+.study.v2 .qundo svg{width:18px;height:18px;flex:none}
+/* the steps: one bar a question (ok green, ng red, now blue, a missed one back later pale red, still to come grey); opaque and above
+   the sheet's scrim, so they stay bright while the sheet is up */
+.study.v2 .segs{position:relative;z-index:46;flex:none;display:grid;grid-template-columns:repeat(var(--n),1fr);column-gap:3px;gap:0 3px;height:6px;margin-top:6px}
+.study.v2 .segs i{display:block;border-radius:3px;background:var(--step-todo);box-shadow:none}
+.study.v2 .segs i.ok{background:var(--ok)} .study.v2 .segs i.ng{background:var(--ng)} .study.v2 .segs i.now{background:var(--blue)} .study.v2 .segs i.redo{background:var(--step-redo)}
+.study.v2 .segs.dense{gap:0 2px} .study.v2 .segs.dense i{border-radius:2px}
+/* the row over the word: the book's 帯 (its name on its colour), what kind of question, 8連続正解 (words only: it isn't pressed) */
+.study.v2 .qhead{display:flex;align-items:center;gap:8px;min-height:26px;margin-top:24px;flex:none;min-width:0}
+.v2 .obi-tag{display:inline-flex;align-items:center;height:20px;padding:2px 6px 0;border-radius:var(--r-book);font-size:var(--fs-min);font-weight:700;line-height:1;color:#fff;background:var(--bk,var(--c-my));font-feature-settings:"palt";flex:none;white-space:nowrap}
+.study.v2 .qtype{position:static;min-width:0;font-size:var(--fs-sub);font-weight:700;letter-spacing:0;color:var(--ink-2);font-feature-settings:"palt";white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.study.v2 .qcombo{position:static;margin-left:auto;font-size:var(--fs-sub);font-weight:700;color:var(--ink);white-space:nowrap;font-feature-settings:"palt"}
+.study.v2 .qcombo b{display:inline-block;margin-right:1px;font-family:var(--f-en);font-weight:800}
+.study.v2 .qcombo b.bump{animation:cbump .2s var(--ease-out)}
+@keyframes cbump{50%{transform:scale(1.12)}}
+/* the question: no card, the word in the middle of the white page (space above : below = 2 : 3) */
+.study.v2 .qstage{margin-top:0;min-height:120px;perspective:none}
+.study.v2 .qcard{background:none;border:0;border-radius:0;box-shadow:none;animation:fade .12s var(--ease-out)}
+.study.v2 .qcard-in{padding:8px 0;gap:10px;justify-content:flex-start}
+.study.v2 .qcard-in>:first-child,.study.v2 .qcard-in>:last-child{margin-top:0;margin-bottom:0}
+.study.v2 .qcard-in::before{content:"";flex:2 1 0}
+.study.v2 .qcard-in::after{content:"";flex:3 1 0}
+.study.v2 .qcard.leave{display:none}   /* nothing turns over: the next question is simply there */
+.study.v2 .qpos{display:flex;align-items:center;justify-content:center;gap:8px;min-height:24px}
+.study.v2 .pos,.fb.v2 .pos{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 4px;border:0;border-radius:var(--r-set);background:var(--fill);color:var(--ink-2);font-size:var(--fs-sub);font-weight:700;line-height:1;flex:none;font-family:var(--f-ui)}
+.study.v2 .w-line{display:flex;align-items:center;justify-content:center;gap:8px;max-width:100%;padding-left:52px}   /* 🔊 44 + 8 to the right: the word's own centre in the middle */
+.study.v2 .w-line:has(.len-l),.study.v2 .w-line.fit{padding-left:0}   /* a long one: the word and its 🔊 together in the middle */
+.study.v2 .qword{min-width:0;font-family:var(--f-en);font-size:var(--fs-word);font-weight:700;line-height:1.15;letter-spacing:-.005em;text-wrap:balance;overflow-wrap:anywhere}
+.study.v2 .qword i,.fb.v2 .e-word i{font-style:italic;font-weight:600;color:var(--ink-2)}   /* tend to do: "a verb goes here" */
+.study.v2 .qword.len-m{font-size:34px}
+.study.v2 .qword.len-l{font-size:28px;line-height:1.2}
+.study.v2 .say,.fb.v2 .say{position:relative;width:44px;height:44px;padding:0;display:grid;place-items:center;flex:none;border-radius:50%;background:none;color:var(--ink)}
+.study.v2 .say::before,.fb.v2 .say::before{content:"";position:absolute;left:50%;top:50%;width:var(--dot,44px);height:var(--dot,44px);transform:translate(-50%,-50%);border-radius:50%;background:var(--fill)}
+.study.v2 .say svg,.fb.v2 .say svg{position:relative;width:var(--ico,22px);height:var(--ico,22px)}
+.study.v2 .flashc .say,.fb.v2 .say{--dot:40px;--ico:20px}
+.study.v2 .qpat{display:inline-flex;align-items:center;min-height:28px;padding:2px 10px;border-radius:var(--r-set);background:var(--fill);font-family:var(--f-en);font-size:var(--fs-body);font-weight:700;color:var(--ink);line-height:1.3}
+.study.v2 .qask{font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);font-feature-settings:"palt"}
+.study.v2 .qask b{color:var(--ng-ink)}
+.study.v2 .qask b.qw{color:var(--ink);font-family:var(--f-en);font-weight:700}
+.study.v2 .qask b.newtag{margin-right:6px;padding:2px 8px;border-radius:var(--r-pill);background:var(--blue-tint);color:var(--blue)}
+.study.v2 .qknown{max-width:32em;font-size:var(--fs-sub);color:var(--ink-2)}
+.study.v2 .qmean{max-width:20em;font-size:24px;font-weight:800;line-height:1.4;text-wrap:balance;font-feature-settings:"palt"}
+.study.v2 .qposname{font-size:var(--fs-min);font-weight:700;color:var(--ink-2)}
+.study.v2 .qmeans{gap:8px}
+.study.v2 .qmeans li{align-items:center;font-size:var(--fs-answer);font-weight:800;line-height:1.35;font-feature-settings:"palt"}
+.study.v2 .qex{max-width:30ch;font-family:var(--f-en);font-size:var(--fs-name);font-weight:500;color:var(--ink-2)}
+.study.v2 .qctx{max-width:28ch;font-family:var(--f-en);font-size:20px;font-weight:500;line-height:1.5;color:var(--ink)}
+.study.v2 .qfrom{font-size:var(--fs-sub);font-weight:700;color:var(--ink-2)}
+.study.v2 .qfrom .fw{font-family:var(--f-en);font-size:var(--fs-name);color:var(--ink)}
+.study.v2 .qfrom span{font-size:var(--fs-sub);font-weight:500}
+.study.v2 .qfrom.qfrom-m span{font-size:var(--fs-name);font-weight:700;color:var(--ink)}
+.study.v2 .mark,.fb.v2 .mark{background:var(--fill);color:inherit;font-weight:800;border-radius:4px;padding:0 3px;margin:0 -1px}
+.study.v2 .mark.gap{font-weight:500;color:var(--ink-2)}
+.study.v2 .lisbtn{height:96px;background:var(--blue-tint);color:var(--blue)}
+.study.v2 .lisbtn svg{width:46px;height:46px}
+/* the bar: one unbroken line (4 high) that runs down from the right, the time left in blue; under it 「⏱ 今なら Great」 (the grade, not a
+   colour, says where you are). Once answered the bar stops and the line under it is free for 「＋2つ目の意味」 */
+.study.v2 .qclock{display:block;flex:none;margin:0 0 12px}
+.study.v2 .qclock.fl{margin:14px 0 0}
+.study.v2 .qtimer{position:relative;height:4px;margin:0;border-radius:2px;background:var(--step-todo);overflow:hidden}
+.study.v2 .qtimer::before,.study.v2 .qtimer i::after{content:none}
+.study.v2 .qtimer i{position:absolute;left:0;top:0;bottom:0;height:auto;border-radius:2px;background:var(--blue)}
+.study.v2 .qtick{display:none}
+.study.v2 .t-lab{margin-top:6px;min-height:24px;display:flex;align-items:center;gap:4px;font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);font-feature-settings:"palt"}
+.study.v2 .t-lab svg{width:16px;height:16px;flex:none}
+.study.v2 .qnow{font-size:var(--fs-sub);color:var(--ink-2)}
+.study.v2 .qrate{min-width:0;text-align:left;line-height:1.3;margin-left:2px;font-family:var(--f-en);font-size:var(--fs-sub);font-weight:800;color:var(--ink)}
+.study.v2 .unlock{height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:var(--r-pill);background:var(--ok-tint);font-size:var(--fs-min);font-weight:800;color:var(--ok-ink);white-space:nowrap;font-feature-settings:"palt";animation:fade .15s var(--ease-out)}
+/* the 4 options: grey boxes (16), the number a white key (the keyboard's 1–4) */
+.study.v2 .choices{gap:10px}
+.study.v2 .choice{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;height:auto;padding:8px 12px;border:0;border-radius:var(--r-card);background:var(--fill);color:var(--ink);font-family:var(--f-ui);font-size:var(--fs-name);font-weight:500;line-height:1.35;text-align:left;transition:background var(--dur-1) var(--ease-io),box-shadow var(--dur-1) var(--ease-io)}
+@media (hover:hover){.study.v2 .choice:hover{box-shadow:inset 0 0 0 1.5px var(--track)}}
+.study.v2 .choice .key{width:30px;height:30px;border:0;border-radius:var(--r-set);background:var(--n-bg);display:grid;place-items:center;flex:none;font-family:var(--f-en);font-size:var(--fs-body);font-weight:800;line-height:1;color:var(--ink-2)}
+.study.v2 .choice .key svg{width:17px;height:17px}
+.study.v2 .choice .ctext{flex:1;min-width:0;-webkit-line-clamp:3}
+.study.v2 .choice .ctext.en{font-family:var(--f-en);font-size:18px;font-weight:600}
+.study.v2 .choice .csub{font-size:var(--fs-min);color:var(--ink-2)}
+.study.v2 .choice.dim{opacity:1}
+.study.v2 .choice.ok{background:var(--ok-tint);box-shadow:inset 0 0 0 2px var(--ok)}
+.study.v2 .choice.ng{background:var(--ng-tint);box-shadow:inset 0 0 0 2px var(--ng)}
+.study.v2 .choice.ok .key{border-radius:50%;background:var(--ok);color:#fff}
+.study.v2 .choice.ng .key{border-radius:50%;background:var(--ng);color:#fff}
+.study.v2 .choice.ng .key svg{width:15px;height:15px}
+.study.v2 .crate{flex:none;height:26px;display:inline-flex;align-items:center;margin:0;padding:0 10px;border-radius:var(--r-pill);background:var(--ok-solid);color:#fff;font-family:var(--f-en);font-size:var(--fs-sub);font-weight:800;letter-spacing:.01em}
+.study.v2 .veil{border:1.5px dashed var(--track);border-radius:var(--r-card);background:var(--fill);color:var(--ink);font-size:var(--fs-name)}
+.study.v2 .veil small{font-size:var(--fs-min);font-weight:500;color:var(--ink-2)}
+.study.v2 .dunno{display:block;height:44px;margin:6px auto 0;padding:0 18px;border-radius:var(--r-pill);font-size:var(--fs-body);font-weight:700;color:var(--blue)}
+.study.v2 .dunno:hover{background:none}
+.study.v2 .dunrow{margin-top:6px;gap:8px} .study.v2 .dunrow .dunno{margin:0}
+.study.v2 .nosound{height:44px;min-height:0;padding:0 12px;font-size:var(--fs-sub);font-weight:700;color:var(--ink-2)}
+.study.v2 .inl-fb{min-height:44px;margin-top:6px;gap:12px}
+.study.v2 .inl-fb .ivl{padding:0;background:none;font-family:var(--f-ui);font-size:var(--fs-sub);font-weight:700;color:var(--ink-2)}
+.study.v2 .inl-fb .fb-more{height:44px;margin:0;padding:0 8px;border:0;font-size:var(--fs-body);font-weight:700;color:var(--blue)}
+/* スペル: the letters' slots, ヒント / わからない, the field and 答える */
+.study.v2 .spell{margin-top:4px;gap:12px}
+.study.v2 .hint{font-family:var(--f-en);font-size:24px;font-weight:600;color:var(--ink-2)}
+.study.v2 .hint-n{font-size:var(--fs-min);color:var(--ink-3)}
+.study.v2 .spell input{height:56px;border-radius:var(--r-card);border:1.5px solid var(--line-card);background:var(--n-bg);color:var(--ink);font-family:var(--f-en);font-size:22px;font-weight:600}
+.study.v2 .spell input:focus{border-color:var(--blue)}
+.study.v2 .spell input.ok{border-color:var(--ok);background:var(--ok-tint)}
+.study.v2 .spell input.ng{border-color:var(--ng);background:var(--ng-tint);font-size:18px}
+.study.v2 .spell-note{color:var(--ng-ink)}
+.study.v2 .btn,.fb.v2 .btn{border-radius:var(--r-pill);font-family:var(--f-ui);font-feature-settings:"palt"}
+.study.v2 .btn-primary,.fb.v2 .btn-primary{background:var(--blue-hero);color:var(--on-blue);font-size:var(--fs-cta);font-weight:800}
+.study.v2 .btn-ghost{border:0;background:var(--fill);color:var(--ink);font-size:var(--fs-body)}
+.study.v2 .spell-btns .btn{min-height:44px}
+.study.v2 .spell-row .btn{min-height:56px;padding:0 22px}
+.study.v2 .reveal{margin-top:14px}
+.study.v2 .reveal .btn{min-height:56px}
+/* a card you grade yourself: a white card with a thin line (22), the row of 帯 and kind inside it; the back under a short rule */
+.study.v2 .qcard.flashc{margin-top:14px;padding:16px 18px 18px;flex-direction:column;border-radius:var(--r-hero);background:var(--card-bg);box-shadow:inset 0 0 0 1.5px var(--line-card)}
+.study.v2 .flashc .qhead{margin-top:0}
+.study.v2 .qcard.flashc .qcard-in{padding:8px 0 0;justify-content:flex-start}
+.study.v2 .flashc .qcard-in::before{flex:1 1 0} .study.v2 .flashc .qcard-in::after{flex:1.3 1 0}
+.study.v2 .flashc .qword{font-size:var(--fs-word)}
+.study.v2 .flashc .w-line{padding-left:48px}
+.study.v2 .flashc .w-line:has(.len-l),.study.v2 .flashc .w-line.fit{padding-left:0}
+.study.v2 .back-pron{margin:-6px 0 0;text-align:center}
+.study.v2 .back-front{display:flex;flex-direction:column;align-items:center;gap:2px}
+.study.v2 .back-face{width:100%;margin-top:0;padding-top:0;border-top:0;gap:0;align-items:center}
+.study.v2 .back-face::before{content:"";display:block;width:48px;height:2px;margin:10px auto 18px;background:var(--line-card)}
+.study.v2 .back-face .senses{align-items:center;gap:16px;text-align:center}
+.study.v2 .back-face .senses li{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 8px;padding:0;background:none}
+.study.v2 .back-face .senses .sbody{display:contents}
+.study.v2 .back-face .senses .sm{margin:0;padding:0;background:none;color:var(--ink);font-size:var(--fs-answer);font-weight:800;line-height:1.3;font-feature-settings:"palt"}
+.study.v2 .back-face .senses li .pos{margin:0;width:22px;min-width:22px;height:22px;font-size:var(--fs-min)}
+.study.v2 .back-face .pat,.study.v2 .back-face .sex,.study.v2 .back-face .sja{flex-basis:100%}
+.study.v2 .back-face .pat{font-family:var(--f-en);font-size:var(--fs-body);font-weight:700;color:var(--ink-2)}
+.study.v2 .back-face .sex{margin-top:8px;font-family:var(--f-en);font-size:var(--fs-name);font-weight:500;line-height:1.4}
+.study.v2 .back-face .sja{font-size:var(--fs-body);color:var(--ink-2);line-height:1.5}
+.study.v2 .back-face .senses li.locked{display:block;font-size:var(--fs-sub);color:var(--ink-2)}
+.study.v2 .back-face .sprog{justify-content:center;color:var(--ink-2)}
+.study.v2 .back-face .ety{margin-top:14px;text-align:center;font-size:var(--fs-sub);color:var(--ink-2)}
+.study.v2 .back-face .ety .ep{font-family:var(--f-en);color:var(--ink)}
+.study.v2 .back-face .parent-line{justify-content:center;border-top:1px solid var(--hair)}
+.study.v2 .ipa,.fb.v2 .ipa{display:inline;font-family:var(--f-ipa);font-size:var(--fs-body);font-weight:400;color:var(--ink-2);letter-spacing:0}
+.study.v2 .kana,.fb.v2 .kana{display:inline;margin:0 0 0 10px;font-size:var(--fs-sub);font-weight:500;color:var(--ink-2)}
+.study.v2 .sayex,.fb.v2 .sayex{width:32px;height:32px;margin-left:4px;border-radius:50%;background:var(--fill);color:var(--ink);vertical-align:-9px}
+.study.v2 .sayex .ico,.fb.v2 .sayex .ico{width:16px;height:16px}
+/* grading a card: どれくらい覚えてた？ and 4 grey buttons, the first line's colour says which (もう一度 red, 難しい ink, 正解 green, 簡単 blue) */
+.study.v2 .g-q{font-feature-settings:"palt";margin-top:14px;text-align:center;font-size:var(--fs-body);font-weight:700;color:var(--ink-2)}
+.study.v2 .grades{margin-top:10px;gap:8px}
+.study.v2 .grade{min-height:76px;padding:8px 2px;justify-content:center;gap:1px;border:0;border-radius:var(--r-card);background:var(--fill);color:var(--ink);text-align:center}
+.study.v2 .grade b{font-size:var(--fs-name);font-weight:800;line-height:1.3;white-space:nowrap;letter-spacing:-.01em}
+.study.v2 .grade small,.study.v2 .grade small.jp{margin:0;font-family:var(--f-ui);font-size:var(--fs-sub);font-weight:500;line-height:1.3;color:var(--ink-2);opacity:1}
+.study.v2 .grade.g1 b{color:var(--ng-ink)} .study.v2 .grade.g3 b{color:var(--ok-ink)} .study.v2 .grade.g4 b{color:var(--blue)}
+.study.v2 .grade-note{font-size:var(--fs-min);color:var(--ink-2)}
+/* a short screen (iPhone SE, 文字「大」): tighter, so わからない stays in view */
+.short .study.v2 .qhead{margin-top:14px}
+.short .study.v2 .choice{min-height:52px}
+.short .study.v2 .choices{gap:8px}
+.short .study.v2 .qcard.flashc{margin-top:10px}
+.short .study.v2 .grade{min-height:64px}
+
+/* ---- the sheet: white, from below, its top 78px left over a dimmed screen (the steps stay bright above the scrim; taps still reach
+   × and 1問もどす). A miss: the whole height, 次へ fixed at the foot, the rest scrolls ---- */
+.fb-scrim{position:fixed;inset:0;z-index:44;background:var(--scrim);pointer-events:none;animation:fade var(--dur-2) var(--ease-out)}
+.fb.v2{top:auto;max-height:calc(100% - 78px - env(safe-area-inset-top,0px));border:0;border-radius:var(--r-hero) var(--r-hero) 0 0;background:var(--n-bg);color:var(--ink);font-family:var(--f-ui);box-shadow:0 -8px 30px rgba(18,18,22,.14);padding-bottom:0;word-break:auto-phrase}
+.fb.v2.ng{top:calc(78px + env(safe-area-inset-top,0px))}
+.fb.v2.ng,.fb.v2.near{box-shadow:none}
+.fb.v2:has(#fbmore:not([hidden])){max-height:calc(100% - 78px - env(safe-area-inset-top,0px))}
+.fb.v2.near,.fb.v2.near:has(#fbmore:not([hidden])){bottom:var(--kb,0px);max-height:calc(100% - 78px - env(safe-area-inset-top,0px) - var(--kb,0px))}
+.fb.v2 .fb-in{flex:1 1 auto;min-height:0;max-width:560px;gap:0;padding:0 0 calc(22px + env(safe-area-inset-bottom,0px))}
+.fb.v2 .grab{display:block;flex:none;width:36px;height:5px;margin:7px auto 0;border-radius:3px;background:var(--grab)}
+.fb.v2 .fb-sc{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;padding:10px max(20px,env(safe-area-inset-right,0px)) 2px max(20px,env(safe-area-inset-left,0px))}
+.fb.v2 .fb-body{min-height:auto;overflow:visible;gap:0}
+.fb.v2 .fb-actions{flex:none;padding:10px max(20px,env(safe-area-inset-right,0px)) 0 max(20px,env(safe-area-inset-left,0px))}
+.fb.v2 .fb-actions > .btn{width:100%;min-height:56px}
+/* 1. the verdict: a 28 circle (× red / ✓ green), 不正解 21/800; on the right ↻ 3問あとにもう一度 (words only) */
+.fb.v2 .fb-head{display:flex;flex-wrap:nowrap;align-items:center;gap:9px;min-height:36px;color:var(--ink);font-size:var(--fs-sec);font-weight:800}
+.fb.v2.ok .fb-head,.fb.v2.ng .fb-head,.fb.v2.near .fb-head{color:var(--ink)}
+.fb.v2 .fb-tt{display:inline-flex;align-items:center;gap:9px;letter-spacing:.01em;font-feature-settings:"palt"}
+.fb.v2 .mk{width:28px;height:28px;margin:0;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;font-size:15px;font-weight:800}
+.fb.v2 .mk.x{background:var(--ng)} .fb.v2 .mk.o{background:var(--ok)} .fb.v2 .mk.n{background:var(--hard);color:#fff}
+.fb.v2 .mk svg{width:16px;height:16px}
+.fb.v2 .fb-head .rate{height:26px;display:inline-flex;align-items:center;margin-left:2px;padding:0 10px;border-radius:var(--r-pill);background:var(--ok-solid);color:#fff;font-family:var(--f-en);font-size:var(--fs-sub);font-weight:800}
+.fb.v2 .ivl{display:inline-flex;align-items:center;gap:4px;padding:0;background:none;font-family:var(--f-ui);font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);white-space:nowrap;font-feature-settings:"palt"}
+.fb.v2 .ivl svg{width:16px;height:16px;flex:none}
+.fb.v2 .fb-more{height:44px;margin:0 -4px 0 0;padding:0 4px 0 8px;border:0;border-radius:0;font-size:var(--fs-sub);font-weight:700;color:var(--blue)}
+/* 2. the word: 26/700, 🔊, the 帯 and No.; the reading under it */
+.fb.v2 .fb-word{display:block;margin-top:12px}
+.fb.v2 .e-line{display:flex;flex-wrap:wrap;align-items:center;gap:0 6px;min-width:0}
+.fb.v2 .e-word{min-width:0;font-family:var(--f-en);font-size:var(--fs-entry);font-weight:700;line-height:1.15;letter-spacing:-.005em;overflow-wrap:break-word}
+.fb.v2 .e-word.len-l{font-size:22px}
+.fb.v2 .no{margin-left:auto;display:flex;align-items:center;gap:6px;flex:none;font-family:var(--f-en);font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);white-space:nowrap}
+.fb.v2 .e-pron{margin-top:2px;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 10px}
+.fb.v2 .e-pron .kana{margin:0}
+.fb.v2 .e-pron:empty{display:none}
+/* 3. 正解 in green, the strongest text on the sheet; 4. your answer one step smaller, struck through, whose meaning it was, 押し間違えた */
+.fb.v2 .cmp{margin-top:14px;display:flex;flex-direction:column;gap:8px;padding:0;border-radius:0;background:none}
+.fb.v2 .cmp-row{display:block;border-radius:var(--r-card);font-size:var(--fs-body);line-height:1.4}
+.fb.v2 .cmp-l{display:block;width:auto;font-size:var(--fs-min);font-weight:700;line-height:1.3;font-feature-settings:"palt"}
+.fb.v2 .cmp-row.ok{padding:13px 14px 14px;background:var(--ok-tint)}
+.fb.v2 .cmp-row.ok .cmp-l{color:var(--ok-ink)}
+.fb.v2 .cmp-t{margin-top:5px;display:flex;align-items:center;gap:8px;font-size:var(--fs-answer);line-height:1.3;font-feature-settings:"palt"}
+.fb.v2 .cmp-t b{font-weight:800;color:var(--ink)}
+.fb.v2 .cmp-t.en b{font-family:var(--f-en);font-weight:700}
+.fb.v2 .cmp-row.ok .pos{width:22px;min-width:22px;height:22px;background:var(--n-bg);font-size:var(--fs-min)}
+.fb.v2 .cmp-row.ok small{display:block;margin-top:2px;font-size:var(--fs-min);color:var(--ink-2)}
+.fb.v2 .cmp-row.ng{display:flex;align-items:center;gap:8px;padding:9px 6px 10px 14px;background:var(--ng-tint)}
+.fb.v2 .cmp-a{flex:1;min-width:0;display:flex;flex-direction:column}
+.fb.v2 .cmp-row.ng .cmp-l{color:var(--ng-ink)}
+.fb.v2 .cmp-row.ng s{margin-top:2px;font-size:var(--fs-body);font-weight:500;color:var(--ink-2);text-decoration-thickness:1.5px;text-decoration-color:color-mix(in srgb,var(--ink-2) 65%,transparent)}
+.fb.v2 .cmp-row.ng s.en{font-family:var(--f-en)}
+.fb.v2 .cmp-row.ng small{margin-top:1px;font-size:var(--fs-min);color:var(--ink-2)}
+.fb.v2 .cmp-row.ng small b{font-family:var(--f-en);font-weight:700;color:var(--ink)}
+.fb.v2 .cmp-dk{margin-top:2px;font-size:var(--fs-body);font-weight:500;color:var(--ink-2)}
+.fb.v2 .cmp-undo{flex:none;height:44px;min-height:0;margin:0;padding:0 8px;font-size:var(--fs-sub);font-weight:700;color:var(--blue);text-decoration:none;white-space:nowrap}
+.fb.v2 .cmp .cw{display:block;font-family:var(--f-en);font-size:22px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
+.fb.v2 .cmp-row.ok .cw{margin-top:5px}
+.fb.v2 .cmp-row.ng .cw{margin-top:2px;font-size:18px;font-weight:500}
+/* 5. that meaning's example: the word marked in the same pale green as the 正解 box */
+.fb.v2 .fb-exrow{margin-top:14px;display:flex;align-items:flex-start;gap:4px}
+.fb.v2 .ex-t{flex:1;min-width:0;padding-top:2px}
+.fb.v2 .fb-ex{font-family:var(--f-en);font-size:var(--fs-name);font-weight:500;line-height:1.4;color:var(--ink)}
+.fb.v2 .fb-exrow .fb-ex .mark{background:var(--ok-tint)}
+.fb.v2 .fb-ja{margin-top:3px;font-size:var(--fs-sub);line-height:1.5;color:var(--ink-2)}
+.fb.v2 .fb-exrow .sayex{position:relative;width:44px;height:44px;flex:none;margin:-4px -4px 0 0;display:grid;place-items:center;background:none;vertical-align:0}
+.fb.v2 .fb-exrow .sayex::before{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--fill)}
+.fb.v2 .fb-exrow .sayex::after{content:none}
+.fb.v2 .fb-exrow .sayex svg{position:relative;width:18px;height:18px}
+/* 6. the table: a 78px label column, a thin line over each row; a row you press is 48 high, its action blue with › */
+.fb.v2 .facts{margin-top:12px}
+.fb.v2 .f-row{display:grid;grid-template-columns:78px minmax(0,1fr);align-items:baseline;column-gap:8px;padding:12px 0;border-top:1px solid var(--hair)}
+.fb.v2 .f-k{font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);font-feature-settings:"palt"}
+.fb.v2 .f-v{min-width:0;font-size:var(--fs-body);line-height:1.45;font-feature-settings:"palt"}
+.fb.v2 .f-v b{font-weight:700}
+.fb.v2 .f-sub{display:block;margin-top:1px;font-size:var(--fs-sub);color:var(--ink-2)}
+.fb.v2 .f-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px}
+.fb.v2 .f-line + .f-line{margin-top:6px}
+.fb.v2 .f-line + b{display:block;margin-top:8px}
+.fb.v2 .f-line .pos,.fb.v2 .fchip .pos{width:22px;min-width:22px;height:22px;font-size:var(--fs-min);align-self:center}
+.fb.v2 .f-en{font-family:var(--f-en);font-weight:600}
+.fb.v2 .pat{display:inline;margin-left:6px;font-family:var(--f-en);font-size:var(--fs-sub);font-weight:600;color:var(--ink-2)}
+.fb.v2 .morph{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.fb.v2 .m{display:inline-flex;align-items:center;gap:4px;min-height:28px;padding:0 8px;border-radius:var(--r-set);background:var(--fill)}
+.fb.v2 .m b{font-family:var(--f-en);font-size:var(--fs-body);font-weight:700}
+.fb.v2 .m span{font-family:"Noto Sans JP",sans-serif;font-size:var(--fs-min);color:var(--ink-2)}
+.fb.v2 .plus{padding:0 1px;font-size:var(--fs-min);color:var(--ink-3)}
+.fb.v2 .f-row.fam{display:grid;align-items:start;gap:0 8px;margin:0;padding:0}
+.fb.v2 .f-row.fam .f-k{padding-top:15px}
+.fb.v2 .fchips{display:flex;flex-direction:column;gap:0}
+.fb.v2 .fchip{display:flex;align-items:center;gap:7px;width:100%;min-height:48px;padding:0;border:0;border-radius:0;background:none;text-align:left}
+.fb.v2 .fchip + .fchip{border-top:1px solid var(--hair)}
+.fb.v2 .fchip::after{content:none}
+.fb.v2 .fchip b.en{font-family:var(--f-en);font-size:var(--fs-name);font-weight:700}
+.fb.v2 .fchip .go{margin-left:auto;display:flex;align-items:center;font-size:var(--fs-sub);font-weight:700;color:var(--blue);white-space:nowrap}
+.fb.v2 .fchip .go svg{width:17px;height:17px}
+.fb.v2 .fchip.on .go{visibility:hidden}
+.fb.v2 .fdetail:not(:empty){margin:0 0 12px;padding:10px 12px;border-radius:var(--r-card);background:var(--fill)}
+.fb.v2 .fdetail .fw{font-family:var(--f-en);font-weight:700}
+.fb.v2 .fdetail .sm{font-weight:700}
+.fb.v2 .fdetail .sex{margin-top:4px;font-family:var(--f-en);font-size:var(--fs-body)}
+.fb.v2 .fdetail .sja{font-size:var(--fs-sub);color:var(--ink-2)}
+.fb.v2 .fdetail .mark{background:var(--n-bg)}
+/* a right answer's sheet (スペル, 語法, a new meaning, or 自動で次へ off): the meaning, then 詳しく */
+.fb.v2 .fb-body > *{margin-top:10px}
+.fb.v2 .fb-mean{font-size:var(--fs-answer);font-weight:800;line-height:1.35;font-feature-settings:"palt"}
+.fb.v2 .fb-mean .muted{font-size:var(--fs-body);font-weight:500;color:var(--ink-2)}
+.fb.v2 .tease,.fb.v2 .sprog,.fb.v2 .ety,.fb.v2 .senses li.locked{font-size:var(--fs-sub);color:var(--ink-2)}
+.fb.v2 .ety .ep{font-family:var(--f-en);color:var(--ink)}
+.fb.v2 .senses li{padding:6px 0}
+.fb.v2 .senses .sm,.fb.v2 .senses li.hit .sm{margin:0;padding:0;background:none;color:var(--ink);font-size:var(--fs-name);font-weight:700}
+.fb.v2 .senses .sex{font-family:var(--f-en);font-size:var(--fs-body)}
+.fb.v2 .senses .sja{font-size:var(--fs-sub);color:var(--ink-2)}
+.fb.v2 .usenote .fb-ex b{color:var(--ok-ink)}
+.fb.v2 .usenote .why{font-size:var(--fs-sub)}
+/* おしい: the right spelling typed once more */
+.fb.v2 .retype{width:100%}
+.fb.v2 .retype input{height:56px;border-radius:var(--r-card);border:1.5px solid var(--line-card);background:var(--n-bg);font-family:var(--f-en);font-size:20px;font-weight:600}
+.fb.v2 .retype input:focus{border-color:var(--blue)}
+.fb.v2 .retype input.ng{border-color:var(--ng);background:var(--ng-tint)}
+.fb.v2 .retype .btn{min-height:56px;padding:0 22px}
+@media (max-width:350px){
+  .study.v2 .qundo span{padding:0 10px 0 8px}
+  .study.v2 .grade b{font-size:var(--fs-body)}
+  .study.v2 .grade small,.study.v2 .grade small.jp{font-size:var(--fs-min)}
+  .fb.v2 .f-row{grid-template-columns:70px minmax(0,1fr)}
+}
 </style>
 
 </head><body><div id="app" lang="ja"><main class="wrap" id="view"></main></div>
@@ -4219,7 +4523,12 @@ const sameCore = (a, b) => { const A = new Set(corePieces(a)); return corePieces
 /* a wrong option marked trap (a look-alike, an idiom with the same verb) makes the question harder: its answer time goes in a box of its own (rtKey) */
 function pickChoices(c, type, si, noConf){
   const target = c.s[si], pool = distractorPool(c), mine = c.isS ? c.parent.s : c.s;
-  const ordered = [...pool.filter(x => (type === 'e2j' ? metSenses(x) : x.s).some(s => s.p === target.p)), ...pool];
+  // a meaning asked as its form (tend to do): the wrong options are meanings of the same form too (pretend to do, decide to do), then
+  // other 「～する…」 meanings, so the shape of an option never gives the answer away
+  const form = type === 'e2j' && !!formOf(c, target), toDo = s => /^[～〜](する|し)/.test(String(s.m));
+  const fsense = x => { const ms = metSenses(x); return ms.find(s => formOf(x, s)) || ms.find(s => s.p === target.p && toDo(s)); };
+  const ordered = form ? [...pool.filter(x => metSenses(x).some(s => formOf(x, s))), ...pool.filter(x => metSenses(x).some(s => s.p === target.p && toDo(s))), ...pool]
+    : [...pool.filter(x => (type === 'e2j' ? metSenses(x) : x.s).some(s => s.p === target.p)), ...pool];
   const picked = [], used = new Set();
   const cf = !noConf && (type === 'e2j' || type === 'j2e') ? confPick(c, type, target) : null;   // its look-alike, once both are learned (not when it is only heard)
   if (cf) { picked.push(cf); used.add(cf.card.deck + '|' + cf.card.k); }
@@ -4234,7 +4543,7 @@ function pickChoices(c, type, si, noConf){
     const id = x.deck + '|' + x.k; if (used.has(id) || isNear(c.w, x.w)) continue;   // never an idiom that could answer for this one
     const sv = !!verb && headVerb(x.w) === verb; if (sv && nv >= nVerb) continue;
     if (type === 'e2j') {
-      const ms = metSenses(x), cand = ms.find(s => s.p === target.p) || ms[0];   // another word's meaning the learner has already met
+      const ms = metSenses(x), cand = (form && fsense(x)) || ms.find(s => s.p === target.p) || ms[0];   // another word's meaning the learner has already met
       if (mine.some(s => alike(s.m, cand.m)) || picked.some(o => alike(o.text, cand.m))) continue;
       picked.push({card:x, text:qm(cand.m), sub:x.w, ok:false, trap:sv});
     } else {
@@ -4247,7 +4556,7 @@ function pickChoices(c, type, si, noConf){
   // 英→日: when only the right meaning carries a （…） note (「（問題）に取り組む」), it stands out — one plain wrong option gives way
   // to another word's meaning that has a note too
   const note = t => /[（(]/.test(t);
-  if (type === 'e2j' && note(qm(target.m)) && !picked.some(o => note(o.text))) {
+  if (type === 'e2j' && !form && note(qm(target.m)) && !picked.some(o => note(o.text))) {
     let k = picked.length - 1; while (k >= 0 && (picked[k].trap || picked[k].tip)) k--;
     for (const x of k < 0 ? [] : ordered) {
       const id = x.deck + '|' + x.k; if (used.has(id) || isNear(c.w, x.w) || (verb && headVerb(x.w) === verb)) continue;
@@ -4572,13 +4881,14 @@ document.addEventListener('visibilitychange', () => {
 });
 /* the grade a right answer earns at this moment, shown beside the bar so the speed rule is visible */
 const RATE_NAME = {4: 'Perfect', 3: 'Excellent', 2: 'Great', 1: 'Good'};
-const rateHTML = () => `<div class="qclock">${TIMER_HTML}<span class="qnow" id="qnow" aria-hidden="true">今なら</span><b class="rate qrate t4" id="qrate" aria-hidden="true">Perfect</b></div>`;
+/* the bar and, under it, one line (#qtlab): 「今なら Great」 while the clock runs; once answered it is free for 「＋2つ目の意味」 */
+const clockHTML = (bar, live) => `<div class="qclock">${bar ? TIMER_HTML : ''}<p class="t-lab" id="qtlab" aria-hidden="true">${live
+  ? `${QI.clock}<span class="qnow" id="qnow">今なら</span><b class="qrate" id="qrate">Perfect</b>` : ''}</p></div>`;
+const rateHTML = () => clockHTML(true, true);
 function showRate(t, final){
   const el = $('#qrate'); if (!el) return;
-  if (final || !t) $('#qnow')?.remove();   // answered: what stays is the grade it earned, no longer "now"
-  if (!RATE_NAME[t]) { el.classList.add('gone'); return; }
-  if (el.dataset.t !== String(t) || final) { el.textContent = RATE_NAME[t]; el.className = `rate qrate t${t}${final ? ' pop' : ''}`; el.dataset.t = t; }
-  if (!final) { const bar = $('#qtbar'); if (bar && !bar.classList.contains('low')) { bar.classList.toggle('pf', t === 4); bar.classList.toggle('ex', t === 3); } }
+  if (final || !RATE_NAME[t]) { $('#qtlab')?.replaceChildren(); return; }   // answered: the grade it earned goes on the chosen option (inlineOK)
+  if (el.dataset.t !== String(t)) { el.textContent = RATE_NAME[t]; el.dataset.t = t; }
 }
 /* time's up: a choice question counts as わからない; a card turns over and counts as もう一度 */
 function timeUp(it){
@@ -4588,35 +4898,80 @@ function timeUp(it){
   if (it.type === 'flash') { reveal(true); answer(null, 1); } else dunno();
 }
 /* the card's corner says what the question is part of, so a 新しい単語 set that ends with today's checks
-   doesn't look like reviews came back: 復習（英 → 日） / 新しい単語 / 新しい意味 / 新しい派生語 / 今日のおさらい;
+   doesn't look like reviews came back: 復習（英→日） / 新しい単語 / 新しい意味 / 新しい派生語 / 今日のおさらい;
    練習（…） in a practice set, もう一度（…） when a missed one comes back */
 function kindLabel(it, type, fresh, prac){
-  const t = TYPE_LABEL[type] || '', with_ = k => t ? `${k}（${t}）` : k;
+  const t = type === 'flash' ? (it.flip ? '日→英' : '英→日') : TYPE_LABEL[type] || '', with_ = k => t ? `${k}（${t}）` : k;
   if (it.sameDay) return it.tries ? '今日のおさらい（もう一度）' : '今日のおさらい';
   if (fresh) { const k = it.c.isS ? '新しい意味' : it.c.isD ? '新しい派生語' : '新しい単語'; return prac ? `練習（${k}）` : it.tries ? `${k}（もう一度）` : k; }
   return with_(it.tries ? 'もう一度' : prac ? '練習' : it.check || !isReview(it.p0) ? 'さっきの単語' : '復習');   // さっきの単語: a new word back in its own set
 }
-const TYPE_LABEL = {e2j:'英 → 日', j2e:'日 → 英', spell:'スペル', flash:'カード', odd:'仲間はずれ', dform:'派生語', dspell:'派生語スペル', snew:'新しい意味', ctx:'文脈', use:'語法', lis:'聞き取り'};
-function segsInner(){
-  return Q.items.map((it, i) => {
-    const waiting = Q.queue.includes(i);
-    const cls = it.first === null ? (it === Q.cur ? 'cur' : '') : `g${it.grade || (it.ok ? 3 : 1)}${!it.ok && !waiting ? ' fix' : ''}`;   // fix: missed, then right on its retry
-    return `<i class="${cls}"></i>`;
-  }).join('');
+const TYPE_LABEL = {e2j:'英→日', j2e:'日→英', spell:'スペル', flash:'カード', odd:'仲間はずれ', dform:'派生語', dspell:'派生語スペル', snew:'新しい意味', ctx:'文脈', use:'語法', lis:'聞き取り'};
+/* the set's steps, one bar a question in the order they are asked: the answers so far (ok / ng), the one now, then the queue —
+   a missed one that comes back is a bar of its own (redo), so the total grows by one with each miss */
+function stepCells(){
+  const done = (Q.hist || []).map(h => h.res ? 'ok' : 'ng');
+  return [...done, ...Q.queue.map((i, k) => k === 0 && !Q.answered && Q.items[i] === Q.cur ? 'now' : Q.items[i].tries > 0 ? 'redo' : '')];
 }
+const stepAt = cells => Math.min(cells.length, (Q.hist?.length || 0) + (Q.answered ? 0 : 1));
+const segsInner = (cells = stepCells()) => cells.map(c => c ? `<i class="${c}"></i>` : '<i></i>').join('');
+const countHTML = cells => `<b>${stepAt(cells)}</b>/${cells.length}`;
+function stepsUpdate(){
+  const cells = stepCells(), n = cells.length, sg = $('.segs'), qc = $('.qcount');
+  if (sg) { sg.innerHTML = segsInner(cells); sg.style.setProperty('--n', n); sg.classList.toggle('dense', n > 20); sg.setAttribute('aria-valuenow', Q.cleared); }
+  if (qc) { qc.innerHTML = countHTML(cells); qc.setAttribute('aria-label', `${n}問のうち${stepAt(cells)}問目`); }
+}
+/* the new look's icons on the study screen (docs/ui_redesign/S/quiz) */
+const QI = {
+  x:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
+  undo:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9.5h9.5a4.75 4.75 0 0 1 0 9.5H9"/><path d="M8.5 5.5 4.5 9.5l4 4"/></svg>',
+  say:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.6h3.1L11.6 6v12l-4.5-3.6H4z"/><path d="M15.2 9.4a3.8 3.8 0 0 1 0 5.2M17.8 6.9a7.3 7.3 0 0 1 0 10.2"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7.2"/><path d="M12 13.5V9.6M9.6 3.6h4.8M18.4 6.6l1.3-1.3"/></svg>',
+  check:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg>',
+  cross:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>',
+  redo:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.2 13.4A7.4 7.4 0 1 1 17 6.6"/><path d="M17.6 3.4v3.9h-3.9"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6l6 6-6 6"/></svg>',
+};
 function qHeader(){
-  const n = Q.items.length;
-  return `<div class="qtop"><button class="iconbtn" data-act="quitQuiz" aria-label="やめる">${I.close}</button>
-    <div class="segs${n > 20 ? ' dense' : ''}" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${Q.cleared}" style="--n:${n}">${segsInner()}</div>
-    <span class="qcount num">${Q.cleared}/${n}</span>
-    <button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}>${I.undo}<span>1問もどす</span></button></div>`;
+  const cells = stepCells(), n = cells.length;
+  return `<div class="qtop"><button class="iconbtn qx" data-act="quitQuiz" aria-label="やめる"><span>${QI.x}</span></button>
+    <p class="qcount num" aria-label="${n}問のうち${stepAt(cells)}問目">${countHTML(cells)}</p>
+    <button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}><span>${QI.undo}1問もどす</span></button></div>
+    <div class="segs${n > 20 ? ' dense' : ''}" role="progressbar" aria-label="このセットの進み具合" aria-valuemin="0" aria-valuemax="${Q.items.length}" aria-valuenow="${Q.cleared}" style="--n:${n}">${segsInner(cells)}</div>`;
 }
+/* 語法の形で覚える意味 (tend to do＝～する傾向がある): its one pattern is the headword + to do and the meaning starts with ～する／～し.
+   Such a meaning is asked, and shown, as that form (tend to do); 🔊 still reads the headword alone */
+function formOf(c, s){
+  if (!c || !s || c.isD) return '';
+  const en = String(s.pat || '').split('｜')[0].trim();
+  return en.toLowerCase() === `${String(c.w).trim().toLowerCase()} to do` && /^[～〜](する|し)/.test(String(s.m)) ? en : '';
+}
+/* the word as a question or an entry shows it: the form when there is one (do in italics, "a verb goes here"), sized by its length */
+function wordHTML(c, s, cls = 'qword'){
+  const f = formOf(c, s), n = [...(f || c.w)].length;
+  return `<div class="${cls}${n >= 16 ? ' len-l' : n >= 12 ? ' len-m' : ''}" lang="en">${f ? esc(f).replace(/ do$/, ' <i>do</i>') : esc(c.w)}</div>`;
+}
+/* the book the word is from, as its 帯's name on its colour (基礎, 標準 …) */
+function obiTag(c){
+  const d = deckById(c.deck) || (c.parent && deckById(c.parent.deck)); if (!d) return '';
+  const b = bookOf(d); return `<span class="obi-tag" style="--bk:var(--c-${b.k})">${esc(b.obi)}</span>`;
+}
+const comboHTML = () => Q.combo >= 3 ? `<span class="qcombo" id="qcombo"><b>${Q.combo}</b>連続正解</span>` : '';
 /* ignore taps for a moment after the screen changes, so a fast double tap can't answer the next card */
 const locked = () => !!Q && performance.now() < (Q.lockUntil || 0);
 const nextOpts = () => Q?.done ? {deckIds: Q.opts.deckIds, flash: Q.opts.flash} : {};
 /* a short screen (iPhone SE (Safari / home screen), 文字「大」) packs the study screens tighter (.short), so わからない stays in view */
 function fitCheck(){ document.documentElement.classList.toggle('short', innerHeight / (S.settings.zoom || 1) < 660); }
-addEventListener('resize', () => { if (!$('#screen').hidden) fitCheck(); });
+addEventListener('resize', () => { if (!$('#screen').hidden) { fitCheck(); fitWord(); } });
+/* the word on one line (a long one: two): first its 🔊 joins it in the middle (no offset), then the size steps down (320px, 文字「大」) */
+function fitWord(){
+  const w = $('#qcard .qword'), wl = w?.parentElement; if (!w || !wl?.classList.contains('w-line')) return;
+  wl.classList.remove('fit'); w.style.fontSize = '';
+  const over = () => { const fs = parseFloat(getComputedStyle(w).fontSize); return w.getBoundingClientRect().height > fs * (w.classList.contains('len-l') ? 2.7 : 1.6); };
+  if (!over()) return;
+  wl.classList.add('fit');
+  for (let fs = parseFloat(getComputedStyle(w).fontSize); over() && fs > 22; ) { fs -= 2; w.style.fontSize = fs + 'px'; }
+}
 function renderQ(){
   if (!Q) return;
   Q.inl = null; fitCheck();
@@ -4635,23 +4990,23 @@ function renderQ(){
   const c = it.c, type = it.type, left = Q.queue.length, sense = c.s[it.si] || c.s[0];
   const fresh = type === 'flash' && !isReview(it.p0), clock = timed(type) && !fresh && !it.check;   // no clock while a word is brand new, nor on its check later in the set
   const live = clock && type !== 'flash' && it.first === null;   // speed decides the grade only on a review's first answer
-  const behind = (left > 1 ? '<div class="behind"></div>' : '') + (left > 2 ? '<div class="behind b2"></div>' : '');
-  const sayBtn = `<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(sense.p)}" aria-label="発音を聞く">${I.say}</button>`;
+  const sayBtn = `<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(sense.p)}" aria-label="発音を聞く">${QI.say}</button>`;
+  const form = formOf(c, sense), wline = (s = sense) => `<div class="w-line">${wordHTML(c, s)}${sayBtn}</div>`;   // the word, its 🔊 on its right
   const multi = c.cat ? `<span class="cat">${esc(c.cat)}</span>` : '';   // no 「意味 Nつ」 on a question: it read as "choose N"; the answer side shows the meanings
   const from = c.isD ? `<div class="qfrom"><b class="fw" lang="en">${esc(c.parent.w)}</b><span>${esc(c.parent.m)}</span>の派生語</div>` : '';
   let card, body = '';
   if (c.isS && (type === 'e2j' || type === 'snew' || (type === 'flash' && !it.flip))) {
     const known = c.parent.s.filter((_, i) => i !== c.si && 'ml'.includes(senseState(c.parent, i))).map(x => x.m);
-    card = `<div class="qpos"><span class="pos">${esc(c.p || '—')}</span>${sayBtn}${senseDots(c.parent)}</div><div class="qword" lang="en">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}
+    card = `<div class="qpos"><span class="pos">${esc(c.p || '—')}</span>${senseDots(c.parent)}</div>${wline()}${form ? '' : patHTML(c.pat, 'qpat')}
       ${known.length ? `<div class="qknown">知っている意味：${esc(known.join(' ／ '))}</div>` : ''}
       <div class="qask">${type === 'snew' || (type === 'flash' && !isReview(it.p0)) ? '<b class="newtag">新しい意味</b>' : ''}${c.si + 1}つ目の意味は？</div>`;
   } else if (type === 'flash' && it.flip) {
     card = `<div class="qask">この意味の英単語は？</div><ul class="qmeans">${metSenses(c).slice(0, 4).map(s => `<li><span class="pos">${esc(s.p||'—')}</span>${esc(qm(s.m))}</li>`).join('')}</ul>${c.isD ? `<div class="qask">← ${esc(c.parent.w)}の派生語</div>` : ''}`;
   } else if (type === 'lis') {
     card = `<div class="qpos"><span class="pos">${esc(sense.p || '—')}</span></div>
-      <button class="lisbtn" data-act="lisPlay" aria-label="もう一度聞く">${I.say}</button><div class="qask">聞こえた単語の意味は？</div>`;
+      <button class="lisbtn" data-act="lisPlay" aria-label="もう一度聞く">${QI.say}</button><div class="qask">聞こえた単語の意味は？</div>`;
   } else if (type === 'e2j' || type === 'flash' || type === 'odd') {
-    card = `<div class="qpos"><span class="pos">${esc((type === 'odd' || type === 'flash') ? c.p || '—' : sense.p || '—')}</span>${sayBtn}${multi}</div><div class="qword" lang="en">${esc(c.w)}</div>${type !== 'odd' ? patHTML(sense.pat, 'qpat') : ''}${c.isD ? `<div class="qask">← ${esc(c.parent.w)}の派生語</div>` : ''}`;
+    card = `<div class="qpos"><span class="pos">${esc((type === 'odd' || type === 'flash') ? c.p || '—' : sense.p || '—')}</span>${multi}</div>${type === 'odd' ? wline({}) : wline()}${type !== 'odd' && !form ? patHTML(sense.pat, 'qpat') : ''}${c.isD ? `<div class="qask">← ${esc(c.parent.w)}の派生語</div>` : ''}`;
     if (type === 'odd') card += `<div class="qask">この単語の意味<b>ではない</b>ものは？</div>`;
     else if (type === 'e2j' && it.si > 0) card += `<div class="qask">${it.si + 1}つ目の意味は？</div>`;
   } else if (type === 'dform' || type === 'dspell') {
@@ -4687,10 +5042,15 @@ function renderQ(){
     // a word seen for the first time has no "answer" yet
     body = `<div class="reveal"><button class="btn btn-primary btn-block" data-act="reveal">${fresh ? (it.flip ? '英単語を見る' : '意味を見る') : '答えを見る'}<span class="kbd">（Space）</span></button></div>`;
   }
-  $('#screen').innerHTML = `<div class="screen-in study">${qHeader()}
-    ${live ? rateHTML() : clock ? TIMER_HTML : ''}
-    <div class="qstage">${behind}<div class="tcard holed qcard${type === 'flash' ? ' flashc' : ''}" id="qcard"${type === 'flash' ? ' data-act="reveal"' : ''}><span class="ring"></span>${Q.combo >= 3 ? `<span class="qcombo">${Q.combo} 連続正解</span>` : ''}<span class="qtype">${kindLabel(it, type, fresh, !!Q.opts.practice)}</span><div class="qcard-in">${card}</div></div></div>
-    <div id="qbody">${body}</div></div><div id="fb"></div>`;
+  // the new look (S/quiz): × / 9/12 / 1問もどす, the steps, the row of 帯 / kind / 連続正解, the word in the middle of a white page,
+  // the bar with 「今なら Great」 under it, then the options. A card (flash) is a white card with that row inside; its bar sits under it
+  const head = `<div class="qhead">${obiTag(c)}<span class="qtype">${kindLabel(it, type, fresh, !!Q.opts.practice)}</span>${comboHTML()}</div>`;
+  const flash = type === 'flash', choiceQ = !!body.match(/^<div class="choices/);
+  const tl = choiceQ ? clockHTML(clock, live) : flash && clock ? `<div class="qclock fl">${TIMER_HTML}</div>` : '';
+  $('#screen').innerHTML = `<div class="screen-in study v2 t-${type}">${qHeader()}
+    ${flash ? '' : head}<div class="qstage"><div class="qcard${flash ? ' flashc' : ''}" id="qcard"${flash ? ' data-act="reveal"' : ''}>${flash ? head : ''}<div class="qcard-in">${card}</div></div></div>
+    ${tl}<div id="qbody">${body}</div></div><div id="fb"></div>`;
+  fitWord();
   Q.t0 = performance.now(); Q.lockUntil = Q.t0 + 250; Q.timedOut = false; tutDrop();
   const rk = rtKey(type);   // the speed lines: a question with a trap among its options is timed against its own kind
   const go = () => {
@@ -4742,7 +5102,7 @@ function lisStart(it, pos, clock, live, tap=false){
 }
 function lisReveal(it, ok){
   const c = it.c, p = (c.s[it.si] || c.s[0]).p, box = $('#qcard .qcard-in');
-  if (box) box.innerHTML = `<div class="qpos"><span class="pos">${esc(p || '—')}</span></div><div class="qword" lang="en">${esc(c.w)}</div>${ipaInline(c.w, p)}`;
+  if (box) box.innerHTML = `<div class="qpos"><span class="pos">${esc(p || '—')}</span></div><div class="qword" lang="en">${esc(c.w)}</div><div class="back-pron">${ipaInline(c.w, p)}</div>`;
   if (ok) playWord(c.w, p);   // once more with the spelling in front of you (after a miss the feedback plays it)
 }
 function noSound(){
@@ -4755,7 +5115,7 @@ function noSound(){
 function lisAgain(i){
   const it = Q.cur, b = document.querySelectorAll('.choice')[i];
   Q.lisNg = i; Q.lisTok = null; stopCountdown();
-  if (b) { b.classList.add('ng'); b.disabled = true; b.querySelector('.key').textContent = '×'; }
+  if (b) { b.classList.add('ng'); b.disabled = true; b.querySelector('.key').innerHTML = QI.cross; }
   const tm = $('.qclock') || $('.qtimer'); if (tm) tm.style.visibility = 'hidden';
   $('.nosound')?.remove(); lisReveal(it, false);
   $('#qcard .qcard-in')?.insertAdjacentHTML('beforeend', '<div class="qask">つづりを見て、もう一度えらんでね</div>');
@@ -4837,6 +5197,7 @@ function answer(ok, grade){
   const practice = !!Q.opts.practice; snap.practice = practice;
   if (it.first === null && ok && grade == null && !practice && !it.sameDay) { noteRT(rk, ms); snap.rt = rk; }
   if (grade != null) ok = grade > 1;
+  snap.res = ok;   // this answer's bar in the steps
   const tier = ok && grade == null && it.first === null && !it.sameDay && it.type in SLOW_DEF ? speedTier(rk, ms) : 0;
   showRate(tier, true);   // the tier it earned pops; a miss clears it
   let np = null;
@@ -4870,8 +5231,10 @@ function answer(ok, grade){
   let back = -1;
   if (ok) { if (qp >= 0) Q.cleared++; Q.combo++; Q.maxCombo = Math.max(Q.maxCombo, Q.combo); }
   else { back = Math.min(3, Q.queue.length); Q.queue.splice(back, 0, idx); Q.combo = 0; }   // a miss comes back after 3 other questions (sooner only when fewer are left)
-  const sg = $('.segs'); if (sg) { sg.innerHTML = segsInner(); sg.setAttribute('aria-valuenow', Q.cleared); }
-  const qc = $('.qcount'); if (qc) qc.textContent = `${Q.cleared}/${Q.items.length}`;
+  stepsUpdate();
+  const cb = $('#qcombo');   // 連続正解: its number grows a little for a moment (a miss clears it)
+  if (!ok) cb?.remove(); else if (cb) { const b = cb.querySelector('b'); b.textContent = Q.combo; b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
+  else if (Q.combo >= 3) $('.qhead')?.insertAdjacentHTML('beforeend', comboHTML());
   if (card && !Q.timedOut) {
     // a card you graded yourself already shows its answer: no sheet and no buzzer, it turns over at once (nextQ); もう一度 drops to the back
     sfx(ok ? 'ok' : 'tick'); if (ok) haptic(true);
@@ -4909,11 +5272,12 @@ function srSay(t){ const r = $('#sr'); if (!r) return; r.textContent = ''; setTi
    then on. A tap anywhere goes on at once (answered choices let taps through); 詳しく opens the sheet (fbOpen) */
 function inlineOK(it, np){
   const c = it.c, p = (c.s[it.si] || c.s[0]).p, qb = $('#qbody');
-  qb.classList.add('answered'); qb.querySelectorAll('.csub').forEach(e => e.hidden = false);
-  if (it.tier > 0) qb.querySelector('.choice.ok')?.insertAdjacentHTML('beforeend', `<b class="rate crate t${it.tier}">${RATE_NAME[it.tier]}</b>`);
+  qb.classList.add('answered');   // the chosen option turns green with the grade it earned on its right; the others stay as they were
+  if (it.tier > 0) qb.querySelector('.choice.ok')?.insertAdjacentHTML('beforeend', `<b class="rate crate">${RATE_NAME[it.tier]}</b>`);
   const dn = qb.querySelector('.dunrow') || qb.querySelector('.dunno');
-  const nx = opensNext(it, np);
-  if (dn) dn.outerHTML = `<div class="inl-fb" id="inlfb">${np ? `<span class="ivl">次は${ivlText(np.due - dayIdx())}</span>` : ''}${nx ? `<span class="ivl nx">${nx}</span>` : ''}<button class="fb-more" data-act="fbOpen">詳しく</button></div>`;
+  const nx = opensNext(it, np), lab = $('#qtlab');   // 「＋2つ目の意味」: on the line under the bar (where 今なら was)
+  if (nx && lab) lab.innerHTML = `<span class="unlock">${nx}</span>`;
+  if (dn) dn.outerHTML = `<div class="inl-fb" id="inlfb">${np ? `<span class="ivl">次は${ivlText(np.due - dayIdx())}</span>` : ''}${nx && !lab ? `<span class="unlock">${nx}</span>` : ''}<button class="fb-more" data-act="fbOpen">詳しく</button></div>`;
   const sc = $('.screen-in.study'); if (sc) sc.dataset.act = 'fbTap';
   if (it.type === 'j2e' || it.type === 'dform') playWord(c.w, p); else if (it.type === 'lis') lisReveal(it, true);
   let stay = {4: 600, 3: 600, 2: 750, 1: 1100}[it.tier || 2];
@@ -4932,55 +5296,95 @@ function detailHTML(it, noProg = false){
     : S.settings.senseCards ? sensesGated(c, 0, false, noProg) + etyHTML(c) + familyHTML(c, null)
     : sensesHTML(c, hit, 'hit', false, 3) + etyHTML(c) + familyHTML(c, null));
 }
+/* a miss: the sheet's table (S/quiz wrong) — ほかの意味, 成り立ち, コア, 見分け方, 派生語 (each opens its meaning and example), 次の復習日.
+   The same things 詳しく used to hold (detailHTML), in rows with a label column */
+function factsHTML(it, np, tip){
+  const c = it.c, rows = [], row = (k, v, cls = '') => `<div class="f-row${cls}"><span class="f-k">${k}</span><div class="f-v">${v}</div></div>`;
+  if (it.type === 'use') { const u = useQ(c, it.si); if (u) rows.push(row('語法', `<span class="f-en" lang="en">${esc(u[0]).replace('___', () => `<b>${esc(u[1])}</b>`)}</span>${u[5] ? `<span class="f-sub">${esc(u[5])}</span>` : ''}`)); }
+  const h = c.isS ? c.parent : c.isD ? null : c;
+  if (h) {   // the other meanings met so far; those still to come as 「あと2つ」 and when they come
+    const me = c.isS ? c.si : S.settings.senseCards ? 0 : it.si, gated = S.settings.senseCards;
+    const open = i => i === 0 || i === me || !gated || 'ml'.includes(senseState(h, i));
+    const lines = h.s.map((x, i) => i === me || !open(i) ? '' : `<span class="f-line"><span class="pos">${esc(x.p || '—')}</span><span>${esc(x.m)}${patHTML(x.pat, 'pat inl')}</span></span>`).join('');
+    const locked = h.s.filter((_, i) => !open(i)).length, nx = h.s.findIndex((_, i) => !open(i));
+    const lk = locked ? `<b>${lines ? 'ほかに' : ''}あと${locked}つ</b><span class="f-sub">${lockNote(h, nx)}</span>` : '';
+    if (lines || lk) rows.push(row('ほかの意味', lines + lk));
+  }
+  if (c.isD) {
+    rows.push(row('元の単語', `<span class="f-line"><b class="f-en" lang="en">${esc(c.parent.w)}</b>${c.parent.p ? `<span class="pos">${esc(c.parent.p)}</span>` : ''}<span>${esc(c.parent.m)}</span></span>`));
+    const a = affixOf(c); if (a) rows.push(row('成り立ち', `<span class="morph"><span class="m"><b lang="en">${esc(a.a)}</b><span>${esc(a.m)}</span></span></span>`));
+  } else {
+    const e = h?.ety;
+    if (!c.isS && e?.parts?.length) rows.push(row('成り立ち', `<span class="morph">${e.parts.map(([a, m]) => `<span class="m"><b lang="en">${esc(a)}</b><span>${esc(m)}</span></span>`).join('<span class="plus">＋</span>')}</span>`));
+    if (e?.core) rows.push(row('コア', esc(e.core)));
+    if (c.isS && e) {   // a meaning card: how it links to a meaning already learned
+      const sb = e.sb || [], mine = sb[c.si], prev = openIdx(h).filter(i => i !== c.si).slice(0, 1).map(i => esc(sb[i] || h.s[i].m));
+      if (mine) rows.push(row('つながり', [...prev, `<b>${esc(mine)}</b>`].join('<span class="plus">→</span>')));
+    }
+  }
+  if (tip) rows.push(row('見分け方', esc(tip)));
+  const F = c.isD ? c.parent : c.isS ? null : c;
+  if (F?.fam?.length) {   // 派生語: one row each, the open one's meaning and example under them (famchip)
+    const list = [...(c.isD ? [{w: F.w, p: F.p}] : []), ...F.fam].filter(f => f.w !== c.w);
+    if (list.length) rows.push(`<div class="f-row fam"><span class="f-k">派生語</span><div class="f-v"><div class="fchips">${list.map(f => `<button class="fchip" data-act="famchip" data-deck="${esc(F.deck)}" data-k="${esc(F.k)}" data-w="${esc(f.w)}"><b class="en" lang="en">${esc(f.w)}</b><span class="pos">${esc(f.p || '')}</span><span class="go">意味と例文${QI.chev}</span></button>`).join('')}</div><div class="fdetail" id="fdetail"></div></div></div>`);
+  }
+  if (np) rows.push(row('次の復習日', ivlText(np.due - dayIdx())));
+  return rows.length ? `<div class="facts">${rows.join('')}</div>` : '';
+}
 /* back: where a miss went back in the queue (0 = next). opt.full: opened with 詳しく after an inline 正解;
-   opt.quiet: the word has already played and the tap been felt */
+   opt.quiet: the word has already played and the tap been felt.
+   The new look (S/quiz wrong): a white sheet from below over a dimmed screen (the steps stay bright), the verdict, the word with its
+   帯 and No., 正解 in a green box (the strongest text), your answer struck through in a red one, the example, the table, 次へ */
 function showFeedback(it, ok, np, back = -1, opt = {}){
-  const c = it.c, today = dayIdx();
+  const c = it.c, today = dayIdx(), s0 = c.s?.[it.si] || c.s?.[0], pos0 = s0?.p || c.p;
   const hit = (it.type === 'odd' || isSpell(it.type) || it.type === 'flash' || c.isD) ? -1 : it.si;
-  // when it comes back: a right answer on its review day, a miss later in this set (its review day is in 詳しく)
+  // when it comes back: a right answer on its review day, a miss later in this set (its review day is in the table)
   const when = ok ? (np ? `<span class="ivl">次は${ivlText(np.due - today)}</span>` : '')
-    : back >= 0 ? `<span class="ivl again">${back === 0 ? 'すぐにもう一度' : `${back}問あとにもう一度`}</span>` : '';
+    : back >= 0 ? `<span class="ivl again">${QI.redo}${back === 0 ? 'すぐにもう一度' : `${back}問あとにもう一度`}</span>` : '';
   const qb = $('#qbody'); qb.classList.add('answered');
   if (it.type === 'lis' && !opt.quiet) lisReveal(it, ok);
-  qb.querySelectorAll('.csub').forEach(e => e.hidden = false);
-  const head = `<div class="fb-word"><b lang="en">${esc(c.w)}</b>${ipaHTML(c)}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc((c.s[it.si] || c.s[0]).p)}" aria-label="発音">${I.say}</button>${c.n && !c.isD ? `<span class="no">No.${c.n}</span>` : ''}</div>`;
+  const no = (c.n && !c.isD) || obiTag(c) ? `<span class="no">${obiTag(c)}${c.n && !c.isD ? `No.${c.n}` : ''}</span>` : '';
+  const head = `<div class="fb-word"><div class="e-line">${wordHTML(c, s0, 'e-word')}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(pos0)}" aria-label="発音">${QI.say}</button>${no}</div><div class="e-pron">${ipaHTML(c)}</div></div>`;
   const near = ok && Q.cur === it ? Q.near : null;   // おしい: 難しい, and on only after the word is typed right once
   const auto = ok && S.settings.autoNext && !opt.full && !near;
   const canUndo = !ok && np && it.type !== 'flash' && !Q.gaveUp;
   const tn = it.tier || ({4: 3, 3: 2, 2: 1})[it.grade];   // spelling has no tier: 簡単 reads as Excellent
   const rating = ok && !near && (np || Q.opts.practice) && it.first !== null && RATE_NAME[tn] ? `<span class="rate t${tn}">${RATE_NAME[tn]}</span>` : '';
-  const title = near ? '<span class="mk n">△</span>おしい！' : ok ? `<span class="mk o">○</span>正解${rating}` : `<span class="mk x">×</span>${Q.timedOut ? '時間切れ' : Q.gaveUp ? '答えはこれ' : np ? '不正解' : 'まだ覚えていない'}`;
-  // what you answered vs what was right, so the wrong option is corrected explicitly; 押し間違えた sits on your answer
+  const title = near ? '<span class="mk n">△</span>おしい！' : ok ? `<span class="mk o">${QI.check}</span>正解${rating}` : `<span class="mk x">${QI.cross}</span>${Q.timedOut ? '時間切れ' : Q.gaveUp ? '答えはこれ' : np ? '不正解' : 'まだ覚えていない'}`;
+  // 正解 first and largest, then what you answered (struck through, and whose meaning it was); 押し間違えた sits on your answer
   const right = it.type !== 'flash' && !isSpell(it.type) ? Q.choices?.find(o => o.ok) : null;
+  const isEn = t => /^[\x00-\x7F’‘]+$/.test(String(t || ''));
   let cmp = '';
   if (!ok && it.type !== 'flash') {
     const mine = isSpell(it.type) ? (Q.typed ? {text:Q.typed, sub:''} : null) : Q.picked;
-    cmp = `<div class="cmp">${mine ? `<div class="cmp-row ng"><span class="cmp-l">あなた</span><s>${esc(mine.text)}</s>${mine.sub ? `<small>${esc(mine.sub)}</small>` : ''}${canUndo ? '<button class="cmp-undo" data-act="mistap">押し間違えた</button>' : ''}</div>` : ''}
-      <div class="cmp-row ok"><span class="cmp-l">正解</span><b>${esc(isSpell(it.type) ? c.w : right ? right.text : c.w)}</b>${it.type === 'odd' && right ? `<small>${esc(right.sub)}</small>` : ''}</div></div>`;
+    const rt = isSpell(it.type) ? c.w : right ? right.text : c.w, rEn = isEn(rt);
+    const rPos = !rEn && right?.card === c && pos0 ? `<span class="pos">${esc(pos0)}</span>` : '';
+    const src = o => !o.sub ? '' : isEn(o.sub) ? `<b lang="en">${esc(o.sub)}</b> の意味` : esc(o.sub);
+    cmp = `<div class="cmp"><div class="cmp-row ok"><span class="cmp-l">正解</span><p class="cmp-t${rEn ? ' en' : ''}"${rEn ? ' lang="en"' : ''}>${rPos}<b>${esc(rt)}</b></p>${it.type === 'odd' && right ? `<small>${esc(right.sub)}</small>` : ''}</div>
+      ${mine ? `<div class="cmp-row ng"><div class="cmp-a"><span class="cmp-l">あなたの答え</span><s${isEn(mine.text) ? ' lang="en" class="en"' : ''}>${esc(mine.text)}</s>${mine.sub ? `<small>${src(mine)}</small>` : ''}</div>${canUndo ? '<button class="cmp-undo" data-act="mistap">押し間違えた</button>' : ''}</div>`
+        : Q.gaveUp && !Q.timedOut ? '<div class="cmp-row ng"><div class="cmp-a"><span class="cmp-l">あなたの答え</span><span class="cmp-dk">わからない</span></div></div>' : ''}</div>`;
   } else if (near) {
     const [ai, an, bi, bn] = near.sp, mark = (w, i, n) => esc(w.slice(0, i)) + (n ? `<mark>${esc(w.slice(i, i + n))}</mark>` : '<mark class="gap"></mark>') + esc(w.slice(i + n));
-    cmp = `<div class="cmp near"><div class="cmp-row"><span class="cmp-l">あなた</span><span class="cw" lang="en">${mark(near.v, ai, an)}</span></div>
-      <div class="cmp-row ok"><span class="cmp-l">正解</span><b class="cw" lang="en">${mark(c.w, bi, bn)}</b></div></div>`;
+    cmp = `<div class="cmp near"><div class="cmp-row ok"><span class="cmp-l">正解</span><b class="cw" lang="en">${mark(c.w, bi, bn)}</b></div>
+      <div class="cmp-row ng"><div class="cmp-a"><span class="cmp-l">あなたの答え</span><span class="cw" lang="en">${mark(near.v, ai, an)}</span></div></div></div>`;
   }
   const gated = S.settings.senseCards;
-  // after the answer: the 語法 point, a derivative's affix, and in the details 語源・コアイメージ
+  // a right answer: the 語法 point, a derivative's affix, the meanings (詳しく for the rest)
   const use = it.type === 'use' ? useNoteHTML(c, it.si) : '', aff = c.isD ? affixHTML(c) : '';
   const short = use + (c.isD ? `<div class="fb-mean">${esc(c.m)}<span class="muted"> ← ${esc(c.parent.w)}</span></div>${aff}`
     : c.isS ? `<div class="fb-mean">${esc(c.m)}<span class="muted">（${c.si + 1}つ目の意味）</span></div>${sensesProgress(c.parent)}`
     : gated ? sensesGated(c, 0, true)
     : sensesHTML(c, hit, 'none', true));
-  // a miss: after the right meaning (above), one example and how the word is built; the rest behind 詳しく
-  const s0 = c.s?.[it.si] || c.s?.[0], ex = s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null;
-  const exLine = ex ? `<div class="fb-ex" lang="en">${exSay(markWord(ex.e, c.w), ex.e)}</div><div class="fb-ja">${esc(ex.j)}</div>` : '';
-  const shortNg = use + (it.type === 'flash' ? '' : exLine) + (c.isD ? aff : c.isS ? linkHTML(c) : etyHTML(c));
-  const fold = auto || !ok || !!near;   // the short version first, 詳しく for the rest
-  // a look-alike picked by mistake: how to tell the two apart
-  const pk = Q.picked, tip = !ok && pk?.tip && !tipLeaks(pk.tip, [c.isS ? c.parent : c, pk.card]) ? `<div class="ctip"><span class="ety-k">見分け方</span>${esc(pk.tip)}</div>` : '';
-  $('#fb').innerHTML = `<div class="fb ${near ? 'near' : ok ? 'ok' : 'ng'}" ${auto ? 'data-act="fbTap"' : ''}><div class="fb-in">
+  // a miss: that meaning's example (the word marked), then the table; nothing behind 詳しく
+  const ex = s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null;
+  const exLine = ex && it.type !== 'flash' ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${markWord(ex.e, c.w)}</div><div class="fb-ja">${esc(ex.j)}</div></div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '';
+  const pk = Q.picked, tip = !ok && pk?.tip && !tipLeaks(pk.tip, [c.isS ? c.parent : c, pk.card]) ? pk.tip : '';
+  const miss = !ok && !near, fold = auto || !!near;   // a right answer: the short version first, 詳しく for the rest
+  $('#fb').innerHTML = `${miss || near ? '<div class="fb-scrim" aria-hidden="true"></div>' : ''}<div class="fb v2 ${near ? 'near' : ok ? 'ok' : 'ng'}" ${auto ? 'data-act="fbTap"' : ''}><div class="fb-in"><span class="grab" aria-hidden="true"></span><div class="fb-sc">
     <div class="fb-head"><span class="fb-tt">${title}</span><span class="sp"></span>${when}${fold ? '<button class="fb-more" data-act="fbMore">詳しく</button>' : ''}</div>
-    ${cmp}${tip}${head}
-    <div class="fb-body" id="fbshort" ${fold ? '' : 'hidden'}>${ok ? short : shortNg}</div>
-    <div class="fb-body" id="fbmore" ${fold ? 'hidden' : ''}>${detailHTML(it, !ok)}${!ok && np ? `<div class="small muted">次の復習日：${ivlText(np.due - today)}</div>` : ''}</div>
+    ${miss ? head + cmp : cmp + head}
+    <div class="fb-body" id="fbshort" ${fold || miss ? '' : 'hidden'}>${miss ? exLine + factsHTML(it, np, tip) : short}</div>
+    <div class="fb-body" id="fbmore" ${fold || miss ? 'hidden' : ''}>${miss ? '' : detailHTML(it, false)}</div></div>
     <div class="fb-actions" id="fbact" ${auto ? 'hidden' : ''}>${near ? `<div class="retype"><input id="retypein" type="text" inputmode="url" enterkeyhint="next" lang="en" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="正しいつづりを入力" placeholder="正しいつづりを入力"><button class="btn btn-primary" data-act="retypeGo">次へ</button></div>`
       : '<button class="btn btn-primary" data-act="next">次へ</button>'}</div>
   </div></div>`;
@@ -5066,6 +5470,7 @@ function mistap(it = Q?.cur){
   if (!it || !it.after || it.ok) return;
   const lis2 = it === Q.cur && Q.lisNg >= 0, g = lis2 ? 2 : 3;   // 聞き取り's second pick: as if right then (難しい, 聞き取り again next time)
   const np = nextState(it.p0, g); if (lis2) np.nl = 1; setProg(it.c, np); it.after = np; it.first = g; it.ok = true;
+  const hr = Q.hist?.findLast(x => x.it === it); if (hr) hr.res = true;
   const h = Q.hist?.findLast(x => x.it === it && x.bump), kh = h?.bump.kc ? 1 : 0;   // a 知ってる check that was really right
   bumpDaily(kh ? {c:1, rc: isReview(it.p0) ? 1 : 0, kh} : {c:1, rc: isReview(it.p0) ? 1 : 0});
   if (h) { h.bump.c++; if (isReview(it.p0)) h.bump.rc++; if (kh) h.bump.kh = (h.bump.kh || 0) + 1; }
@@ -5076,8 +5481,8 @@ function mistap(it = Q?.cur){
 function markChoices(picked){
   document.querySelectorAll('.choice').forEach((b, j) => {
     const c = Q.choices[j], key = b.querySelector('.key');
-    if (c.ok) { b.classList.add('ok'); key.textContent = '○'; }
-    else if (j === picked || j === Q.lisNg) { b.classList.add('ng'); key.textContent = '×'; }
+    if (c.ok) { b.classList.add('ok'); key.innerHTML = QI.check; }
+    else if (j === picked || j === Q.lisNg) { b.classList.add('ng'); key.innerHTML = QI.cross; }
     else b.classList.add('dim');
   });
 }
@@ -5140,29 +5545,29 @@ const parentLine = c => c.isD && c.parent ? `<div class="parent-line"><span clas
 function reveal(noProg = false){
   if (!Q || Q.answered || Q.revealed === Q.cur || locked()) return; Q.revealed = Q.cur; stopCountdown();
   $('#qcard')?.removeAttribute('data-act');   // the back doesn't turn over again
+  $('.qclock.fl')?.remove();   // the card's bar: its clock has stopped, so it goes
   Q.lockUntil = performance.now() + 200;   // a double tap on 答えを見る doesn't grade the card
   const it = Q.cur, c = it.c, today = dayIdx(), isNew = !isReview(it.p0);
   // under each grade, how it felt (まだムリ / あやしい / 覚えた / 知ってた), not the days: those pulled the choice (the days are on the results)
-  const prev = g => `<small class="jp">${GRADE_FEEL[g]}</small>`;
-  const front = it.flip ? `<div class="qword" lang="en">${esc(c.w)}</div>${ipaHTML(c)}` : '';
+  const prev = g => `<small class="jp">${GRADE_FEEL[g]}</small>`, gb = (g, t, sub) => `<button class="grade g${g}" data-act="grade" data-g="${g}"><b>${t}</b>${sub}</button>`;
+  const front = it.flip ? `<div class="w-line">${wordHTML(c, c.s[it.si] || c.s[0])}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(c.p)}" aria-label="発音を聞く">${QI.say}</button></div><div class="back-pron">${ipaHTML(c)}</div>` : '';
   const back = c.isD || !S.settings.senseCards ? sensesHTML(c, -1, 'all') : c.isS ? sensesGated(c.parent, c.si, false, noProg) : sensesGated(c, 0, false, noProg);
   // a new word's back: 成り立ち・コア (a new meaning: how it links to the ones learned; a derivative: its affix)
   const ety = isNew && it.first === null ? (c.isD ? affixHTML(c) : c.isS ? linkHTML(c) : etyHTML(c)) : '';
   const pron = !it.flip ? `<div class="back-pron">${ipaHTML(c)}</div>` : '';   // every card's answer side: how it sounds
-  $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `<div class="back-face">${front}${pron}${back}${parentLine(c)}${ety}</div>`);
+  const wl = !it.flip && $('#qcard .w-line'); if (wl && pron) wl.insertAdjacentHTML('afterend', pron);   // the reading right under the word
+  $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `${front ? `<div class="back-front">${front}</div>` : ''}<div class="back-face">${back}${parentLine(c)}${ety}</div>`);
   const qp = $('#qcard .qpat'); if (qp && [...document.querySelectorAll('#qcard .back-face .pat')].some(x => x.firstChild?.textContent === qp.textContent)) qp.remove();   // the collocation once: under its meaning
   if (it.flip) playWord(c.w, c.p);
   if (it.first !== null || it.sameDay) {
     // second look in this set (or today's check): the review date is already set, so only "again or got it" matters here
-    $('#qbody').innerHTML = `<div class="grades two">
-      <button class="grade g1" data-act="grade" data-g="1">もう一度<small>このセットでまた出す</small></button>
-      <button class="grade g3" data-act="grade" data-g="3">覚えた<small>次へ進む</small></button></div>
+    $('#qbody').innerHTML = `<p class="g-q">どれくらい覚えてた？</p><div class="grades two">
+      ${gb(1, 'もう一度', '<small>このセットでまた出す</small>')}${gb(3, '覚えた', '<small>次へ進む</small>')}</div>
       <p class="grade-note">${it.sameDay ? `今日のうちの確認です。次の復習は${ivlText(it.p0.due - today)}` : `次の復習は${it.after ? ivlText(it.after.due - today) : '明日'}（1回目の答えで決まっています）`}</p>`;
     return;
   }
-  $('#qbody').innerHTML = `<div class="grades">
-    <button class="grade g1" data-act="grade" data-g="1">もう一度${prev(1)}</button><button class="grade g2" data-act="grade" data-g="2">難しい${prev(2)}</button>
-    <button class="grade g3" data-act="grade" data-g="3">正解${prev(3)}</button><button class="grade g4" data-act="grade" data-g="4">簡単${prev(4)}</button></div>`;
+  $('#qbody').innerHTML = `<p class="g-q">どれくらい覚えてた？</p><div class="grades">
+    ${gb(1, 'もう一度', prev(1))}${gb(2, '難しい', prev(2))}${gb(3, '正解', prev(3))}${gb(4, '簡単', prev(4))}</div>`;
   if (isNew && !Q.opts.practice && tutNew('b1')) tutSay('b1', tutLine('b1'), $('#screen .qstage'));   // the first new card's back: which one to press
 }
 const GRADE_FEEL = {1: 'まだムリ', 2: 'あやしい', 3: '覚えた', 4: '知ってた'};
