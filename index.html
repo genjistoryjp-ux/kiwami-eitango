@@ -2588,7 +2588,7 @@ const MK_LINES = {
   "新しい単語はカード。めくって、覚えてたか自分で選ぶだけ",
   "知らなかったら「もう一度」でOK。減点じゃなくて、おかわり",
   "意味が多い単語も、まず1つ目から。覚えたら次の意味も出すよ",
-  "復習と新しい単語がおわったらゴール。連続が1日のびるよ"
+  "1日1セット（10問）やったら、連続が1日のびるよ"
  ],
  "guide_done": [
   "今日はゴール済み！ 明日はまず復習から",
@@ -2627,10 +2627,10 @@ const MK_LINES = {
   "{n}語、仲間入り！ {when}は復習{how}からね"
  ],
  "tut_home1": [
-  "あと{n}語でゴール！ ゴールした日だけ[連続]が1日のびるよ"
+  "あと{n}語でゴール！ [連続]は1日1セットでのびるよ"
  ],
  "tut_home1hit": [
-  "ゴールした日だけ[連続]がのびるよ。明日もこの火、つけにきてね"
+  "1日1セットで[連続]がのびるよ。明日もこの火、つけにきてね"
  ],
  "tut_home2": [
   "きのうの単語が4択で戻ってきた！速く正解するほど、次は先になるよ"
@@ -3164,11 +3164,16 @@ function bumpDaily(o){
   for (const [f,v] of Object.entries(o)) d[f] = (d[f]||0) + v;
   save(); markDirty('meta');
 }
-/* 連続記録: a day counts when its goal was reached — every review due that day (up to the daily limit) and the day's
-   new words are done (daily.g, set by checkGoal). Days before the goal rule started count if anything was studied. */
-const GOAL_FROM = '2026-10-19';
+/* 連続記録: a day counts once a set's worth of questions (STREAK_N, answered in study sets, not 練習) was done that day,
+   or its goal was reached (daily.g, set by checkGoal). The goal alone was the rule from 2026-10-19 until 2026-10-26; one set
+   is enough now, so a busy day still keeps the streak (the owner, 2026-10-26). Days before 2026-10-19 count if anything was
+   studied. Every day is counted again by this rule. */
+const GOAL_FROM = '2026-10-19', STREAK_N = 10;
 const MILESTONES = [3, 7, 14, 30, 50, 100, 150, 200, 300, 365, 500, 1000];
-function dayOn(k){ const d = S.daily[k]; return !!d && (k < GOAL_FROM ? (d.n || 0) + (d.sw || 0) > 0 : !!d.g); }
+function dayOn(k){ const d = S.daily[k]; return !!d && (k < GOAL_FROM ? (d.n || 0) + (d.sw || 0) > 0 : !!d.g || (d.n || 0) >= STREAK_N); }
+/* questions still to answer today before the streak grows (0 once today counts) */
+const streakLeft = () => streakInfo().done ? 0 : Math.max(1, STREAK_N - (todayStat().n || 0));
+const streakNext = st => `あと${streakLeft()}問で連続${st.n + 1}日${st.n ? '' : '目'}`;
 function streakInfo(){
   const today = dayIdx(), on = new Set(), frozen = new Set();
   const days = Object.keys(S.daily).filter(dayOn).map(k => Math.round(Date.parse(k) / DAY)).sort((a,b) => a - b);
@@ -3199,7 +3204,7 @@ function streakSheet(){
   const g = goalToday(), st = g.st, next = MILESTONES.find(x => x > st.n);
   openSheet(`<div class="sheet-h"><h3>連続記録</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="k-stksh">${streakBlock(g)}
-    <p class="k-stk-rule">${kPhrases(`${st.done ? '今日の目標は達成、また明日も' : '今日の復習と新しい単語を終えると、連続が1日のびる'}${next ? `、${next}日連続まであと${next - st.n}日` : ''}`)}</p>
+    <p class="k-stk-rule">${kPhrases(`${st.done ? '今日はもうつながった、また明日も' : '1日1セット（10問）やると、連続が1日のびる'}${next ? `、${next}日連続まであと${next - st.n}日` : ''}`)}</p>
     ${calBlock(st, g.fr)}${tktBlock(st)}</div>
     <button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
 }
@@ -3786,7 +3791,7 @@ function syncShort(){
 }
 function renderSync(){
   const dot = $('#syncdot'); if (dot) { dot.className = 'syncdot ' + Sync.state; dot.title = syncLabel(); }
-  const b = $('#syncbtn'); if (b) { const s = syncShort(); b.querySelector('.synclab').textContent = s; b.classList.toggle('warn', s === '未保存'); b.classList.toggle('login', s === 'ログイン'); b.setAttribute('aria-label', (Auth.user ? (Auth.user.displayName || Auth.user.email || '') + '、' : '') + '保存の状態：' + syncLabel()); }
+  const b = $('#syncbtn'); if (b) { const s = syncShort(); b.querySelector('.synclab').textContent = s; b.classList.toggle('warn', s === '未保存'); b.classList.toggle('login', s === 'ログイン'); b.setAttribute('aria-label', meLabel()); }
   const t = $('#synctext'); if (t) t.textContent = syncLabel();
 }
 /* not logged in: the home says the record lives only here from the 3rd day of study (not after the very first set), and once
@@ -4023,12 +4028,14 @@ addEventListener('pageshow', dayCheck);
 /* the top bar (new look, on every tab): the 極 tile; the 連続 pill (its ring fills with today's words done ÷ today's goal,
    then お休みチケット) that opens the streak sheet; the account's round face (the icon chosen, else the nickname's or the account name's first letter) that opens
    where the record is saved, or the login (only where there is an account to log in to) */
+/* the top-right face opens 記録 (its profile); where the record is kept is in 設定 → 記録の保存先, the dot only shows it */
+const meLabel = () => { const u = Auth.user, who = nickOf() || (u ? u.displayName || u.email || '' : ''); return `${who ? who + 'の' : ''}プロフィール（保存の状態：${syncLabel()}）`; };
 function topbar(){
   const st = streakInfo(), act = activeIds(), td = todayStat(), c = act.length ? counts(act) : null;
   const done = (td.rn || 0) + (td.nw || 0), left = c ? c.due + c.newToday : 0, fr = st.done ? 1 : done + left ? done / (done + left) : 0;
   const ring = `<svg viewBox="0 0 26 26" fill="none" aria-hidden="true"><circle cx="13" cy="13" r="11" stroke="var(--orange-track)" stroke-width="2.6"/>${fr > 0 ? `<circle cx="13" cy="13" r="11" stroke="var(--orange)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="${(69.1 * fr).toFixed(1)} 69.1" transform="rotate(-90 13 13)"/>` : ''}<path d="M13 6.9c.3 2-.8 3.2-1.8 4.3-1 1.1-2 2.3-2 4.1 0 2.3 1.7 4 3.8 4s3.8-1.7 3.8-3.9c0-1.4-.6-2.5-1.4-3.4-.2.9-.8 1.5-1.5 1.8.3-2-.1-4.8-.9-6.9z" stroke="var(--orange)" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
   const u = Auth.user, name = u ? (u.displayName || u.email || '') : '', who = nickOf() || name;   // the nickname first, else the account's name
-  const av = IS_WEB && FIREBASE || u ? `<button id="syncbtn" class="k-hit k-avatar" data-act="syncInfo" aria-label="${esc(who ? who + '、' : '')}保存の状態：${esc(syncLabel())}">${faceHTML('k-face', name)}<span id="syncdot" class="syncdot ${Sync.state}" aria-hidden="true"></span><span class="synclab sr-only">${syncShort()}</span></button>` : '';
+  const av = IS_WEB && FIREBASE || u ? `<button id="syncbtn" class="k-hit k-avatar" data-act="me" aria-label="${esc(meLabel())}">${faceHTML('k-face', name)}<span id="syncdot" class="syncdot ${Sync.state}" aria-hidden="true"></span><span class="synclab sr-only">${syncShort()}</span></button>` : '';
   return `<header class="k-top v2"><span class="k-logo" role="img" aria-label="極（きわみ）">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span>
     <div class="k-top-r"><button class="k-hit k-streak" data-act="streakSheet" aria-label="連続${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}、お休みチケット${st.freeze}枚"><span class="k-pill" aria-hidden="true"><span class="k-ring">${ring}</span>連続${st.n}日<span class="k-sep"></span><span class="k-tk">${K_ICO.ticket}お休み${st.freeze}枚</span></span></button>${av}</div></header>${iabNote()}`;
 }
@@ -4235,7 +4242,7 @@ function viewHome(){
   const goalN = done + total;
   const title = !act.length ? `<p class="k-hero-title"><span class="big">単語帳を選ぼう</span></p><p class="k-hero-sub">使う単語帳を選ぶと、今日の復習と新しい単語がここに出る</p>`
     : total ? `<p class="k-hero-title"><span class="pre">のこり</span><span class="n">${total}</span><span class="unit">語</span></p><p class="k-hero-sub"><span class="k-ph">目標の${goalN}語まで、</span><span class="k-ph">あと${aboutMin(total)}</span></p>
-      <p class="k-hero-sub k-hero-streak${hit ? ' lit' : ''}">${K_ICO.flame}${hit ? `連続${stk.n}日、今日の分は済み` : `終わると連続${stk.n + 1}日${stk.n ? '' : '目'}`}</p>`
+      <p class="k-hero-sub k-hero-streak${hit ? ' lit' : ''}">${K_ICO.flame}${hit ? `連続${stk.n}日、今日もつながった` : streakNext(stk)}</p>`
     : `<p class="k-hero-title">${done ? `<span class="n">${done}</span><span class="unit">語</span><span class="post">クリア</span>` : '<span class="big">今日の分はクリア</span>'}</p>${hit ? `<p class="k-hero-sub k-hero-streak lit">${K_ICO.flame}連続${stk.n}日になった</p>` : ''}<p class="k-hero-sub">ここからは、やりたい分だけ</p>`;
   // today's road: 済み, 復習, 新しい in the same proportions as their labels (a label never narrower than its text)
   const segs = [['done', done, `済み${done}語`], ['rev', c.due, `復習${c.due}語`], ['new', c.newToday, `新しい${c.newToday}語`]].filter(x => x[1] > 0);
@@ -4613,7 +4620,7 @@ const kBig = (pre, n, unit, of = '') => `<p class="k-big">${pre ? `<span class="
 function goalToday(){
   const st = streakInfo(), td = todayStat(), act = activeIds(), c = act.length ? counts(act) : null;
   const done = (td.rn || 0) + (td.nw || 0), left = c ? c.due + c.newToday : 0;
-  return {st, td, done, left, goal: done + left, fr: st.done ? 1 : done + left ? done / (done + left) : 0};
+  return {st, td, done, left, goal: done + left, fr: td.g ? 1 : done + left ? done / (done + left) : 0};
 }
 function kRing(fr, size, r, w){
   const C = 2 * Math.PI * r, h = size / 2;
@@ -4622,11 +4629,11 @@ function kRing(fr, size, r, w){
 /* the big ring and the streak beside it (also the streak's sheet) */
 function streakBlock(g = goalToday()){
   const {st, td, done, left, goal, fr} = g, mins = Math.round((td.wt || td.t || 0) / 60000);
-  const now = [mins ? `今日は${mins}分` : '', st.done ? '今日の分は済み' : left ? `目標まであと${left}語` : ''].filter(Boolean).join('、');
+  const now = [mins ? `今日は${mins}分` : '', td.g ? '今日の目標は達成' : left ? `目標まであと${left}語` : ''].filter(Boolean).join('、');
   return `<div class="k-stk"><div class="k-stk-ring" role="img" aria-label="${goal ? `今日の目標${goal}語のうち${done}語` : `今日は${done}語`}">${kRing(fr, 108, 48, 10)}
       <div class="in" aria-hidden="true">${K_ICO.flame}<b>${done}</b>${goal ? `<span>／${goal}語</span>` : '<span>語</span>'}</div></div>
     <div class="k-stk-t">${kBig('連続', st.n, '日')}${st.best > st.n ? `<p class="l">自己ベストは${st.best}日</p>` : st.n ? '<p class="l">自己ベストを更新中</p>' : ''}
-      ${now ? `<p class="l ink gap">${kPhrases(now)}</p>` : ''}<p class="l fl${st.done ? ' lit' : ''}">${K_ICO.flame}${st.done ? `連続${st.n}日になった` : `終わると連続${st.n + 1}日${st.n ? '' : '目'}`}</p></div></div>`;
+      ${now ? `<p class="l ink gap">${kPhrases(now)}</p>` : ''}<p class="l fl${st.done ? ' lit' : ''}">${K_ICO.flame}${st.done ? `連続${st.n}日になった` : streakNext(st)}</p></div></div>`;
 }
 /* the month's calendar, Sunday first: the days done joined by a band (cut at the week's ends), a day an お休みチケット kept the
    streak on the band with the ticket, today the small ring (today's progress), the rest grey */
@@ -4881,7 +4888,7 @@ const xpHas = d => !!d && Object.keys(d).some(isXpKey);
 function xpEst(k, d){
   if (!d) return 0;
   const n = d.n || 0, nw = Math.min(n, d.nw || 0), rn = Math.max(0, d.rn ?? n - nw), rc = Math.max(0, Math.min(rn, d.rc ?? (d.c || 0) - nw));
-  return XP.rev * rc + XP.miss * (rn - rc) + XP.nw * nw + XP.set * Math.ceil(n / 10) + (dayOn(k) && (n > 0 || d.g) ? XP.goal : 0);
+  return XP.rev * rc + XP.miss * (rn - rc) + XP.nw * nw + XP.set * Math.ceil(n / 10) + ((k < GOAL_FROM ? n + (d.sw || 0) > 0 : d.g) && (n > 0 || d.g) ? XP.goal : 0);   // the goal's 20: the goal reached (not the streak's one set)
 }
 function xpDay(k, d){
   if (!xpHas(d)) return xpEst(k, d);
@@ -5077,8 +5084,10 @@ function pickSheet(k){
 }
 /* 記録の保存先: where the record is now (renderSync keeps #synctext up to date), and logging in or out */
 function saveSheet(){
+  let ft = '';   // a part not saved yet: try it again now, and say why when it cannot be (this was the top-right face's tap before it opened the profile)
+  if (Auth.user && Sync.state === 'err') { ft = fatalText() || '一部の記録がまだクラウドに保存できていません（この端末には残っています）。通信が戻ると自動で保存します'; for (const b of Object.values(Sync.bad)) if (!b.fatal) b.at = 0; Sync.synced === Sync.col ? flush(true) : pull(); }
   openSheet(`<div class="sheet-h"><h3>記録の保存先</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-    <div class="k-grp"><div class="k-srow"><span class="txt"><span class="lab">${Auth.user ? 'アカウント' : 'この端末'}</span><span class="sub ml" id="synctext">${esc(syncLabel())}</span></span></div></div>
+    <div class="k-grp"><div class="k-srow"><span class="txt"><span class="lab">${Auth.user ? 'アカウント' : 'この端末'}</span><span class="sub ml" id="synctext">${esc(syncLabel())}</span>${ft ? `<span class="sub ml">${esc(ft)}</span>` : ''}</span></div></div>
     ${IS_WEB && FIREBASE ? (Auth.user ? '<button class="btn btn-ghost btn-block" data-act="signOut">ログアウト</button>' : '<button class="btn btn-primary btn-block" data-act="signIn">ログインして記録を保存</button>') : ''}
     <button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
 }
@@ -6443,8 +6452,8 @@ function renderResults(){
   const revTail = k => `、復習はのこり${k}語`;
   const nextBtn = () => {
     if (hasMore && goOn) return {main: go('studyReview', '復習の続きをやる', 'more', setN(revMore), revTail(revMore), {more: 1}), subs: [sub('goNew', `新しい単語へ ${setN(more.newToday)}問`, setN(more.newToday))]};
-    if (hasMore) return {main: more.due ? go('studyReview', reviewed ? '復習の続きをやる' : '復習をはじめる', 'review', nextN, before.done ? `、今日あと${rem}問` : sets <= 1 ? `、終えると連続${before.n + 1}日` : revTail(more.due))
-        : go('goNew', '新しい単語へ', 'new', nextN, before.done ? `、今日あと${rem}問` : sets <= 1 ? `、終えると連続${before.n + 1}日` : ''),
+    if (hasMore) return {main: more.due ? go('studyReview', reviewed ? '復習の続きをやる' : '復習をはじめる', 'review', nextN, before.done ? `、今日あと${rem}問` : !streakInfo().done ? `、終えると連続${before.n + 1}日` : revTail(more.due))
+        : go('goNew', '新しい単語へ', 'new', nextN, before.done ? `、今日あと${rem}問` : !streakInfo().done ? `、終えると連続${before.n + 1}日` : ''),
       subs: revMore ? [sub('studyReview', `復習を続ける（のこり${revMore}語）`, setN(revMore), {more: 1})] : []};
     // the goal reached: reviews still left come first (the next deck below them), then the next deck, then more new words
     const ndGo = nd && {act: 'nextDeck', id: nd.to.id, main: `${bookName(nd.to)}もはじめる`, decks: [nd.to], k: setN(S.settings.setSize),
@@ -7449,12 +7458,7 @@ const ACT = {
   signIn: t => t.dataset.kind ? signIn(t.dataset.kind) : loginSheet(),
   resetPass: () => resetPass(),
   signOut: () => signOutNow(),
-  syncInfo: () => {
-    if (!Auth.user) { if (Auth.api) loginSheet(); else toast(Auth.failed ? 'ログイン機能を読み込めませんでした。通信が戻ると自動でつなぎ直します' : '準備中です。少し待ってからお試しください'); return; }
-    if (Sync.state === 'err') { const ft = fatalText(); for (const b of Object.values(Sync.bad)) if (!b.fatal) b.at = 0; Sync.synced === Sync.col ? flush(true) : pull();
-      toast(ft || '一部の記録がまだクラウドに保存できていません（この端末には残っています）。通信が戻ると自動で保存します', null, 4000); return; }
-    toast(syncLabel(), null, 3000);
-  },
+  me: () => { if (route.tab !== 'stats') SCROLL[route.tab] = scrollY; route.from = null; route.tab = 'stats'; render(); scrollTo(0, 0); },
   nudgeLogin: () => loginSheet(),
   nudgeLater: t => { t.closest('.nudge')?.remove(); lsSet(NUDGE_DAY, ''); },
   // ホーム画面に入れとこ: やり方を見る / あとで both put it off (once more 7 days later); 設定's やり方 just shows the steps
