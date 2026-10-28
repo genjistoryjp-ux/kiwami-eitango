@@ -4,17 +4,24 @@
    - audio sprites (words sNNN, example sentences eNNN): cached on first play (the words also all at once from 設定).
      A sprite file never changes (tools/pack_*.py put new audio in new files), so this cache keeps one name and is never cleared
    - the login / sync library (Firebase, one fixed version): cached on first use, so an offline start still syncs later
-   - Google Fonts: served from cache, refreshed in the background */
-const APP = 'kyokutan-app-4a05d1a1e3';
+   - Google Fonts: served from cache, refreshed in the background
+   - the page's data (d/: each deck, the audio indexes…): named by a hash of what they hold, so a file never changes; saved
+     at install, served from the cache, and a file the current page no longer names is dropped */
+const APP = 'kyokutan-app-96a1bf4a85';
 const AUDIO = 'kyokutan-audio';
 const AUDIO_OLD = 'kyokutan-audio-f026ca2bc4';   // the last name that changed with the audio set: the same files, so they move over
 const FONTS = 'kyokutan-fonts-v1';
+const DATA = 'kyokutan-data';
+const DATA_FILES = ["./d/deck_j1.f688abaefa.js", "./d/deck_j2.cc616c09c9.js", "./d/deck_j3.8e221f6bd2.js", "./d/deck_idioms.d32c42de25.js", "./d/deck_toeic.c1c4b899bf.js", "./d/deck_junior.b556b0c816.js", "./d/deck_tagi.e54ab562d5.js", "./d/deck_theme.2435bcc8fb.js", "./d/aud.2708c763ee.js", "./d/exi.dd85173111.js", "./d/mekuru.80e52ef710.js", "./d/extra.8d13f92ebd.js"];
 const LIB = 'kyokutan-lib-10.12.2';
 const PAGE_WAIT = 3000;
 const SHELL = ['./', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(APP).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(Promise.all([caches.open(APP).then(c => c.addAll(SHELL)), caches.open(DATA).then(async c => {
+    const have = new Set((await c.keys()).map(r => new URL(r.url).pathname.split('/').pop()));
+    await c.addAll(DATA_FILES.filter(f => !have.has(f.split('/').pop())));   // only the files this version added
+  })]).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
@@ -23,7 +30,9 @@ self.addEventListener('activate', e => {
       const from = await caches.open(AUDIO_OLD), to = await caches.open(AUDIO);
       for (const req of await from.keys()) { const res = await from.match(req); if (res) await to.put(req, res); }
     }
-    for (const k of await caches.keys()) if (k.startsWith('kyokutan-') && ![APP, AUDIO, FONTS, LIB].includes(k)) await caches.delete(k);
+    for (const k of await caches.keys()) if (k.startsWith('kyokutan-') && ![APP, AUDIO, FONTS, LIB, DATA].includes(k)) await caches.delete(k);
+    const keep = new Set(DATA_FILES.map(f => f.split('/').pop())), dc = await caches.open(DATA);
+    for (const r of await dc.keys()) if (!keep.has(new URL(r.url).pathname.split('/').pop())) await dc.delete(r);
     await self.clients.claim();
   })());
 });
@@ -77,5 +86,6 @@ self.addEventListener('fetch', e => {
   if (url.origin !== location.origin) return;
   if (req.mode === 'navigate' || url.pathname.endsWith('/index.html')) return e.respondWith(networkFirst(req, fetchPage(e)));
   if (url.pathname.includes('/audio/')) return e.respondWith(cacheFirst(req, AUDIO));
+  if (url.pathname.includes('/d/')) return e.respondWith(cacheFirst(req, DATA));
   e.respondWith(cacheFirst(req, APP));
 });
