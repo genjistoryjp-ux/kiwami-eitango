@@ -1,13 +1,15 @@
-/* 極（きわみ） service worker: the app works offline after the first visit.
-   - the page: network first, so a new version arrives as soon as you are online; on a weak signal (no answer in 3 s)
-     the saved page opens, and the download carries on in the background for next time
+/* 極（きわみ） service worker, at the site's root (scope /): the app (/app/) works offline after the first visit, and the site's
+   pages (the home /, /ranking/…) open offline once seen.
+   - the pages: network first, so a new version arrives as soon as you are online; on a weak signal (no answer in 3 s)
+     the saved page opens, and the download carries on in the background for next time. Whatever the network answers in
+     time is what opens, a 404 or other error page included (no saved home in place of a page that is not there)
    - audio sprites (words sNNN, example sentences eNNN): cached on first play (the words also all at once from 設定).
      A sprite file never changes (tools/pack_*.py put new audio in new files), so this cache keeps one name and is never cleared
    - the login / sync library (Firebase, one fixed version): cached on first use, so an offline start still syncs later
    - Google Fonts: served from cache, refreshed in the background
    - the page's data (d/: each deck, the audio indexes…): named by a hash of what they hold, so a file never changes; saved
      at install, served from the cache, and a file the current page no longer names is dropped */
-const APP = 'kyokutan-app-119cbe5ae7';
+const APP = 'kyokutan-app-9437e39fac';
 const AUDIO = 'kyokutan-audio';
 const AUDIO_OLD = 'kyokutan-audio-f026ca2bc4';   // the last name that changed with the audio set: the same files, so they move over
 const FONTS = 'kyokutan-fonts-v1';
@@ -15,7 +17,8 @@ const DATA = 'kyokutan-data';
 const DATA_FILES = ["./d/deck_j1.f688abaefa.js", "./d/deck_j2.cc616c09c9.js", "./d/deck_j3.8e221f6bd2.js", "./d/deck_idioms.d32c42de25.js", "./d/deck_toeic.c1c4b899bf.js", "./d/deck_junior.b556b0c816.js", "./d/deck_tagi.e54ab562d5.js", "./d/deck_theme.2435bcc8fb.js", "./d/aud.2708c763ee.js", "./d/exi.dd85173111.js", "./d/mekuru.80e52ef710.js", "./d/extra.8d13f92ebd.js"];
 const LIB = 'kyokutan-lib-10.12.2';
 const PAGE_WAIT = 3000;
-const SHELL = ['./', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
+const PAGES = ["./", "./app/"];   // the pages saved at install (the site's home and the app at ./app/; build.py fills it in)
+const SHELL = [...PAGES, './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(Promise.all([caches.open(APP).then(c => c.addAll(SHELL)), caches.open(DATA).then(async c => {
@@ -59,12 +62,14 @@ function fetchPage(e) {
 
 async function networkFirst(req, net) {
   const c = await caches.open(APP);
-  const hit = (await c.match(req)) || (await c.match('./')) || (await c.match('./index.html'));
+  // the saved copy of this page (with or without its ?query), else the saved page it belongs under (the app for /app/…, else the home)
+  const path = new URL(req.url).pathname, base = PAGES.map(p => new URL(p, self.registration.scope).pathname).filter(p => path.startsWith(p)).sort((a, b) => b.length - a.length)[0];
+  const hit = (await c.match(req)) || (await c.match(req, {ignoreSearch: true})) || (base && (await c.match(base))) || (await c.match('./')) || (await c.match('./index.html'));
   if (!hit) return net.catch(() => Response.error());
   const late = new Promise(r => setTimeout(r, PAGE_WAIT, null));
   try {
     const res = await Promise.race([net, late]);
-    return res && res.ok ? res : hit;                // no answer within 3 s, or an error page: the saved page
+    return res || hit;                               // the network's answer, even a 404; no answer within 3 s: the saved page
   } catch (err) {
     return hit;
   }

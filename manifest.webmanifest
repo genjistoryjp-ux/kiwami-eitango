@@ -3,7 +3,7 @@
  "short_name": "極",
  "description": "中学の基礎から難関大まで、共通テスト・大学入試に出る英単語を無料で覚えるアプリ。受験英単語2,500語・熟語1,026・多義語を、派生語や発音・例文といっしょに。忘れかけたころに自動で復習。登録なし・広告なし。",
  "lang": "ja",
- "start_url": "./",
+ "start_url": "./app/",
  "scope": "./",
  "display": "standalone",
  "orientation": "portrait",

@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>プライバシーポリシー｜極（きわみ）</title>
+<meta name="description" content="極（きわみ）のアプリが保存する情報、保存先と見られる人、消し方。">
+<link rel="canonical" href="https://kiwami-eitango.com/privacy/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="極（きわみ）"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="プライバシーポリシー｜極（きわみ）"><meta property="og:description" content="極（きわみ）のアプリが保存する情報、保存先と見られる人、消し方。"><meta property="og:url" content="https://kiwami-eitango.com/privacy/"><meta property="og:image" content="https://kiwami-eitango.com/ogp.png?v=eff554af"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="極（きわみ）英単語アプリ"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111114" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" href="/icons/favicon-64.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* the site's pages (トップ, ランキング, プライバシーポリシー): build.py puts this file inline in each page.
+   Look: white, one blue (--brand #083FF9), greys, 1px lines, no shadows or gradients; mobile first (375px), two columns from 900px */
+:root{
+  --blue:#083FF9; --blue-ink:#0530B8; --blue-50:#EEF2FF; --on-blue:#fff;
+  --brand:#083FF9; --hero-bg:var(--brand); --field-bg:#fff; --field-ink:#1a1a1a; --field-ico:#757575; --field-ph:#757575; --btn-bg:#1a1a1a;
+  --ink:#1a1a1a; --sub:#5f5f5f; --mute:#6e6e6e; --line:#e5e5e5; --bg:#fff; --card:#fff; --soft:#f6f7f9;
+  --app-bg:rgba(8,63,249,.06); --app-line:rgba(8,63,249,.14); --bar-off:#e5e5e5; --dot-off:#cfcfcf;
+  --r:8px;
+  --jp:"Noto Sans JP","Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;
+  --en:"Figtree","Noto Sans JP",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --blue:#5C7CFF; --blue-ink:#AFC0FF; --blue-50:#1B2240; --hero-bg:#14245E;
+    --ink:#ececee; --sub:#a9a9b0; --mute:#8d8d95; --line:#2c2c33; --bg:#111114; --card:#17171b; --soft:#18181d;
+    --app-bg:rgba(92,124,255,.10); --app-line:rgba(92,124,255,.24); --bar-off:#2c2c33; --dot-off:#4a4a52;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.7 var(--jp)}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{text-wrap:balance;word-break:auto-phrase;overflow-wrap:anywhere}
+.nw{display:inline-block}
+a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:3px}
+::selection{background:var(--blue-50);color:var(--ink)}
+.en,[lang="en"]{font-family:var(--en)}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* header */
+.hd{background:var(--bg);border-bottom:1px solid var(--line)}
+.hd .wrap{height:56px;display:flex;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:8px;flex-shrink:0;min-width:0}
+.tile{width:32px;height:32px;border-radius:7px;background:var(--brand);display:grid;place-items:center;flex:none}
+.tile img{width:24px;height:24px;display:block}
+.logo b{font-size:18px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.logo small{display:none;color:var(--sub);font-size:12px;margin-left:6px;padding-left:10px;border-left:1px solid var(--line);line-height:1.3}
+.hd-r{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:14px;font-weight:500}
+.hd-r a:hover{color:var(--blue)}
+.hd-r .applink{color:var(--blue);font-weight:700}
+.hd-r .rklink{display:none}
+
+/* hero: the search */
+.hero{background:var(--hero-bg);color:#fff}
+.hero a:focus-visible,.hero button:focus-visible{outline-color:#fff}
+.hero .wrap{padding-top:20px;padding-bottom:20px}
+.hero-in{max-width:760px}
+.hero h1{margin:0 0 12px;font-size:21px;line-height:1.4;font-weight:700;letter-spacing:.01em}
+.sbox{display:flex;align-items:center;background:var(--field-bg);border-radius:var(--r);height:52px;padding:4px 4px 4px 14px;gap:8px;margin:0}
+.sbox:focus-within{outline:3px solid #fff;outline-offset:2px}
+.sbox svg{width:20px;height:20px;color:var(--field-ico);flex-shrink:0}
+.sbox input{flex:1;min-width:0;border:0;outline:0;font:400 16px var(--jp);color:var(--field-ink);background:none;-webkit-appearance:none;appearance:none}
+.sbox input::placeholder{color:var(--field-ph)}
+.sbox input::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+.sbox button{height:44px;padding:0 18px;border:0;border-radius:6px;background:var(--btn-bg);color:#fff;font:700 15px var(--jp);cursor:pointer}
+.sbox button:hover{background:#000}
+.sbox button:active{transform:translateY(1px)}
+@media (max-width:379px){.sbox button{padding:0 14px}}
+.qw{margin-top:12px;font-size:13px;line-height:1.6;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
+.qw span{color:rgba(255,255,255,.82)}
+.qw a{padding:3px 0;font-family:var(--en);font-weight:600;font-size:15px;text-decoration:underline;text-decoration-color:rgba(255,255,255,.5);text-underline-offset:3px}
+.hint{margin:8px 0 0;font-size:12px;color:rgba(255,255,255,.82)}
+
+/* layout: one column on a phone (ranking first), main + side from 900px */
+.page{display:flex;flex-direction:column}
+.col-m,.col-s{display:contents}
+.a-rank{order:1}.a-miss{order:2}.a-app{order:3}.a-about{order:4}
+.a-app{margin-top:32px}
+.a-about{margin-top:12px}
+.sec{padding:32px 0 0}
+.sh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sh h2{margin:0;font-size:20px;line-height:1.4;font-weight:700}
+.sh a{font-size:13px;color:var(--blue);white-space:nowrap;flex-shrink:0}
+.lead{margin:-4px 0 14px;font-size:14px;color:var(--sub);line-height:1.65}
+
+/* ranking */
+.rk{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card)}
+.rk-hd,.rk-row{display:grid;grid-template-columns:28px minmax(0,1fr) 40px 44px;gap:10px;padding:9px 14px;align-items:center}
+.rk-hd{padding:7px 14px;background:var(--soft);border-bottom:1px solid var(--line);font-size:12px;color:var(--sub);line-height:1.4}
+.rk-hd span:nth-child(n+3){text-align:right}
+.rk-row{border-top:1px solid var(--line);position:relative}
+.rk-row:hover{background:var(--soft)}
+.rk-hd + .rk-row{border-top:0}
+.rk-n{font:700 15px var(--en);color:var(--mute);text-align:center}
+.rk-n.top{color:#fff;background:var(--brand);border-radius:5px;height:24px;line-height:24px;font-size:13px}
+.rk-w{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
+.rk-w a{font:700 16px var(--en);color:var(--ink);margin-right:8px}
+.rk-w a::after{content:"";position:absolute;inset:0}
+.rk-row:hover .rk-w a{color:var(--blue)}
+.rk-w a:focus-visible{outline:0}
+.rk-row:has(a:focus-visible){outline:2px solid var(--blue);outline-offset:-2px}
+.rk-w span{font-size:13px;color:var(--sub)}
+.rk-x{font-style:normal;font-size:12px;font-weight:700;color:var(--blue-ink);margin-right:4px}
+.rk.full .rk-x{display:inline-block;background:var(--blue-50);border-radius:3px;padding:0 5px;line-height:1.6;margin-right:6px;vertical-align:1px}
+.rk-v{text-align:right;font:700 16px var(--en);line-height:1.3}
+.rk-v small{font-family:var(--jp);font-size:12px;font-weight:500;margin-left:1px}
+.rk-c{text-align:right;font-size:12px;color:var(--mute);line-height:1.3}
+.rk-foot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:8px}
+.rk-note{margin:0;font-size:13px;color:var(--mute);line-height:1.6}
+.rk-foot a{font-size:13px;color:var(--blue);white-space:nowrap;font-weight:500}
+
+/* 意味をまちがえやすい単語 */
+.miss{display:grid;gap:12px}
+.card{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:var(--card);min-width:0}
+.hw{display:flex;align-items:baseline;gap:10px;margin:0 0 2px}
+.hw a{font:700 28px/1.2 var(--en)}
+.hw .pos{font-size:13px;color:var(--sub)}
+.card h3{margin:0 0 12px;font-size:16px;line-height:1.55}
+.bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--bar-off)}
+.bar i{display:block;background:var(--blue)}
+.bar-l{list-style:none;margin:10px 0 0;padding:0;font-size:14px}
+.bar-l li{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-top:1px solid var(--line)}
+.bar-l li:first-child{border-top:0}
+.bar-l b{font-family:var(--en);white-space:nowrap}
+.dot{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--blue);margin-right:6px;vertical-align:1px}
+.dot.g{background:var(--dot-off)}
+.more{display:inline-block;margin-top:12px;font-size:14px;color:var(--blue);font-weight:500}
+.cnote{margin:10px 0 0;font-size:13px;color:var(--mute);line-height:1.6}
+.ml{list-style:none;margin:4px 0 0;padding:0}
+.ml li{padding:10px 0;border-top:1px solid var(--line)}
+.ml li:first-child{border-top:0;padding-top:4px}
+.ml .r1{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ml .w{font:700 18px var(--en)}
+.ml .w:hover{color:var(--blue)}
+.ml .m1{font-size:13px;color:var(--mute);line-height:1.5}
+.ml .m2{display:block;margin-top:2px;font-size:15px;font-weight:700;line-height:1.5}
+.ml .m2 i{font-style:normal;font-size:12px;font-weight:700;color:var(--blue-ink);background:var(--blue-50);border-radius:3px;padding:1px 5px;margin-right:6px;vertical-align:2px}
+
+/* side boxes */
+.appbox{background:var(--app-bg);border:1px solid var(--app-line);border-radius:var(--r);padding:14px 16px;display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;align-items:center}
+.appbox img{width:52px;height:52px;display:block}
+.appbox b{display:block;font-size:15px;line-height:1.45}
+.appbox p{margin:2px 0 6px;font-size:13px;color:var(--sub);line-height:1.5}
+.appbox a{font-size:14px;color:var(--blue);font-weight:700}
+.box{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--card)}
+.box h2{margin:0 0 8px;font-size:15px;font-weight:700}
+.box p{margin:0;font-size:13px;color:var(--sub);line-height:1.7}
+.box p + p{margin-top:6px}
+.box .src{color:var(--ink)}
+
+/* article pages (ランキング, プライバシーポリシー) */
+.crumb{font-size:12px;color:var(--mute);padding-top:14px}
+.crumb a{color:var(--sub)}
+.crumb a:hover{color:var(--blue)}
+.art{max-width:760px}
+.art h1{margin:8px 0 10px;font-size:20px;line-height:1.45;font-weight:700}
+.art h2{margin:32px 0 10px;font-size:18px;line-height:1.45}
+.art p{margin:0 0 12px;font-size:15px;line-height:1.85}
+.art .lede{color:var(--sub)}
+.how{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--soft);margin:24px 0 0}
+.art .rk.full{margin-top:16px}
+.how summary{cursor:pointer;font-weight:700;font-size:15px}
+.how[open] summary{margin-bottom:6px}
+.how summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.how ul{margin:0;padding-left:1.2em;font-size:14px;line-height:1.75}
+.how li + li{margin-top:4px}
+.rk.full .rk-hd,.rk.full .rk-row{grid-template-columns:30px minmax(0,1fr) 40px 44px}
+.rk.full .rk-w{white-space:normal;overflow:visible}
+.rk.full .rk-w span{display:block;font-size:13px;margin-top:1px}
+.pv{list-style:none;margin:16px 0 0;padding:0;border-top:1px solid var(--line)}
+.pv li{padding:14px 0;border-bottom:1px solid var(--line)}
+.pv b{display:block;font-size:15px;margin-bottom:4px}
+.pv span{display:block;font-size:15px;line-height:1.8;color:var(--sub)}
+.art .upd{margin:14px 0 0;font-size:13px;color:var(--mute)}
+.art .appbox{margin-top:28px}
+
+/* footer */
+.ft{margin-top:48px;background:var(--soft);border-top:1px solid var(--line);font-size:13px;color:var(--sub)}
+.ft .wrap{padding-top:28px;padding-bottom:24px}
+.ft-logo{display:flex;align-items:center;gap:8px;color:var(--ink);margin-bottom:6px}
+.ft-logo .tile{width:26px;height:26px;border-radius:6px}.ft-logo .tile img{width:19px;height:19px}
+.ft-logo b{font-size:15px}
+.ft-d{margin:0 0 16px;line-height:1.6}
+.ft-l{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 22px;line-height:2}
+.ft-l a:hover{color:var(--blue)}
+.ft-c{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+
+@media (min-width:900px){
+  .logo small{display:block}
+  .hd-r .rklink{display:inline}
+  .hero .wrap{padding-top:36px;padding-bottom:32px}
+  .hero h1{font-size:26px;margin-bottom:16px}
+  .sbox{height:60px}
+  .sbox input{font-size:18px}
+  .sbox button{height:52px;padding:0 28px;font-size:16px}
+  .page{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:0 40px;align-items:start}
+  .col-m,.col-s{display:block}
+  .col-s{padding-top:36px}
+  .col-s > *{margin-top:16px}
+  .col-s > *:first-child{margin-top:0}
+  .col-s .sec{padding-top:0}
+  .col-s .rk-row,.col-s .rk-hd{padding-left:12px;padding-right:12px;gap:8px}
+  .a-about{margin-top:16px}
+  .sec{padding-top:36px}
+  .sh h2{font-size:22px}
+  .a-rank .sh h2{font-size:17px}
+  .a-rank .lead{font-size:13px}
+  .art h1{font-size:28px}
+  .rk.full .rk-hd,.rk.full .rk-row{grid-template-columns:40px minmax(0,1fr) 56px 56px;padding-left:18px;padding-right:18px}
+  .rk.full .rk-w span{display:inline;font-size:14px;margin-top:0}
+}
+</style>
+</head>
+<body>
+<header class="hd">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="極（きわみ）トップ">
+      <span class="tile"><img src="/assets/brand.png" alt="" width="24" height="24"></span>
+      <b>極（きわみ）</b>
+      <small>英単語の意味と<br>入試データ</small>
+    </a>
+    <nav class="hd-r" aria-label="メイン">
+      <a class="rklink" href="/ranking/kyotsu/">共通テスト英単語ランキング</a>
+      <a class="applink" href="/app/">無料アプリ</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<nav class="crumb" aria-label="現在地"><a href="/">トップ</a> › プライバシーポリシー</nav>
+<article class="art">
+  <h1>プライバシーポリシー</h1>
+  <p class="lede">極（きわみ）のアプリが保存する情報と、その保存先、消し方です。アプリの「設定 → 記録とプライバシー」と同じ内容です。</p>
+  <ul class="pv">
+    <li><b>保存するもの</b><span>学習記録（どの単語にいつ答えて、合っていたか）、設定、自作の単語帳とメモ。ログイン中は、メールアドレスと名前も保存します。</span></li>
+    <li><b>保存先と、見られる人</b><span>ログインしないと、この端末の中だけに保存します（どこにも送りません）。ログインすると、アカウント（GoogleのFirebase）にも保存します。ほかの人からは見えません（運営者が不具合を調べるときに見ることはあります）。</span></li>
+    <li><b>集計</b><span>アカウントの記録を、だれのものかわからない形にまとめて、出題の改善に使うことがあります。</span></li>
+    <li><b>消し方</b><span>アプリの「設定 → 学習記録をリセット」で消せます（ログイン中はアカウントの記録も）。自作の単語帳は、その単語帳のページで消せます。</span></li>
+  </ul>
+  <p class="upd">最終更新：2026年10月29日</p>
+</article>
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-logo"><span class="tile"><img src="/assets/brand.png" alt="" width="19" height="19"></span><b>極（きわみ）</b></div>
+    <p class="ft-d">受験英単語の意味と、入試での使われ方のデータ</p>
+    <ul class="ft-l">
+      <li><a href="/ranking/kyotsu/">共通テスト英単語ランキング</a></li>
+      <li><a href="/app/">アプリを開く</a></li>
+      <li><a href="/privacy/">プライバシーポリシー</a></li>
+    </ul>
+    <div class="ft-c">© 2026 極（きわみ）</div>
+  </div>
+</footer>
+</body>
+</html>
