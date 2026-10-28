@@ -1275,6 +1275,7 @@ html{touch-action:manipulation}
 .k-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:-4px}
 #view:not(.home) > .k-top{margin-bottom:10px}   /* the tabs not redone yet: the old gap under the bar, and a white pill on their grey page */
 #view:not(.v2) .k-pill{background:var(--surface)}
+a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .k-logo{width:36px;height:36px;flex:none;border-radius:var(--r-logo);background:var(--logo);color:#fff;display:grid;place-items:center;position:relative;font-size:20px;font-weight:800}
 .k-logo i{position:absolute;left:3.5px;top:3.5px;width:29px;height:29px;background:#fff;-webkit-mask:var(--brand) center/100% 100% no-repeat;mask:var(--brand) center/100% 100% no-repeat}
 .k-top-r{display:flex;align-items:center;gap:6px;min-width:0}
@@ -4272,7 +4273,8 @@ function topbar(){
   const ring = `<svg viewBox="0 0 26 26" fill="none" aria-hidden="true"><circle cx="13" cy="13" r="11" stroke="var(--orange-track)" stroke-width="2.6"/>${fr > 0 ? `<circle cx="13" cy="13" r="11" stroke="var(--orange)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="${(69.1 * fr).toFixed(1)} 69.1" transform="rotate(-90 13 13)"/>` : ''}<path d="M13 6.9c.3 2-.8 3.2-1.8 4.3-1 1.1-2 2.3-2 4.1 0 2.3 1.7 4 3.8 4s3.8-1.7 3.8-3.9c0-1.4-.6-2.5-1.4-3.4-.2.9-.8 1.5-1.5 1.8.3-2-.1-4.8-.9-6.9z" stroke="var(--orange)" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
   const u = Auth.user, name = u ? (u.displayName || u.email || '') : '', who = nickOf() || name;   // the nickname first, else the account's name
   const av = IS_WEB && FIREBASE || u ? `<button id="syncbtn" class="k-hit k-avatar" data-act="me" aria-label="${esc(meLabel())}">${faceHTML('k-face', name)}<span id="syncdot" class="syncdot ${Sync.state}" aria-hidden="true"></span><span class="synclab sr-only">${syncShort()}</span></button>` : '';
-  return `<header class="k-top v2"><span class="k-logo" role="img" aria-label="極（きわみ）">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span>
+  const glyph = BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極';   // on the web the logo goes back to the site's home (?home: a learner is not sent straight back here)
+  return `<header class="k-top v2">${IS_WEB ? `<a class="k-logo" href="/?home" aria-label="極（きわみ）のトップページへ">${glyph}</a>` : `<span class="k-logo" role="img" aria-label="極（きわみ）">${glyph}</span>`}
     <div class="k-top-r"><button class="k-hit k-streak" data-act="streakSheet" aria-label="連続${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}、お休みチケット${st.freeze}枚"><span class="k-pill" aria-hidden="true"><span class="k-ring">${ring}</span>連続${st.n}日<span class="k-sep"></span><span class="k-tk">${K_ICO.ticket}お休み${st.freeze}枚</span></span></button>${av}</div></header>${iabNote()}`;
 }
 /* n / l / m: 未学習・学習中・覚えた by status(); r: 学習ずみ (learnedIn) and pct, the deck's % (deckPct); q: sorted as まだ, not
