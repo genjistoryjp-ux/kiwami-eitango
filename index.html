@@ -8187,7 +8187,7 @@ const ACT = {
   djGo: t => { const id = t.dataset.id; closeSheet(); if (!$('#screen').hidden) closeScreen();
     if (id === 'kw') { route.tab = 'decks'; route.deck = null; route.dq = ''; render(); scrollTo(0, 0); } else ACT.openDeck({dataset: {id}});
     const el = $('#dj-' + id); if (el && !el.dataset.new) el.scrollIntoView({block: 'center'}); },
-  backup: () => offerFile(`kyokutan-backup-${dayKey(dayIdx())}.json`, backupJSON()),
+  backup: () => offerFile(`kiwami-backup-${dayKey(dayIdx())}.json`, backupJSON()),   // the old name (極単, kyokutan) is someone else's app now: never shown
   restoreSheet: () => openSheet(`<div class="sheet-h"><h3>バックアップから戻す</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <p class="small muted">書き出した .json ファイルを選ぶか、中身を貼り付けてください。今の記録は置き換わります。</p>
     <input type="file" id="rfile" accept=".json,application/json" class="input"><textarea class="textarea" id="rtext" placeholder='{"app":"tangoloop", ...}'></textarea>
