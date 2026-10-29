@@ -343,6 +343,31 @@ ol.ms > li{scroll-margin-top:16px}
   .wside{position:sticky;top:16px;margin-top:24px}
   .wd .bar-l,.wd .warn{max-width:600px}
 }
+
+/* 受験英単語一覧 (/words/) */
+.wli h1{margin:8px 0 6px}
+.wli .wsec h2 small{font-size:13px;font-weight:500;color:var(--mute);margin-left:10px}
+.wl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--line)}
+.wl li{display:flex;align-items:baseline;gap:10px;min-width:0;border-bottom:1px solid var(--line)}
+.wl a{font:600 16px var(--en);color:var(--blue);padding:9px 0;flex:none}
+.wl a:hover{text-decoration:underline}
+.wl span{font-size:13px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+@media (min-width:900px){
+  .wli{max-width:none}
+  .wl{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px}
+}
+
+/* 単語ページ: review fixes (one-meaning words, 熟語 phrases, pronunciation group, long words) */
+.wh .pr{display:inline-flex;align-items:center;gap:12px;white-space:nowrap}
+.wh h1.lw{font-size:clamp(30px,9.4vw,40px)}
+.wd .ph{font-family:var(--en);font-weight:700;margin-right:6px}
+.wd .gist.one .no{display:none}
+ol.ms.one > li{padding-left:0}
+ol.ms.one > li::before{display:none}
+.wd .ety > span{white-space:nowrap}
+.wjump{margin:4px 0 6px}
+.wli .cnote{margin:0 0 4px}
+.wli .wl .rk-x{font-style:normal;margin-right:3px}
 </style>
 </head>
 <body>

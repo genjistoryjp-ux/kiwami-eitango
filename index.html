@@ -344,6 +344,31 @@ ol.ms > li{scroll-margin-top:16px}
   .wside{position:sticky;top:16px;margin-top:24px}
   .wd .bar-l,.wd .warn{max-width:600px}
 }
+
+/* 受験英単語一覧 (/words/) */
+.wli h1{margin:8px 0 6px}
+.wli .wsec h2 small{font-size:13px;font-weight:500;color:var(--mute);margin-left:10px}
+.wl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--line)}
+.wl li{display:flex;align-items:baseline;gap:10px;min-width:0;border-bottom:1px solid var(--line)}
+.wl a{font:600 16px var(--en);color:var(--blue);padding:9px 0;flex:none}
+.wl a:hover{text-decoration:underline}
+.wl span{font-size:13px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+@media (min-width:900px){
+  .wli{max-width:none}
+  .wl{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px}
+}
+
+/* 単語ページ: review fixes (one-meaning words, 熟語 phrases, pronunciation group, long words) */
+.wh .pr{display:inline-flex;align-items:center;gap:12px;white-space:nowrap}
+.wh h1.lw{font-size:clamp(30px,9.4vw,40px)}
+.wd .ph{font-family:var(--en);font-weight:700;margin-right:6px}
+.wd .gist.one .no{display:none}
+ol.ms.one > li{padding-left:0}
+ol.ms.one > li::before{display:none}
+.wd .ety > span{white-space:nowrap}
+.wjump{margin:4px 0 6px}
+.wli .cnote{margin:0 0 4px}
+.wli .wl .rk-x{font-style:normal;margin-right:3px}
 </style>
 </head>
 <body>
@@ -363,12 +388,12 @@ ol.ms > li{scroll-margin-top:16px}
 <section class="hero">
   <div class="wrap"><div class="hero-in">
     <h1>英単語の意味と、<span class="nw">入試での出かたを調べる</span></h1>
-    <form class="sbox" action="/app/" method="get" role="search" data-words="risk relate represent">
+    <form class="sbox" action="/app/" method="get" role="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
       <input type="search" name="q" placeholder="英単語を入力" aria-label="英単語" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required>
       <button type="submit">検索</button>
     </form>
-    <div class="qw"><span>意味をまちがえやすい：</span><a href="/words/risk/" lang="en">risk</a><a href="/words/relate/" lang="en">relate</a><a href="/words/represent/" lang="en">represent</a><a href="/app/?q=threat" lang="en">threat</a><a href="/app/?q=beyond" lang="en">beyond</a></div>
+    <div class="qw"><span>意味をまちがえやすい：</span><a href="/words/risk/" lang="en">risk</a><a href="/words/relate/" lang="en">relate</a><a href="/words/represent/" lang="en">represent</a><a href="/words/threat/" lang="en">threat</a><a href="/words/beyond/" lang="en">beyond</a></div>
     <p class="hint">意味・例文・発音・入試での出かたが見られます</p>
   </div></div>
 </section>
@@ -388,7 +413,7 @@ ol.ms > li{scroll-margin-top:16px}
       </article>
       <article class="card">
         <h3>入試では2つ目以降の意味で多く出る単語</h3>
-        <ul class="ml"><li><div class="r1"><a class="w" href="/words/relate/" lang="en">relate</a><span class="m1">単語帳の1つ目：～を関連づける</span></div><span class="m2"><i>入試で多い</i>（to）関係がある</span></li><li><div class="r1"><a class="w" href="/words/represent/" lang="en">represent</a><span class="m1">単語帳の1つ目：～を代表する</span></div><span class="m2"><i>入試で多い</i>～を表す、象徴する</span></li><li><div class="r1"><a class="w" href="/app/?q=threat" lang="en">threat</a><span class="m1">単語帳の1つ目：脅し、脅迫</span></div><span class="m2"><i>入試で多い</i>脅威、恐れ</span></li><li><div class="r1"><a class="w" href="/app/?q=beyond" lang="en">beyond</a><span class="m1">単語帳の1つ目：～の向こうに</span></div><span class="m2"><i>入試で多い</i>（範囲・能力）を超えて</span></li></ul>
+        <ul class="ml"><li><div class="r1"><a class="w" href="/words/relate/" lang="en">relate</a><span class="m1">単語帳の1つ目：～を関連づける</span></div><span class="m2"><i>入試で多い</i>（to）関係がある</span></li><li><div class="r1"><a class="w" href="/words/represent/" lang="en">represent</a><span class="m1">単語帳の1つ目：～を代表する</span></div><span class="m2"><i>入試で多い</i>～を表す、象徴する</span></li><li><div class="r1"><a class="w" href="/words/threat/" lang="en">threat</a><span class="m1">単語帳の1つ目：脅し、脅迫</span></div><span class="m2"><i>入試で多い</i>脅威、恐れ</span></li><li><div class="r1"><a class="w" href="/words/beyond/" lang="en">beyond</a><span class="m1">単語帳の1つ目：～の向こうに</span></div><span class="m2"><i>入試で多い</i>（範囲・能力）を超えて</span></li></ul>
         <p class="cnote">ほかにも全部で106語（1語につき入試の文を最大180文調べました）。</p>
       </article>
     </div>
@@ -400,7 +425,7 @@ ol.ms > li{scroll-margin-top:16px}
     <p class="lead">令和6〜8年度の共通テスト英語12本のうち、何本に出たかの順。</p>
     <div class="rk">
       <div class="rk-hd"><span>順位</span><span>単語</span><span>本数</span><span>回数</span></div>
-      <div class="rk-row"><span class="rk-n top">1</span><div class="rk-w"><a href="/app/?q=view" lang="en">view</a><span><i class="rk-x" title="入試で多い意味">※</i>意見</span></div><span class="rk-v num">11<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n top">2</span><div class="rk-w"><a href="/app/?q=local" lang="en">local</a><span>地元の</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">51回</span></div><div class="rk-row"><span class="rk-n top">3</span><div class="rk-w"><a href="/app/?q=event" lang="en">event</a><span>行事</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">44回</span></div><div class="rk-row"><span class="rk-n">4</span><div class="rk-w"><a href="/app/?q=include" lang="en">include</a><span>～を含む</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">5</span><div class="rk-w"><a href="/app/?q=research" lang="en">research</a><span>研究</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">6</span><div class="rk-w"><a href="/app/?q=improve" lang="en">improve</a><span>～を改善する</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">45回</span></div><div class="rk-row"><span class="rk-n">7</span><div class="rk-w"><a href="/app/?q=experience" lang="en">experience</a><span>経験</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">42回</span></div><div class="rk-row"><span class="rk-n">8</span><div class="rk-w"><a href="/app/?q=information" lang="en">information</a><span>情報</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">37回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/app/?q=create" lang="en">create</a><span>～を創り出す</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/app/?q=decide" lang="en">decide</a><span>～を決める</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div>
+      <div class="rk-row"><span class="rk-n top">1</span><div class="rk-w"><a href="/words/view/" lang="en">view</a><span><i class="rk-x" title="入試で多い意味">※</i>意見</span></div><span class="rk-v num">11<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n top">2</span><div class="rk-w"><a href="/words/local/" lang="en">local</a><span>地元の</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">51回</span></div><div class="rk-row"><span class="rk-n top">3</span><div class="rk-w"><a href="/words/event/" lang="en">event</a><span>行事</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">44回</span></div><div class="rk-row"><span class="rk-n">4</span><div class="rk-w"><a href="/words/include/" lang="en">include</a><span>～を含む</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">5</span><div class="rk-w"><a href="/words/research/" lang="en">research</a><span>研究</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">6</span><div class="rk-w"><a href="/words/improve/" lang="en">improve</a><span>～を改善する</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">45回</span></div><div class="rk-row"><span class="rk-n">7</span><div class="rk-w"><a href="/words/experience/" lang="en">experience</a><span>経験</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">42回</span></div><div class="rk-row"><span class="rk-n">8</span><div class="rk-w"><a href="/words/information/" lang="en">information</a><span>情報</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">37回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/words/create/" lang="en">create</a><span>～を創り出す</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/words/decide/" lang="en">decide</a><span>～を決める</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div>
     </div>
     <div class="rk-foot"><p class="rk-note">※は入試で多い意味。本数が同じなら合計回数の多い順</p><a href="/ranking/kyotsu/">50位まで見る →</a></div>
   </section>
@@ -414,8 +439,9 @@ ol.ms > li{scroll-margin-top:16px}
   </div>
 </aside>
 </main>
-<script>(function(){var f=document.querySelector('.sbox');if(!f)return;var ws=(f.dataset.words||'').split(' ');
-f.addEventListener('submit',function(ev){var w=(f.q.value||'').trim().toLowerCase();if(ws.indexOf(w)>=0){ev.preventDefault();location.href='/words/'+encodeURIComponent(w)+'/'}})})();</script>
+<script>(function(){var f=document.querySelector('.sbox');if(!f||!window.fetch)return;var busy=0;
+f.addEventListener('submit',function(ev){var w=(f.q.value||'').trim().toLowerCase();if(!/^[a-z][a-z'-]*$/.test(w))return;ev.preventDefault();if(busy)return;busy=1;
+var u='/words/'+encodeURIComponent(w)+'/';fetch(u,{method:'HEAD'}).then(function(r){location.href=r.ok?u:'/app/?q='+encodeURIComponent(w)},function(){location.href='/app/?q='+encodeURIComponent(w)})})})();</script>
 
 <footer class="ft">
   <div class="wrap">
