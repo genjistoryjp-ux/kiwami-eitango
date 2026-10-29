@@ -20,7 +20,7 @@
 /* the site's pages (トップ, ランキング, プライバシーポリシー): build.py puts this file inline in each page.
    Look: white, one blue (--brand #083FF9), greys, 1px lines, no shadows or gradients; mobile first (375px), two columns from 900px */
 :root{
-  --blue:#083FF9; --blue-ink:#0530B8; --blue-50:#EEF2FF; --on-blue:#fff;
+  --blue:#083FF9; --blue-ink:#0530B8; --blue-50:#EEF2FF; --on-blue:#fff; --topb-bg:var(--blue); --topb-ink:#fff;
   --brand:#083FF9; --hero-bg:var(--brand); --field-bg:#fff; --field-ink:#1a1a1a; --field-ico:#757575; --field-ph:#757575; --btn-bg:#1a1a1a;
   --ink:#1a1a1a; --sub:#5f5f5f; --mute:#6e6e6e; --line:#e5e5e5; --bg:#fff; --card:#fff; --soft:#f6f7f9;
   --app-bg:rgba(8,63,249,.06); --app-line:rgba(8,63,249,.14); --bar-off:#e5e5e5; --dot-off:#cfcfcf;
@@ -31,7 +31,7 @@
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --blue:#5C7CFF; --blue-ink:#AFC0FF; --blue-50:#1B2240; --hero-bg:#14245E;
+    --blue:#5C7CFF; --blue-ink:#AFC0FF; --blue-50:#1B2240; --hero-bg:#14245E; --topb-bg:#AFC0FF; --topb-ink:#111114;
     --ink:#ececee; --sub:#a9a9b0; --mute:#8d8d95; --line:#2c2c33; --bg:#111114; --card:#17171b; --soft:#18181d;
     --app-bg:rgba(92,124,255,.10); --app-line:rgba(92,124,255,.24); --bar-off:#2c2c33; --dot-off:#4a4a52;
     color-scheme:dark;
@@ -136,6 +136,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 .bar-l li{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-top:1px solid var(--line)}
 .bar-l li:first-child{border-top:0}
 .bar-l b{font-family:var(--en);white-space:nowrap}
+.wd .bar-l li.top span{font-weight:700}
 .dot{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--blue);margin-right:6px;vertical-align:1px}
 .dot.g{background:var(--dot-off)}
 .more{display:inline-block;margin-top:12px;font-size:14px;color:var(--blue);font-weight:500}
@@ -163,8 +164,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 .box .src{color:var(--ink)}
 
 /* article pages (ランキング, プライバシーポリシー) */
-.crumb{font-size:12px;color:var(--mute);padding-top:14px}
-.crumb a{color:var(--sub)}
+.crumb{font-size:12px;line-height:20px;color:var(--mute);padding-top:4px;margin-bottom:-8px}
+.crumb a{color:var(--sub);display:inline-block;padding:10px 0}
 .crumb a:hover{color:var(--blue)}
 .art{max-width:760px}
 .art h1{margin:8px 0 10px;font-size:20px;line-height:1.45;font-weight:700}
@@ -224,6 +225,125 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
   .rk.full .rk-hd,.rk.full .rk-row{grid-template-columns:40px minmax(0,1fr) 56px 56px;padding-left:18px;padding-right:18px}
   .rk.full .rk-w span{display:inline;font-size:14px;margin-top:0}
 }
+
+/* 単語ページ (/words/<word>/) */
+.wd{max-width:760px}
+.wh{display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;margin:10px 0 4px}
+.wh h1{margin:0;font:700 40px/1.15 var(--en);letter-spacing:-.01em}
+.ipa{font:400 18px "Segoe UI","Lucida Sans Unicode","Noto Sans","Arial Unicode MS",sans-serif;color:var(--sub)}
+.say{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--blue);display:grid;place-items:center;cursor:pointer;padding:0}
+.say:hover{background:var(--blue-50)}
+.say svg{width:20px;height:20px}
+.wd .gist{list-style:none;margin:6px 0 4px;padding:0;font-size:15px;line-height:1.8}
+.wd .gist li{display:flex;align-items:baseline;gap:8px;padding:1px 0}
+.wd .gist .no,.wd .bar-l .no,.wd .lead2 .no,.wd .warn .no{flex:none;width:19px;height:19px;border-radius:50%;background:var(--ink);color:var(--bg);font:700 11px/19px var(--en);text-align:center}
+.wd .gist li.top{background:var(--blue-50);border-radius:6px;margin:2px -8px;padding:3px 8px;width:fit-content;max-width:calc(100% + 16px)}
+.wd .gist li.top .gm{font-weight:700}
+.wd .gist li.top .ps{background:var(--bg)}
+.wd .gist li.more{padding-left:27px;font-size:14px}
+.wd .gist li.more a{color:var(--blue)}
+.topb{font-style:normal;display:inline-block;font-size:12px;font-weight:700;line-height:1.6;padding:1px 8px;border-radius:3px;border:0;color:var(--topb-ink);background:var(--topb-bg);margin-left:8px;vertical-align:1px;white-space:nowrap}
+.share{font-size:12px;color:var(--mute);margin-left:8px;white-space:nowrap}
+.ps{font-style:normal;display:inline-block;font-size:12px;font-weight:700;line-height:1.6;color:var(--blue-ink);background:var(--blue-50);border-radius:3px;padding:0 6px;margin-right:6px;vertical-align:1px}
+.wsec{padding-top:28px}
+.wsec h2{margin:0 0 12px;font-size:19px;line-height:1.45;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.wsec h3{margin:20px 0 6px;font-size:16px}
+.wsec h2 + h3{margin-top:0}
+.wst{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.wst li{border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;background:var(--card);display:flex;flex-direction:column;gap:2px}
+.wst b{font:700 24px/1.2 var(--en)}
+.wst b small{font:500 13px var(--jp);margin-left:2px}
+.wst span{font-size:13px;color:var(--sub);line-height:1.45}
+.wst span small{font-size:12px;color:var(--mute)}
+.wd .cnote{margin:8px 0 0;font-size:12px;line-height:1.6;color:var(--mute)}
+.wd .lead2{margin:0 0 10px;font-size:15px;line-height:1.8}
+.wd .bar-l li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:7px 0;border-top:0}
+.wd .bar-l .trk{grid-column:1/-1;display:block;height:6px;border-radius:3px;background:var(--bar-off);overflow:hidden}
+.wd .bar-l .trk i{display:block;height:100%;background:var(--mute)}
+.wd .bar-l li.top .trk i{background:var(--blue)}
+.wd .bar-l li > span:first-child{display:flex;align-items:baseline;gap:0 8px}
+.wd .bar-l .ps{flex:none;margin-right:0}
+.wd .bar-l .oth{padding-left:27px}
+.wd .bar-l .num{font-weight:500;color:var(--sub)}
+.wd .bar-l li.top .num{font-weight:700;color:var(--ink)}
+.wd .bar-l li:not(.top) > span:first-child{color:var(--sub)}
+.wd .lead2 .no,.wd .warn .no{display:inline-block;vertical-align:1px;margin:0 2px 0 1px;width:17px;height:17px;font-size:10px;line-height:17px}
+.wd .warn{margin:12px 0 0;padding:10px 12px;border-left:3px solid var(--blue);background:var(--blue-50);font-size:14px;line-height:1.7;border-radius:0 var(--r) var(--r) 0}
+.ms{list-style:none;margin:0;padding:0;counter-reset:m}
+.ms > li{padding:12px 0;border-top:1px solid var(--line)}
+.ms > li:first-child{border-top:0;padding-top:2px}
+ol.ms > li{counter-increment:m;padding-left:30px;position:relative}
+ol.ms > li::before{content:counter(m);position:absolute;left:0;top:13px;width:21px;height:21px;border-radius:50%;background:var(--ink);color:var(--bg);font:700 12px/21px var(--en);text-align:center}
+ol.ms > li:first-child::before{top:3px}
+ol.ms > li.top{background:var(--blue-50);border-radius:var(--r);border-top:0;margin:0 -8px;padding:12px 8px 12px 38px}
+ol.ms > li.top::before{left:8px;top:15px}
+ol.ms > li.top + li{border-top:0}
+ol.ms > li.top .ps{background:var(--bg)}
+.mh{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 0;line-height:1.6}
+.mh b{font-size:16px}
+.mh a{font:700 18px var(--en);color:var(--blue);margin-right:10px}
+ol.ms .mh{gap:4px 8px}
+.dv .mh a{padding:9px 0;margin-top:-9px;margin-bottom:-9px}
+ol.ms .mh .ps{margin-right:0}
+ol.ms .mh .topb,ol.ms .mh .share{margin-left:0}
+.wd .pat{margin:4px 0 0;font-size:14px;line-height:1.6}
+.wd .pat span{font-weight:700;font-family:var(--en)}
+.wd .pat small{margin-left:8px;color:var(--sub);font-size:13px}
+.wd .ex{margin:6px 0 0;font-size:15px;line-height:1.6}
+.wd .ex span{display:block}
+.wd .ex span b{font-weight:700;color:var(--ink)}
+.wd .ex small{display:block;font-size:13px;color:var(--sub)}
+.wd .br{margin:6px 0 0;font-size:13px;line-height:1.6;color:var(--mute)}
+.wd .br::before{content:"コアイメージから：";font-weight:700}
+.wd .core{margin:0 0 12px;font-size:16px;line-height:1.6;font-weight:700}
+.wd .ety{margin:0 0 12px;font-size:14px;line-height:1.6;color:var(--sub)}
+.wd .core + .ety{margin-top:-8px}
+.ety b{color:var(--ink);margin-right:4px}
+.wd .etl{font-size:12px;font-weight:700;color:var(--sub);border:1px solid var(--line);border-radius:3px;padding:0 6px;margin-right:8px}
+.ety i{font-style:normal;margin:0 6px;color:var(--mute)}
+.qz{margin:0;padding:0;list-style:none}
+.qz li{position:relative;padding:10px 0 10px 1.4em;border-top:1px solid var(--line)}
+.qz li::before{content:counter(list-item) ".";position:absolute;left:0;font-size:16px;line-height:1.6}
+.qz li:first-child{border-top:0;padding-top:0}
+.wd .q{margin:0;font-size:16px;line-height:1.6}
+.blank{display:inline-block;min-width:3em;border-bottom:1.5px solid var(--ink)}
+.wd .opts{margin:6px 0 0;display:flex;flex-wrap:wrap;gap:2px 20px;font-size:15px;line-height:1.7}
+.opts b{font-weight:500;color:var(--sub);margin-right:2px}
+.qz details{margin-top:0;font-size:14px}
+.qz summary{cursor:pointer;color:var(--blue);font-weight:500;width:fit-content;padding:10px 0;line-height:24px}
+.qz summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:3px}
+.wd .qz details p{margin:0 0 4px;font-size:14px;line-height:1.7}
+.qz details b{margin-right:8px}
+.qz .ok{font-size:12px;color:var(--blue-ink);border:1px solid currentColor;border-radius:3px;padding:0 6px;margin-right:8px;font-weight:700}
+.qz .qe{display:block;color:var(--sub);font-size:13px}
+.cf{list-style:none;margin:0;padding:0}
+.cf li{padding:10px 0;border-top:1px solid var(--line)}
+.cf li:first-child{border-top:0;padding-top:0}
+.cf a{font:700 18px var(--en);color:var(--blue)}
+.wd .cf p{margin:2px 0 0;font-size:14px;line-height:1.7}
+.rel{display:flex;flex-wrap:wrap;gap:8px;margin:0}
+.rel a{border:1px solid var(--line);border-radius:999px;padding:8px 16px;font:600 15px/22px var(--en)}
+.rel a:hover{border-color:var(--blue);color:var(--blue)}
+.wside{margin-top:32px;display:grid;gap:12px}
+.wside .rel{margin-top:4px}
+.wside .appbox a,.wside .more{display:inline-block;padding:10px 0;margin:-10px 0}
+.wside .appbox p{word-break:auto-phrase;text-wrap:pretty}
+.wd .lead2,.wd .warn,.wd .cnote,.wd .gist,.wd .mh b,.wd .br,.wd .cf p,.wd .ex small,.wd .pat small,.wst span{word-break:auto-phrase;text-wrap:pretty}
+.wd .qm{display:inline-block}
+.wd .lead2 .lc{display:block;margin-top:2px}
+.wd .lead2 .lc > .qm:first-child{margin-right:4px}
+ol.ms > li{scroll-margin-top:16px}
+.wd .gist a.gm{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent);text-underline-offset:3px}
+.wd .gist a.gm:hover{text-decoration-color:currentColor}
+.wd .warn a{color:var(--blue-ink);text-decoration:underline;text-underline-offset:3px}
+@media (min-width:900px){
+  .wh h1{font-size:48px}
+  .wd .gist{font-size:16px}
+  .wst{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .wpage{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:0 40px;align-items:start}
+  .wside{position:sticky;top:16px;margin-top:24px}
+  .wd .bar-l,.wd .warn{max-width:600px}
+}
 </style>
 </head>
 <body>
@@ -243,13 +363,13 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 <section class="hero">
   <div class="wrap"><div class="hero-in">
     <h1>英単語の意味と、<span class="nw">入試での出かたを調べる</span></h1>
-    <form class="sbox" action="/app/" method="get" role="search">
+    <form class="sbox" action="/app/" method="get" role="search" data-words="risk relate represent">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
       <input type="search" name="q" placeholder="英単語を入力" aria-label="英単語" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required>
       <button type="submit">検索</button>
     </form>
-    <div class="qw"><span>意味をまちがえやすい：</span><a href="/app/?q=risk" lang="en">risk</a><a href="/app/?q=relate" lang="en">relate</a><a href="/app/?q=argument" lang="en">argument</a><a href="/app/?q=represent" lang="en">represent</a><a href="/app/?q=specific" lang="en">specific</a></div>
-    <p class="hint">アプリの辞書で、意味・例文・発音が見られます</p>
+    <div class="qw"><span>意味をまちがえやすい：</span><a href="/words/risk/" lang="en">risk</a><a href="/words/relate/" lang="en">relate</a><a href="/words/represent/" lang="en">represent</a><a href="/app/?q=threat" lang="en">threat</a><a href="/app/?q=beyond" lang="en">beyond</a></div>
+    <p class="hint">意味・例文・発音・入試での出かたが見られます</p>
   </div></div>
 </section>
 
@@ -259,17 +379,17 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
     <div class="sh"><h2>意味をまちがえやすい単語</h2></div>
     <div class="miss">
       <article class="card">
-        <div class="hw"><a href="/app/?q=risk" lang="en">risk</a><span class="pos">名詞で出る</span></div>
-        <h3>入試の30文中29文が名詞「危険（性）、リスク」</h3>
-        <div class="bar" role="img" aria-label="30文中29文が名詞"><i style="width:96.67%"></i></div>
-        <ul class="bar-l num"><li><span><i class="dot"></i>名詞「危険（性）、リスク」</span><b>29文</b></li><li><span><i class="dot g"></i>動詞「（risk ～ing）危険を冒す」</span><b>1文</b></li><li><span><i class="dot g"></i>動詞「～を危険にさらす、賭ける」</span><b>0文</b></li></ul>
+        <div class="hw"><a href="/words/risk/" lang="en">risk</a><span class="pos">名詞で出る</span></div>
+        <h3>入試の174文中156文が名詞「危険（性）、リスク」</h3>
+        <div class="bar" role="img" aria-label="174文中156文が名詞"><i style="width:89.66%"></i></div>
+        <ul class="bar-l num"><li><span><i class="dot"></i>名詞「危険（性）、リスク」</span><b>156文</b></li><li><span><i class="dot g"></i>動詞「（risk ～ing）危険を冒す」</span><b>11文</b></li><li><span><i class="dot g"></i>動詞「～を危険にさらす、賭ける」</span><b>7文</b></li></ul>
         <p class="cnote">アプリでは1つ目が「～を危険にさらす、賭ける」。</p>
-        <a class="more" href="/app/?q=risk">アプリの辞書で risk を見る →</a>
+        <a class="more" href="/words/risk/"><span lang="en">risk</span> の意味と入試データを見る →</a>
       </article>
       <article class="card">
         <h3>入試では2つ目以降の意味で多く出る単語</h3>
-        <ul class="ml"><li><div class="r1"><a class="w" href="/app/?q=relate" lang="en">relate</a><span class="m1">単語帳の1つ目：～を関連づける</span></div><span class="m2"><i>入試で多い</i>（to）関係がある</span></li><li><div class="r1"><a class="w" href="/app/?q=argument" lang="en">argument</a><span class="m1">単語帳の1つ目：口論、言い争い</span></div><span class="m2"><i>入試で多い</i>論拠、主張</span></li><li><div class="r1"><a class="w" href="/app/?q=represent" lang="en">represent</a><span class="m1">単語帳の1つ目：～を代表する</span></div><span class="m2"><i>入試で多い</i>～を表す、象徴する</span></li><li><div class="r1"><a class="w" href="/app/?q=specific" lang="en">specific</a><span class="m1">単語帳の1つ目：具体的な、明確な</span></div><span class="m2"><i>入試で多い</i>特定の</span></li></ul>
-        <p class="cnote">ほかにも全部で79語（1語につき入試の文を最大30文調べました）。</p>
+        <ul class="ml"><li><div class="r1"><a class="w" href="/words/relate/" lang="en">relate</a><span class="m1">単語帳の1つ目：～を関連づける</span></div><span class="m2"><i>入試で多い</i>（to）関係がある</span></li><li><div class="r1"><a class="w" href="/words/represent/" lang="en">represent</a><span class="m1">単語帳の1つ目：～を代表する</span></div><span class="m2"><i>入試で多い</i>～を表す、象徴する</span></li><li><div class="r1"><a class="w" href="/app/?q=threat" lang="en">threat</a><span class="m1">単語帳の1つ目：脅し、脅迫</span></div><span class="m2"><i>入試で多い</i>脅威、恐れ</span></li><li><div class="r1"><a class="w" href="/app/?q=beyond" lang="en">beyond</a><span class="m1">単語帳の1つ目：～の向こうに</span></div><span class="m2"><i>入試で多い</i>（範囲・能力）を超えて</span></li></ul>
+        <p class="cnote">ほかにも全部で106語（1語につき入試の文を最大180文調べました）。</p>
       </article>
     </div>
   </section>
@@ -280,7 +400,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
     <p class="lead">令和6〜8年度の共通テスト英語12本のうち、何本に出たかの順。</p>
     <div class="rk">
       <div class="rk-hd"><span>順位</span><span>単語</span><span>本数</span><span>回数</span></div>
-      <div class="rk-row"><span class="rk-n top">1</span><div class="rk-w"><a href="/app/?q=view" lang="en">view</a><span><i class="rk-x" title="入試で多い意味">※</i>（as）～とみなす</span></div><span class="rk-v num">11<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n top">2</span><div class="rk-w"><a href="/app/?q=local" lang="en">local</a><span>地元の</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">51回</span></div><div class="rk-row"><span class="rk-n top">3</span><div class="rk-w"><a href="/app/?q=event" lang="en">event</a><span>行事</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">44回</span></div><div class="rk-row"><span class="rk-n">4</span><div class="rk-w"><a href="/app/?q=include" lang="en">include</a><span>～を含む</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">5</span><div class="rk-w"><a href="/app/?q=research" lang="en">research</a><span>研究</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">6</span><div class="rk-w"><a href="/app/?q=improve" lang="en">improve</a><span>～を改善する</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">45回</span></div><div class="rk-row"><span class="rk-n">7</span><div class="rk-w"><a href="/app/?q=experience" lang="en">experience</a><span>経験</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">42回</span></div><div class="rk-row"><span class="rk-n">8</span><div class="rk-w"><a href="/app/?q=information" lang="en">information</a><span>情報</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">37回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/app/?q=create" lang="en">create</a><span>～を創り出す</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/app/?q=decide" lang="en">decide</a><span>～を決める</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div>
+      <div class="rk-row"><span class="rk-n top">1</span><div class="rk-w"><a href="/app/?q=view" lang="en">view</a><span><i class="rk-x" title="入試で多い意味">※</i>意見</span></div><span class="rk-v num">11<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n top">2</span><div class="rk-w"><a href="/app/?q=local" lang="en">local</a><span>地元の</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">51回</span></div><div class="rk-row"><span class="rk-n top">3</span><div class="rk-w"><a href="/app/?q=event" lang="en">event</a><span>行事</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">44回</span></div><div class="rk-row"><span class="rk-n">4</span><div class="rk-w"><a href="/app/?q=include" lang="en">include</a><span>～を含む</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">5</span><div class="rk-w"><a href="/app/?q=research" lang="en">research</a><span>研究</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">6</span><div class="rk-w"><a href="/app/?q=improve" lang="en">improve</a><span>～を改善する</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">45回</span></div><div class="rk-row"><span class="rk-n">7</span><div class="rk-w"><a href="/app/?q=experience" lang="en">experience</a><span>経験</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">42回</span></div><div class="rk-row"><span class="rk-n">8</span><div class="rk-w"><a href="/app/?q=information" lang="en">information</a><span>情報</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">37回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/app/?q=create" lang="en">create</a><span>～を創り出す</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/app/?q=decide" lang="en">decide</a><span>～を決める</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div>
     </div>
     <div class="rk-foot"><p class="rk-note">※は入試で多い意味。本数が同じなら合計回数の多い順</p><a href="/ranking/kyotsu/">50位まで見る →</a></div>
   </section>
@@ -290,10 +410,12 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
   </div>
   <div class="box a-about">
     <h2>入試データについて</h2>
-    <p class="src">共通テスト12本＋大学16校の公式公開分94本、約22.5万語を数えました。</p>
+    <p class="src">共通テスト12本と、国公立・私立116校の大学入試1,176本、約278万語を数えました。</p>
   </div>
 </aside>
 </main>
+<script>(function(){var f=document.querySelector('.sbox');if(!f)return;var ws=(f.dataset.words||'').split(' ');
+f.addEventListener('submit',function(ev){var w=(f.q.value||'').trim().toLowerCase();if(ws.indexOf(w)>=0){ev.preventDefault();location.href='/words/'+encodeURIComponent(w)+'/'}})})();</script>
 
 <footer class="ft">
   <div class="wrap">
