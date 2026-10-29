@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>英単語を調べる｜極（きわみ）</title>
+<meta name="description" content="受験英単語2,500語から、英単語や日本語の意味で調べられます。">
+<link rel="canonical" href="https://kiwami-eitango.com/search/">
+<meta name="google-adsense-account" content="ca-pub-3219062907495876">
+<script>if(location.hostname==="kiwami-eitango.com"){var a=document.createElement("script");a.async=true;a.crossOrigin="anonymous";a.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3219062907495876";document.head.appendChild(a)}</script>
+<meta property="og:type" content="website"><meta property="og:site_name" content="極（きわみ）"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="英単語を調べる｜極（きわみ）"><meta property="og:description" content="受験英単語2,500語から、英単語や日本語の意味で調べられます。"><meta property="og:url" content="https://kiwami-eitango.com/search/"><meta property="og:image" content="https://kiwami-eitango.com/ogp.png?v=eff554af"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="極（きわみ）英単語アプリ"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111114" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96.png"><link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.8aa5d6ff.css">
+</head>
+<body>
+<header class="hd">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="極（きわみ）トップ">
+      <span class="tile"><img src="/assets/brand.png" alt="" width="24" height="24"></span>
+      <b>極（きわみ）</b>
+      <small>英単語の意味と<br>入試データ</small>
+    </a>
+    <nav class="hd-r" aria-label="メイン">
+      <a class="rklink" href="/ranking/nyushi/">入試英単語ランキング</a><a class="rklink" href="/words/">単語一覧</a>
+      <a class="applink" href="/app/">無料アプリ</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap"><nav class="crumb" aria-label="現在地"><a href="/">トップ</a> › 検索</nav><article class="art wd srch"><h1 id="sh">英単語を調べる</h1><form class="sbox" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語か日本語を入力" aria-label="英単語か日本語" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required><button type="submit">検索</button></form><div id="sr"><p class="lead2">さがしています…</p></div></article></main><script>(async function(){var P=new URLSearchParams(location.search),q=P.get('q')||'';try{q=q.normalize('NFKC')}catch(e){}q=q.trim();var I=document.querySelector('.sbox input'),O=document.getElementById('sr'),H=document.getElementById('sh');I.value=q;var E=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};if(!q){H.textContent='英単語を調べる';O.innerHTML='<p class="lead2">英単語か、日本語の意味を入れてください。</p>';return}document.title='「'+q+'」の検索結果｜極（きわみ）';H.textContent='「'+q+'」の検索結果';var W;try{W=await fetch('/assets/words.47d38ffb.json').then(function(r){return r.json()})}catch(e){W=[]}var l=q.toLowerCase(),en=/^[a-z][a-z' -]*$/.test(l),R=[],msg='';if(en){var hit=W.filter(function(x){return x[0]===l})[0];if(hit){location.replace('/words/'+encodeURIComponent(l)+'/');return}var D=function(a,b){if(Math.abs(a.length-b.length)>2)return 9;var p=[],pp=[],i,j;for(j=0;j<=b.length;j++)p[j]=j;for(i=1;i<=a.length;i++){var c=[i];for(j=1;j<=b.length;j++){c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])c[j]=Math.min(c[j],pp[j-2]+1)}pp=p;p=c}return p[b.length]};var pre=W.filter(function(x){return l.length>=2&&x[0].indexOf(l)===0}).sort(function(a,b){return a[0].length-b[0].length||a[2]-b[2]});var near=W.map(function(x){return[x,D(l,x[0])]}).filter(function(z){return z[1]<=(l.length<5?1:2)&&pre.indexOf(z[0])<0}).sort(function(a,b){return a[1]-b[1]||a[0][2]-b[0][2]}).map(function(z){return z[0]});R=near.concat(pre).slice(0,30);msg='「'+E(q)+'」の単語ページはまだありません。'+(R.length?'もしかして：':'')}else{var X=function(x){return x[1].split(' / ').some(function(m){return m.replace(/[～〜]|（[^）]*）/g,'').split('、').indexOf(q)>=0})?0:1};R=W.filter(function(x){return x[1].indexOf(q)>=0}).sort(function(a,b){return X(a)-X(b)||a[2]-b[2]}).slice(0,50);msg=R.length?'「'+E(q)+'」の意味をもつ単語（入試によく出る順）':'「'+E(q)+'」の意味をもつ単語は、受験英単語の中に見つかりませんでした。'}O.innerHTML='<p class="lead2">'+msg+'</p>'+(R.length?'<ul class="alist sl">'+R.map(function(x){return'<li><a href="/words/'+encodeURIComponent(x[0])+'/"><b lang="en">'+E(x[0])+'</b><span>'+E(x[1])+'</span></a></li>'}).join('')+'</ul>':'')+'<p class="sapp"><a href="/app/?q='+encodeURIComponent(q)+'">アプリの辞書で「'+E(q)+'」を調べる →</a><small>中学の単語や熟語も入っています</small></p>'})();</script>
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-logo"><span class="tile"><img src="/assets/brand.png" alt="" width="19" height="19"></span><b>極（きわみ）</b></div>
+    <p class="ft-d">受験英単語の意味と、入試での使われ方のデータ</p>
+    <ul class="ft-l">
+      <li><a href="/ranking/nyushi/">大学入試英単語ランキング</a></li>
+      <li><a href="/ranking/kyotsu/">共通テスト英単語ランキング</a></li>
+      <li><a href="/words/">受験英単語一覧</a></li>
+      <li><a href="/app/">アプリを開く</a></li>
+      <li><a href="/about/">極について</a></li>
+      <li><a href="/privacy/">プライバシーポリシー</a></li>
+      <li><a href="https://forms.gle/56xaeGjnA7WYgS3V6" target="_blank" rel="noopener">お問い合わせ</a></li>
+    </ul>
+    <div class="ft-c">© 2026 極（きわみ）</div>
+  </div>
+</footer>
+<!-- Cloudflare Web Analytics --><script>if(location.hostname==="kiwami-eitango.com"){var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",'{"token": "5dedc341bc184ed59cae8fbf670adedf"}');document.body.appendChild(s)}</script>
+</body>
+</html>
