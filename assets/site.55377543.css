@@ -350,3 +350,7 @@ ol.ms.one > li::before{display:none}
 .wjump{margin:4px 0 6px}
 .wli .cnote{margin:0 0 4px}
 .wli .wl .rk-x{font-style:normal;margin-right:3px}
+.rk-also{margin:10px 0 0;font-size:13px}
+.rk-also a{color:var(--blue);font-weight:500}
+.rk.full.nyu .rk-hd,.rk.full.nyu .rk-row{grid-template-columns:30px minmax(0,1fr) 58px 46px}
+@media (min-width:900px){.rk.full.nyu .rk-hd,.rk.full.nyu .rk-row{grid-template-columns:40px minmax(0,1fr) 64px 56px}}

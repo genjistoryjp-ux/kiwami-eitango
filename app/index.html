@@ -2523,7 +2523,7 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 <div id="toastroot" lang="ja"></div>
 <div id="sr" class="sr-only" aria-live="polite" lang="ja"></div>
 
-<script src="../d/deck_j1.f688abaefa.js"></script><script src="../d/deck_j2.cc616c09c9.js"></script><script src="../d/deck_j3.8e221f6bd2.js"></script><script src="../d/deck_idioms.d32c42de25.js"></script><script src="../d/deck_toeic.c1c4b899bf.js"></script><script src="../d/deck_junior.b556b0c816.js"></script><script src="../d/deck_tagi.e54ab562d5.js"></script><script src="../d/deck_theme.2435bcc8fb.js"></script><script src="../d/aud.2708c763ee.js"></script><script src="../d/exi.dd85173111.js"></script><script src="../d/mekuru.80e52ef710.js"></script><script src="../d/extra.8d13f92ebd.js"></script>
+<script src="../d/deck_j1.945ddd9937.js"></script><script src="../d/deck_j2.348d5825de.js"></script><script src="../d/deck_j3.cea61563df.js"></script><script src="../d/deck_idioms.d32c42de25.js"></script><script src="../d/deck_toeic.c1c4b899bf.js"></script><script src="../d/deck_junior.b556b0c816.js"></script><script src="../d/deck_tagi.e54ab562d5.js"></script><script src="../d/deck_theme.2435bcc8fb.js"></script><script src="../d/aud.2708c763ee.js"></script><script src="../d/exi.dd85173111.js"></script><script src="../d/mekuru.80e52ef710.js"></script><script src="../d/extra.e98a67666a.js"></script>
 <script>
 'use strict';
 const RAW = {"j1":self.__KD["deck:j1"],"j2":self.__KD["deck:j2"],"j3":self.__KD["deck:j3"],"idioms":self.__KD["deck:idioms"],"toeic":self.__KD["deck:toeic"],"junior":self.__KD["deck:junior"],"tagi":self.__KD["deck:tagi"],"theme":self.__KD["deck:theme"]};
@@ -3112,13 +3112,58 @@ function ivlShort(days){
 function fmtMs(ms){ const s = Math.round(ms/1000); return s < 60 ? `${s}秒` : `${Math.floor(s/60)}分${String(s%60).padStart(2,'0')}秒`; }
 
 /* ---------- state ---------- */
-function blank(){ return {v:1, prog:{}, daily:{}, settings:{...DEF}, custom:{}, notes:{}}; }
+function blank(){ return {v:1, prog:{}, daily:{}, settings:{...DEF}, custom:{}, notes:{}, mo:clone(EXTRA.mo || {})}; }
+/* 意味の並び替え: build.py puts a word's most-asked meaning first (EXTRA.mo = {deck: {word: perm}}, perm[new] = old, old being
+   the data's original order; a word not listed keeps it). A record sits on its meaning's place (0 = the word, i = "word#i"),
+   so when the order changes it moves to where its meaning is now. S.mo is the order S's records are in. The cloud keeps
+   the original order (what an older version reads and writes): a push goes back to it, a pull comes from it. Notes stay
+   on the word (a memo is the word's, for all its meanings). With 意味を1つずつ覚える off the word's record is the whole
+   word's (it asks every meaning), so it stays on the word and only the meaning cards' records move */
+const permOk = p => Array.isArray(p) && p.every((x, i) => Number.isInteger(x) && x >= 0 && x < p.length && p.indexOf(x) === i);
+const samePerm = (a, b) => { for (let i = 0; i < Math.max(a.length, b.length); i++) if ((a[i] ?? i) !== (b[i] ?? i)) return false; return true; };
+/* one deck's prog map from order a to order b ({word: perm} each, missing = original): the record at place j is meaning
+   a[j], which goes to place b.indexOf(a[j]); places past a perm's end keep their meaning. keep0: place 0 stays (the whole
+   word's record) and the meaning cards follow their meanings, the one whose meaning comes to place 0 taking the place that
+   the card of meaning 0 would have. A new map, or the same one when nothing moves */
+function remapProg(map, a, b, keep0 = false){
+  const P = (o, w) => { const p = o && Object.hasOwn(o, w) ? o[w] : null; return permOk(p) ? p : []; };
+  const ws = new Set([...Object.keys(a || {}), ...Object.keys(b || {})].filter(w => !samePerm(P(a, w), P(b, w))));
+  if (!map || !ws.size) return map;
+  const out = {}; let moved = false;
+  for (const [k, v] of Object.entries(map)) {
+    const m = /^(.+)#([1-9]\d*)$/.exec(k), w = m ? m[1] : k;
+    if (!ws.has(w)) { out[k] = v; continue; }
+    const pa = P(a, w), pb = P(b, w), j = m ? +m[2] : 0, at = i => pa[i] ?? i, of = o => { const t = pb.indexOf(o); return t >= 0 ? t : o; };
+    let n;
+    if (!keep0) n = of(at(j));
+    else if (!j) n = 0;
+    else { n = of(at(j) || at(0)); if (!n) n = of(0); }
+    const nk = n ? w + '#' + n : w;
+    out[nk] = v; if (nk !== k) moved = true;
+  }
+  return moved ? out : map;
+}
+/* S's records from the order they were saved in (S.mo) to this build's (the cloud's docs keep the original order, so only
+   a custom deck that changed is saved again: MO_MOVED) */
+const MO_MOVED = new Set();
+function moMigrate(st){
+  const to = EXTRA.mo || {}, from = st.mo || {}, k0 = !st.settings.senseCards;
+  for (const deck of Object.keys(st.prog)) st.prog[deck] = remapProg(st.prog[deck], from[deck], to[deck], k0);
+  for (const [id, d] of Object.entries(st.custom)) for (const x of Array.isArray(d?.cards) ? d.cards : []) {   // a reference to a meaning card (a word or a derivative keeps its key)
+    const i = typeof x?.ref === 'string' ? x.ref.indexOf('|') : -1; if (i < 0) continue;
+    const deck = x.ref.slice(0, i), k = x.ref.slice(i + 1); if (!k.includes('#')) continue;
+    const nk = Object.keys(remapProg({[k]: 1}, from[deck], to[deck], k0))[0];
+    if (nk !== k) { x.ref = deck + '|' + nk; d.upd = Date.now(); MO_MOVED.add('deck_' + id); }
+  }
+  st.mo = clone(to);
+  return st;
+}
 /* 出題の形式 was 段階式 / 4択だけ / カード, but 4択だけ only meant 段階式 without spelling (2026-10): now 4択 or カード, and
    spelling is スペル入力を出す alone. A record from then (or from an older version on another device) keeps its no-spelling */
 const fixMode = st => { if (st.mode === 'choice') { st.mode = 'auto'; st.spell = false; } return st; };
 function normalize(o){
   const b = blank();
-  return {...b, ...o, settings:fixMode({...DEF, ...(o.settings||{})}), prog:o.prog||{}, daily:o.daily||{}, custom:o.custom||{}, notes:o.notes||{}};
+  return moMigrate({...b, ...o, settings:fixMode({...DEF, ...(o.settings||{})}), prog:o.prog||{}, daily:o.daily||{}, custom:o.custom||{}, notes:o.notes||{}, mo:o.mo||{}});
 }
 function loadLocal(){
   try { const raw = localStorage.getItem(LS_KEY); if (raw) return normalize(JSON.parse(raw)); } catch(e) {}
@@ -3690,7 +3735,7 @@ cap('sample').then(s => { if (s) { AI = s; document.body.classList.add('has-ai')
    document is cut into parts (prog_j1, prog_j1~1, prog_j1~2 ...). Docs that older versions saved as maps are still read. */
 /* synced: the collection whose records were last read from the server; nothing is written to a collection before that
    (an offline start reads an empty cache, and writing then would replace what other devices saved) */
-const Sync = {col:null, uid:null, par:false, state:'local', dirty:new Set(), busy:false, again:false, timer:null, timerAt:0, err:null, lastOk:0, pulled:0, part:200000, parts:{}, bad:{}, warned:false, synced:null, retry:null, hidAt:0};
+const Sync = {col:null, uid:null, par:false, state:'local', dirty:new Set(MO_MOVED), busy:false, again:false, timer:null, timerAt:0, err:null, lastOk:0, pulled:0, part:200000, parts:{}, bad:{}, warned:false, synced:null, retry:null, hidAt:0};
 const SYNC_EVERY = 60000;
 const UID_KEY = 'tangoloop.uid';   // the account this device last merged with: its first sync on a device takes the account's settings
 const lsGet = k => { try { return localStorage.getItem(k); } catch(e) { return null; } };
@@ -3741,7 +3786,7 @@ function docBodies(name){
     out.parts = P.length; return out;
   }
   const f = name.startsWith('prog_') ? 'cj' : name.startsWith('note_') ? 'mj' : null; if (!f) return [];
-  const parts = packMap((f === 'cj' ? S.prog : S.notes)[name.slice(5)]);
+  const deck = name.slice(5), parts = packMap(f === 'cj' ? remapProg(S.prog[deck], S.mo?.[deck], {}, !S.settings.senseCards) : S.notes[deck]);   // in the original meaning order
   const out = parts.map((s, i) => [i ? `${name}~${i}` : name, {[f]:s, upd}]);
   for (let i = parts.length; i < (Sync.parts[name] || 1); i++) out.push([`${name}~${i}`, {[f]:'{}', upd}]);   // empty the parts a smaller map no longer uses
   out.parts = parts.length;
@@ -3797,6 +3842,7 @@ function fatalText(){
 const mergeDay = (a={}, b={}) => { const o = {...a}; for (const [k,v] of Object.entries(b)) o[k] = Math.max(o[k]||0, v||0); return o; };
 const sameObj = (a,b) => JSON.stringify(a) === JSON.stringify(b);
 const progTime = p => Math.max(p?.u || 0, p?.last || 0);   // u: when 「戻る」 restored it
+const docMo = data => { try { return typeof data?.mo === 'string' ? JSON.parse(data.mo) || {} : {}; } catch(e) { return {}; } };   // a prog doc's meaning order (none: the original, the only one written)
 async function pull(){
   const col = Sync.col; if (!col) return;
   let snap;
@@ -3822,8 +3868,9 @@ async function pull(){
     const pm = /^((?:prog|note)_.+?)(?:~(\d+))?$/.exec(id);
     if (pm) {                                                       // collect every part of a deck's map before merging
       const name = pm[1], f = name.startsWith('prog_') ? 'cj' : 'mj', part = unpackMap(data, f, f === 'cj' ? 'c' : 'm');
-      const g = maps[name] ||= {R:{}, legacy:false, parts:1};
-      for (const [k, v] of Object.entries(part)) if (!(k in g.R) || (f === 'cj' && progTime(v) > progTime(g.R[k]))) g.R[k] = v;
+      const g = maps[name] ||= {R:{}, legacy:false, parts:1, P:[]};
+      if (f === 'cj') g.P.push([part, docMo(data)]);                // into this device's meaning order below, once meta's settings are in
+      else for (const [k, v] of Object.entries(part)) if (!(k in g.R)) g.R[k] = v;
       if (typeof data[f] !== 'string' && Object.keys(part).length) g.legacy = true;   // saved as a map by an older version: rewrite it once
       if (pm[2] && Object.keys(part).length) g.parts = Math.max(g.parts, +pm[2] + 1);
       continue;
@@ -3864,16 +3911,20 @@ async function pull(){
   }
   for (const [id, g] of Object.entries(maps)) {
     const R = g.R; seen.add(id); Sync.parts[id] = g.parts;
-    if (g.legacy) Sync.dirty.add(id);
     if (id.startsWith('prog_')) {
-      const L = S.prog[id.slice(5)] ||= {};
+      const deck = id.slice(5), k0 = !S.settings.senseCards, L = S.prog[deck] ||= {};
+      for (const [raw, mo] of g.P) {                                // the cloud keeps the original order (a doc that says another: saved again in it)
+        if (remapProg(raw, mo, {}, k0) !== raw) g.legacy = true;
+        for (const [k, v] of Object.entries(remapProg(raw, mo, S.mo?.[deck], k0))) if (!(k in R) || progTime(v) > progTime(R[k])) R[k] = v;
+      }
+      if (g.legacy) Sync.dirty.add(id);
       for (const [k,rp] of Object.entries(R)) { const lp = L[k];
         if (!lp || progTime(rp) > progTime(lp)) { L[k] = rp; changed = true; } else if (progTime(lp) > progTime(rp)) Sync.dirty.add(id); }
       for (const k of Object.keys(L)) if (!R[k]) Sync.dirty.add(id);
     } else {
       const L = S.notes[id.slice(5)] ||= {};
       for (const [k,v] of Object.entries(R)) if (!(k in L)) { L[k] = v; changed = true; }
-      if (Object.keys(L).some(k => R[k] !== L[k])) Sync.dirty.add(id);
+      if (g.legacy || Object.keys(L).some(k => R[k] !== L[k])) Sync.dirty.add(id);
     }
   }
   if (!seen.has('meta')) Sync.dirty.add('meta');
