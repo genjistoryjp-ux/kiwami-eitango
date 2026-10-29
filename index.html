@@ -90,7 +90,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 /* layout: one column on a phone (ranking first), main + side from 900px */
 .page{display:flex;flex-direction:column}
 .col-m,.col-s{display:contents}
-.a-rank{order:1}.a-miss{order:2}.a-app{order:3}.a-about{order:4}
+.a-rank{order:1}.a-miss{order:2}.a-art{order:3}.a-app{order:4}.a-about{order:5}
 .a-app{margin-top:32px}
 .a-about{margin-top:12px}
 .sec{padding:32px 0 0}
@@ -430,6 +430,14 @@ ol.ms.one > li::before{display:none}
 .post .tip::before{content:"ひとこと";display:block;font-size:12px;font-weight:700;color:var(--sub);margin-bottom:2px}
 @media (prefers-color-scheme:dark){.post mark{background:linear-gradient(transparent 58%,rgba(255,214,80,.35) 58%)}}
 @media (min-width:900px){.key .kn{font-size:40px}.post h2{font-size:21px}}
+/* 記事へのリンク: header, home, word pages */
+.hd-r .artlink{font-weight:700}
+.alist.hl{margin-top:0}
+.alist.hl b{font-size:16px}
+.warts ul{list-style:none;margin:0;padding:0}
+.warts li + li{border-top:1px solid var(--line)}
+.warts a{display:block;padding:8px 0;font-size:14px;line-height:1.55;color:var(--blue)}
+.warts a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -442,7 +450,7 @@ ol.ms.one > li::before{display:none}
     </a>
     <nav class="hd-r" aria-label="メイン">
       <a class="rklink" href="/ranking/nyushi/">入試英単語ランキング</a><a class="rklink" href="/words/">単語一覧</a>
-      <a class="applink" href="/app/">無料アプリ</a>
+      <a class="artlink" href="/articles/">記事</a><a class="applink" href="/app/">無料アプリ</a>
     </nav>
   </div>
 </header>
@@ -478,6 +486,10 @@ ol.ms.one > li::before{display:none}
         <p class="cnote">ほかにも全部で106語（1語につき入試の文を最大180文調べました）。極のアプリでは、これらの単語は入試で多い意味から覚えます。</p>
       </article>
     </div>
+  </section>
+  <section class="sec a-art">
+    <div class="sh"><h2>受験英語の記事</h2><a href="/articles/">すべて見る →</a></div>
+    <ul class="alist hl"><li><a href="/articles/derivatives/"><b>英単語の派生語は覚えるべき？入試に多い派生語と覚え方</b><span>differ より different、respond より response のほうが多くの入試に出ていました。大学入試1,176本で見出し語と派生語を比べ、語尾で品詞を見分ける方法、否定の接頭辞、覚え方をまとめます。</span></a></li><li><a href="/articles/exam-meanings/"><b>英単語の意外な意味｜入試では最初に覚える訳より多く出る意味</b><span>demand は「需要」、field は「分野」。大学入試の英文を1文ずつ調べると、まず思い浮かぶ訳よりほかの意味のほうがずっと多く使われていた英単語が106語ありました。ずれ方のパターン別に、文の数つきで紹介します。</span></a></li><li><a href="/articles/how-many-words/"><b>大学受験に必要な英単語は何語？入試の英文を数えてわかった目安</b><span>国公立・私立の大学入試1,176本に出た語を多い順に並べ、上位何語で共通テスト・国立・公立・私立の英文の何%が読めるかを計算しました。95%に届くのは共通テストで約3,800語、国立で約4,900語です。</span></a></li><li><a href="/articles/how-to-memorize/"><b>英単語の覚え方｜受験生が忘れずに覚える手順を入試データで解説</b><span>受験生向けの英単語の覚え方。大学入試1,176本で単語の出かたを数えたデータをもとに、覚える順番、1つの意味から始める理由、思い出す練習と復習の間隔、1日の量の決め方、覚えたかの確かめ方まで説明します。</span></a></li><li><a href="/articles/kyotsu-vs-niji/"><b>共通テストと二次・私大で出る英単語のちがい｜入試データで比較</b><span>共通テスト12本と大学入試1,176本で、受験英単語2,500語の出かたを比べました。共通テストに多い語、共通テストには出ないのに二次・私大でよく出る語、国立と私立で多い語を表にまとめ、覚える順番も紹介します。</span></a></li><li><a href="/articles/march-kankandoritsu/"><b>MARCH・関関同立の英単語レベル｜大学別の難しさと出る単語</b><span>MARCH・関関同立の9大学の入試英語に、めったに出ない語がどれだけ出るかを大学別に数えました。同志社・明治・関西学院の差、会話文の語、グループごとに多い単語、大学別の対策まで。</span></a></li></ul>
   </section>
 </div>
 <aside class="col-s" aria-label="ランキングとアプリ">

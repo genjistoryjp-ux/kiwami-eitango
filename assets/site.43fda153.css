@@ -69,7 +69,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 /* layout: one column on a phone (ranking first), main + side from 900px */
 .page{display:flex;flex-direction:column}
 .col-m,.col-s{display:contents}
-.a-rank{order:1}.a-miss{order:2}.a-app{order:3}.a-about{order:4}
+.a-rank{order:1}.a-miss{order:2}.a-art{order:3}.a-app{order:4}.a-about{order:5}
 .a-app{margin-top:32px}
 .a-about{margin-top:12px}
 .sec{padding:32px 0 0}
@@ -409,3 +409,11 @@ ol.ms.one > li::before{display:none}
 .post .tip::before{content:"ひとこと";display:block;font-size:12px;font-weight:700;color:var(--sub);margin-bottom:2px}
 @media (prefers-color-scheme:dark){.post mark{background:linear-gradient(transparent 58%,rgba(255,214,80,.35) 58%)}}
 @media (min-width:900px){.key .kn{font-size:40px}.post h2{font-size:21px}}
+/* 記事へのリンク: header, home, word pages */
+.hd-r .artlink{font-weight:700}
+.alist.hl{margin-top:0}
+.alist.hl b{font-size:16px}
+.warts ul{list-style:none;margin:0;padding:0}
+.warts li + li{border-top:1px solid var(--line)}
+.warts a{display:block;padding:8px 0;font-size:14px;line-height:1.55;color:var(--blue)}
+.warts a:hover{text-decoration:underline}
