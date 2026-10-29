@@ -9,7 +9,7 @@
    - Google Fonts: served from cache, refreshed in the background
    - the page's data (d/: each deck, the audio indexes…): named by a hash of what they hold, so a file never changes; saved
      at install, served from the cache, and a file the current page no longer names is dropped */
-const APP = 'kyokutan-app-a1873d42fa';
+const APP = 'kyokutan-app-1c36642846';
 const AUDIO = 'kyokutan-audio';
 const AUDIO_OLD = 'kyokutan-audio-f026ca2bc4';   // the last name that changed with the audio set: the same files, so they move over
 const FONTS = 'kyokutan-fonts-v1';
