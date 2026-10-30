@@ -440,6 +440,34 @@ ol.ms.one > li::before{display:none}
 .warts a:hover{text-decoration:underline}
 .ab p a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
 .art h2 + .pv{margin-top:8px}
+/* 派生語ページ */
+.wd .dpar{margin:6px 0 0;font-size:15px;display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
+.wd .dpar a{font:700 18px var(--en);color:var(--blue)}
+.wd .dpar span:last-child{color:var(--sub)}
+.wd .fam li.cur{background:var(--blue-50);border-radius:6px;margin:0 -8px;padding:10px 8px}
+.wd .fam .fw{font:700 18px var(--en);margin-right:10px}
+.wd .fam .mh span{color:var(--sub)}
+
+/* メニューの帯 (every site page): sections, the one you are in marked; a search box from 900px */
+.hd{border-bottom:0}
+.snav-w{background:var(--bg);border-bottom:1px solid var(--line)}
+.snav-in{display:flex;align-items:center;gap:16px}
+.snav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 12px;flex:1;min-width:0}
+.snav::-webkit-scrollbar{display:none}
+.snav a{flex:none;padding:10px 10px 9px;font-size:14px;font-weight:500;color:var(--sub);border-bottom:2px solid transparent;white-space:nowrap}
+.snav a:hover{color:var(--ink)}
+.snav a[aria-current]{color:var(--ink);font-weight:700;border-bottom-color:var(--blue)}
+.hsrch{display:none}
+@media (min-width:900px){
+  .snav{margin:0;padding:0;gap:8px}
+  .snav a{padding:12px 8px 11px}
+  .hsrch{display:flex;align-items:center;gap:6px;width:280px;height:36px;border:1px solid var(--line);border-radius:999px;padding:0 12px;background:var(--card);flex:none}
+  .hsrch:focus-within{outline:2px solid var(--blue);outline-offset:1px}
+  .hsrch svg{width:16px;height:16px;color:var(--mute);flex:none}
+  .hsrch input{flex:1;min-width:0;border:0;outline:0;background:none;font:400 14px var(--jp);color:var(--ink);-webkit-appearance:none;appearance:none}
+  .hsrch input::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+  body:has(.hero) .hsrch{visibility:hidden}
+}
 </style>
 </head>
 <body>
@@ -450,11 +478,12 @@ ol.ms.one > li::before{display:none}
       <b>極（きわみ）</b>
       <small>英単語の意味と<br>入試データ</small>
     </a>
-    <nav class="hd-r" aria-label="メイン">
-      <a class="rklink" href="/ranking/nyushi/">入試英単語ランキング</a><a class="rklink" href="/words/">単語一覧</a>
-      <a class="artlink" href="/articles/">記事</a><a class="applink" href="/app/">無料アプリ</a>
-    </nav>
+    <nav class="hd-r" aria-label="アプリ"><a class="applink" href="/app/">無料アプリ</a></nav>
   </div>
+  <div class="snav-w"><div class="wrap snav-in">
+    <nav class="snav" aria-label="メイン"><a href="/search/">単語を調べる</a><a href="/words/">単語一覧</a><a href="/ranking/nyushi/">ランキング</a><a href="/articles/">記事</a><a href="/about/">極について</a></nav>
+    <form class="hsrch" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語を調べる" aria-label="英単語か日本語で調べる" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required></form>
+  </div></div>
 </header>
 <section class="hero">
   <div class="wrap"><div class="hero-in">
