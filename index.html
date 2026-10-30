@@ -443,7 +443,16 @@ ol.ms.one > li::before{display:none}
 /* 派生語ページ */
 .wd .dpar{margin:6px 0 0;font-size:15px;display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
 .wd .dpar a{font:700 18px var(--en);color:var(--blue)}
-.wd .dpar span:last-child{color:var(--sub)}
+.wd .dpar .dm{color:var(--sub);flex:1 1 9em;min-width:0;word-break:auto-phrase;text-wrap:pretty}
+.wst.w3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.wst.w3 li{padding:10px 9px}
+.wst.w3 b{font-size:21px}
+.wst.w3 span{font-size:12px}
+.wst.w3 span small{font-size:11px}
+.wd .afx{margin:0 0 10px;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;font-size:14px;color:var(--sub)}
+.wd .afx b{font:700 16px var(--en);color:var(--ink)}
+.wd .afx span,.wd .afx small{white-space:nowrap}
+.wd .afx small{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:0 8px}
 .wd .fam li.cur{background:var(--blue-50);border-radius:6px;margin:0 -8px;padding:10px 8px}
 .wd .fam .fw{font:700 18px var(--en);margin-right:10px}
 .wd .fam .mh span{color:var(--sub)}
