@@ -5507,18 +5507,38 @@ function kyuOf(xp){
   return {kyu: 10 - i, name: `${10 - i}級`, xp, lo, hi, left: hi === null ? 0 : hi - xp, fr: hi === null ? 1 : (xp - lo) / (hi - lo)};
 }
 const xpBar = (fr, from) => `<span class="k-xbar" aria-hidden="true"><i${fr > 0 ? '' : ' class="zero"'} style="width:${(fr * 100).toFixed(1)}%${from != null ? `;--from:${(from * 100).toFixed(1)}%` : ''}"></i></span>`;
-/* the 記録 tab's profile: 3級, the bar, あと120XP */
-function kyuRow(){
-  const k = kyuOf(xpTotal()), one = k.hi === null, hint = one ? djHint() : '';
-  return `<div class="k-kyu" role="img" aria-label="${k.name}、${one ? hint || '最上の級' : `${k.kyu - 1}級まであと${nLoc(k.left)}XP`}、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${k.name}</span>${xpBar(k.fr)}<span class="r" aria-hidden="true">${one ? '' : `あと${nLoc(k.left)}XP`}</span></div>${hint ? `<p class="k-kyu-s" aria-hidden="true">${kPhrases(hint)}</p>` : ''}`;
+/* past 1級, XP goes on as 稽古1, 稽古2, … (one each 2,500 XP), so something still grows after the 級 run out; null before 1級 */
+const KEI = 2500, KYU_TOP = KYU[KYU.length - 1];
+function keiOf(xp){
+  if (xp < KYU_TOP) return null;
+  const i = Math.floor((xp - KYU_TOP) / KEI), lo = KYU_TOP + i * KEI;
+  return {lv: i + 1, name: `稽古${i + 1}`, xp, lo, hi: lo + KEI, left: lo + KEI - xp, fr: (xp - lo) / KEI};
 }
-/* the results: +38 XP, the 級 and its bar (filling from where it stood before this set); a 級 up says so, 1級 points to the 道場 */
+/* the 段 shows only from 1級 on: a dojo passed before that waits for it (as in 武道, 初段 comes after 1級) */
+const danShown = () => xpTotal() >= KYU_TOP ? danName() : undefined;
+/* the 記録 tab's profile: 3級, the bar, あと120XP; from 1級 on: 稽古3 and its bar */
+function kyuRow(){
+  const k = kyuOf(xpTotal()), kk = keiOf(k.xp);
+  if (kk) { const dn = danShown(), hint = dn ? '' : djHint(), q = kk.name;
+    return `<div class="k-kyu" role="img" aria-label="${q}、稽古${kk.lv + 1}まであと${nLoc(kk.left)}XP、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${q}</span>${xpBar(kk.fr)}<span class="r" aria-hidden="true">あと${nLoc(kk.left)}XP</span></div>${hint ? `<p class="k-kyu-s" aria-hidden="true">${kPhrases(hint)}</p>` : ''}`; }
+  return `<div class="k-kyu" role="img" aria-label="${k.name}、${k.kyu - 1}級まであと${nLoc(k.left)}XP、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${k.name}</span>${xpBar(k.fr)}<span class="r" aria-hidden="true">あと${nLoc(k.left)}XP</span></div>`;
+}
+/* the results: +38 XP, the 級 and its bar (filling from where it stood before this set); a 級 up says so, 1級 points to the 道場.
+   From 1級 on the same for 稽古: the 段 (once it shows) and 稽古 on the right, the 稽古 bar, 稽古4に上がった */
 function xpResHTML(gain, k0, k1){
-  const up = k1.kyu < k0.kyu, one = k1.hi === null, from = up ? 0 : k0.fr;
-  const h = djHint(), s = one ? `${up ? '<b>1級になった</b>、' : ''}${h ? kPhrases(h) : '段は、道場の合格で上がる'}`
-    : up ? `<b>${k1.name}に上がった</b>、${k1.kyu - 1}級まであと${nLoc(k1.left)}XP` : `${k1.kyu - 1}級まで、あと${nLoc(k1.left)}XP`;
+  const e1 = keiOf(k1.xp);
+  if (e1) {
+    const e0 = keiOf(k0.xp), first = !e0, up = !first && e1.lv > e0.lv, dn = danShown(), h = dn ? '' : djHint(), from = first || up ? 0 : e0.fr;
+    const s = first ? `<b>1級になった</b>、${h ? kPhrases(h) : `ここからは稽古、稽古2まであと${nLoc(e1.left)}XP`}`
+      : up ? `<b>${e1.name}に上がった</b>、稽古${e1.lv + 1}まであと${nLoc(e1.left)}XP` : `稽古${e1.lv + 1}まで、あと${nLoc(e1.left)}XP${h ? `。${kPhrases(h)}` : ''}`;
+    const q = dn ? `${dn}・${e1.name}` : e1.name;
+    return `<section class="rs-xp" aria-label="このセットで${nLoc(gain)}XP、${q}${up ? 'に上がった' : ''}"><div class="hd" aria-hidden="true"><p class="g"><b>+${nLoc(gain)}</b>XP</p><p class="q${first || up ? ' up' : ''}${dn ? ' jp' : ''}">${q}</p></div>
+    ${xpBar(e1.fr, from)}<p class="s">${s}</p></section>`;
+  }
+  const up = k1.kyu < k0.kyu, from = up ? 0 : k0.fr;
+  const s = up ? `<b>${k1.name}に上がった</b>、${k1.kyu - 1}級まであと${nLoc(k1.left)}XP` : `${k1.kyu - 1}級まで、あと${nLoc(k1.left)}XP`;
   return `<section class="rs-xp" aria-label="このセットで${nLoc(gain)}XP、${k1.name}${up ? 'に上がった' : ''}"><div class="hd" aria-hidden="true"><p class="g"><b>+${nLoc(gain)}</b>XP</p><p class="q${up ? ' up' : ''}">${k1.name}</p></div>
-    ${xpBar(k1.fr, one && !up ? null : from)}<p class="s">${s}</p></section>`;
+    ${xpBar(k1.fr, from)}<p class="s">${s}</p></section>`;
 }
 /* ---------- 極み道場（docs/features/dojo.md） ---------- */
 /* 段 is the skill: each dojo passed lifts it (初段 … 五段; the 極 dojo, 極), XP never does. A built-in deck's dojo (ACH_BOOKS) is
@@ -5874,9 +5894,10 @@ function djResults(){
   const note = r.pass && !r.first ? `段は${djDan(id)}のまま、最高${e.b}問` : r.pass ? '' : '明日また挑戦できる';
   const hero = `<section class="rs-first"><article class="k-hero rs-hero dj-hero" aria-label="${esc(djName(id))}、${n}問のうち${r.got}問正解、${r.pass ? '合格' : '不合格'}"><div class="k-hero-top">${djSign(id)}<div class="k-hero-txt" aria-hidden="true">
     <p class="k-hero-title"><span class="n">${r.got}</span><span class="unit">問正解</span></p><p class="k-hero-sub">${kPhrases(sub)}</p>${note ? `<p class="k-hero-sub dj-note">${kPhrases(note)}</p>` : ''}</div>${r.pass ? '<span class="k-seal" aria-hidden="true">合格</span>' : ''}</div></article></section>`;
-  const dan = r.first ? danName() : djDan(id), v = {d: djName(id), q: dan, b: e.b, n: r.got};   // just passed: the 段 now (two on one day are told apart by the decks' order later)
-  const up = r.first ? `<section class="dj-up" role="status" aria-label="${dan}になった"><p class="l">${id === 'kw' ? '最後の道場に合格' : '段が上がった'}</p><p class="q">${dan}</p><p class="s">${id === 'kw' ? '5つの道場と極の道場、ぜんぶ合格' : `合格した道場 ${danN()}つ`}</p></section>` : '';
-  const line = r.first ? mkSay(id === 'kw' ? 'dojo_kw_pass' : 'dojo_pass', v) || `${dan}になったよ！`
+  const dan = r.first ? danName() : djDan(id), v = {d: djName(id), q: dan, b: e.b, n: r.got}, wait = r.first && !danShown();   // passed before 1級: the 段 comes with 1級   // just passed: the 段 now (two on one day are told apart by the decks' order later)
+  const up = wait ? `<section class="dj-up" role="status" aria-label="合格、1級になると${dan}"><p class="l">道場に合格</p><p class="q">${dan}</p><p class="s">1級になると、${dan}がつく</p></section>`
+    : r.first ? `<section class="dj-up" role="status" aria-label="${dan}になった"><p class="l">${id === 'kw' ? '最後の道場に合格' : '段が上がった'}</p><p class="q">${dan}</p><p class="s">${id === 'kw' ? '5つの道場と極の道場、ぜんぶ合格' : `合格した道場 ${danN()}つ`}</p></section>` : '';
+  const line = wait ? `合格！1級になったら、${dan}だよ` : r.first ? mkSay(id === 'kw' ? 'dojo_kw_pass' : 'dojo_pass', v) || `${dan}になったよ！`
     : r.pass ? mkSay('dojo_repass', v) || '腕だめしも合格！' : mkSay('dojo_fail', v) || '明日また挑戦しよう';
   const say = `<section class="k-say rs-say" aria-label="めくるから">${mekuru(r.pass ? 'happy' : 'cheer')}<p class="k-bubble" role="status">${kPhrases(line)}</p></section>`;
   const secs = Math.round((Date.now() - DJ.start) / 1000), nb = (x, u) => `<b>${x}</b>${u}`;
@@ -5891,12 +5912,12 @@ function djResults(){
 }
 /* the 記録 tab's profile: the 段 large, and the 道場's list (none before a dojo has come) */
 function danRow(){
-  const dn = danName(); if (!dn && !DJ_IDS.some(djSeen)) return '';
-  return `<button class="k-dan" data-act="djList" aria-label="${dn ? `段は${dn}` : '段はまだ'}、道場の一覧"><span class="q${dn ? '' : ' none'}" aria-hidden="true">${dn || '段はまだ'}</span><span class="r" aria-hidden="true">道場${K_ICO.chev}</span></button>`;
+  const dn = danShown(), wait = !dn && danName(); if (!dn && !DJ_IDS.some(djSeen)) return '';
+  return `<button class="k-dan" data-act="djList" aria-label="${dn ? `段は${dn}` : wait ? `${wait}は1級から` : '段はまだ'}、道場の一覧"><span class="q${dn ? '' : ' none'}" aria-hidden="true">${dn || (wait ? `${wait}は1級から` : '段はまだ')}</span><span class="r" aria-hidden="true">道場${K_ICO.chev}</span></button>`;
 }
 /* the list: every dojo, passed (its day, its 段, the best) or not; one not come yet is ？？？ */
 function djListSheet(){
-  const dn = danName(), np = DJ_IDS.filter(id => djE(id).p != null).length;
+  const dn = danShown(), np = DJ_IDS.filter(id => djE(id).p != null).length;
   const row = id => { const e = djE(id);
     if (!djSeen(id)) return `<li><div class="k-djl-r q" role="img" aria-label="まだあらわれていない道場"><span class="k-dj-sign mini q" aria-hidden="true"><span>？</span></span><span class="k-djl-t" aria-hidden="true"><span class="k-djl-n">？？？</span><span class="k-djl-s">まだあらわれていない</span></span></div></li>`;
     const s = e.p != null ? `${djDayText(e.p)}に合格、${djDan(id)}${e.b != null ? `、最高${e.b}問` : ''}` : e.b != null ? `まだ合格していない、最高${e.b}問` : 'まだ挑戦していない';
@@ -7385,7 +7406,8 @@ function renderResults(){
   // XP: a set finished (not 練習 nor 苦手を特訓) earns 5, once; the set's XP is its answers', that and the goal's (when it was reached here)
   if (!prac && !Q.opts.drill && !Q.xpSet) { Q.xpSet = XP.set; xpOpen(); bumpDaily({[XPK]: XP.set}); }
   const xpGain = prac ? 0 : (Q.hist || []).reduce((a, h) => a + (h.bump?.[XPK] || 0), 0) + (Q.xpSet || 0) + (Q.won ? XP.goal : 0);
-  const xpNow = xpTotal(), ky1 = kyuOf(xpNow), ky0 = kyuOf(Math.max(0, xpNow - xpGain)), kyUp = !prac && ky1.kyu < ky0.kyu ? ky1 : null;
+  const xpNow = xpTotal(), ky1 = kyuOf(xpNow), ky0 = kyuOf(Math.max(0, xpNow - xpGain)), ke1 = keiOf(xpNow), ke0 = keiOf(Math.max(0, xpNow - xpGain)),
+    kyUp = prac ? null : ky1.kyu < ky0.kyu ? ky1 : ke1 && ke0 && ke1.lv > ke0.lv ? {kyu: 0, name: ke1.name} : null;
   // a set of new words only is not a test: you graded each card yourself, so it shows how (N語 めくった in four grades), not a %
   const fr = !prac && its.every(x => !x.sameDay && !isReview(x.p0)), gn = [0, 1, 2, 3, 4].map(g => its.filter(x => x.first === g).length);
   if (!prac && TUT?.on && !TUT.f1 && tutOn()) { TUT.f1 = Date.now(); tutSave(); }   // a new learner finished a first set (kept for later)
