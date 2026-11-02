@@ -1290,6 +1290,12 @@ html{touch-action:manipulation}
 #app:has(.scdock) ~ #toastroot .toast{bottom:calc(70px + var(--scd,130px) + var(--kb,0px) + env(safe-area-inset-bottom,0px))}   /* above the dock (its height: --scd) */
 .scan-picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.scan-picks .scan-pick{min-height:64px}.scanpk:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .scm-done .link{margin-left:8px;font-size:13px}
+.scmean{flex:1 0 100%;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0;align-items:center}.scmean::-webkit-scrollbar{display:none}
+.scm-q{flex:none;font-size:12px;color:var(--muted)}.scm-c{flex:none;max-width:16em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-height:32px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;cursor:pointer}
+.scm-c.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.scx-tag{font-size:11.5px;font-weight:700;color:var(--accent);margin-bottom:2px}
+.qscx{margin-top:12px;max-width:30ch;text-align:left}.qscx .fb-ex{font-family:var(--f-en);font-size:15px;line-height:1.55;color:var(--ink-2)}
+.scx-card{margin:12px 0;padding:12px 14px;border-radius:12px;background:var(--surface)}.scx-card .fb-ex{margin:2px 0 6px;font-family:var(--f-en);font-size:15px;line-height:1.55}.scx-note{margin:0 0 4px;font-size:12px;color:var(--muted)}
 .scm-done{margin:0 0 10px;font-size:13px;font-weight:700;line-height:1.55}
 .scmiss{display:grid;gap:12px;margin:12px 0 16px}.scm-row{display:grid;gap:6px}.scm-w{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.scm-w b{font-family:var(--f-en);font-size:17px}
 .scm-w .link{display:inline-flex;align-items:center;gap:4px}.scm-w .ico{width:14px;height:14px}
@@ -2253,6 +2259,17 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-pf-s{margin:8px 0 0;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.45;font-feature-settings:"palt"}
 .k-input{display:block;width:100%;height:48px;padding:0 14px;border:1.5px solid transparent;border-radius:12px;background:var(--fill);color:var(--ink);font:inherit;font-size:16px;font-weight:500}
 .k-input:focus{outline:none;border-color:var(--blue)}
+/* ユーザーID, 特典コード, 開発者メニュー */
+.btn-sm{min-height:36px;padding:0 12px;font-size:13.5px;flex:none}
+.k-code{display:flex;flex-direction:column;gap:10px;margin:6px 0 14px}
+.k-code .k-pf-h{margin:6px 0 0}
+.k-dev-promo{display:flex;flex-direction:column;gap:10px}
+.k-dev-promo[hidden]{display:none}
+.k-idv{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.k-bdgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.k-bdg{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:var(--r-pill);background:var(--fill);color:var(--ink);font-size:var(--fs-sub);font-weight:700}
+.k-bdg.dev{background:var(--ink);color:var(--surface)}
+.k-bdg.fnd{background:var(--blue);color:#fff}
 .k-input::placeholder{color:var(--ink-3)}
 .k-pf-icons{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
 .k-pf-icons button{display:grid;place-items:center;min-height:60px;border-radius:50%}
@@ -4041,11 +4058,12 @@ async function initFirebase(){
         Sync.err = null; Sync.state = 'syncing'; renderSync();
         await pull();                                   // merges this device's records with the account's
         Sync.state = Sync.err ? 'err' : 'on';
+        loadAcct();
         if (S.settings.onboarded && $('.ob')) closeSheet();
         if (!S.settings.onboarded && !sheetOpen()) onboard();
         if (instAfter && Date.now() - instAfter < 600000) setTimeout(() => { if (!sheetOpen()) installSheet(); }, 400);   // logged in from ホーム画面に入れる: its steps again
         instAfter = 0;
-      } else { Sync.col = null; Sync.uid = null; Sync.state = 'local'; }
+      } else { Sync.col = null; Sync.uid = null; Sync.state = 'local'; acctReset(null); }
       renderSync();
       if ($('#screen').hidden && !sheetOpen()) render();
     });
@@ -4112,6 +4130,154 @@ async function resetPass(){
 async function signOutNow(){
   const {authM, auth} = Auth.api || {}; if (!authM) return;
   await flush(true); await authM.signOut(auth); toast('ログアウトしました（この端末の記録は残ります）');
+}
+
+/* ---------- ユーザーID と 特典コード (firestore.rules says who may write what) ----------
+   ユーザーID: 8 random digits given to an account at its first login here (ids/<id> + acct/<uid> in one write; the rules refuse an
+   id already taken, and then another is tried). 特典コード: KW + 8 letters, made by the owner in the 開発者メニュー (admins/<uid>,
+   made by hand in the console); using one counts a use on codes/<code> and makes perks/<code>_<uid> in the same write.
+   kind founder = 創設メンバー (days 0: for good), promo = days of 極プラス. What the account has is kept per uid in localStorage, so it
+   shows offline too */
+const ACCT_KEY = 'kiwami.acct.';
+const Acct = {uid: null, id: '', admin: false, perks: []};
+const CODE_AB = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   // no 0/O, 1/I
+const rndOf = (ab, n) => [...crypto.getRandomValues(new Uint32Array(n))].map(x => ab[x % ab.length]).join('');
+const fmtId = id => id ? id.slice(0, 4) + ' ' + id.slice(4) : '';
+const normCode = s => (s || '').normalize('NFKC').toUpperCase().replace(/[^A-Z0-9]/g, '');
+const fmtCode = c => c.replace(/^KW(\w{4})(\w{4})$/, 'KW-$1-$2');
+const perkEnd = p => p.days ? p.t + p.days * DAY : Infinity;
+const isPlus = () => Acct.admin || Acct.perks.some(p => perkEnd(p) > Date.now());
+const acctBadges = () => [Acct.admin && '開発者', Acct.perks.some(p => p.kind === 'founder') && '創設メンバー'].filter(Boolean);
+const ymd = ms => { const d = new Date(ms); return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`; };
+function plusWhy(){
+  if (Acct.admin) return '開発者';
+  if (Acct.perks.some(p => p.kind === 'founder')) return '創設メンバー特典';
+  const end = Math.max(0, ...Acct.perks.map(perkEnd));
+  return end > Date.now() ? `${ymd(end)}まで` : '';
+}
+function acctReset(uid){
+  let c = null; try { c = uid && JSON.parse(lsGet(ACCT_KEY + uid) || 'null'); } catch(e) {}
+  Object.assign(Acct, {uid, id: c?.id || '', admin: !!c?.admin, perks: Array.isArray(c?.perks) ? c.perks : []});
+}
+async function loadAcct(){
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid; if (!fs || !uid) return;
+  if (Acct.uid !== uid) acctReset(uid);
+  try {
+    const [a, ad, ps] = await Promise.all([fs.getDoc(fs.doc(db, 'acct', uid)), fs.getDoc(fs.doc(db, 'admins', uid)).catch(() => null),
+      fs.getDocs(fs.query(fs.collection(db, 'perks'), fs.where('uid', '==', uid)))]);
+    if (Auth.user?.uid !== uid) return;
+    const id = a.exists() ? a.data().id : await newId(fs, db, uid);
+    Object.assign(Acct, {id, admin: !!ad?.exists(), perks: ps.docs.map(d => { const x = d.data(); return {code: x.code, kind: x.kind, days: x.days || 0, t: x.t?.toMillis?.() || Date.now()}; })});
+    lsSet(ACCT_KEY + uid, JSON.stringify({id: Acct.id, admin: Acct.admin, perks: Acct.perks}));
+  } catch(e) { return; }   // offline: what was kept on this device stands
+  if (['settings', 'stats'].includes(route.tab) && $('#screen').hidden && !sheetOpen()) render();
+}
+async function newId(fs, db, uid){
+  for (let i = 0; i < 6; i++) {
+    const id = String(1 + crypto.getRandomValues(new Uint32Array(1))[0] % 9) + rndOf('0123456789', 7), b = fs.writeBatch(db);
+    b.set(fs.doc(db, 'ids', id), {uid, t: fs.serverTimestamp()});
+    b.set(fs.doc(db, 'acct', uid), {id, t: fs.serverTimestamp()});
+    try { await b.commit(); return id; }
+    catch(e) {
+      if (e?.code !== 'permission-denied') throw e;
+      const a = await fs.getDoc(fs.doc(db, 'acct', uid)); if (a.exists()) return a.data().id;   // another device of this account got one first
+    }
+  }
+  return '';
+}
+function copyText(s, msg){
+  try { navigator.clipboard.writeText(s).then(() => toast(msg), () => toast(s, null, 6000)); } catch(e) { toast(s, null, 6000); }
+}
+function codeSheet(){
+  const ps = Acct.perks.filter(p => p.kind === 'founder' || perkEnd(p) > Date.now());
+  openSheet(`<div class="sheet-h"><h3>特典コード</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    ${isPlus() ? `<div class="k-grp"><div class="k-srow">${kTxt('極プラス', esc(plusWhy()))}</div></div>` : ''}
+    <form id="codeform" class="k-code">
+      <label class="k-pf-h" for="rcode">コードを入力</label>
+      <input id="rcode" class="k-input" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="KW-XXXX-XXXX" maxlength="20" enterkeyhint="done">
+      <p id="rerr" class="small" role="alert" style="color:var(--again-t)"></p>
+      <button class="btn btn-primary btn-block" type="submit">使う</button>
+    </form>
+    ${ps.length ? `<p class="k-pf-s">使ったコード：${ps.map(p => esc(fmtCode(p.code))).join('、')}</p>` : ''}`);
+}
+const CODE_ERR = {none: 'このコードは見つかりません。打ちまちがいがないか確かめてください', old: 'このコードは期限が切れています',
+  full: 'このコードは、使える人数に達しました', mine: 'このコードは、もう使っています', form: 'KW から始まる10文字のコードを入れてください'};
+async function redeem(){
+  const {fs, db} = Auth.api || {}, u = Auth.user, err = $('#rerr'), btn = $('#codeform button[type=submit]');
+  if (!fs || !u || !err) return;
+  const code = normCode($('#rcode').value); err.textContent = '';
+  try {
+    if (!/^KW[A-Z0-9]{8}$/.test(code)) throw 'form';
+    if (Acct.perks.some(p => p.code === code)) throw 'mine';
+    btn.disabled = true;
+    const cr = fs.doc(db, 'codes', code), c = await fs.getDoc(cr);
+    if (!c.exists()) throw 'none';
+    const x = c.data();
+    if (x.until && x.until.toMillis() < Date.now()) throw 'old';
+    if (x.uses >= x.max) throw 'full';
+    const b = fs.writeBatch(db);
+    b.update(cr, {uses: fs.increment(1)});
+    b.set(fs.doc(db, 'perks', code + '_' + u.uid), {uid: u.uid, code, kind: x.kind, days: x.days, t: fs.serverTimestamp()});
+    await b.commit();
+    Acct.perks.push({code, kind: x.kind, days: x.days, t: Date.now()});
+    closeSheet(); render();
+    toast(x.kind === 'founder' ? '創設メンバーになりました。極プラスがずっと無料で使えます' : `極プラスが${x.days}日間、無料で使えます`, null, 4000);
+    loadAcct();
+  } catch(e) {
+    err.textContent = CODE_ERR[e] || (e?.code === 'permission-denied' ? 'このコードは使えませんでした（使用ずみ・期限切れ・人数に達したなど）' : '通信できませんでした。もう一度お試しください');
+    if (btn) btn.disabled = false;
+  }
+}
+/* 開発者メニュー (admins only; the rules refuse anyone else): make a code, see the codes made, stop one */
+const CODE_KIND = {founder: '創設メンバー', promo: 'キャンペーン'};
+function devSheet(){
+  if (!Acct.admin) return;
+  openSheet(`<div class="sheet-h"><h3>開発者メニュー</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <form id="devform" class="k-code">
+      <p class="k-pf-h">コードを作る</p>
+      <div class="field"><label for="dkind">種類</label><select id="dkind" class="input"><option value="founder">創設メンバー（1人1回・ずっと無料）</option><option value="promo">キャンペーン（人数と日数を決める）</option></select></div>
+      <div class="k-dev-promo" hidden>
+        <div class="field"><label for="dmax">使える人数</label><input id="dmax" class="input" type="number" min="1" max="100000" value="100"></div>
+        <div class="field"><label for="ddays">無料の日数</label><input id="ddays" class="input" type="number" min="1" max="3650" value="30"></div>
+        <div class="field"><label for="duntil">コードの期限（空なら無期限）</label><input id="duntil" class="input" type="date"></div>
+      </div>
+      <div class="field"><label for="dmemo">メモ（だれに渡すか）</label><input id="dmemo" class="input" type="text" maxlength="40" autocomplete="off"></div>
+      <button class="btn btn-primary btn-block" type="submit">作る</button>
+      <div id="devout"></div>
+    </form>
+    <p class="k-pf-h">作ったコード</p><div id="devlist" class="k-grp"><p class="small muted">読み込み中…</p></div>`);
+  devList();
+}
+async function devMake(){
+  const {fs, db} = Auth.api || {}; if (!fs || !Acct.admin) return;
+  const kind = $('#dkind').value, promo = kind === 'promo', btn = $('#devform button[type=submit]');
+  const max = promo ? Math.max(1, Math.round(+$('#dmax').value || 1)) : 1, days = promo ? Math.max(1, Math.round(+$('#ddays').value || 30)) : 0;
+  const ud = promo && $('#duntil').value, until = ud ? fs.Timestamp.fromDate(new Date(ud + 'T23:59:59+09:00')) : null;
+  const code = 'KW' + rndOf(CODE_AB, 8);
+  btn.disabled = true;
+  try {
+    await fs.setDoc(fs.doc(db, 'codes', code), {kind, max, uses: 0, days, until, memo: $('#dmemo').value.trim().slice(0, 40), t: fs.serverTimestamp()});
+    $('#devout').innerHTML = `<div class="k-grp"><div class="k-srow">${kTxt(`<b lang="en">${fmtCode(code)}</b>`, '作りました')}<button class="btn btn-ghost btn-sm" type="button" data-act="devCopy" data-c="${code}">コピー</button></div></div>`;
+    $('#dmemo').value = '';
+    devList();
+  } catch(e) { toast('作れませんでした（' + (e?.code || '通信') + '）'); }
+  btn.disabled = false;
+}
+async function devList(){
+  const {fs, db} = Auth.api || {}, box = $('#devlist'); if (!fs || !box) return;
+  try {
+    const snap = await fs.getDocs(fs.query(fs.collection(db, 'codes'), fs.orderBy('t', 'desc'), fs.limit(100)));
+    if (!$('#devlist')) return;
+    box.innerHTML = snap.docs.map(d => { const x = d.data(), off = x.uses >= x.max || (x.until && x.until.toMillis() < Date.now());
+      const sub = [CODE_KIND[x.kind] || x.kind, `${x.uses}/${x.max}人`, x.days ? `${x.days}日` : 'ずっと', x.until ? `${ymd(x.until.toMillis())}まで` : '', x.memo ? esc(x.memo) : '', off ? '終了' : ''].filter(Boolean).join('・');
+      return `<div class="k-srow"><span class="txt"><span class="lab" lang="en">${fmtCode(d.id)}</span><span class="sub ml">${sub}</span></span><button class="btn btn-ghost btn-sm" type="button" data-act="devCopy" data-c="${d.id}">コピー</button>${off ? '' : `<button class="btn btn-ghost btn-sm" type="button" data-act="devStop" data-c="${d.id}">止める</button>`}</div>`;
+    }).join('') || '<p class="small muted">まだありません</p>';
+  } catch(e) { box.innerHTML = `<p class="small muted">読み込めませんでした（${esc(e?.code || '通信')}）</p>`; }
+}
+async function devStop(code){
+  const {fs, db} = Auth.api || {}; if (!fs || !Acct.admin) return;
+  try { const r = fs.doc(db, 'codes', code), c = await fs.getDoc(r); await fs.updateDoc(r, {max: c.data().uses}); toast('止めました'); devList(); }
+  catch(e) { toast('止められませんでした'); }
 }
 function syncLabel(){
   if (IS_WEB && FIREBASE && !Auth.user) return Auth.failed ? 'この端末に保存（ログイン機能を読み込めませんでした。通信が戻ると自動でつなぎ直します）'
@@ -5743,7 +5909,8 @@ function viewStats(){
   const top = `<section class="k-prof" aria-label="プロフィール"><div class="top">${avHTML(S.settings.icon, 'lg')}
       <div class="info"><h1 class="nm">${nick ? esc(nick) : '<button class="k-prof-set" data-act="profSheet">ニックネームを決める</button>'}</h1>
         <button class="k-prof-goal" data-act="profSheet" data-f="goal" aria-label="${gl ? `目標 ${esc(gl[2])}、変える` : '目標を決める'}"><span class="pill">${K_FLAG}${gl ? `<span class="k">目標</span>${esc(gl[1])}` : '目標を決める'}</span></button>
-        ${since ? `<p class="since">${since}にはじめた</p>` : ''}</div>
+        ${since ? `<p class="since">${since}にはじめた</p>` : ''}${Auth.user && Acct.uid === Auth.user.uid && Acct.id ? `<p class="since">ユーザーID <span class="k-idv">${fmtId(Acct.id)}</span></p>` : ''}
+        ${Auth.user && acctBadges().length ? `<p class="k-bdgs">${acctBadges().map(b => `<span class="k-bdg ${b === '開発者' ? 'dev' : 'fnd'}">${b}</span>`).join('')}</p>` : ''}</div>
       <button class="k-prof-edit" data-act="profSheet" aria-label="プロフィールを編集"><span class="pill">${K_PEN}編集</span></button></div>
     ${danRow()}${kyuRow()}<div class="k-pst"><div><p class="n">${nLoc(mAll)}<small>語</small></p><p class="l">覚えた単語</p></div><div><p class="n">${nLoc(days)}<small>日</small></p><p class="l">学習した日</p></div><div><p class="n">${nLoc(tm[0])}<small>${tm[1]}</small></p><p class="l">学習した時間</p></div></div></section>`;
   const streak = `<section class="k-sec" aria-label="連続記録"><div class="k-sec-h"><h2 class="k-sec-t">連続記録</h2></div>${streakBlock(g)}${calBlock(st, g.fr)}${tktBlock(st)}</section>`;
@@ -5860,7 +6027,9 @@ function viewSettings(){
   ${kSec('音と振動', kGroup([kSw('autoSpeak', '単語を自動で読み上げる', 'オフにすると、聞き取りの問題も出ない'),
     kOpts('rate', [[0.75, 'ゆっくり'], [0.95, 'ふつう'], [1.15, '速め']], '例文の読み上げの速さ'), kSw('sfx', '効果音'), kSw('haptic', '振動', '正解と不正解を振動でも知らせる')]))}
   ${IS_WEB ? kSec('アプリとして使う', kGroup([inst, kGo('dlAudio', '音声をまとめてダウンロード', '<span data-prog>約25MBで、電波がなくても発音が聞ける</span>')])) : ''}
-  ${IS_WEB && FIREBASE ? kSec('アカウント', kGroup([u ? `<div class="k-srow">${u.photoURL ? `<img class="k-me" src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}${kTxt(esc(u.displayName || 'ログイン中'), u.email ? esc(u.email) : '')}</div>${kGo('signOut', 'ログアウト', 'この端末の記録は残る')}`
+  ${IS_WEB && FIREBASE ? kSec('アカウント', kGroup([u ? `<div class="k-srow">${u.photoURL ? `<img class="k-me" src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}${kTxt(esc(u.displayName || 'ログイン中'), u.email ? esc(u.email) : '')}</div>
+      <div class="k-srow">${kTxt('ユーザーID', Acct.uid === u.uid && Acct.id ? `<span class="k-idv">${fmtId(Acct.id)}</span>` : '準備中…')}${Acct.uid === u.uid && Acct.id ? '<button class="btn btn-ghost btn-sm" data-act="copyId">コピー</button>' : ''}</div>
+      ${kGo('codeSheet', '特典コード', isPlus() ? `極プラス（${esc(plusWhy())}）` : 'コードを持っていたら、ここで使う')}${Acct.admin ? kGo('devSheet', '開発者メニュー', 'コードを作る・見る') : ''}${kGo('signOut', 'ログアウト', 'この端末の記録は残る')}`
       : kGo('signIn', 'ログインして記録を保存', 'スマホを変えても、続きからできる'), saveRow])) : ''}
   ${kSec('データ', kGroup([IS_WEB && FIREBASE ? '' : saveRow, kGo('backup', 'バックアップをとる', '記録と自作の単語帳を、ファイルに保存'), kGo('restoreSheet', 'バックアップから戻す', 'いまの記録は、ファイルの記録に置きかわる')]))}
   ${kSec('アプリについて', kGroup([kGo('showOnboard', 'アプリのしくみ', '忘れかけたころに出るしくみと、毎日の流れ'), IS_WEB ? kGo('privacySheet', '記録とプライバシー') : '',
@@ -5920,7 +6089,7 @@ function cardSheet(c, keep=false){
       <div class="qword" lang="en">${esc(c.w)}</div>${ipaHTML(c)}
       ${c.isD ? `<div class="qask">← ${esc(c.parent.w)}（${esc(c.parent.m)}）の派生語</div>` : sensesProgress(c)}
       ${sensesHTML(c, -1, 'all')}${c.isD ? affixHTML(c) : etyHTML(c)}
-    </div>
+    </div>${scanCtx(c) ? (() => { const x = scanCtx(c); return `<div class="scx-card"><div class="scx-tag">長文で見た文${x.si >= 0 ? `（${esc(c.s[x.si].m)}）` : ''}</div><p class="fb-ex" lang="en">${markWord(x.t, c.w)}</p><p class="scx-note">${x.si >= 0 ? kPhrases('復習で、この文での意味を聞きます。') : kPhrases('答えの画面に出ます。長文の画面でこの文での意味を選ぶと、この文で問題も出ます。')}</p><button class="link" data-act="scanCtxOff" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">この文で出さない</button></div>`; })() : ''}
     ${c.isD ? familyHTML(c.parent, c.w, true) : familyHTML(c, c.fam?.[0]?.w || null)}
     <div class="kv">
       <div><span>状態</span><b>${stLabel}</b></div>
@@ -6053,6 +6222,7 @@ function baseType(c, p){
   }
   if (!isReview(p)) return 'e2j';
   if (swCheck(p)) return 'e2j';   // the 知ってる check asks for the meaning itself (聞き取り may still stand in for it), never a 語法/文脈 question
+  { const x = scanCtx(c); if (x && x.si >= 0 && (p.r || 0) % 2 === 1 && openIdx(c).includes(x.si) && ctxParts(c, x.si)) return 'ctx'; }   // a word from your passage: every other review in its sentence
   const n = S.settings.senseCards ? learnedSenses(c) : c.s.length, r = p.r || 0;
   const canSpell = S.settings.mode === 'auto' && S.settings.spell && c.p !== '熟' && /^[a-z][a-z'-]*$/i.test(c.w);
   if (p.s < 4) return (n >= 3 && r % 3 === 2) ? 'odd' : 'e2j';
@@ -6245,7 +6415,9 @@ const CROSS_NEAR = {right: [['正しい', '適切な']], without: [['なしで',
    not a near-synonym, so the sentence decides between real alternatives. */
 function ctxParts(c, si){
   if (c.isD) return null;
-  const host = c.isS ? c.parent : c, i = c.isS ? c.si : si, target = host?.s[i];
+  const host = c.isS ? c.parent : c, i = c.isS ? c.si : si; let target = host?.s[i];
+  const sx = scanCtx(host), own = !!target && sx?.si === i;   // the sentence from your passage, for the meaning chosen there
+  if (own) target = {...target, e: sx.t, j: ''};
   if (!target?.e) return null;
   const mark = markWord(target.e, host.w); if (!mark.includes('class="mark"')) return null;
   const mates = openIdx(host).filter(j => j !== i && host.s[j].m && !similar(host.s[j].m, target.m)).map(j => ({text: host.s[j].m, sub: `${host.w}の別の意味`}));
@@ -6264,7 +6436,7 @@ function ctxParts(c, si){
       mates.push({text: m, sub: `${host.w}の別の意味（${BUILTIN.find(d => d.id === y.deck)?.nick || ''}）`});
     }
   }
-  return mates.length ? {host, i, target, mark, mates} : null;
+  return mates.length || own ? {host, i, target, mark, mates} : null;
 }
 /* the choices: the right meaning, the word's other learned meanings (in this deck or another), then meanings of other words (same part of speech first) */
 function pickCtx(c, si){
@@ -6543,6 +6715,7 @@ function renderQ(){
   const it = Q.items[Q.queue[0]];
   if (!it.type) { it.type = qType(it.c, it.p0); if (it.type === 'flash') { const d = S.settings.dir; it.flip = d === 'j2e' || (d === 'mix' && Math.random() < 0.5); } }
   if (it.si == null) it.si = senseFor(it.c, it.p0);
+  if (it.type === 'ctx' && !it.c.isS) { const x = scanCtx(it.c); if (x && x.si >= 0 && openIdx(it.c).includes(x.si)) it.si = x.si; }   // your passage's sentence is about the meaning chosen there
   if (it.sameDay && !Q.sdShown) { Q.sdShown = true; const k = Q.items.filter(x => x.sameDay).length; setTimeout(() => Q && toast(`ここから今日のおさらい（${k}語）`), 60); }
   if (it.tries > (isSpell(it.type) ? 1 : 0) && (isSpell(it.type) || it.type === 'odd')) it.type = it.c.isD ? 'dform' : 'e2j';   // a missed spelling comes back as spelling once
   if (it.lis == null) { it.lis = lisFor(it); if (it.lis) it.type = 'lis'; }   // 聞き取り is decided once, when the question first comes up
@@ -6570,7 +6743,7 @@ function renderQ(){
     card = `<div class="qpos"><span class="pos">${esc(sense.p || '—')}</span></div>
       <button class="lisbtn" data-act="lisPlay" aria-label="もう一度聞く">${QI.say}</button><div class="qask">聞こえた単語の意味は？</div>`;
   } else if (type === 'e2j' || type === 'flash' || type === 'odd') {
-    card = `<div class="qpos"><span class="pos">${esc((type === 'odd' || type === 'flash') ? c.p || '—' : sense.p || '—')}</span>${multi}</div>${type === 'odd' ? wline({}) : wline()}${type !== 'odd' && !form ? patHTML(sense.pat, 'qpat') : ''}${c.isD ? `<div class="qask">← ${esc(c.parent.w)}の派生語</div>` : ''}`;
+    card = `<div class="qpos"><span class="pos">${esc((type === 'odd' || type === 'flash') ? c.p || '—' : sense.p || '—')}</span>${multi}</div>${type === 'odd' ? wline({}) : wline()}${type !== 'odd' && !form ? patHTML(sense.pat, 'qpat') : ''}${c.isD ? `<div class="qask">← ${esc(c.parent.w)}の派生語</div>` : ''}${type === 'flash' && !isReview(it.p0) ? scanCtxHTML(c, 'qscx') : ''}`;
     if (type === 'odd') card += `<div class="qask">この単語の意味<b>ではない</b>ものは？</div>`;
     else if (type === 'e2j' && it.si > 0) card += `<div class="qask">${it.si + 1}つ目の意味は？</div>`;
   } else if (type === 'dform' || type === 'dspell') {
@@ -6948,7 +7121,7 @@ function showFeedback(it, ok, np, back = -1, opt = {}){
     : sensesHTML(c, hit, 'none', true));
   // a miss: that meaning's example (the word marked), then the table; nothing behind 詳しく
   const ex = s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null;
-  const exLine = ex && it.type !== 'flash' ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${markWord(ex.e, c.w)}</div><div class="fb-ja">${esc(ex.j)}</div></div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '';
+  const exLine = (it.type !== 'ctx' ? scanCtxHTML(c) : '') + (ex && it.type !== 'flash' ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${markWord(ex.e, c.w)}</div><div class="fb-ja">${esc(ex.j)}</div></div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '');
   const pk = Q.picked, tip = !ok && pk?.tip && !tipLeaks(pk.tip, [c.isS ? c.parent : c, pk.card]) ? pk.tip : '';
   const miss = !ok && !near, fold = auto || !!near;   // a right answer: the short version first, 詳しく for the rest
   $('#fb').innerHTML = `${miss || near ? '<div class="fb-scrim" aria-hidden="true"></div>' : ''}<div class="fb v2 ${near ? 'near' : ok ? 'ok' : 'ng'}" ${auto ? 'data-act="fbTap"' : ''}><div class="fb-in"><span class="grab" aria-hidden="true"></span><div class="fb-sc">
@@ -7133,7 +7306,7 @@ function reveal(noProg = false){
   const ety = isNew && it.first === null ? (c.isD ? affixHTML(c) : c.isS ? linkHTML(c) : etyHTML(c)) : '';
   const pron = !it.flip ? `<div class="back-pron">${ipaHTML(c)}</div>` : '';   // every card's answer side: how it sounds
   const wl = !it.flip && $('#qcard .w-line'); if (wl && pron) wl.insertAdjacentHTML('afterend', pron);   // the reading right under the word
-  $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `${front ? `<div class="back-front">${front}</div>` : ''}<div class="back-face">${back}${parentLine(c)}${ety}</div>`);
+  $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `${front ? `<div class="back-front">${front}</div>` : ''}<div class="back-face">${back}${parentLine(c)}${ety}${it.flip ? scanCtxHTML(c, 'qscx') : ''}</div>`);
   const qp = $('#qcard .qpat'); if (qp && [...document.querySelectorAll('#qcard .back-face .pat')].some(x => x.firstChild?.textContent === qp.textContent)) qp.remove();   // the collocation once: under its meaning
   if (it.flip) playWord(c.w, c.p);
   if (it.first !== null || it.sameDay) {
@@ -7161,7 +7334,7 @@ function resWordHTML(it){
   const pos = pos0 && !c.isD ? `<span class="pos">${esc(pos0)}</span>` : '';
   const mean = `<div class="cmp"><div class="cmp-row ok"><span class="cmp-l">意味</span><p class="cmp-t">${pos}<b>${c.isD ? `${esc(c.m)}` : esc(studyMain(c))}</b></p>${c.isD ? `<small>← <span lang="en">${esc(c.parent.w)}</span></small>` : ''}</div></div>`;
   const ex = s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null;
-  const exLine = ex ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${markWord(ex.e, c.w)}</div><div class="fb-ja">${esc(ex.j)}</div></div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '';
+  const exLine = scanCtxHTML(c) + (ex ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${markWord(ex.e, c.w)}</div><div class="fb-ja">${esc(ex.j)}</div></div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '');
   return `<div class="fb v2 rs-sheet ${good ? 'ok' : 'ng'}"><div class="fb-in"><div class="fb-sc">
     <div class="fb-head"><span class="fb-tt">${mk}${verdict}</span><span class="sp"></span>${when}</div>
     ${head}${mean}<div class="fb-body">${exLine}${factsHTML(it, null, '')}</div></div>
@@ -8068,18 +8241,18 @@ function scanState(){
   const old = lsGet('kiwami.scan'); if (old && !list.length) list = [{id: uid('p'), t: Date.now(), text: old, sel: []}];   // the first version kept one
   if (old) { try { localStorage.removeItem('kiwami.scan'); } catch(e) {} if (list.length) lsSet(SCAN_KEY, JSON.stringify(list.slice(0, SCAN_N))); }
   const c = list[0];
-  return SCAN = {list, cur: c?.id || null, text: c?.text || '', sel: scanKeys(c?.sel), last: null, busy: null, msg: '', err: '', edit: false, home: false, added: null};
+  return SCAN = {list, cur: c?.id || null, text: c?.text || '', sel: scanKeys(c?.sel), mean: {...c?.mean}, last: null, busy: null, msg: '', err: '', edit: false, home: false, added: null};
 }
 const scanKeys = a => new Set((a || []).map(k => scanEntry(k)?.k || k));   // kept as written by the first version
 function scanSave(){
   const x = scanState(), c = x.list.find(y => y.id === x.cur);
-  if (c) { c.text = x.text; c.sel = [...x.sel]; }
+  if (c) { c.text = x.text; c.sel = [...x.sel]; c.mean = x.mean; }
   lsSet(SCAN_KEY, JSON.stringify(x.list.slice(0, SCAN_N)));
 }
 function scanNew(text){
   const x = scanState(), id = uid('p');
   x.list = [{id, t: Date.now(), text, sel: []}, ...x.list].slice(0, SCAN_N);
-  Object.assign(x, {cur: id, text, sel: new Set(), last: null, edit: false, home: false, err: '', added: null}); scanSave();
+  Object.assign(x, {cur: id, text, sel: new Set(), mean: {}, last: null, edit: false, home: false, err: '', added: null}); scanSave();
 }
 function scanEntry(k){
   const D = dictIndex(); if (D !== SCAN_D) { SCAN_HIT.clear(); SCAN_D = D; SCAN_IDI = null; }
@@ -8228,7 +8401,8 @@ function scanDockHTML(){
   let peek;
   if (!k) peek = `<p class="scan-hint">${kPhrases('知らない単語をタップして選ぶ')}</p>`;
   else if (e) { const c = dictMain(e) || dictPseudo(e), cls = scanClass(e);
-    peek = `<div class="scpeek"><b lang="en">${esc(e.w)}</b>${cls !== 'basic' ? `<span class="dst ${cls === 'in' ? 'learn' : cls}">${SCAN_LAB[cls]}</span>` : ''}<button class="link" data-act="dictOpen" data-k="${esc(e.k)}">詳しく</button><span class="m">${esc(allMeanings(c))}</span></div>`; }
+    const ms = x.sel.has(e.k) && c.s.filter(y => y.m).length > 1 ? `<div class="scmean" role="group" aria-label="この長文での意味"><span class="scm-q">この文では？</span>${c.s.map((y, i) => y.m ? `<button class="scm-c${x.mean[e.k] === i ? ' on' : ''}" data-act="scanMean" data-k="${esc(e.k)}" data-i="${i}" aria-pressed="${x.mean[e.k] === i}">${esc(y.m)}</button>` : '').join('')}</div>` : '';
+    peek = `<div class="scpeek"><b lang="en">${esc(e.w)}</b>${cls !== 'basic' ? `<span class="dst ${cls === 'in' ? 'learn' : cls}">${SCAN_LAB[cls]}</span>` : ''}<button class="link" data-act="dictOpen" data-k="${esc(e.k)}">詳しく</button>${ms || `<span class="m">${esc(allMeanings(c))}</span>`}</div>`; }
   else { const near = /^[a-z]{4,}$/.test(k) ? dictNear(k).map(y => y[1]).slice(0, 2) : [];
     peek = `<div class="scpeek"><b lang="en">${esc(k)}</b><span class="m">${near.length ? `読み違い？ ${near.map(y => `<button class="link" data-act="scanFix" data-from="${esc(k)}" data-to="${esc(y.w)}" lang="en">${esc(y.w)}</button>`).join('・')} に直す` : '極にない単語'}</span></div>`; }
   const btn = n ? `<button class="btn btn-primary btn-block" data-act="scanAdd">${I.plus}選んだ${n}語を単語帳に入れる</button>`
@@ -8304,6 +8478,30 @@ async function scanPhoto(files, more = false){
   if (route.tab === 'decks' && route.scan) { render(); scrollTo(0, 0); }
   reloadIfQuiet();
 }
+/* the first sentence of the passage with the word in it (any form; an idiom: its words) */
+function scanSent(text, id){
+  for (let t of String(text).replace(/\s*\n+\s*/g, ' ').match(/[^.!?]+(?:[.!?]+["”’)]*|$)/g) || []) {
+    t = t.trim(); if (!t) continue;
+    const hit = id.includes(' ') ? scanFindIdioms(t).some(e => e.k === id)
+      : (t.match(SCAN_W) || []).some(m => { const k = normW(m).replace(/'s$/, ''); return [k, ...k.split('-')].some(y => y === id || scanEntry(y)?.k === id); });
+    if (hit) return t.length > 320 ? t.slice(0, 320) + '…' : t;
+  }
+  return '';
+}
+/* a card's sentence from your passage: {t, si: the meaning chosen (its place now: the order can change), or -1}, or null. A
+   word you put in from a passage: its sentence comes on the card while it's new, every other review asks 「この文での意味は？」 in it
+   (once that meaning is chosen and open), and the answer side shows it */
+function scanCtx(c){
+  const h = c?.isS ? c.parent : c; if (!h || h.isD) return null;
+  const x = S.custom[scanDeckId() || '']?.ctx?.[h.deck + '|' + h.k]; if (!x?.t) return null;
+  const si = x.m ? h.s.findIndex(y => y.m === x.m) : -1;
+  return {t: x.t, si};
+}
+const scanCtxHTML = (c, cls = 'fb-exrow') => { const x = scanCtx(c); return x ? `<div class="${cls} scx"><div class="ex-t"><div class="scx-tag">長文で見た文</div><div class="fb-ex" lang="en">${markWord(x.t, (c.isS ? c.parent : c).w)}</div></div></div>` : ''; };
+function scanCtxPut(D, key, t, m){
+  if (!t) return; D.ctx ||= {};
+  const o = D.ctx[key]; if (!o || m || !o.m) D.ctx[key] = {t, m: m || ''};
+}
 /* 「長文で出た単語」: made if needed and put first among the decks in use, as 辞書で調べた単語 */
 const scanDeckId = () => Object.values(S.custom).filter(d => d && d.scan && !d.del && Array.isArray(d.cards)).sort((a, b) => (a.created || 0) - (b.created || 0) || (a.id < b.id ? -1 : 1))[0]?.id || null;
 function scanDeckFirst(){
@@ -8328,10 +8526,13 @@ function scanAdd(){
   const snap = scanSnap(), {id, made} = scanDeckFirst(), D = S.custom[id], has = c => D.cards.some(y => y.ref ? y.ref === dictRef(c) : y.k === c.k);
   let n = 0, had = 0;
   for (const k of got) {
-    const e = scanEntry(k), c = [...e.heads, ...e.ders].length ? dictMain(e) : null;
-    if (c) { if (has(c)) had++; else { D.cards.push(storeCard({ref: dictRef(c), w: c.w, s: [{p: c.p, m: c.m}]})); n++; } continue; }
-    if (D.cards.some(y => !y.ref && normW(y.w) === e.k)) { had++; continue; }
-    const y = e.own.find(o => o.deck !== id) || dictPseudo(e); D.cards.push(storeCard({w: y.w, s: y.s})); n++;   // one of your other decks': a copy
+    const e = scanEntry(k), c = [...e.heads, ...e.ders].length ? dictMain(e) : null, t = scanSent(x.text, k), mi = x.mean[k];
+    if (c) { if (has(c)) had++; else { D.cards.push(storeCard({ref: dictRef(c), w: c.w, s: [{p: c.p, m: c.m}]})); n++; }
+      scanCtxPut(D, c.deck + '|' + c.k, t, c.s.length === 1 ? c.s[0].m : c.s[mi]?.m); continue; }
+    const old = D.cards.find(y => !y.ref && normW(y.w) === e.k);
+    if (old) { had++; scanCtxPut(D, id + '|' + old.k, t, old.s?.[0]?.m); continue; }
+    const y = e.own.find(o => o.deck !== id) || dictPseudo(e), st = storeCard({w: y.w, s: y.s}); D.cards.push(st); n++;   // one of your other decks': a copy
+    scanCtxPut(D, id + '|' + st.k, t, st.s.length === 1 ? st.s[0].m : st.s[mi]?.m);
   }
   touchDeck(id); SCAN_UNDO = snap; x.sel = new Set(miss); x.last = null; x.added = id; x.addT = Date.now(); scanSave(); render();
   const said = n ? `${made ? `単語帳「${SCAN_NAME}」をつくって` : `「${D.name}」に`}${n}語入れました${had ? `（${had}語は入っていました）` : ''}` : `${had}語とも、もう「${D.name}」に入っています`;
@@ -8349,7 +8550,8 @@ function scanAddOwn(){
   const rows = [...document.querySelectorAll('#sheetroot .scm')].map(i => [i.dataset.w, i.value.trim()]).filter(r => r[1]);
   if (!rows.length) return toast('意味を入れてください');
   const snap = scanSnap(), {id} = scanDeckFirst(), x = scanState(); let n = 0;
-  for (const [w, m] of rows) { const sn = parseSenseText(m); if (sn.length) { S.custom[id].cards.push(storeCard({w, s: sn})); n++; x.sel.delete(w); } }
+  for (const [w, m] of rows) { const sn = parseSenseText(m); if (!sn.length) continue;
+    const st = storeCard({w, s: sn}); S.custom[id].cards.push(st); n++; x.sel.delete(w); scanCtxPut(S.custom[id], id + '|' + st.k, scanSent(x.text, w), sn[0].m); }
   touchDeck(id); SCAN_UNDO = snap; x.added = id; x.addT = Date.now(); scanSave(); closeSheet(); render();
   toast(`「${S.custom[id].name}」に${n}語入れました`, {label: '元に戻す', act: 'scanUndo'}, 6000);
 }
@@ -8360,6 +8562,10 @@ const SCAN_ACT = {
     if (x.busy == null && (x.home || x.edit) && x.text) { x.home = false; x.edit = false; render(); scrollTo(0, 0); return; }
     x.stop?.(); route.scan = false; render(); scrollTo(0, SCROLL.decks || 0); },
   scanStop: () => scanState().stop?.(),
+  scanMean: t => { const x = scanState(), k = t.dataset.k, i = +t.dataset.i; if (x.mean[k] === i) delete x.mean[k]; else x.mean[k] = i;
+    scanSave(); const d = $('#scdock'); if (d) { d.innerHTML = scanDockHTML(); scanDockH(); } },
+  scanCtxOff: t => { const c = findCard(t.dataset.deck, t.dataset.k), id = scanDeckId(), h = c?.isS ? c.parent : c; if (!h || !id) return;
+    delete S.custom[id].ctx?.[h.deck + '|' + h.k]; touchDeck(id); cardSheet(findCard(t.dataset.deck, t.dataset.k) || c, true); toast('この単語は、長文の文では出しません'); },
   scanStudy: t => { if (Date.now() - (scanState().addT || 0) > 700) ACT.studyDeck(t); },   // not the second tap of 入れる
   scanFix: t => { const x = scanState(), a = t.dataset.from, b = t.dataset.to;
     x.text = x.text.replace(new RegExp(`(^|[^A-Za-z'’-])(${a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![A-Za-z'’-])`, 'gi'), (m, q, w) => q + (/^[A-Z]/.test(w) ? b[0].toUpperCase() + b.slice(1) : b));
@@ -8373,13 +8579,13 @@ const SCAN_ACT = {
   scanUndo: () => scanUndo(),
   scanHome: () => { const x = scanState(); x.home = true; x.err = ''; render(); scrollTo(0, 0); },
   scanLoad: t => { const x = scanState(), y = x.list.find(z => z.id === t.dataset.id); if (!y) return;
-    x.list = [y, ...x.list.filter(z => z !== y)]; Object.assign(x, {cur: y.id, text: y.text, sel: scanKeys(y.sel), last: null, home: false, edit: false, draft: null, added: null}); scanSave(); render(); scrollTo(0, 0); },
+    x.list = [y, ...x.list.filter(z => z !== y)]; Object.assign(x, {cur: y.id, text: y.text, sel: scanKeys(y.sel), mean: {...y.mean}, last: null, home: false, edit: false, draft: null, added: null}); scanSave(); render(); scrollTo(0, 0); },
   scanDel: t => { const x = scanState(), i = x.list.findIndex(z => z.id === t.dataset.id); if (i < 0) return;
     x.gone = {y: x.list[i], i, cur: x.cur === t.dataset.id}; x.list.splice(i, 1);
-    if (x.cur === t.dataset.id) Object.assign(x, {cur: null, text: '', sel: new Set(), last: null}); scanSave(); render();
+    if (x.cur === t.dataset.id) Object.assign(x, {cur: null, text: '', sel: new Set(), mean: {}, last: null}); scanSave(); render();
     toast('長文を消しました', {label: '元に戻す', act: 'scanUndel'}, 5000); },
   scanUndel: () => { const x = scanState(), g = x.gone; if (!g) return; x.gone = null;
-    x.list.splice(Math.min(g.i, x.list.length), 0, g.y); if (g.cur) Object.assign(x, {cur: g.y.id, text: g.y.text, sel: scanKeys(g.y.sel)}); scanSave(); render(); },
+    x.list.splice(Math.min(g.i, x.list.length), 0, g.y); if (g.cur) Object.assign(x, {cur: g.y.id, text: g.y.text, sel: scanKeys(g.y.sel), mean: {...g.y.mean}}); scanSave(); render(); },
   scanEdit: () => { const x = scanState(); x.edit = true; x.err = ''; render(); scrollTo(0, 0); $('#scantext')?.focus(); },
   scanCancel: () => { const x = scanState(); x.edit = false; x.draft = null; render(); },
   scanUse: () => { const x = scanState(), t = scanClean($('#scantext')?.value, false);
@@ -8600,6 +8806,11 @@ const ACT = {
   signIn: t => t.dataset.kind ? signIn(t.dataset.kind) : loginSheet(),
   resetPass: () => resetPass(),
   signOut: () => signOutNow(),
+  copyId: () => { if (Acct.id) copyText(Acct.id, 'ユーザーIDをコピーしました'); },
+  codeSheet: () => codeSheet(),
+  devSheet: () => devSheet(),
+  devCopy: t => copyText(fmtCode(t.dataset.c), 'コードをコピーしました'),
+  devStop: t => devStop(t.dataset.c),
   me: () => { if (route.tab !== 'stats') SCROLL[route.tab] = scrollY; route.from = null; route.tab = 'stats'; render(); scrollTo(0, 0); },
   nudgeLogin: () => loginSheet(),
   nudgeLater: t => { t.closest('.nudge')?.remove(); lsSet(NUDGE_DAY, ''); },
@@ -8726,6 +8937,7 @@ document.addEventListener('input', e => {
 Object.assign(ACT, SCAN_ACT);
 document.addEventListener('change', e => {
   if (e.target.id === 'scanfile' || e.target.id === 'scanmore' || e.target.id === 'scancam') { const fs = [...(e.target.files || [])]; e.target.value = ''; if (fs.length) scanPhoto(fs, e.target.id === 'scanmore'); return; }
+  if (e.target.id === 'dkind') { const p = $('.k-dev-promo'); if (p) p.hidden = e.target.value !== 'promo'; }
   if (e.target.id === 'imptarget') { $('#impnamewrap').hidden = e.target.value !== '__new'; impPreview(); }
   if (e.target.id === 'impfile') { const f = e.target.files?.[0]; IMP.file = ''; if (f) f.text().then(t => { IMP.file = t; impPreview(); }, () => impPreview()); else impPreview(); }
   if (e.target.id === 'imptext' && impT) { clearTimeout(impT); impT = null; impPreview(); }
@@ -8741,6 +8953,8 @@ document.addEventListener('submit', e => {
   e.preventDefault();
   const f = e.target;
   if (f.id === 'mailform') { mailAuth(e.submitter?.dataset.mode || 'in'); return; }
+  if (f.id === 'codeform') { redeem(); return; }
+  if (f.id === 'devform') { devMake(); return; }
   if (f.id === 'dictform') { dictAddNew(); return; }
   if (f.id === 'newdeckform') { const items = importItems(analyzeImport($('#imptext')?.value || '', null));
     const id = createDeck($('#dname').value.trim().slice(0,40) || '新しい単語帳', items); closeSheet(); route.tab = 'decks'; route.deck = id; render(); toast(items.length ? `${items.length}語の単語帳をつくりました` : '単語帳をつくりました'); }
