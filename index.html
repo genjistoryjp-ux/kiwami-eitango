@@ -543,16 +543,30 @@ ol.ms.one > li::before{display:none}
 .art .sd-words{margin:8px 0 0;font-size:15px}
 .art .sd-words b{font-size:18px}
 .art .sd-words small{display:block;font-size:12px;color:var(--mute)}
-.sd-hex{display:block;width:100%;max-width:360px;margin:10px auto 0}
+.sd-univ{display:block;font-size:18px;font-weight:700;color:var(--blue);margin-top:2px}
+.art .sd-mk{display:flex;align-items:center;gap:12px;max-width:380px;margin:16px auto 4px;text-align:left}
+.sd-mk img{flex:none}
+.art .sd-mk p{position:relative;margin:0;padding:10px 14px;border:1.5px solid var(--ink);border-radius:14px;background:var(--card);font-size:15px;font-weight:700;line-height:1.55}
+.art .sd-mk p::before{content:"";position:absolute;left:-7.5px;top:50%;width:12px;height:12px;margin-top:-6px;background:var(--card);border-left:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);transform:rotate(45deg)}
+.sd-hex{display:block;width:100%;max-width:380px;margin:10px auto 0;overflow:visible}
 .sd-ring{fill:none;stroke:var(--line);stroke-width:1}
-.sd-area{fill:rgba(8,63,249,.18);stroke:var(--blue);stroke-width:2.5;stroke-linejoin:round}
+.sd-ring.out{stroke:var(--mute);stroke-width:1.2}
+.sd-area{fill:rgba(8,63,249,.24);stroke:var(--blue);stroke-width:2.5;stroke-linejoin:round}
+.sd-gm{font:700 9px var(--en);fill:var(--mute)}
 .sd-lab{font:700 13px var(--jp);fill:var(--ink)}
-.sd-labn{font:700 13px var(--en);fill:var(--blue)}
+.sd-grade{font:800 26px var(--en);fill:var(--ink)}
+.sd-grade.gA,.sd-rg.gA{fill:var(--blue);color:var(--blue)}
+.sd-grade.gE,.sd-rg.gE{fill:var(--mute);color:var(--mute)}
+.sd-grade.gS,.sd-rg.gS{fill:#C98A00;color:#C98A00}
+.sd-pop{opacity:0;transform-box:fill-box;transform-origin:center;animation:sd-pop .35s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes sd-pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+.sd-still .sd-pop{opacity:1;animation:none}
 .sd-rows{list-style:none;margin:8px 0 0;padding:0;text-align:left}
-.sd-rows li{display:grid;grid-template-columns:5.5em 1fr 2.5em;align-items:center;gap:10px;padding:7px 0;font-size:14px}
+.sd-rows li{display:grid;grid-template-columns:5.5em 1fr 2.2em 2em;align-items:center;gap:10px;padding:7px 0;font-size:14px}
 .sd-trk{display:block;height:8px;border-radius:4px;background:var(--bar-off);overflow:hidden}
 .sd-trk i{display:block;height:100%;background:var(--blue);border-radius:4px}
-.sd-rows b{text-align:right;font:700 15px var(--en)}
+.sd-rows b{text-align:center;font:800 18px var(--en)}
+.sd-rows small{text-align:right;font:600 13px var(--en);color:var(--sub)}
 .sd-adv{margin:20px 0 0;padding:16px;border-radius:var(--r);background:var(--app-bg);border:1px solid var(--app-line);text-align:left}
 .sd-adv b{font-size:16px}
 .art .sd-adv p{margin:6px 0 10px;font-size:14px;line-height:1.7}
@@ -579,7 +593,7 @@ ol.ms.one > li::before{display:none}
 .sd-promo-t small{display:block;font-size:13px;color:var(--sub);margin-top:2px;line-height:1.6}
 .sd-promo-go{flex:none;font-weight:700;color:var(--blue)}
 .sd-side{font-size:14px;color:var(--sub);margin:0 0 6px}
-@media (prefers-color-scheme:dark){.sd-area{fill:rgba(92,124,255,.25)}.sd-x{background:#fff;color:#000}}
+@media (prefers-color-scheme:dark){.sd-area{fill:rgba(92,124,255,.25)}.sd-grade.gS,.sd-rg.gS{fill:#F2B630;color:#F2B630}.sd-x{background:#fff;color:#000}}
 </style>
 </head>
 <body>
