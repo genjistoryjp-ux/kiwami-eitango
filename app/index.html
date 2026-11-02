@@ -172,7 +172,7 @@ p{margin:0}
 .nudge .btn{min-height:42px}
 /* the tab bar (new look): white 94% over a blur, a hairline on top; 58px + the home indicator (.ctadock sits at bottom:58px) */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--tabbar-bg);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--hair);padding:4px max(6px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(6px,env(safe-area-inset-left,0px))}
-.tabbar-in{max-width:560px;height:54px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tabbar-in{max-width:560px;height:54px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
 .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:var(--fs-min);font-weight:700;line-height:1.2;color:var(--ink-tab);font-feature-settings:"palt"}
 .tab[aria-current="page"]{color:var(--blue)}
 .tab svg{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
@@ -1488,6 +1488,73 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 /* the shelf: the big title, the 辞書's box, then shelves of different shapes (2 big covers a row, 4 in a row, rows, tiles) */
 .k-page-h{display:flex;align-items:center;min-height:44px;padding:12px max(var(--pad),env(safe-area-inset-left,0px)) 0}
 .k-page-t{margin:0;font-size:var(--fs-page);font-weight:800;letter-spacing:.01em;line-height:1.2;font-feature-settings:"palt"}
+/* 友達: the ranking card, its rows, the invite code, the stamps; the home's line under the hero */
+.k-fr-say{margin-top:14px}
+.tab[data-tab="friends"]{position:relative}
+.tab.has-new::after{content:"";position:absolute;top:5px;left:calc(50% + 7px);width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 2px var(--bg)}
+.k-fr-pts{margin:16px max(var(--pad),env(safe-area-inset-left,0px)) 0;padding:14px 16px 14px 34px;border-radius:var(--r-card);background:var(--fill);font-size:var(--fs-body);line-height:1.6;color:var(--ink)}
+.k-fr-pts li+li{margin-top:6px}
+.k-fr-acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px max(var(--pad),env(safe-area-inset-left,0px)) 0}
+.k-fr-acts.one{grid-template-columns:1fr}
+.k-fr-acts .btn{min-height:48px}
+.k-fr-gs{display:flex;gap:8px;overflow-x:auto;padding:12px max(var(--pad),env(safe-area-inset-left,0px)) 2px;scrollbar-width:none}
+.k-fr-gs::-webkit-scrollbar{display:none}
+.k-fr-gs button{flex:none;height:36px;max-width:60vw;padding:0 14px;border-radius:var(--r-pill);background:var(--fill);font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.k-fr-gs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.k-fr-card{margin:14px max(var(--pad),env(safe-area-inset-left,0px)) 0}
+.k-fr-h{display:flex;align-items:flex-start;gap:8px}
+.k-fr-h .t{flex:1;min-width:0}
+.k-fr-h h2{margin:0;font-size:var(--fs-sec);font-weight:800;line-height:1.25;overflow-wrap:anywhere;font-feature-settings:"palt"}
+.k-fr-h p{margin:2px 0 0;font-size:var(--fs-sub);color:var(--ink-2)}
+.k-fr-menu{width:40px;height:40px;flex:none;display:grid;place-items:center;border-radius:50%;background:var(--fill);color:var(--ink)}
+.k-fr-menu svg{width:20px;height:20px}
+.k-segc.k-fr-seg{margin-top:14px;grid-template-columns:repeat(3,1fr)}
+.k-segc.k-fr-seg button{font-size:var(--fs-sub)}
+.k-fr-list{list-style:none;margin:10px 0 0;padding:0}
+.k-fr-row{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:8px 4px;text-align:left;color:var(--ink);border-bottom:1px solid var(--hair)}
+.k-fr-list li:last-child .k-fr-row{border-bottom:0}
+.k-fr-row.me{background:var(--blue-tint);border-radius:12px;padding:8px 10px;border-bottom-color:transparent}
+.k-fr-row .rk{width:26px;flex:none;text-align:center;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.k-fr-row .rk.r1,.k-fr-home .rk.r1{color:#B8862B}
+.k-fr-row .rk.r2{color:#7D8590}
+.k-fr-row .rk.r3{color:#A0603A}
+.k-fr-row .nm{flex:1;min-width:0;font-size:var(--fs-name);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.k-fr-row .nm small{margin-left:6px;padding:1px 7px;border-radius:var(--r-pill);background:var(--blue);color:#fff;font-size:11px;font-weight:700;vertical-align:2px}
+.k-fr-row .v{flex:none;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.k-fr-row .v small{margin-left:2px;font-size:var(--fs-min);font-weight:700;color:var(--ink-2)}
+.k-fr-inv{display:flex;align-items:center;gap:8px;margin:18px max(var(--pad),env(safe-area-inset-left,0px)) 0;padding:12px 14px;border-radius:var(--r-card);background:var(--fill)}
+.k-fr-inv.in{margin:4px 0 0}
+.k-fr-inv>div{flex:1;min-width:0}
+.k-fr-inv .l{margin:0;font-size:var(--fs-min);color:var(--ink-2);font-weight:700}
+.k-fr-inv .c{margin:2px 0 0;font-size:18px;font-weight:800;letter-spacing:.06em;white-space:nowrap}
+.k-fr-last{margin:18px max(var(--pad),env(safe-area-inset-left,0px)) 0;padding:14px 16px;border-radius:var(--r-card);background:#FBF3E2;color:#3D2E0E}
+.k-fr-last .h{margin:0;font-size:var(--fs-min);font-weight:800;color:#8A6416;letter-spacing:.04em}
+.k-fr-last .t{margin:4px 0 0;font-size:var(--fs-name);font-weight:700}
+.k-fr-last .s{margin:2px 0 0;font-size:var(--fs-sub);color:#6B5420}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .k-fr-last{background:#2E2513;color:#F3E6C8}:root:not([data-theme="light"]) .k-fr-last .h{color:#E3B65A}:root:not([data-theme="light"]) .k-fr-last .s{color:#D9C597}}
+:root[data-theme="dark"] .k-fr-last{background:#2E2513;color:#F3E6C8}:root[data-theme="dark"] .k-fr-last .h{color:#E3B65A}:root[data-theme="dark"] .k-fr-last .s{color:#D9C597}
+.k-fr-sp{list-style:none;margin:0 max(var(--pad),env(safe-area-inset-left,0px));padding:0}
+.k-fr-sp li{display:flex;align-items:center;gap:10px;min-height:52px;border-bottom:1px solid var(--hair);font-size:var(--fs-body)}
+.k-fr-sp li:last-child{border-bottom:0}
+.k-fr-sp .t{flex:1;min-width:0}
+.k-fr-sp .ago{flex:none;font-size:var(--fs-min);color:var(--ink-3)}
+.k-fr-who{display:flex;align-items:center;gap:16px;margin-top:6px}
+.k-fr-nums{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.k-fr-nums .n{margin:0;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.k-fr-nums .n small{margin-left:1px;font-size:var(--fs-min);color:var(--ink-2)}
+.k-fr-nums .l{margin:0;font-size:var(--fs-min);color:var(--ink-2)}
+.k-fr-stamps{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.k-fr-stamp{min-height:46px;border-radius:12px;background:var(--fill);font-size:var(--fs-body);font-weight:700;color:var(--ink)}
+.k-fr-stamp:active{background:var(--blue-tint)}
+.btn.k-fr-danger{margin-top:18px;color:var(--ng-ink)}
+.k-fr-homew{padding:12px max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
+.k-fr-home{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px 10px 14px;border-radius:var(--r-card);background:var(--fill);text-align:left;color:var(--ink)}
+.k-fr-home .rk{flex:none;min-width:40px;font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+.k-fr-home .rk small{margin-left:1px;font-size:var(--fs-min)}
+.k-fr-home .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.k-fr-home .m{font-size:var(--fs-sub);color:var(--ink-2);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.k-fr-home .s{font-size:var(--fs-body);font-weight:700}
+.k-fr-home svg{width:18px;height:18px;flex:none;fill:none;stroke:var(--ink-3);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 #view.dk .dsearch{margin:0;padding:8px max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px));background:var(--bg)}
 #view.dk .dsearch.on{padding-bottom:8px}
 #view.dk .dsearch .search{height:44px;gap:8px;padding:0 0 0 14px;border:0;border-radius:var(--r-pill);background:var(--fill);color:var(--ink-2)}
@@ -2590,6 +2657,7 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 <nav class="tabbar v2" aria-label="メニュー"><div class="tabbar-in">
   <button class="tab" data-act="tab" data-tab="home"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7v9a1.4 1.4 0 0 1-1.4 1.4H15v-6.2H9V21H4.9a1.4 1.4 0 0 1-1.4-1.4z"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7v9a1.4 1.4 0 0 1-1.4 1.4H15v-6.2H9V21H4.9a1.4 1.4 0 0 1-1.4-1.4z"/></svg>ホーム</button>
   <button class="tab" data-act="tab" data-tab="decks"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="4.4" height="16" rx="1"/><rect x="8.9" y="6.5" width="4.4" height="13.5" rx="1"/><path d="M18.6 20l-4.17-1.04 3.63-14.55 4.17 1.04z"/><path d="M3 8.2h4.4M8.9 10h4.4"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="4.4" height="16" rx="1"/><rect x="8.9" y="6.5" width="4.4" height="13.5" rx="1"/><path d="M18.6 20l-4.17-1.04 3.63-14.55 4.17 1.04z"/><path class="cut" d="M3.4 8.2h3.6M9.3 10h3.6"/></svg>単語帳</button>
+  <button class="tab" data-act="tab" data-tab="friends"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.6c.5-3.4 3-5.4 6.2-5.4s5.7 2 6.2 5.4"/><path d="M15.6 4.9a3.3 3.3 0 0 1 0 6.3M17.6 14.6c2 .7 3.3 2.4 3.6 5"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.9"/><path d="M2.3 19.4c.5-3.8 3.2-6 6.7-6s6.2 2.2 6.7 6a1 1 0 0 1-1 1.1H3.3a1 1 0 0 1-1-1.1z"/><path d="M15.4 4.3a3.9 3.9 0 0 1 0 7.4 5.6 5.6 0 0 0 0-7.4zM17.4 13.8c2.4.8 4 2.8 4.3 5.6a1 1 0 0 1-1 1.1h-3.1c.1-.4.1-.8 0-1.2-.2-2.1-1-3.9-2.3-5.2.7-.2 1.4-.3 2.1-.3z"/></svg>友達</button>
   <button class="tab" data-act="tab" data-tab="stats"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><path d="M5.5 20v-7M12 20V5M18.5 20v-10M3 20.5h18"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="12" width="3.2" height="8" rx="1"/><rect x="10.4" y="4" width="3.2" height="16" rx="1"/><rect x="16.8" y="9" width="3.2" height="11" rx="1"/><rect x="2.5" y="19.6" width="19" height="1.8" rx=".9"/></svg>記録</button>
   <button class="tab" data-act="tab" data-tab="settings"><svg class="t-o" viewBox="0 0 24 24" stroke-width="1.6" aria-hidden="true"><path d="M9.95 5.31 L10.39 2.84 L13.61 2.84 L14.05 5.31 L15.29 5.82 L17.33 4.38 L19.62 6.67 L18.18 8.71 L18.69 9.95 L21.16 10.39 L21.16 13.61 L18.69 14.05 L18.18 15.29 L19.62 17.33 L17.33 19.62 L15.29 18.18 L14.05 18.69 L13.61 21.16 L10.39 21.16 L9.95 18.69 L8.71 18.18 L6.67 19.62 L4.38 17.33 L5.82 15.29 L5.31 14.05 L2.84 13.61 L2.84 10.39 L5.31 9.95 L5.82 8.71 L4.38 6.67 L6.67 4.38 L8.71 5.82Z"/><circle cx="12" cy="12" r="3.1"/></svg><svg class="t-f" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M9.95 5.31 L10.39 2.84 L13.61 2.84 L14.05 5.31 L15.29 5.82 L17.33 4.38 L19.62 6.67 L18.18 8.71 L18.69 9.95 L21.16 10.39 L21.16 13.61 L18.69 14.05 L18.18 15.29 L19.62 17.33 L17.33 19.62 L15.29 18.18 L14.05 18.69 L13.61 21.16 L10.39 21.16 L9.95 18.69 L8.71 18.18 L6.67 19.62 L4.38 17.33 L5.82 15.29 L5.31 14.05 L2.84 13.61 L2.84 10.39 L5.31 9.95 L5.82 8.71 L4.38 6.67 L6.67 4.38 L8.71 5.82Z M12 8.9a3.1 3.1 0 1 0 0 6.2a3.1 3.1 0 1 0 0-6.2z"/></svg>設定</button>
 </div></nav>
@@ -3254,7 +3322,7 @@ function saveNow(){
 }
 function save(){ clearTimeout(saveT); saveT = setTimeout(saveNow, 300); }
 function setSetting(k, v){
-  S.settings[k] = v; S.settings.upd = Date.now(); save(); markDirty('meta', true); }
+  S.settings[k] = v; S.settings.upd = Date.now(); save(); markDirty('meta', true); if (k === 'nick' || k === 'icon') grpSoon(); }
 
 /* ---------- decks ---------- */
 /* A card holds every meaning of a word: s = [{p 品詞, m 意味, e 例文, j 訳}], most important first. */
@@ -4072,7 +4140,7 @@ async function initFirebase(){
         if (!S.settings.onboarded && !sheetOpen()) onboard();
         if (instAfter && Date.now() - instAfter < 600000) setTimeout(() => { if (!sheetOpen()) installSheet(); }, 400);   // logged in from ホーム画面に入れる: its steps again
         instAfter = 0;
-      } else { Sync.col = null; Sync.uid = null; Sync.state = 'local'; acctReset(null); }
+      } else { Sync.col = null; Sync.uid = null; Sync.state = 'local'; acctReset(null); grpReset(null); }
       renderSync();
       if ($('#screen').hidden && !sheetOpen()) render();
     });
@@ -4180,6 +4248,7 @@ async function loadAcct(){
     lsSet(ACCT_KEY + uid, JSON.stringify({id: Acct.id, admin: Acct.admin, perks: Acct.perks}));
   } catch(e) { return; }   // offline: what was kept on this device stands
   if ($('#screen').hidden && !sheetOpen()) render();   // the top bar's icon gets its ring, the settings and the profile what the account has
+  grpLoad(true).then(grpPend);   // 友達: the groups, and an invite link's join
 }
 async function newId(fs, db, uid){
   for (let i = 0; i < 6; i++) {
@@ -4193,6 +4262,357 @@ async function newId(fs, db, uid){
     }
   }
   return '';
+}
+/* ---------- 友達: groups and this week's ranking ----------
+   A group's name is its invite code (KG + 8 letters). Each member writes their own numbers to groups/<g>/members/<uid> and the
+   others read them; the rules take only what studying can give (3,000 XP and 3,000 questions a day at most, never faster than
+   answering), so nobody can put in a number they did not study. Days and weeks as the rules count them: a day from 4:00 in Japan,
+   a week from Monday. ug/<uid> keeps the groups one is in (5 at most). All of it is kept on this device too (kiwami.grp.<uid>),
+   so the tab shows at once and offline. Stamps: one member to another, the latest one each, shown for 7 days */
+const GRP_KEY = 'kiwami.grp.', GRP_MAX = 5, GRP_N = 20, GDAY_CAP = 3000;
+const STAMPS = ['えらい', 'すごい', 'ナイス', 'おつかれ', '負けないぞ', '追いつくぞ', 'さすが', 'いっしょにがんばろ'];
+const GM = [['wxp', '今週のXP', 'XP'], ['wq', '解いた問題', '問'], ['st', '連続', '日']];
+const Grp = {uid: null, gs: [], by: {}, me: {}, at: 0, ready: false, busy: false, failed: false, pend: '', sent: {}, seen: 0};
+const gDay = (ms = Date.now()) => Math.floor((ms + 18000000) / DAY);
+const gWeek = dn => Math.floor((dn + 3) / 7);
+const fmtG = g => g.replace(/^KG(\w{4})(\w{4})$/, 'KG-$1-$2');
+const gName = s => [...(s || '').replace(/[\u0000-\u001f]/g, '').trim()].slice(0, 20).join('');
+function grpReset(uid){
+  let c = null; try { c = uid && JSON.parse(lsGet(GRP_KEY + uid) || 'null'); } catch(e) {}
+  Object.assign(Grp, {uid, gs: Array.isArray(c?.gs) ? c.gs : [], by: c?.by || {}, me: c?.me || {}, at: 0, ready: !!c, busy: false, failed: false, sent: {}, seen: c?.seen || 0});
+}
+function grpSave(){ if (Grp.uid) lsSet(GRP_KEY + Grp.uid, JSON.stringify({gs: Grp.gs, by: Grp.by, me: Grp.me, seen: Grp.seen})); }
+/* a stamp not seen yet: a dot on the 友達 tab until the tab is opened */
+const grpUnseen = () => !!Auth.user && Grp.uid === Auth.user.uid && Grp.gs.some(g => (Grp.by[g]?.sp || []).some(x => x.t > Grp.seen && Date.now() - x.t < 7 * DAY));
+function grpDot(){ document.querySelector('.tab[data-tab="friends"]')?.classList.toggle('has-new', route.tab !== 'friends' && grpUnseen()); }
+/* my numbers now: this week's days (each at most 3,000, as the rules count them), today, the streak and the day it last grew.
+   The week is Japan's; its days are this device's own (off: 0 in Japan, a day either way elsewhere) */
+function grpMine(){
+  const dn = gDay(), off = dn - dayIdx(), w0 = dn - (dn + 3) % 7, sti = streakInfo(); let dxp = 0, dq = 0, wxp = 0, wq = 0;
+  for (let d = w0; d <= dn; d++) {
+    const k = dayKey(d - off), x = S.daily[k]; if (!x) continue;
+    const xp = Math.min(GDAY_CAP, Math.round(xpDay(k, x))), q = Math.min(GDAY_CAP, x.n || 0);
+    wxp += xp; wq += q; if (d === dn) { dxp = xp; dq = q; }
+  }
+  const last = Math.max(-1, ...[...sti.on].filter(d => d <= dayIdx())) + off;
+  return {name: gName(nickOf()) || 'ななし', icon: avOf(S.settings.icon)[0], dn, wk: gWeek(dn), dxp, dq, wxp, wq, st: sti.n, sl: sti.n ? clamp(last, dn - 3, dn) : dn - 1, pk: 0};
+}
+/* what the rules will take, given what is there (o): never lower than it, the week only by what the days add (days not written
+   since may each have held 3,000), the streak only on a day it has not grown yet (sl) and a day at a time; pk, last week's XP, is
+   what o had when the week turned. Joining: a streak no longer than the app has been there (20744: 2026-10-18) */
+function grpFit(m, o){
+  const dn = m.dn;
+  if (!o || o.wk == null) return {...m, st: Math.min(m.st, dn - 20744 + 1), pk: 0};
+  const sameD = o.dn === dn, sameW = o.wk === m.wk, r = {...m}, gone = sameD ? 0 : GDAY_CAP * Math.min(dn - o.dn, 7);
+  const pd = sameD ? o.dxp : 0, pq = sameD ? o.dq : 0, pw = sameW ? o.wxp : 0, pwq = sameW ? o.wq : 0, sl = o.sl ?? dn - 1;
+  r.dxp = Math.max(r.dxp, pd); r.dq = Math.max(r.dq, pq);
+  r.wxp = Math.min(Math.max(r.wxp, pw), pw + r.dxp - pd + gone); r.wq = Math.min(Math.max(r.wq, pwq), pwq + r.dq - pq + gone);
+  if (r.st > o.st && sl < dn) { r.st = Math.min(r.st, o.st + dn - sl); r.sl = dn; } else { r.st = Math.min(r.st, o.st); r.sl = sl; }
+  r.pk = sameW ? o.pk || 0 : o.wk === m.wk - 1 ? o.wxp : 0;
+  return r;
+}
+let grpT = 0;
+function grpSoon(ms = 1500){ clearTimeout(grpT); if (ms < 60000) Grp.tries = 0; grpT = setTimeout(grpPush, ms); }
+/* my numbers to each group (only when something changed); refused (too soon after the last write): again in a minute, 3 times at
+   most (a device whose clock is a day off is refused every time; the next set tries again) */
+async function grpPush(){
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid; if (!fs || !uid || Grp.uid !== uid || !Grp.gs.length) return;
+  const m = grpMine(); let again = false;
+  await Promise.all(Grp.gs.map(async g => {
+    const o = Grp.me[g], x = grpFit(m, o);
+    if (o && Object.keys(x).every(f => o[f] === x[f])) return;
+    try { await fs.setDoc(fs.doc(db, 'groups', g, 'members', uid), {...x, t: fs.serverTimestamp()}); Grp.me[g] = x; Grp.tries = 0; }
+    catch(e) { if (e?.code === 'permission-denied') { again = true; await grpReadMe(g); } }
+  }));
+  grpSave(); if (again && (Grp.tries = (Grp.tries || 0) + 1) <= 3) grpSoon(60000);
+}
+/* what is written for me there (after a refusal: what the rules compare with) */
+async function grpReadMe(g){
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid; if (!fs || !uid) return;
+  try { const d = await fs.getDoc(fs.doc(db, 'groups', g, 'members', uid)); if (d.exists() && !d.metadata?.fromCache) { const {t, ...m} = d.data(); Grp.me[g] = m; } } catch(e) {}
+}
+/* the groups and everyone's numbers, at most once a minute (force: now). An answer from the device's cache (offline) changes nothing */
+async function grpLoad(force){
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid; if (!fs || !uid) return;
+  if (Grp.uid !== uid) grpReset(uid);
+  if (Grp.busy || !force && Date.now() - Grp.at < 60000) return;
+  Grp.busy = true;
+  try {
+    const u = await fs.getDoc(fs.doc(db, 'ug', uid));
+    if (Auth.user?.uid !== uid) return;
+    if (u.metadata?.fromCache) throw 'offline';
+    Grp.gs = u.exists() && Array.isArray(u.data().gs) ? u.data().gs.slice(0, GRP_MAX) : [];
+    await Promise.all(Grp.gs.map(grpFetch));
+    Grp.at = Date.now(); Grp.ready = true; Grp.failed = false; grpSave();
+  } catch(e) { Grp.failed = true; } finally { Grp.busy = false; }
+  if (Auth.user?.uid !== uid) return;
+  grpRedraw(); grpDot(); grpPush();
+}
+async function grpFetch(g){
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid; if (!fs || !uid) return;
+  try {
+    const gd = await fs.getDoc(fs.doc(db, 'groups', g));
+    if (gd.metadata?.fromCache) return;
+    if (!gd.exists()) return grpDrop(g, 'gone');
+    const x = gd.data();
+    if (x.ban?.includes(uid)) return grpDrop(g, 'out', x.name);
+    const [ms, sp] = await Promise.all([fs.getDocs(fs.collection(db, 'groups', g, 'members')),
+      fs.getDocs(fs.query(fs.collection(db, 'groups', g, 'stamps'), fs.where('to', '==', uid)))]);
+    if (ms.metadata?.fromCache) return;
+    const list = ms.docs.map(d => { const m = d.data(); return {uid: d.id, name: m.name, icon: m.icon, dn: m.dn, wk: m.wk, dxp: m.dxp, dq: m.dq, wxp: m.wxp, wq: m.wq, st: m.st, sl: m.sl, pk: m.pk || 0}; });
+    const mine = list.find(m => m.uid === uid);
+    if (!mine) return grpDrop(g, 'out', x.name);
+    const {uid: _u, ...me} = mine; Grp.me[g] = me;
+    Grp.by[g] = {name: x.name, owner: x.owner, n: x.n, ms: list, sp: sp.docs.map(d => { const s = d.data(); return {from: s.from, s: s.s, t: s.t?.toMillis?.() || 0}; })};
+  } catch(e) { if (e?.code === 'permission-denied') grpDrop(g, 'out', Grp.by[g]?.name); }
+}
+/* a group gone (closed by the one who made it) or one was put out of: off the list, and told once */
+async function grpDrop(g, why, name){
+  const was = Grp.gs.includes(g);
+  Grp.gs = Grp.gs.filter(x => x !== g); delete Grp.by[g]; delete Grp.me[g]; grpSave();
+  if (route.grp === g) route.grp = Grp.gs[0] || null;
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid;
+  if (was && fs && uid) { fs.setDoc(fs.doc(db, 'ug', uid), {gs: fs.arrayRemove(g)}, {merge: true}).catch(() => {}); toast(why === 'out' ? `「${name || 'グループ'}」から外れました` : 'グループが解散されました', null, 3200); }
+}
+const grpRedraw = () => { if ((route.tab === 'friends' || route.tab === 'home') && $('#screen').hidden && !sheetOpen()) render(); };
+/* a number to rank by: this week's (0 if not written this week); the streak while it can still be going (an お休みチケット keeps it 2 days) */
+function gVal(m, k){
+  const dn = gDay();
+  if (k === 'st') return m.dn >= dn - 3 ? m.st || 0 : 0;
+  return m.wk === gWeek(dn) ? m[k] || 0 : 0;
+}
+/* a group's ranking by k: me with today's numbers (not only what was last written); the same number, the same place */
+function gRank(g, k){
+  const x = Grp.by[g], uid = Auth.user?.uid; if (!x) return [];
+  const mine = grpFit(grpMine(), Grp.me[g]);
+  const rows = x.ms.map(m => m.uid === uid ? {...m, ...mine, me: true, v: gVal(mine, k)} : {...m, v: gVal(m, k)});
+  rows.sort((a, b) => b.v - a.v || (a.me ? -1 : b.me ? 1 : 0) || String(a.name).localeCompare(String(b.name), 'ja'));
+  rows.forEach((m, i) => m.rank = i && m.v === rows[i - 1].v ? rows[i - 1].rank : i + 1);
+  return rows;
+}
+/* 先週の結果 (Monday to Wednesday): everyone's XP of last week (pk once they have written this week, else what they had), the top and me */
+function grpLast(g){
+  const x = Grp.by[g], uid = Auth.user?.uid, dn = gDay(), cw = gWeek(dn); if (!x || (dn + 3) % 7 > 2) return null;
+  const mine = grpFit(grpMine(), Grp.me[g]);
+  const rows = x.ms.map(m => { const y = m.uid === uid ? {...m, ...mine} : m; return {...y, me: m.uid === uid, v: y.wk === cw ? y.pk || 0 : y.wk === cw - 1 ? y.wxp : 0}; })
+    .filter(r => r.v > 0).sort((a, b) => b.v - a.v);
+  if (rows.length < 2) return null;
+  rows.forEach((m, i) => m.rank = i && m.v === rows[i - 1].v ? rows[i - 1].rank : i + 1);
+  return {top: rows.filter(r => r.rank === 1), me: rows.find(r => r.me), n: rows.length};
+}
+const agoText = t => { const s = (Date.now() - t) / 1000; return s < 60 ? 'たった今' : s < 3600 ? `${Math.floor(s / 60)}分前` : s < 86400 ? `${Math.floor(s / 3600)}時間前` : `${Math.floor(s / 86400)}日前`; };
+const grpCur = () => Grp.gs.includes(route.grp) ? route.grp : Grp.gs[0];
+/* the home's line under the hero: where I am in this week's XP */
+function grpHome(){
+  if (!Auth.user || Grp.uid !== Auth.user.uid || !Grp.gs.length) return '';
+  const g = grpCur(), x = Grp.by[g]; if (!x) return '';
+  const rows = gRank(g, 'wxp'), me = rows.find(r => r.me); if (!me) return '';
+  const above = rows.filter(r => r.v > me.v).pop();
+  const sub = rows.length < 2 ? '友達を招待して、いっしょに競おう' : above ? `あと${nLoc(above.v - me.v + 1)}XPで${above.rank}位` : rows.some(r => !r.me && r.v === me.v) ? '1位タイ、ぬけだそう' : '1位をキープ中';
+  return `<div class="k-fr-homew"><button class="k-fr-home" data-act="tab" data-tab="friends"><span class="rk${me.rank <= 3 ? ' r' + me.rank : ''}">${me.rank}<small>位</small></span><span class="t"><span class="m">${esc(x.name)}・今週のXP</span><span class="s">${sub}</span></span>${K_ICO.chev}</button></div>`;
+}
+const frSay = t => `<div class="k-say k-fr-say">${mekuru('happy')}<p class="k-bubble">${kPhrases(t)}</p></div>`;
+function viewFriends(){
+  const head = `${topbar()}<div class="k-page-h"><h1 class="k-page-t">友達</h1></div>`;
+  const pts = `<ul class="k-fr-pts"><li>招待コードを送って、友達とグループを作る</li><li>今週のXP・解いた問題・連続日数で、毎週ランキング</li><li>友達にスタンプで「えらい」「負けないぞ」</li></ul>`;
+  if (!FIREBASE) return `${head}${frSay('友達と競えるのは、ログインできる版だけなんだ')}`;
+  if (!Auth.user) return `${head}${frSay('友達とグループを作って、今週どれだけやったか競えるよ')}${pts}<div class="k-fr-acts one"><button class="btn btn-primary btn-block" data-act="signIn">ログインしてはじめる</button></div>`;
+  if (Grp.uid !== Auth.user.uid || !Grp.ready) return `${head}${Grp.failed ? `<p class="k-empty">通信できませんでした。電波のいいところで、もう一度ためしてね</p><div class="k-fr-acts one"><button class="btn btn-ghost btn-block" data-act="grpRetry">もう一度読み込む</button></div>` : '<p class="k-empty">読み込んでいます…</p>'}`;
+  if (grpUnseen()) { Grp.seen = Date.now(); grpSave(); }   // the stamps are on this page
+  const acts = Grp.gs.length < GRP_MAX ? `<div class="k-fr-acts"><button class="btn btn-ghost" data-act="grpNew">グループを作る</button><button class="btn btn-ghost" data-act="grpJoin">招待コードで入る</button></div>` : '';
+  if (!Grp.gs.length) return `${head}${frSay('友達とグループを作って、今週どれだけやったか競えるよ')}${pts}<div class="k-fr-acts"><button class="btn btn-primary" data-act="grpNew">グループを作る</button><button class="btn btn-ghost" data-act="grpJoin">招待コードで入る</button></div>`;
+  const g = grpCur(), x = Grp.by[g], k = GM.some(m => m[0] === route.gm) ? route.gm : 'wxp', unit = GM.find(m => m[0] === k)[2];
+  const chips = Grp.gs.length > 1 ? `<div class="k-fr-gs" role="tablist" aria-label="グループ">${Grp.gs.map(id => `<button role="tab" aria-selected="${id === g}" data-act="grpSel" data-g="${id}">${esc(Grp.by[id]?.name || fmtG(id))}</button>`).join('')}</div>` : '';
+  if (!x) return `${head}${chips}<p class="k-empty">このグループは、通信が戻ると表示されます</p>${acts}`;
+  const dn = gDay(), left = 7 - (dn + 3) % 7, rows = gRank(g, k), myRank = rows.length > 1 ? rows.find(r => r.me)?.rank : 0;
+  const row = m => {
+    const inner = `<span class="rk${m.v && m.rank <= 3 ? ' r' + m.rank : ''}">${m.rank}</span>${avHTML(m.icon)}<span class="nm">${esc(m.name)}${m.me ? '<small>あなた</small>' : ''}</span><span class="v">${nLoc(m.v)}<small>${unit}</small></span>`;
+    return `<li>${m.me ? `<div class="k-fr-row me">${inner}</div>` : `<button class="k-fr-row" data-act="grpMember" data-u="${esc(m.uid)}" aria-label="${m.rank}位 ${esc(m.name)} ${nLoc(m.v)}${unit}、スタンプを送る">${inner}</button>`}</li>`;
+  };
+  const sp = (x.sp || []).filter(s => Date.now() - s.t < 7 * DAY).sort((a, b) => b.t - a.t).slice(0, 5);
+  const who = u => x.ms.find(m => m.uid === u);
+  const stamps = sp.length ? `<section class="k-sec" aria-label="届いたスタンプ"><div class="k-sec-h"><h2 class="k-sec-t">届いたスタンプ</h2></div><ul class="k-fr-sp">${sp.map(s => { const m = who(s.from); return m ? `<li>${avHTML(m.icon)}<span class="t"><b>${esc(m.name)}</b>から「${esc(STAMPS[s.s] || '')}」</span><span class="ago">${agoText(s.t)}</span></li>` : ''; }).join('')}</ul></section>` : '';
+  const solo = x.ms.length < 2 ? frSay('招待コードを友達に送ると、ここに並ぶよ') : '';
+  const lw = grpLast(g), lastHTML = !lw ? '' : `<section class="k-fr-last" aria-label="先週の結果"><p class="h">先週の結果</p>
+    <p class="t">${K_ICO.crown || ''}1位 <b>${lw.top.map(r => esc(r.name)).join('、')}</b> ${nLoc(lw.top[0].v)}XP</p>
+    ${lw.me ? `<p class="s">${lw.me.rank === 1 ? 'あなたが1位！' : `あなたは${lw.me.rank}位（${nLoc(lw.me.v)}XP）`}・${lw.n}人中</p>` : '<p class="s">あなたは先週、このグループでの記録なし</p>'}</section>`;
+  return `${head}${chips}<section class="k-fr-card" aria-label="${esc(x.name)}のランキング">
+    <div class="k-fr-h"><div class="t"><h2>${esc(x.name)}</h2><p>${x.ms.length}人${myRank ? `・あなたは${myRank}位` : ''}・${left === 1 ? '明日の朝4時に' : `あと${left}日で`}リセット</p></div><button class="k-fr-menu" data-act="grpMenu" aria-label="グループの設定と招待">${K_ICO.more}</button></div>
+    <div class="k-segc k-fr-seg" role="tablist" aria-label="ランキングの種類">${GM.map(m => `<button role="tab" aria-selected="${m[0] === k}" data-act="grpGm" data-k="${m[0]}"><span>${m[1]}</span></button>`).join('')}</div>
+    <ol class="k-fr-list">${rows.map(row).join('')}</ol></section>${solo}${lastHTML}
+    <div class="k-fr-inv"><div><p class="l">招待コード</p><p class="c">${fmtG(g)}</p></div><button class="btn btn-primary btn-sm" data-act="grpShare">友達に送る</button></div>
+    ${stamps}${acts}`;
+}
+/* the sheets: make one, join one (a code typed or from an invite link), a member (stamps; put out), the group (invite, name, leave/close).
+   No nickname yet: asked for here, since the others see it */
+const grpNickField = () => nickOf() ? '' : `<label class="k-pf-h" for="gnick">あなたのニックネーム</label><input id="gnick" class="k-input" type="text" maxlength="${NICK_MAX}" placeholder="グループの人に見える名前" autocomplete="nickname" spellcheck="false">`;
+function grpNickOk(){ const e = $('#gnick'); if (!e) return true; const v = cleanNick(e.value); if (!v) return false; setSetting('nick', v); return true; }
+function grpNew(){
+  openSheet(`<div class="sheet-h"><h3>グループを作る</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <form id="grpform" class="k-code">${grpNickField()}<label class="k-pf-h" for="gname">グループの名前</label>
+      <input id="gname" class="k-input" type="text" maxlength="20" placeholder="例：3年B組、部活のみんな" autocomplete="off" enterkeyhint="done">
+      <p id="gerr" class="small" role="alert" style="color:var(--again-t)"></p>
+      <button class="btn btn-primary btn-block" type="submit">作る</button></form>
+    <p class="k-pf-s">作ったら、招待コードを友達に送ってね。20人まで入れます</p>`);
+}
+function grpJoin(code = ''){
+  openSheet(`<div class="sheet-h"><h3>招待コードで入る</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <form id="gjoinform" class="k-code">${grpNickField()}<label class="k-pf-h" for="gcode">招待コード</label>
+      <input id="gcode" class="k-input" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="KG-XXXX-XXXX" maxlength="20" enterkeyhint="done" value="${esc(code ? fmtG(code) : '')}">
+      <p id="gerr" class="small" role="alert" style="color:var(--again-t)"></p>
+      <button class="btn btn-primary btn-block" type="submit">入る</button></form>
+    <p class="k-pf-s">グループの人には、ニックネームとアイコン、今週の数字（XP・解いた問題・連続日数）だけが見えます</p>`);
+}
+const GRP_ERR = {form: 'KG から始まる10文字のコードを入れてください', none: 'このコードのグループは見つかりません。打ちまちがいがないか確かめてください',
+  full: 'このグループは20人でいっぱいです', ban: 'このグループには入れません', mine: 'このグループには、もう入っています', max: '入れるグループは5つまでです',
+  name: 'グループの名前を入れてください', nick: 'ニックネームを入れてください（グループの人に見える名前）'};
+async function grpMake(){
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid, err = $('#gerr'), btn = $('#grpform button[type=submit]');
+  if (!fs || !uid || !err) return;
+  err.textContent = '';
+  try {
+    if (Grp.gs.length >= GRP_MAX) throw 'max';
+    if (!grpNickOk()) throw 'nick';
+    const name = gName($('#gname').value) || `${gName(nickOf()) || 'みんな'}のグループ`;
+    btn.disabled = true;
+    let g = '';
+    for (let i = 0; i < 4 && !g; i++) {
+      const id = 'KG' + rndOf(CODE_AB, 8), m = grpFit(grpMine(), null), b = fs.writeBatch(db);
+      b.set(fs.doc(db, 'groups', id), {name, owner: uid, n: 1, ban: [], t: fs.serverTimestamp()});
+      b.set(fs.doc(db, 'groups', id, 'members', uid), {...m, t: fs.serverTimestamp()});
+      b.set(fs.doc(db, 'ug', uid), {gs: fs.arrayUnion(id)}, {merge: true});
+      try { await b.commit(); g = id; Grp.me[id] = m; }
+      catch(e) { if (e?.code !== 'permission-denied' || !(await fs.getDoc(fs.doc(db, 'groups', id)).catch(() => null))?.exists()) throw e; }   // refused because the code was taken: another
+    }
+    if (!g) throw 'net';
+    Grp.gs.push(g); route.grp = g; route.tab = 'friends'; await grpFetch(g); grpSave();
+    closeSheet(); render(); scrollTo(0, 0); toast('グループを作りました。招待コードを友達に送ってね', null, 3200);
+  } catch(e) { err.textContent = GRP_ERR[e] || '通信できませんでした。もう一度お試しください'; if (btn) btn.disabled = false; }
+}
+async function grpEnter(){
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid, err = $('#gerr'), btn = $('#gjoinform button[type=submit]');
+  if (!fs || !uid || !err) return;
+  err.textContent = '';
+  const g = normCode($('#gcode').value);
+  try {
+    if (!/^KG[A-Z0-9]{8}$/.test(g)) throw 'form';
+    if (Grp.gs.includes(g)) throw 'mine';
+    if (Grp.gs.length >= GRP_MAX) throw 'max';
+    if (!grpNickOk()) throw 'nick';
+    btn.disabled = true;
+    const gr = fs.doc(db, 'groups', g), x = await fs.getDoc(gr);
+    if (!x.exists()) throw 'none';
+    const d = x.data();
+    if (d.ban?.includes(uid)) throw 'ban';
+    if (d.n >= GRP_N) throw 'full';
+    const m = grpFit(grpMine(), null), b = fs.writeBatch(db), me = fs.doc(db, 'groups', g, 'members', uid);
+    b.update(gr, {n: fs.increment(1)});
+    b.set(me, {...m, t: fs.serverTimestamp()});
+    b.set(fs.doc(db, 'ug', uid), {gs: fs.arrayUnion(g)}, {merge: true});
+    try { await b.commit(); }
+    catch(e) {   // already in it (the list had lost it): back on the list
+      if (e?.code !== 'permission-denied' || !(await fs.getDoc(me).catch(() => null))?.exists()) throw e;
+      await fs.setDoc(fs.doc(db, 'ug', uid), {gs: fs.arrayUnion(g)}, {merge: true});
+    }
+    Grp.me[g] = m; Grp.gs.push(g); route.grp = g; route.tab = 'friends'; await grpFetch(g); grpSave();
+    closeSheet(); render(); scrollTo(0, 0); toast(`「${d.name}」に入りました`);
+  } catch(e) { err.textContent = GRP_ERR[e] || (e?.code === 'permission-denied' ? 'このグループには入れませんでした（人数がいっぱいなど）' : '通信できませんでした。もう一度お試しください'); if (btn) btn.disabled = false; }
+}
+function grpMember(u){
+  const g = grpCur(), x = Grp.by[g], m = x?.ms.find(y => y.uid === u); if (!m) return;
+  const own = x.owner === Auth.user?.uid;
+  openSheet(`<div class="sheet-h"><h3>${esc(m.name)}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="k-fr-who">${avHTML(m.icon, 'md')}<div class="k-fr-nums">${GM.map(([k, l, un]) => `<div><p class="n">${nLoc(gVal(m, k))}<small>${un}</small></p><p class="l">${l}</p></div>`).join('')}</div></div>
+    <p class="k-pf-h">スタンプを送る</p>
+    <div class="k-fr-stamps">${STAMPS.map((s, i) => `<button class="k-fr-stamp" data-act="grpStamp" data-u="${esc(u)}" data-s="${i}">${s}</button>`).join('')}</div>
+    ${own ? `<button class="btn btn-ghost btn-block k-fr-danger" data-act="grpKick" data-u="${esc(u)}">このグループから外す</button>` : ''}`);
+}
+async function grpStamp(u, s){
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid, g = grpCur(); if (!fs || !uid || !g) return;
+  const key = g + u, m = Grp.by[g]?.ms.find(y => y.uid === u);
+  if (Date.now() - (Grp.sent[key] || 0) < 21000) { toast('少し待ってから、また送ってね'); return; }
+  try {
+    await fs.setDoc(fs.doc(db, 'groups', g, 'stamps', `${uid}_${u}`), {from: uid, to: u, s, t: fs.serverTimestamp()});
+    Grp.sent[key] = Date.now(); closeSheet(); toast(`${m ? m.name + 'に' : ''}「${STAMPS[s]}」を送った`);
+  } catch(e) { toast(e?.code === 'permission-denied' ? '少し待ってから、また送ってね' : '通信できませんでした'); }
+}
+/* two taps for what can't be undone: the first asks, the second does it */
+function grpSure(t, text){ if (t.dataset.sure) return true; t.dataset.sure = 1; t.textContent = text; return false; }
+async function grpKick(t){
+  if (!grpSure(t, 'もう一度押すと外します（このグループに戻れなくなります）')) return;
+  const {fs, db} = Auth.api || {}, g = grpCur(), u = t.dataset.u, m = Grp.by[g]?.ms.find(y => y.uid === u); if (!fs || !m) return;
+  try {
+    const col = fs.collection(db, 'groups', g, 'stamps'), [a, z] = await Promise.all([fs.getDocs(fs.query(col, fs.where('from', '==', u))), fs.getDocs(fs.query(col, fs.where('to', '==', u)))]);
+    const b = fs.writeBatch(db);
+    [...a.docs, ...z.docs].forEach(d => b.delete(d.ref));
+    b.update(fs.doc(db, 'groups', g), {n: fs.increment(-1), ban: fs.arrayUnion(u), kick: u});
+    b.delete(fs.doc(db, 'groups', g, 'members', u));
+    await b.commit();
+    await grpFetch(g); grpSave(); closeSheet(); render(); toast(`${m.name}をグループから外しました`);
+  } catch(e) { if (e?.code === 'permission-denied') { await grpFetch(g); grpSave(); closeSheet(); render(); } toast(e?.code === 'permission-denied' ? `${m.name}は、もうグループにいませんでした` : '通信できませんでした。もう一度お試しください'); }
+}
+function grpMenu(){
+  const g = grpCur(), x = Grp.by[g]; if (!x) return;
+  const own = x.owner === Auth.user?.uid;
+  openSheet(`<div class="sheet-h"><h3>${esc(x.name)}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="k-fr-inv in"><div><p class="l">招待コード</p><p class="c">${fmtG(g)}</p></div><button class="btn btn-ghost btn-sm" data-act="grpCopy">コピー</button><button class="btn btn-primary btn-sm" data-act="grpShare">送る</button></div>
+    <p class="k-pf-s">${x.ms.length}人／20人。グループの人に見えるのは、ニックネームとアイコン、今週の数字だけです</p>
+    ${own ? `<form id="grenameform" class="k-code"><label class="k-pf-h" for="grname">グループの名前</label>
+      <input id="grname" class="k-input" type="text" maxlength="20" value="${esc(x.name)}" autocomplete="off" enterkeyhint="done">
+      <button class="btn btn-ghost btn-block" type="submit">名前を変える</button></form>
+      <button class="btn btn-ghost btn-block k-fr-danger" data-act="grpClose">グループを解散する</button>`
+    : `<button class="btn btn-ghost btn-block k-fr-danger" data-act="grpLeave">グループを抜ける</button>`}`);
+}
+const grpLink = g => `${location.origin}/app/?g=${g}`;
+function grpShare(){
+  const g = grpCur(), x = Grp.by[g]; if (!g) return;
+  const text = `極（きわみ）で、いっしょに英単語やろう！グループ「${x?.name || ''}」の招待コード：${fmtG(g)}`;
+  if (navigator.share) navigator.share({text, url: grpLink(g)}).catch(() => {});
+  else copyText(`${text}\n${grpLink(g)}`, '招待のメッセージをコピーしました');
+}
+async function grpRename(){
+  const {fs, db} = Auth.api || {}, g = grpCur(), name = gName($('#grname')?.value); if (!fs || !g || !name) return;
+  try { await fs.updateDoc(fs.doc(db, 'groups', g), {name}); Grp.by[g].name = name; grpSave(); closeSheet(); render(); toast('名前を変えました'); }
+  catch(e) { toast('通信できませんでした。もう一度お試しください'); }
+}
+async function grpLeave(t){
+  if (!grpSure(t, 'もう一度押すと抜けます')) return;
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid, g = grpCur(), name = Grp.by[g]?.name; if (!fs || !uid || !g) return;
+  try {
+    const col = fs.collection(db, 'groups', g, 'stamps'), [a, z] = await Promise.all([fs.getDocs(fs.query(col, fs.where('from', '==', uid))), fs.getDocs(fs.query(col, fs.where('to', '==', uid)))]);
+    const b = fs.writeBatch(db), gs = Grp.gs.filter(x => x !== g);
+    [...a.docs, ...z.docs].forEach(d => b.delete(d.ref));   // my stamps leave with me
+    b.update(fs.doc(db, 'groups', g), {n: fs.increment(-1)});
+    b.delete(fs.doc(db, 'groups', g, 'members', uid));
+    b.set(fs.doc(db, 'ug', uid), {gs: fs.arrayRemove(g)}, {merge: true});
+    await b.commit();
+    Grp.gs = gs; delete Grp.by[g]; delete Grp.me[g]; route.grp = gs[0] || null; grpSave(); closeSheet(); render(); toast(`「${name}」を抜けました`);
+  } catch(e) { toast('通信できませんでした。もう一度お試しください'); }
+}
+async function grpClose(t){
+  if (!grpSure(t, 'もう一度押すと解散します（みんなのランキングも消えます）')) return;
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid, g = grpCur(), name = Grp.by[g]?.name; if (!fs || !uid || !g) return;
+  try {
+    const [ms, sp] = await Promise.all([fs.getDocs(fs.collection(db, 'groups', g, 'members')), fs.getDocs(fs.collection(db, 'groups', g, 'stamps'))]);
+    for (let i = 0; i < sp.docs.length; i += 400) { const b = fs.writeBatch(db); sp.docs.slice(i, i + 400).forEach(d => b.delete(d.ref)); await b.commit(); }   // the stamps first, in parts
+    const b = fs.writeBatch(db), gs = Grp.gs.filter(x => x !== g);
+    ms.docs.forEach(d => b.delete(d.ref));
+    b.delete(fs.doc(db, 'groups', g)); b.set(fs.doc(db, 'ug', uid), {gs: fs.arrayRemove(g)}, {merge: true});
+    await b.commit();
+    Grp.gs = gs; delete Grp.by[g]; delete Grp.me[g]; route.grp = gs[0] || null; grpSave(); closeSheet(); render(); toast(`「${name}」を解散しました`);
+  } catch(e) { toast('通信できませんでした。もう一度お試しください'); }
+}
+/* an invite link (/app/?g=KG…): the 友達 tab, and its join sheet once logged in */
+function grpDeep(){
+  if (!IS_WEB) return;
+  try { const u = new URL(location.href), g = normCode(u.searchParams.get('g') || '');
+    if (u.searchParams.has('g')) { u.searchParams.delete('g'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); }
+    if (/^KG[A-Z0-9]{8}$/.test(g)) { Grp.pend = g; route.tab = 'friends'; } } catch(e) {}
+}
+function grpPend(){
+  if (!Grp.pend || !Auth.user || sheetOpen() || !$('#screen').hidden) return;
+  const g = Grp.pend; Grp.pend = '';
+  if (Grp.gs.includes(g)) { route.grp = g; route.tab = 'friends'; render(); } else grpJoin(g);
 }
 function copyText(s, msg){
   try { navigator.clipboard.writeText(s).then(() => toast(msg), () => toast(s, null, 6000)); } catch(e) { toast(s, null, 6000); }
@@ -4509,16 +4929,16 @@ function render(){
   const sel = a && v.contains(a) && a.dataset?.act ? ['act','k','v','d','f','c','id','tab'].filter(n => a.dataset[n] != null).map(n => `[data-${n}="${CSS.escape(a.dataset[n])}"]`).join('') : '';
   const dq = a && /^(dq|df[wme])$/.test(a.id) ? [a.id, a.selectionStart, a.selectionEnd] : null;   // the search box (and the 辞書's form) keep the keyboard and the caret
   const nw = true, dkp = route.tab === 'decks' && !!route.deck && !!deckById(route.deck);
-  v.classList.toggle('v2', nw); v.classList.toggle('home', route.tab === 'home'); v.classList.toggle('dk', route.tab === 'decks'); v.classList.toggle('dkp', dkp); v.classList.toggle('kst', route.tab === 'stats'); v.classList.toggle('kcf', route.tab === 'settings'); document.body.classList.toggle('v2bg', nw);
+  v.classList.toggle('v2', nw); v.classList.toggle('home', route.tab === 'home'); v.classList.toggle('dk', route.tab === 'decks'); v.classList.toggle('dkp', dkp); v.classList.toggle('kst', route.tab === 'stats'); v.classList.toggle('kcf', route.tab === 'settings'); v.classList.toggle('kfr', route.tab === 'friends'); document.body.classList.toggle('v2bg', nw);
   v.innerHTML = route.tab === 'home' ? viewHome()
     : route.tab === 'decks' ? (route.deck && deckById(route.deck) ? viewDeck() : viewDecks())
-    : route.tab === 'stats' ? viewStats() : viewSettings();
+    : route.tab === 'stats' ? viewStats() : route.tab === 'friends' ? viewFriends() : viewSettings();
   v.querySelectorAll('.chips.filter').forEach((e, i) => { if (sx[i]) e.scrollLeft = sx[i]; });
   if (still) v.querySelectorAll('.ctadock').forEach(d => d.classList.add('still'));
   if (sel) v.querySelector(sel)?.focus({preventScroll:true});
   const di = dq && $('#' + dq[0]); if (di) { di.focus({preventScroll:true}); try { di.setSelectionRange(dq[1], dq[2]); } catch(e) {} if (di.id === 'dq') dictSug(); }   // 最近しらべた単語 stays up too
   viewKey = $('#screen').hidden ? key : '';   // drawn under the study screen: it rises when the screen closes
-  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false'));
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false')); grpDot();
   renderSync(); shownDay = dayIdx();
   if (route.tab === 'decks' && (route.deck || route.scan)) guard();
   deckIO(v); djAfter(v);
@@ -4813,7 +5233,7 @@ function viewHome(){
     if (line) say = `<section class="k-sec k-say" aria-label="めくるから">${MEKURU[face] ? `<button class="k-mk-btn" data-act="mkTalk" aria-label="めくるに話しかける">${mekuru(face)}</button>` : ''}<p id="mkbubble" class="k-bubble" role="status" data-base="${esc(line)}">${kPhrases(line)}</p></section>`;
   }
   const note = act.length ? nudgeHTML() || instHTML('home') : '';
-  return `${topbar()}${hero}${note ? `<div class="k-note">${note}</div>` : ''}${inUse}${again}${shelf}${say}`;
+  return `${topbar()}${hero}${grpHome()}${note ? `<div class="k-note">${note}</div>` : ''}${inUse}${again}${shelf}${say}`;
 }
 /* the hero's ⋯: the other ways to go on (each only when it starts something), how questions are asked, the day's new words,
    and 高速仕分け */
@@ -5257,7 +5677,7 @@ function profSheetHTML(){
       <div class="k-pf-top">${avHTML(pfDraft.icon, 'lg' + avRing())}</div>
       <label class="k-pf-h" for="pfnick">ニックネーム</label>
       <input id="pfnick" class="k-input" type="text" maxlength="${NICK_MAX}" value="${esc(nick)}" placeholder="例：ゆうと" autocomplete="nickname" enterkeyhint="done" spellcheck="false">
-      <p class="k-pf-s"><span class="k-ph">ニックネームでOK（本名じゃなくていい）、</span><span class="k-ph">${NICK_MAX}文字まで、</span><span class="k-ph">ほかの人には見えない</span></p>
+      <p class="k-pf-s"><span class="k-ph">ニックネームでOK（本名じゃなくていい）、</span><span class="k-ph">${NICK_MAX}文字まで、</span><span class="k-ph">友達のグループの人にだけ見える</span></p>
       <p class="k-pf-h" id="pficon">アイコン</p>
       <div class="k-pf-icons${avChoices().length > 6 ? ' more' : ''}" role="radiogroup" aria-labelledby="pficon">${avChoices().map(([k, nm]) => `<button role="radio" aria-checked="${(pfDraft.icon || 'blue') === k}" aria-label="${nm}のめくる${AV_ONLY[k] ? `（${k === 'ink' ? '開発者' : '創設メンバー'}だけ）` : ''}" data-act="pfIcon" data-v="${k}">${avHTML(k, 'md')}${AV_ONLY[k] ? `<span class="k-pf-only">${k === 'ink' ? '開発者' : '創設'}</span>` : ''}</button>`).join('')}</div>
       <p class="k-pf-h" id="pfgoal">目標</p>
@@ -6103,7 +6523,7 @@ function privacySheet(){
   const acct = !!FIREBASE;
   const rows = [
     ['保存するもの', `学習記録（どの単語にいつ答えて、合っていたか）、設定、自作の単語帳とメモ。${acct ? 'ログイン中は、メールアドレスと名前も' : ''}`],
-    ['保存先と、見られる人', acct ? 'ログインしないと、この端末の中だけ（どこにも送らない）。ログインすると、アカウント（GoogleのFirebase）にも保存する。ほかの人からは見えない（運営者が不具合を調べるときに見ることはある）'
+    ['保存先と、見られる人', acct ? 'ログインしないと、この端末の中だけ（どこにも送らない）。ログインすると、アカウント（GoogleのFirebase）にも保存する。ほかの人からは見えない（運営者が不具合を調べるときに見ることはある）。友達のグループに入ると、そのグループの人にだけ、ニックネーム・アイコン・今週の数字（XP、解いた問題、連続日数）が見える'
       : 'この端末の中だけ（どこにも送らない）'],
     acct ? ['集計', 'アカウントの記録を、だれのものかわからない形にまとめて、出題の改善に使うことがある'] : null,
     IS_WEB ? ['アクセス解析', 'Cloudflare Web Analytics で、開かれた回数や見られたページを数えている。Cookie は使わず、だれが見たかはわからない。学習記録は送らない'] : null,
@@ -7406,6 +7826,7 @@ function renderResults(){
   if (!prac) { achCount(its); Q.ach = [...(Q.ach || []), ...achGrant(false)]; }
   // XP: a set finished (not 練習 nor 苦手を特訓) earns 5, once; the set's XP is its answers', that and the goal's (when it was reached here)
   if (!prac && !Q.opts.drill && !Q.xpSet) { Q.xpSet = XP.set; xpOpen(); bumpDaily({[XPK]: XP.set}); }
+  if (!prac) grpSoon();   // 友達: this set's numbers to the groups
   const xpGain = prac ? 0 : (Q.hist || []).reduce((a, h) => a + (h.bump?.[XPK] || 0), 0) + (Q.xpSet || 0) + (Q.won ? XP.goal : 0);
   const xpNow = xpTotal(), ky1 = kyuOf(xpNow), ky0 = kyuOf(Math.max(0, xpNow - xpGain)), ke1 = keiOf(xpNow), ke0 = keiOf(Math.max(0, xpNow - xpGain)),
     kyUp = prac ? null : ky1.kyu < ky0.kyu ? ky1 : ke1 && ke0 && ke1.lv > ke0.lv ? {kyu: 0, name: ke1.name} : null;
@@ -8639,9 +9060,13 @@ const SCAN_ACT = {
 /* ---------- events ---------- */
 let RESET_UNDO = null, DECK_UNDO = null;   // 「元に戻す」: 記録をリセット's card and its record before the reset; 使うのをやめる's deck
 const ACT = {
+  grpNew: () => grpNew(), grpJoin: () => grpJoin(), grpMenu: () => grpMenu(), grpMember: t => grpMember(t.dataset.u),
+  grpStamp: t => grpStamp(t.dataset.u, +t.dataset.s), grpKick: t => grpKick(t), grpLeave: t => grpLeave(t), grpClose: t => grpClose(t),
+  grpCopy: () => copyText(fmtG(grpCur()), '招待コードをコピーしました'), grpShare: () => grpShare(),
+  grpSel: t => { route.grp = t.dataset.g; render(); }, grpRetry: () => { Grp.failed = false; render(); grpLoad(true); }, grpGm: t => { route.gm = t.dataset.k; render(); },
   // a tab comes back as it was left (the deck page with its filter, search and scroll); the tab you are on, tapped again, goes to the top
   // (for 単語帳: back to the list, as does すべて見る)
-  tab: t => { const to = t.dataset.tab, same = to === route.tab; SCROLL[route.tab] = same ? 0 : scrollY; route.from = null;
+  tab: t => { const to = t.dataset.tab, same = to === route.tab; if (to === 'friends') grpLoad().then(grpPend); SCROLL[route.tab] = same ? 0 : scrollY; route.from = null;
     if (to === 'decks' && (same || !t.classList.contains('tab'))) { PEEK.clear(); route.deck = null; route.scan = false; SCROLL.decks = 0; if (!same) route.dq = ''; }   // the home's 単語帳を選ぶ / 切りかえ: the shelves, not a search left there
     route.tab = to; render(); scrollTo(0, SCROLL[to] || 0); },
   openDeck: t => { if (route.tab !== 'decks') SCROLL[route.tab] = scrollY; PEEK.clear(); route.tab = 'decks'; route.deck = t.dataset.id; route.from = null; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; route.sec = null; route.dtab = 'path'; render(); scrollTo(0,0); },
@@ -8993,6 +9418,9 @@ document.addEventListener('submit', e => {
   const f = e.target;
   if (f.id === 'mailform') { mailAuth(e.submitter?.dataset.mode || 'in'); return; }
   if (f.id === 'codeform') { redeem(); return; }
+  if (f.id === 'grpform') { grpMake(); return; }
+  if (f.id === 'gjoinform') { grpEnter(); return; }
+  if (f.id === 'grenameform') { grpRename(); return; }
   if (f.id === 'devform') { devMake(); return; }
   if (f.id === 'dictform') { dictAddNew(); return; }
   if (f.id === 'newdeckform') { const items = importItems(analyzeImport($('#imptext')?.value || '', null));
@@ -9072,7 +9500,7 @@ function onboard(){
       ${[10, 20, 30].map(n => `<label class="ob-chip"><input type="radio" name="obnew" value="${n}" ${n === 20 ? 'checked' : ''}><span>${n}語<small>${{10: 'ゆったり', 20: 'ふつう', 30: 'がっつり'}[n]}</small></span></label>`).join('')}
     </div><p class="ob-note">2日目からは、これに①復習のぶんが少し足されます</p></fieldset>
     <div class="ob-f"><label class="ob-lab" for="obnick">なんて呼べばいい？</label><input id="obnick" class="k-input ob-nick" type="text" maxlength="${NICK_MAX}" placeholder="ニックネームでOK（本名じゃなくていい）" autocomplete="nickname" enterkeyhint="done" spellcheck="false">
-      <p class="ob-note">ほかの人には見えない、飛ばしてもOK</p></div>
+      <p class="ob-note">友達のグループに入ったときだけ、その人たちに見える。飛ばしてもOK</p></div>
     ${forgetChart()}
     <div class="ob-go"><button class="btn ${back ? 'btn-soft' : 'btn-primary'} btn-big btn-block" data-act="obStart" data-mode="swipe">知ってる単語を仕分けて始める<small>最大50語</small></button>
       <button class="btn btn-ghost btn-block" data-act="obStart" data-mode="study">仕分けずに、すぐ覚えはじめる</button>
@@ -9125,7 +9553,7 @@ function deepQuery(){
 }
 function start(data){
   if (data && data.tab) { route.tab = data.tab; route.deck = data.deck || null; }
-  const dq = deepQuery();
+  const dq = deepQuery(); grpDeep();
   if (dq) { route.tab = 'decks'; route.deck = null; route.dq = dq; }
   tutInit();                                                                  // めくるの一言: on for a learner with nothing on record yet
   if (!S.settings.onboarded && hasProgress()) S.settings.onboarded = true;   // people who already study skip the welcome
