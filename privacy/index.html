@@ -500,6 +500,85 @@ ol.ms.one > li::before{display:none}
 .wd .ex .exn{font-style:normal;white-space:nowrap}
 .mh .nl{font:700 18px var(--en);font-style:normal;color:var(--ink);margin-right:10px}
 .cf .nl{font:700 18px var(--en);font-style:normal;color:var(--ink)}
+/* 英単語力診断 */
+.sdp{max-width:680px;margin:0 auto}
+.sd h1{margin-bottom:8px}
+.sd-ax{list-style:none;margin:16px 0;padding:0;border-top:1px solid var(--line)}
+.sd-ax li{display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
+.sd-ax b{flex:none;width:5.5em;font-size:15px}
+.sd-ax span{font-size:14px;color:var(--sub)}
+.art .sd-meta{font-size:14px;color:var(--sub);margin:12px 0 18px}
+.sd-start,.sd-again,.sd-img{display:block;width:100%;height:52px;border:0;border-radius:var(--r);background:var(--blue);color:var(--on-blue);font:700 17px var(--jp);cursor:pointer}
+.sd-start:hover,.sd-again:hover{background:var(--blue-ink)}
+.sd-start:disabled{opacity:.6;cursor:default}
+.art .sd-cn{font-size:12px;color:var(--mute);margin:12px 0 0}
+.sd-top{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.sd-chip{display:inline-block;font-size:12px;font-weight:700;color:var(--blue-ink);background:var(--blue-50);border-radius:4px;padding:2px 8px}
+.sd-n{font:600 14px var(--en);color:var(--sub)}
+.sd-bar{height:6px;border-radius:3px;background:var(--bar-off);margin:10px 0 22px;overflow:hidden}
+.sd-bar i{display:block;height:100%;background:var(--blue);border-radius:3px;transition:width .3s}
+.art .sd-ask{font-size:15px;color:var(--sub);margin:0 0 8px}
+.art .sd-word{font:700 40px/1.2 var(--en);margin:4px 0 22px;word-break:break-word}
+.art .sd-sen{font:500 20px/1.6 var(--en);margin:4px 0 6px}
+.art .sd-sen b{color:var(--blue);font-weight:700}
+.sd-blank{display:inline-block;min-width:4em;border-bottom:2px solid var(--ink);margin:0 2px}
+.art .sd-ja{font-size:14px;color:var(--sub);margin:0 0 18px}
+.art .sd-sen+.sd-opts{margin-top:18px}
+.sd-opts{display:grid;gap:10px}
+.sd-o{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:10px 14px;text-align:left;border:1.5px solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);font:500 16px/1.5 var(--jp);cursor:pointer}
+.sd-o[lang=en]{font-family:var(--en);font-size:17px}
+.sd-o:hover:not(:disabled){border-color:var(--blue);background:var(--blue-50)}
+.sd-k{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--soft);font:700 13px var(--en);color:var(--sub)}
+.sd-o.ok{border-color:#1a8f4c;background:rgba(26,143,76,.1)}
+.sd-o.ng{border-color:#d33;background:rgba(221,51,51,.08)}
+.sd-o:disabled{cursor:default}
+.sd-skip{display:block;margin:16px auto 0;padding:8px 14px;border:0;background:none;color:var(--sub);font:500 14px var(--jp);text-decoration:underline;cursor:pointer}
+.sd-res{text-align:center}
+.art .sd-rl{margin:8px 0 0;font-size:15px;color:var(--sub)}
+.art .sd-total{margin:0;display:flex;align-items:baseline;justify-content:center;gap:4px;flex-wrap:wrap}
+.art .sd-total .num{font:700 72px/1.1 var(--en);color:var(--blue)}
+.art .sd-total small{font-size:20px;font-weight:700}
+.sd-title{display:block;width:100%;font-size:22px;font-weight:700;margin-top:2px}
+.art .sd-words{margin:8px 0 0;font-size:15px}
+.art .sd-words b{font-size:18px}
+.art .sd-words small{display:block;font-size:12px;color:var(--mute)}
+.sd-hex{display:block;width:100%;max-width:360px;margin:10px auto 0}
+.sd-ring{fill:none;stroke:var(--line);stroke-width:1}
+.sd-area{fill:rgba(8,63,249,.18);stroke:var(--blue);stroke-width:2.5;stroke-linejoin:round}
+.sd-lab{font:700 13px var(--jp);fill:var(--ink)}
+.sd-labn{font:700 13px var(--en);fill:var(--blue)}
+.sd-rows{list-style:none;margin:8px 0 0;padding:0;text-align:left}
+.sd-rows li{display:grid;grid-template-columns:5.5em 1fr 2.5em;align-items:center;gap:10px;padding:7px 0;font-size:14px}
+.sd-trk{display:block;height:8px;border-radius:4px;background:var(--bar-off);overflow:hidden}
+.sd-trk i{display:block;height:100%;background:var(--blue);border-radius:4px}
+.sd-rows b{text-align:right;font:700 15px var(--en)}
+.sd-adv{margin:20px 0 0;padding:16px;border-radius:var(--r);background:var(--app-bg);border:1px solid var(--app-line);text-align:left}
+.sd-adv b{font-size:16px}
+.art .sd-adv p{margin:6px 0 10px;font-size:14px;line-height:1.7}
+.sd-app{font-weight:700;color:var(--blue)}
+.sd-share{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 0}
+.sd-x{display:grid;place-items:center;height:52px;border-radius:var(--r);background:#000;color:#fff;font:700 16px var(--jp)}
+.sd-img{background:var(--card);color:var(--ink);border:1.5px solid var(--line);font-size:15px}
+.sd-img:hover{background:var(--soft)}
+.sd-rev{margin:22px 0 0;text-align:left;border-top:1px solid var(--line);padding-top:12px}
+.sd-rev summary{font-weight:700;cursor:pointer;padding:6px 0}
+.sd-rev ol{list-style:none;margin:8px 0 0;padding:0}
+.sd-rev li{padding:12px 0;border-bottom:1px solid var(--line)}
+.art .sd-rev li p{margin:6px 0 0;font-size:15px;line-height:1.6}
+.sd-rev li b{color:var(--ink)}
+.sd-rev .sd-sen,.sd-rev [lang=en]{font-family:var(--en)}
+.sd-ans span{display:block;font-size:13px;color:var(--sub)}
+.art .sd-note{font-size:13px!important;color:var(--sub)}
+.sd-rev a{display:inline-block;margin-top:6px;font-size:14px;color:var(--blue)}
+.art .sd-perfect{margin:20px 0 0;font-weight:700}
+.sd-again{margin:22px 0 0;background:var(--card);color:var(--blue);border:1.5px solid var(--blue)}
+.sd-again:hover{background:var(--blue-50)}
+.sd-promo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0 4px;padding:16px 18px;border-radius:var(--r);background:var(--app-bg);border:1px solid var(--app-line);color:var(--ink)}
+.sd-promo-t b{display:block;font-size:17px}
+.sd-promo-t small{display:block;font-size:13px;color:var(--sub);margin-top:2px;line-height:1.6}
+.sd-promo-go{flex:none;font-weight:700;color:var(--blue)}
+.sd-side{font-size:14px;color:var(--sub);margin:0 0 6px}
+@media (prefers-color-scheme:dark){.sd-area{fill:rgba(92,124,255,.25)}.sd-x{background:#fff;color:#000}}
 </style>
 </head>
 <body>
@@ -513,7 +592,7 @@ ol.ms.one > li::before{display:none}
     <nav class="hd-r" aria-label="アプリ"><a class="applink" href="/app/">無料アプリ</a></nav>
   </div>
   <div class="snav-w"><div class="wrap snav-in">
-    <nav class="snav" aria-label="メイン"><a href="/search/">単語を調べる</a><a href="/words/">単語一覧</a><a href="/ranking/nyushi/">ランキング</a><a href="/articles/">記事</a><a href="/about/">極について</a></nav>
+    <nav class="snav" aria-label="メイン"><a href="/search/">単語を調べる</a><a href="/shindan/">単語力診断</a><a href="/words/">単語一覧</a><a href="/ranking/nyushi/">ランキング</a><a href="/articles/">記事</a><a href="/about/">極について</a></nav>
     <form class="hsrch" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語を調べる" aria-label="英単語か日本語で調べる" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required></form>
   </div></div>
 </header>
