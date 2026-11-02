@@ -1244,6 +1244,56 @@ html{touch-action:manipulation}
 .dst{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .dst.learn{color:var(--accent)} .dst.master{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
 .dst.weak{background:var(--again-soft);border-color:transparent;color:var(--again-t)}
+/* 長文の写真から: the way in, the page (the passage's words coloured by where you are with them), the dock */
+.scan-go{display:flex;align-items:center;gap:12px;width:calc(100% - 2 * var(--pad));max-width:528px;margin:2px auto 14px;padding:12px 12px 12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);text-align:left}
+.scan-go>.ico{flex:none;width:24px;height:24px;color:var(--accent)}
+.scan-go .t{flex:1;min-width:0;display:grid;gap:2px}.scan-go b{font-size:15px}.scan-go small{font-size:12px;color:var(--muted);line-height:1.45}
+.scan-go .k-chev{flex:none;width:18px;height:18px}
+.scan-h{gap:4px}.scan-back{margin-left:-10px}
+.scan-wrap{max-width:560px;margin:0 auto;padding:8px max(var(--pad),env(safe-area-inset-left,0px)) 200px}
+.scan-card{display:grid;gap:12px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface);margin-bottom:14px}
+.scan-lead{margin:0;font-size:14.5px;line-height:1.7}.scan-s{margin:0;font-size:12px;color:var(--muted);line-height:1.5}
+.scan-t{margin:0;font-size:13px;font-weight:700}.scan-err{margin:0;padding:10px 12px;border-radius:10px;background:var(--again-soft);color:var(--again-t);font-size:13px;line-height:1.55}
+.scan-card .btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.scan-pick{min-height:56px}.scan-pick span{display:grid;gap:1px;text-align:left}.scan-pick small{font-size:11.5px;font-weight:500;opacity:.85}
+.scan-tips{margin:0;padding-left:1.2em;font-size:12px;color:var(--muted);line-height:1.6}
+.scan-ta{min-height:300px;font-family:var(--f-en)}
+.scan-busy{justify-items:center;text-align:center;padding:36px 16px}.scan-busy p{margin:0}#scanbusy{font-weight:700}
+.scan-spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--track);border-top-color:var(--accent);animation:scanspin .9s linear infinite}
+@keyframes scanspin{to{transform:rotate(1turn)}}
+.scan-hist ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}.scan-hist li{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.scan-hrow{flex:1;min-width:0;display:grid;gap:4px;padding:12px 4px 12px 14px;text-align:left;color:var(--ink)}
+.scan-hrow .t{font-family:var(--f-en);font-size:14px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.scan-hrow small{font-size:12px;color:var(--muted)}
+.scan-sum{margin:4px 0 16px}.scan-n{margin:0;font-size:14px}.scan-n b{font-size:20px;margin:0 2px}.scan-n small{display:inline-block;font-size:12px;color:var(--muted)}
+.scan-bar{display:flex;gap:2px;height:10px;margin:10px 0;border-radius:999px;overflow:hidden;background:var(--track)}
+.scan-bar i{display:block;min-width:4px}
+.scan-bar .master{background:var(--good)}.scan-bar .learn{background:var(--accent)}.scan-bar .weak{background:var(--again)}.scan-bar .new{background:var(--muted);opacity:.45}.scan-bar .none{background:var(--track)}
+.scan-leg{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:13px}.scan-leg>span{display:inline-flex;align-items:center;gap:5px}.scan-leg .sw{cursor:default;padding:1px 4px}.scan-leg b{font-weight:700}
+.scan-txt{font-family:var(--f-en);font-size:17px;line-height:1.95;overflow-wrap:break-word}.scan-txt p{margin:0 0 1em}
+.sw{display:inline;padding:2px 1px;margin:0 -1px;border:0;border-radius:4px;background:none;color:inherit;font:inherit;line-height:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.sw.s-master{background:var(--good-soft);background:color-mix(in srgb,var(--good) 24%,transparent)}
+.sw.s-learn{background:var(--accent-soft);background:color-mix(in srgb,var(--accent) 20%,transparent)}
+.sw.s-weak{background:var(--again-soft);background:color-mix(in srgb,var(--again) 22%,transparent);color:var(--again-t)}
+.sw.s-in{text-decoration:underline solid;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
+.scan-bar .in{background:var(--accent);opacity:.55}.sw.scan-chip.s-in{text-decoration:none;border-color:var(--accent);border-width:2px}
+.sw.s-new{text-decoration:underline dotted;text-decoration-color:var(--muted);text-decoration-thickness:1.5px;text-underline-offset:4px}
+.sw.on{background:var(--ink);color:var(--bg);text-decoration:none}
+.scan-idi{margin:6px 0 18px}.scan-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.sw.scan-chip{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;margin:0;border-radius:999px;border:1px solid var(--line);font-family:var(--f-en);font-size:15px}
+.sw.scan-chip.s-none,.sw.scan-chip.s-basic{background:var(--surface)}.sw.scan-chip.s-new{text-decoration:none;border-style:dashed;border-color:var(--muted)}.sw.scan-chip.on{border-color:var(--ink)}
+.scan-again{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.scan-again .btn{min-height:40px;padding:0 14px;font-size:14px}
+.scdock{position:fixed;left:0;right:0;z-index:19;bottom:calc(58px + env(safe-area-inset-bottom,0px));padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--tabbar-bg);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--hair)}
+.scdock-in{max-width:528px;margin:0 auto;display:grid;gap:8px}
+.scan-hint{margin:0;font-size:13px;color:var(--muted);text-align:center}
+.scpeek{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;min-width:0;min-height:30px;font-size:14px}.scpeek b{font-family:var(--f-en);font-size:17px;white-space:nowrap;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis}.scpeek .dst{flex:none}
+.scpeek .m{flex:1 0 100%;min-width:0;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-height:1.5;color:var(--ink-2)}.scpeek>.link{flex:none;margin-left:auto;padding:4px 0}.scpeek .m .link{font-size:14px;padding:4px 0}
+#app:has(.scdock) ~ #toastroot .toast{bottom:calc(70px + var(--scd,130px) + var(--kb,0px) + env(safe-area-inset-bottom,0px))}   /* above the dock (its height: --scd) */
+.scan-picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.scan-picks .scan-pick{min-height:64px}.scanpk:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.scm-done .link{margin-left:8px;font-size:13px}
+.scm-done{margin:0 0 10px;font-size:13px;font-weight:700;line-height:1.55}
+.scmiss{display:grid;gap:12px;margin:12px 0 16px}.scm-row{display:grid;gap:6px}.scm-w{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.scm-w b{font-family:var(--f-en);font-size:17px}
+.scm-w .link{display:inline-flex;align-items:center;gap:4px}.scm-w .ico{width:14px;height:14px}
+
 .dpar{display:inline-flex;align-items:baseline;flex-wrap:wrap;justify-content:center;align-content:center;gap:0 2px;min-height:44px;padding:4px 10px;border-radius:10px;font-size:13.5px;font-weight:700;color:var(--accent)}
 .dpar b{font-family:var(--f-word);font-size:15px;font-weight:600}
 .dpar span{color:var(--muted)}
@@ -4116,7 +4166,7 @@ function iabNote(){
    waits for closeScreen / closeSheet) — after saving, and says so once. */
 let swNew = false;
 function reloadIfQuiet(){
-  if (!swNew || !$('#screen').hidden || sheetOpen() || $('#dfm')?.value.trim() || $('#dfe')?.value.trim()) return;   // nor with the 辞書's form half filled in
+  if (!swNew || !$('#screen').hidden || sheetOpen() || $('#dfm')?.value.trim() || $('#dfe')?.value.trim() || SCAN?.busy != null || SCAN?.edit) return;   // nor with the 辞書's form half filled in
   swNew = false; saveNow();
   Promise.race([flush(true).catch(() => {}), new Promise(r => setTimeout(r, 3000))]).then(() => { lsSet('kiwami.updated', '1'); location.reload(); });
 }
@@ -4238,7 +4288,7 @@ function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0
 /* closing a set's results goes back to where it started: a deck page (route stays on it), else the home */
 const backLabel = () => route.tab === 'decks' && route.deck ? '単語帳へもどる' : 'ホームへ';
 function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); tutDrop(); tutPend.length = 0; Q = null; SW = null; if (DJ) { clearInterval(DJ.iv); clearTimeout(DJ.next); DJ = null; } const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); reloadIfQuiet(); }
-const layerOpen = () => sheetOpen() || !$('#screen').hidden || (route.tab === 'decks' && !!route.deck);
+const layerOpen = () => sheetOpen() || !$('#screen').hidden || (route.tab === 'decks' && (!!route.deck || !!route.scan));
 addEventListener('popstate', e => {
   if (!IS_WEB) return;
   if (e.state?.kt) { HG = true; return; }   // forward onto the marker again
@@ -4247,6 +4297,7 @@ addEventListener('popstate', e => {
   else if (sheetOpen()) { if ($('#sheetroot .backdrop[data-act]')) ACT.closeSheet(); }   // the first-run welcome stays open
   else if (!$('#screen').hidden) { if (DJ && !DJ.done) djQuitAsk(); else closeScreen(); }   // 道場: quitting fails it, so it asks
   else if (route.tab === 'decks' && route.deck) ACT.backDecks();
+  else if (route.tab === 'decks' && route.scan) ACT.scanClose();
   else { history.back(); return; }   // a marker left behind by ×: this back was meant for the page before
   if (layerOpen()) guard();
 });
@@ -4258,7 +4309,7 @@ if (window.visualViewport) {
 }
 
 /* ---------- views ---------- */
-let route = {tab:'home', deck:null, filter:'all', cat:'', q:'', red:false, limit:150, sec:null, dtab:'path', dq:'', df:null, from:null};   // dtab: the deck page's tab, 100語ずつ (path) or 単語一覧 (list); dq: what the 単語帳 tab's search box (the 辞書) holds; df: its form's fields; from: 'entry', a deck page opened from a 辞書 entry
+let route = {tab:'home', deck:null, filter:'all', cat:'', q:'', red:false, limit:150, sec:null, dtab:'path', dq:'', df:null, from:null, scan:false};   // dtab: the deck page's tab, 100語ずつ (path) or 単語一覧 (list); dq: what the 単語帳 tab's search box (the 辞書) holds; df: its form's fields; from: 'entry', a deck page opened from a 辞書 entry
 const PEEK = new Set();   // 赤シートでのぞいた語 (deck \t key), only while this deck's page is open
 let shownDay = dayIdx();  // the day the view was drawn for
 let moreSetOpen = false;  // 設定の「くわしい設定」 stays open when the view is drawn again
@@ -4275,7 +4326,7 @@ function applyTheme(){
 }
 let viewKey = '';   // the page #view showed last time with nothing covering it
 function render(){
-  const v = $('#view'), key = route.tab + (route.tab === 'decks' && route.deck ? '/' + route.deck : '');
+  const v = $('#view'), key = route.tab + (route.tab === 'decks' && route.deck ? '/' + route.deck : route.tab === 'decks' && route.scan ? '/scan' : '');
   // drawing the same page again: the dock doesn't rise again, and VoiceOver / the keyboard stay on the control they were on
   const a = document.activeElement, still = key === viewKey && !!v.querySelector('.ctadock');
   const sx = key === viewKey ? [...v.querySelectorAll('.chips.filter')].map(e => e.scrollLeft) : [];   // the chip rows keep their sideways scroll
@@ -4294,7 +4345,7 @@ function render(){
   viewKey = $('#screen').hidden ? key : '';   // drawn under the study screen: it rises when the screen closes
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false'));
   renderSync(); shownDay = dayIdx();
-  if (route.tab === 'decks' && route.deck) guard();
+  if (route.tab === 'decks' && (route.deck || route.scan)) guard();
   deckIO(v); djAfter(v);
   if (said && $('#mkbubble')) { $('#mkbubble').textContent = said; $('#mkbubble').hidden = false; $('#mkbubble').dataset.tap = 1; }
   // めくる waits at the home card's goal and talks only when tapped (a bubble of its own would cover the buttons above it)
@@ -4642,6 +4693,7 @@ const plusRow = d => `<li><button class="k-row" data-act="openDeck" data-id="${e
 const myBook = d => `<button class="k-book" data-act="openDeck" data-id="${esc(d.id)}">${bookCover(d, 'shelf')}<span class="k-book-name">${esc(d.name)}</span><span class="k-book-sub num">${nLoc(d.cards.length)}語</span></button>`;
 /* the 単語帳 tab: the title, the 辞書's search box, then the shelves; while the box holds a word its results take their place */
 function viewDecks(){
+  if (route.scan) return viewScan();
   const x = dictQuery(route.dq);
   return `${topbar()}
   <header class="k-page-h"><h1 class="k-page-t">単語帳</h1></header>
@@ -4659,7 +4711,8 @@ function shelvesHTML(){
   const order = [...SERIES, ...plus.map(d => d.id)], rank = d => { const i = order.indexOf(d.id); return i < 0 ? 99 : i; };
   const lib = act.map((d, i) => [d, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(([d]) => d);
   const sec = (h, body, sub = '') => `<section class="k-sec" aria-label="${h}"><div class="k-sec-h${sub ? ' has-sub' : ''}"><h2 class="k-sec-t">${h}</h2>${sub ? `<p class="k-sec-s">${sub}</p>` : ''}</div>${body}</section>`;
-  return djCardHTML('kw') + sec('使っている単語帳', lib.length ? `<div class="k-lib">${lib.map(d => libBook(d, d === going)).join('')}</div>` : '<p class="k-empty">まだありません。下の本を押して、使う単語帳を選んでください。</p>')
+  const scan = `<button class="scan-go" data-act="scanOpen">${I.camera}<span class="t"><b>長文の写真から単語を調べる</b><small>解いた長文の単語を、覚えた・学習中・苦手で色分け</small></span>${K_CHEV}</button>`;
+  return scan + djCardHTML('kw') + sec('使っている単語帳', lib.length ? `<div class="k-lib">${lib.map(d => libBook(d, d === going)).join('')}</div>` : '<p class="k-empty">まだありません。下の本を押して、使う単語帳を選んでください。</p>')
     + (series.length ? sec('受験英単語シリーズ', `<div class="k-series">${series.map(serBook).join('')}</div>`, `中学から難関大まで、やさしい順に${series.length}冊`) : '')
     + (plus.length ? sec('＋αの単語帳', `<ul class="k-rows">${plus.map(plusRow).join('')}</ul>`) : '')
     + sec('自分の単語帳', `<div class="k-shelf books"><button class="k-book" data-act="makeDeck"><span class="k-make-art" aria-hidden="true">${K_PLUS}</span><span class="k-book-name act">自分でつくる</span></button>${mine.map(myBook).join('')}</div>`, '英単語を貼るだけで、単語帳ができる');
@@ -4670,6 +4723,7 @@ function makeDeckSheet(){
   openSheet(`<div class="sheet-h"><h3>自分でつくる</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="k-menu">
     ${row('newDeck', K_ICO.newW, '新しい単語帳', '名前を付けて英単語を貼る。1語ずつ足してもよい')}
     ${row('importSheet', I.import, '貼って取りこむ', '英単語のリストやファイル（.txt .tsv .csv）から')}
+    ${row('scanOpen', I.camera, '長文の写真から', '解いた長文を撮って、知らない単語だけ入れる')}
     ${row('aiDeck', I.spark, '英文から自動でつくる', 'Claudeが覚える単語を選んで、意味と例文を付ける', ' ai-only')}</div>`);
 }
 function filterCards(d){
@@ -7992,6 +8046,350 @@ function dictRun(){
   const y = r.getBoundingClientRect().top + scrollY - ($('.dsearch')?.offsetHeight || 0); if (x && scrollY > y) scrollTo(0, y);   // new results start just under the box
 }
 Object.assign(I, {ext: '<svg class="ico" viewBox="0 0 24 24"><path d="M14 4.5h5.5V10M19.5 4.5 11 13"/><path d="M18 14v4.5a1 1 0 0 1-1 1H5.5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1H10"/></svg>'});
+Object.assign(I, {photos: '<svg class="ico" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M5 17l4.5-4.5 3 3 2.5-2.5L19 17"/></svg>', camera: '<svg class="ico" viewBox="0 0 24 24"><path d="M4 8.5a1.5 1.5 0 0 1 1.5-1.5h2.2L9.2 5h5.6l1.5 2h2.2A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.3"/></svg>'});
+
+/* ---------- 長文の写真から ---------- */
+/* A passage you solved, from photos (one page or several, read on this device by Tesseract.js, fetched from the CDN the first
+   time; the photos are never sent anywhere) or pasted: every word in the colour of where you are with it — 覚えた (green), 学習中
+   (blue), 苦手 (red), 未学習 (in the app, not studied yet: a dotted line); 中学の基本語 not studied yet (中学基礎 not in use) and
+   words the app doesn't have stay plain; the idioms in it listed under it. A tap marks a word (every place it is in) and shows
+   it in the dock (its state, meanings, 詳しく: its 辞書 entry; a word the app doesn't have: もしかして, for a misread one); the marked
+   ones go into 「長文で出た単語」 (a reference to the built-in card, so the record is shared; made on first use and put first among
+   the decks in use, as the 辞書's deck), and words the app doesn't have get a meaning typed in a sheet. The last 10 passages and
+   what was marked in each stay on this device (kiwami.scans) */
+const SCAN_NAME = '長文で出た単語', SCAN_KEY = 'kiwami.scans', SCAN_N = 10, OCR_JS = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+let SCAN = null, SCAN_UNDO = null, SCAN_D = null, SCAN_IDI = null;
+const SCAN_HIT = new Map();   // a word as written (lower case) → its 辞書 entry or null; made again with the 辞書's index
+/* {list: [{id, t, text, sel}] newest first, cur: its id, sel: Set, last: the key tapped last, busy, msg, err, edit, home: the
+   page with the ways in and the list, added: the deck the last words went into} */
+function scanState(){
+  if (SCAN) return SCAN;
+  let list = []; try { list = JSON.parse(lsGet(SCAN_KEY) || '[]').filter(x => x && x.id && typeof x.text === 'string'); } catch(e) {}
+  const old = lsGet('kiwami.scan'); if (old && !list.length) list = [{id: uid('p'), t: Date.now(), text: old, sel: []}];   // the first version kept one
+  if (old) { try { localStorage.removeItem('kiwami.scan'); } catch(e) {} if (list.length) lsSet(SCAN_KEY, JSON.stringify(list.slice(0, SCAN_N))); }
+  const c = list[0];
+  return SCAN = {list, cur: c?.id || null, text: c?.text || '', sel: scanKeys(c?.sel), last: null, busy: null, msg: '', err: '', edit: false, home: false, added: null};
+}
+const scanKeys = a => new Set((a || []).map(k => scanEntry(k)?.k || k));   // kept as written by the first version
+function scanSave(){
+  const x = scanState(), c = x.list.find(y => y.id === x.cur);
+  if (c) { c.text = x.text; c.sel = [...x.sel]; }
+  lsSet(SCAN_KEY, JSON.stringify(x.list.slice(0, SCAN_N)));
+}
+function scanNew(text){
+  const x = scanState(), id = uid('p');
+  x.list = [{id, t: Date.now(), text, sel: []}, ...x.list].slice(0, SCAN_N);
+  Object.assign(x, {cur: id, text, sel: new Set(), last: null, edit: false, home: false, err: '', added: null}); scanSave();
+}
+function scanEntry(k){
+  const D = dictIndex(); if (D !== SCAN_D) { SCAN_HIT.clear(); SCAN_D = D; SCAN_IDI = null; }
+  if (SCAN_HIT.has(k)) return SCAN_HIT.get(k);
+  let e = D.map.get(k) || null;
+  if (!e) for (const b of dictBases(k, true)) if ((e = D.map.get(b))) break;   // abandoned → abandon, took → take, children → child
+  SCAN_HIT.set(k, e); return e;
+}
+/* master / learn / weak / in (put into 長文で出た単語, not studied yet) / new (the app has it, not studied yet) / basic (中学基礎
+   only, not studied, that deck not in use) / none */
+let SCAN_CC = null;   // {m: entry key → class, sd: 長文で出た単語's cards}; dropped before each drawing
+function scanClass(e){
+  if (!e) return 'none';
+  const cc = SCAN_CC || (SCAN_CC = {m: new Map(), sd: new Set(deckById(scanDeckId() || '')?.cards || [])});
+  let r = cc.m.get(e.k); if (r) return r;
+  const c = dictMain(e), p = c ? prog(c) : null, st = status(p), cs = [...e.heads, ...e.ders];
+  r = p?.wk || (st !== 'new' && isLeech(p)) ? 'weak' : st !== 'new' ? st
+    : [...cs, ...e.own].some(x => cc.sd.has(x)) ? 'in'
+    : cs.length && cs.every(x => x.deck === 'junior') && !S.settings.active.includes('junior') ? 'basic' : 'new';
+  cc.m.set(e.k, r); return r;
+}
+/* words too plain to colour (and not in 中学基礎 as words of their own) */
+const SCAN_STOP = new Set('the a an and or but if of to in on at by for with from as is are was were be been being am do does did done have has had not no nor it its this that these those there here he she they we you i me him her them us my your his our their mine yours what which who whom whose when where why how than then so very can could will would shall should may might must also just only all any some each every both either neither one such same other another more most much many few up down out over into onto about after before because while until though although yet still even ever never again too off'.split(' '));
+const SCAN_LAB = {master: '覚えた', learn: '学習中', weak: '苦手', in: '入れた', new: '未学習', none: '極にない'};
+/* OCR lines: the English ones, a paragraph's lines joined. Out: a line mostly not letters (a question number, ① ② read as @),
+   one mostly capitals or of words no dictionary has (Japanese read as English letters: 「FE RODEN EFA」); (1) / 1. / ① before a
+   line goes */
+function scanLine(l){
+  if (!l.replace(/\s/g, '')) return true;
+  const ts = l.split(/\s+/).filter(t => t && !/^[\d()（）[\]_.,:;!?'"“”‘’…—–#%&*/@+=-]+$/.test(t));   // 2015, ( 3 ), — : neither way
+  if (!ts.length) return false;
+  const ch = ts.join(''), lt = (ch.match(/[A-Za-z]/g) || []).length, up = (ch.match(/[A-Z]/g) || []).length;
+  if (!lt || lt / ch.length < 0.6 || (lt >= 4 && up / lt > 0.5)) return false;
+  const ws = ts.filter(w => /^[A-Za-z'’,.;:!?"“”()-]+$/.test(w) && /[A-Za-z]/.test(w));
+  if (ws.length / ts.length < 0.6) return false;
+  const bs = ws.map(w => w.replace(/[^A-Za-z'’-]/g, '').replace(/^-+|-+$/g, '')), kn = b => { const k = normW(b).replace(/'s$/, ''); return SCAN_STOP.has(k) || !!scanEntry(k); };
+  const rest = bs.filter(b => kn(b) || !/^[A-Z][a-z]{2,}$/.test(b)), known = rest.filter(kn).length;   // a name the app doesn't have (Kinsley) counts neither way
+  if (!rest.length) return false;
+  return rest.length < 3 ? known === rest.length : known / rest.length >= 0.5;
+}
+const scanJoin = t => t.replace(/([^.!?:"”)\n])\n\n(?=[a-z])/g, '$1 ');   // a paragraph break inside a sentence (OCR's, or between two pages)
+/* ocr: the lines that are English only, and (1) / 1. / ① before a line out. Pasted or fixed by hand: every line stays, and a line
+   ending a sentence before one starting with a capital starts a paragraph (text from a page or PDF, a paragraph a line or cut
+   into lines). A word cut at a line's end (well-↵known, impor-↵tant) is joined as the dictionary has it */
+function scanClean(t, ocr = true){
+  let ls = String(t || '').normalize('NFKC').replace(/[‘ʼ`]/g, "'").replace(/\r/g, '').split('\n').map(l => l.trim());
+  if (ocr) ls = ls.map(l => l.replace(/^(?:\(\s*\d+\s*\)|\d+\s*[.)]|[\u2460-\u2473])\s*/, '')).filter(scanLine);
+  let x = ls.join('\n').replace(/([A-Za-z]+)-\n([A-Za-z]+)/g, (m, a, b) => !scanEntry(normW(a + b)) && (scanEntry(normW(a + '-' + b)) || (scanEntry(normW(a)) && scanEntry(normW(b)))) ? `${a}-${b}` : a + b);
+  if (!ocr) x = x.replace(/([.!?]["”']?)\n(?=["“]?[A-Z])/g, '$1\n\n');
+  return x.replace(/([^\n])\n(?!\n)/g, '$1 ').replace(/\n{3,}/g, '\n\n')
+    .replace(/([^.!?:"”)\n])\n\n(?=[a-z])/g, '$1 ').replace(/[ \t]+/g, ' ').trim();
+}
+/* the idioms in the app as patterns: A / B / ～ / one's / oneself / someone… take one word or a few, (the) may be there, at/in
+   either; at least two plain words. By their first word */
+function scanIdioms(){
+  if (SCAN_IDI && SCAN_D === dictIndex()) return SCAN_IDI;
+  scanEntry(''); const by = new Map(), ANY = /^(A|B|~|～|one's|oneself|someone|something|somebody|sb|sth|doing|～ing|~ing)$/;
+  for (const e of dictIndex().list) {
+    if (!e.k.includes(' ') || !e.heads.length || /[^a-z' ~.()/-]/i.test(e.w)) continue;
+    const pat = e.w.replace(/[～〜~]\s*ing\b/g, ' doing ').replace(/[～〜]/g, ' ~ ').replace(/\(([^)]+)\)/g, ' ?$1 ').trim().split(/\s+/).map(w =>
+      ANY.test(w) ? {any: 1} : w.startsWith('?') ? {opt: 1, alts: w.slice(1).toLowerCase().split('/')} : {alts: w.toLowerCase().split('/')});
+    if (pat.filter(x => x.alts && !x.opt).length < 2 || !pat[0].alts || pat[0].opt) continue;
+    for (const f of pat[0].alts) { const a = by.get(f) || []; a.push({e, pat}); by.set(f, a); }
+  }
+  return SCAN_IDI = by;
+}
+/* the idioms in a passage: [entry], in the order met */
+function scanFindIdioms(text){
+  const by = scanIdioms(), toks = [], seen = new Map(), cand = new Map();
+  text.replace(/[A-Za-z]+(?:['’][A-Za-z]+)?|[.!?;:]/g, m => { toks.push(/[A-Za-z]/.test(m) ? normW(m) : '|'); return m; });
+  const forms = t => { let f = cand.get(t); if (!f) { f = new Set([t, ...dictBases(t, true)]); cand.set(t, f); } return f; };
+  const fit = (pat, pi, ti) => {   // where the idiom ends, or -1
+    if (pi === pat.length) return ti;
+    const x = pat[pi], t = toks[ti];
+    if (x.any) { for (let g = 1; g <= 3; g++) { if (toks[ti + g - 1] === '|' || ti + g > toks.length) break; const r = fit(pat, pi + 1, ti + g); if (r >= 0) return r; } return -1; }
+    if (x.opt) { const r = fit(pat, pi + 1, ti); if (r >= 0) return r; }
+    return t && t !== '|' && x.alts.some(a => forms(t).has(a)) ? fit(pat, pi + 1, ti + 1) : -1;
+  };
+  const spans = [];
+  toks.forEach((t, i) => { if (t === '|') return;
+    for (const f of forms(t)) for (const it of by.get(f) || []) { const end = fit(it.pat, 1, i + 1); if (end >= 0) spans.push({e: it.e, a: i, b: end}); } });
+  for (const x of spans) if (!seen.has(x.e.k) && !spans.some(y => y !== x && y.a <= x.a && y.b >= x.b && y.b - y.a > x.b - x.a)) seen.set(x.e.k, x.e);
+  return [...seen.values()];
+}
+/* the passage as paragraphs of words to tap, and what is in it: {html, n: {master…}, basic, ids: every word's key} (a word once,
+   by its entry) */
+const SCAN_W = /[A-Za-z]+(?:[-'’][A-Za-z]+)*/g;
+function scanPassage(text){
+  const sel = scanState().sel, by = new Map();
+  const word = m => {
+    const k = normW(m).replace(/'s$/, '');
+    if (k.includes('-') && !scanEntry(k)) return m.split('-').map(word).join('-');   // well-known: whole; brand-new (not in the app): its parts
+    if (SCAN_STOP.has(k) || k.includes("'") || k.length < 2) { if (!by.has(k)) by.set(k, 'basic'); return esc(m); }   // the, of, don't: plain
+    const e = scanEntry(k), cls = scanClass(e), id = e ? e.k : k;
+    if (cls === 'none' && (k.length < 3 || !/[a-z]/.test(m[0]))) { if (!by.has(id)) by.set(id, 'name'); }   // London: not counted
+    else if (!by.has(id) || by.get(id) === 'name') by.set(id, cls);
+    const on = sel.has(id), lab = cls !== 'none' && cls !== 'basic' ? ` aria-label="${esc(m)}（${SCAN_LAB[cls]}）"` : '';
+    return `<button type="button" class="sw s-${cls}${on ? ' on' : ''}" data-act="scanTap" data-k="${esc(id)}" aria-pressed="${on}"${lab}>${esc(m)}</button>`;
+  };
+  const html = text.split(/\n{2,}/).map(para => { let h = '', i = 0;
+    para.replace(SCAN_W, (m, at) => { h += esc(para.slice(i, at)) + word(m); i = at + m.length; return m; });
+    return `<p>${h + esc(para.slice(i))}</p>`; }).join('');
+  const n = {master: 0, learn: 0, weak: 0, in: 0, new: 0, none: 0}; let basic = 0;
+  for (const v of by.values()) if (v === 'basic') basic++; else if (v in n) n[v]++;
+  return {html, n, basic, ids: new Set(by.keys())};
+}
+const scanPick = (id, cls, t, sub = '', cam = false) => `<label class="btn ${cls} scanpk" tabindex="0" role="button">${cam ? I.camera : I.photos}<span>${t}${sub ? `<small>${sub}</small>` : ''}</span><input type="file" id="${id}" accept="image/*" ${cam ? 'capture="environment"' : 'multiple'} hidden></label>`;
+const scanAgo = t => { const d = new Date(t); return `${d.getMonth() + 1}/${d.getDate()}`; };
+function viewScan(){
+  const x = scanState(), home = x.home || !x.text || x.edit; SCAN_CC = null;
+  const head = `${topbar()}<header class="k-page-h scan-h"><button class="iconbtn scan-back" data-act="scanClose" aria-label="${home && x.text && !x.edit ? '長文にもどる' : '単語帳にもどる'}">${I.left}</button><h1 class="k-page-t">長文の単語</h1></header>`;
+  if (x.busy != null) return `${head}<div class="scan-wrap"><div class="scan-card scan-busy"><div class="scan-spin" aria-hidden="true"></div><p id="scanbusy" role="status">${esc(x.msg || '読み取りの準備をしています…')}</p><p class="scan-s">${kPhrases('はじめての時だけ、読み取り用のデータをダウンロードします（少し時間がかかります）')}</p><button class="btn btn-ghost" data-act="scanStop">やめる</button></div></div>`;
+  if (x.edit) return `${head}<div class="scan-wrap"><div class="scan-card"><label class="scan-t" for="scantext">読み取った英文を直す</label>
+    <textarea class="input textarea scan-ta" id="scantext" lang="en" autocapitalize="off" autocorrect="off" spellcheck="false">${esc(x.draft ?? x.text)}</textarea>
+    <div class="btn-row"><button class="btn btn-primary" data-act="scanUse">この英文で調べる</button><button class="btn btn-ghost" data-act="scanCancel">やめる</button></div></div></div>`;
+  if (home) {
+    const rows = x.list.map(y => { const w = (y.text.match(/[A-Za-z]+/g) || []).length;
+      return `<li><button class="scan-hrow" data-act="scanLoad" data-id="${esc(y.id)}"><span class="t" lang="en">${esc(y.text.slice(0, 90))}</span><small>${scanAgo(y.t)}・<span class="num">${w}</span>語${y.sel?.length ? `・選んだ単語 <span class="num">${y.sel.length}</span>` : ''}</small></button><button class="iconbtn" data-act="scanDel" data-id="${esc(y.id)}" aria-label="この長文を消す">${I.close}</button></li>`; }).join('');
+    return `${head}<div class="scan-wrap">
+    <div class="scan-card"><p class="scan-lead">${kPhrases('解いた長文を写真に撮ると、出てきた単語が、いまの学習の状態で色分けされます。')}${kPhrases('知らない単語をタップして、まとめて自分の単語帳に入れられます。')}</p>
+      ${x.err ? `<p class="scan-err" role="alert">${esc(x.err)}</p>` : ''}<div class="scan-picks">${scanPick('scancam', 'btn-primary scan-pick', 'カメラで撮る', '', true)}${scanPick('scanfile', 'btn-ghost scan-pick', '写真から選ぶ')}</div>
+      <ul class="scan-tips"><li>${kPhrases('明るいところで、英文が画面いっぱいになるように')}</li><li>${kPhrases('2ページある長文は、写真から2枚まとめて選べます')}</li><li>${kPhrases('写真は外に送らず、このスマホの中で読み取ります')}</li></ul></div>
+    <div class="scan-card"><label class="scan-t" for="scantext">または、英文を貼りつける</label>
+      <textarea class="input textarea" id="scantext" lang="en" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="ここに英文を貼りつける"></textarea>
+      <div class="btn-row"><button class="btn btn-primary" data-act="scanUse">この英文で調べる</button></div></div>
+    ${rows ? `<section class="scan-hist"><h2 class="scan-t">最近の長文</h2><ul>${rows}</ul></section>` : ''}</div>`;
+  }
+  const r = scanPassage(x.text), total = Object.values(r.n).reduce((a, b) => a + b, 0);
+  const ks = ['master', 'learn', 'weak', 'in', 'new', 'none'].filter(k => r.n[k]);
+  const bar = `<div class="scan-bar" role="img" aria-label="${ks.map(k => `${SCAN_LAB[k]}${r.n[k]}語`).join('、')}">${ks.map(k => `<i class="${k}" style="flex:${r.n[k]}"></i>`).join('')}</div>`;
+  const leg = `<div class="scan-leg" aria-hidden="true">${ks.map(k => `<span><span class="sw s-${k}">${SCAN_LAB[k]}</span><b class="num">${r.n[k]}</b></span>`).join('')}</div>`;
+  const idi = scanFindIdioms(x.text);
+  const idiHTML = idi.length ? `<section class="scan-idi"><h2 class="scan-t">この長文の熟語 <span class="num">${idi.length}</span></h2><div class="scan-chips">${idi.map(e => { const cls = scanClass(e);
+    return `<button type="button" class="sw scan-chip s-${cls}${x.sel.has(e.k) ? ' on' : ''}" data-act="scanTap" data-k="${esc(e.k)}" aria-pressed="${x.sel.has(e.k)}" lang="en">${esc(e.w)}</button>`; }).join('')}</div></section>` : '';
+  return `${head}<div class="scan-wrap">
+    <div class="scan-sum"><p class="scan-n">この長文の単語 <b class="num">${total}</b>語${r.basic ? `<small>（中学の基本語${r.basic}語をのぞく）</small>` : ''}</p>${bar}${leg}</div>
+    <div class="scan-txt" lang="en">${r.html}</div>${idiHTML}
+    <div class="scan-again">${scanPick('scanmore', 'btn-ghost', '続きのページを足す', '', false)}<button class="btn btn-ghost" data-act="scanEdit">英文を直す</button><button class="btn btn-ghost" data-act="scanHome">別の長文</button></div>
+  </div><div class="scdock" id="scdock" aria-live="polite">${scanDockHTML()}</div>${(requestAnimationFrame(scanDockH), '')}`;
+}
+/* the dock: the word tapped last (its state, meanings, 詳しく; one the app doesn't have: もしかして) and the button that puts the
+   marked words in (after that, with none marked: 入れた単語を覚える) */
+const scanDockH = () => { const d = $('#scdock'); if (d) document.documentElement.style.setProperty('--scd', d.offsetHeight + 'px'); };
+function scanDockHTML(){
+  const x = scanState(), n = x.sel.size, k = x.last, e = k ? scanEntry(k) : null; SCAN_CC = null;
+  let peek;
+  if (!k) peek = `<p class="scan-hint">${kPhrases('知らない単語をタップして選ぶ')}</p>`;
+  else if (e) { const c = dictMain(e) || dictPseudo(e), cls = scanClass(e);
+    peek = `<div class="scpeek"><b lang="en">${esc(e.w)}</b>${cls !== 'basic' ? `<span class="dst ${cls === 'in' ? 'learn' : cls}">${SCAN_LAB[cls]}</span>` : ''}<button class="link" data-act="dictOpen" data-k="${esc(e.k)}">詳しく</button><span class="m">${esc(allMeanings(c))}</span></div>`; }
+  else { const near = /^[a-z]{4,}$/.test(k) ? dictNear(k).map(y => y[1]).slice(0, 2) : [];
+    peek = `<div class="scpeek"><b lang="en">${esc(k)}</b><span class="m">${near.length ? `読み違い？ ${near.map(y => `<button class="link" data-act="scanFix" data-from="${esc(k)}" data-to="${esc(y.w)}" lang="en">${esc(y.w)}</button>`).join('・')} に直す` : '極にない単語'}</span></div>`; }
+  const btn = n ? `<button class="btn btn-primary btn-block" data-act="scanAdd">${I.plus}選んだ${n}語を単語帳に入れる</button>`
+    : x.added && deckById(x.added)?.cards.length ? `<button class="btn btn-primary btn-block" data-act="scanStudy" data-id="${esc(x.added)}">入れた単語を覚える</button>`
+    : '';
+  return `<div class="scdock-in">${peek}${btn}</div>`;
+}
+/* reading photos: each made smaller first (2,400px at most, as the camera turned it) and the shade of the room taken out (each
+   pixel against the paper around it: the page made small and blurred), then Tesseract.js, one after another */
+const scanLoad = () => window.Tesseract ? Promise.resolve(window.Tesseract) : new Promise((ok, ng) => {
+  const sc = document.createElement('script'); sc.src = OCR_JS; sc.crossOrigin = 'anonymous'; sc.onload = () => window.Tesseract ? ok(window.Tesseract) : ng(new Error('no Tesseract')); sc.onerror = ng; document.head.appendChild(sc); });
+async function scanImage(file){
+  let b; try { b = await createImageBitmap(file, {imageOrientation: 'from-image'}); }
+  catch(e) { b = await new Promise((ok, ng) => { const i = new Image(), u = URL.createObjectURL(file); i.onload = () => { URL.revokeObjectURL(u); ok(i); }; i.onerror = ng; i.src = u; }); }
+  const W = b.width || b.naturalWidth, H = b.height || b.naturalHeight, f = Math.min(1, 2400 / Math.max(W, H)), c = document.createElement('canvas');
+  c.width = Math.round(W * f); c.height = Math.round(H * f); const g = c.getContext('2d', {willReadFrequently: true}); g.drawImage(b, 0, 0, c.width, c.height); b.close?.();
+  try {
+    const s = document.createElement('canvas'), sw = Math.max(1, Math.round(c.width / 24)), sh = Math.max(1, Math.round(c.height / 24)); s.width = sw; s.height = sh;
+    const sg = s.getContext('2d', {willReadFrequently: true}); sg.drawImage(c, 0, 0, sw, sh);
+    const sd = sg.getImageData(0, 0, sw, sh).data, bg = new Float32Array(sw * sh);
+    for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) {   // the paper: the lightest near it (text is dark, so it drops out)
+      let m = 0; for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const yy = Math.min(sh - 1, Math.max(0, y + dy)), xx = Math.min(sw - 1, Math.max(0, x + dx)), i = (yy * sw + xx) * 4;
+        const v = sd[i] * .299 + sd[i + 1] * .587 + sd[i + 2] * .114; if (v > m) m = v; }
+      bg[y * sw + x] = Math.max(m, 24); }
+    const bm = bg.slice(); for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) {   // smoothed, so noise on the paper doesn't make patches
+      let t = 0, n = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const yy = y + dy, xx = x + dx; if (yy >= 0 && yy < sh && xx >= 0 && xx < sw) { t += bm[yy * sw + xx]; n++; } }
+      bg[y * sw + x] = t / n; }
+    const d = g.getImageData(0, 0, c.width, c.height), a = d.data, kx = sw / c.width, ky = sh / c.height, CW = c.width;
+    const L = new Uint8ClampedArray(CW * c.height); for (let i = 0; i < L.length; i++) L[i] = a[i * 4] * .299 + a[i * 4 + 1] * .587 + a[i * 4 + 2] * .114;
+    const M = L.slice(), q = new Uint8Array(9);   // grain out: the middle of the 3×3 around each pixel
+    for (let y = 1; y < c.height - 1; y++) for (let x = 1; x < CW - 1; x++) { let n = 0; for (let dy = -1; dy <= 1; dy++) { const o = (y + dy) * CW + x; q[n++] = L[o - 1]; q[n++] = L[o]; q[n++] = L[o + 1]; } q.sort(); M[y * CW + x] = q[4]; }
+    let gr = 0; for (let i = 0; i < L.length; i += 7) gr += Math.abs(L[i] - M[i]); const G = gr / (L.length / 7) > 4 ? M : L;   // a grainy photo only (on a clean one it thins the letters)
+    for (let y = 0; y < c.height; y++) { const fy = Math.min(sh - 1, Math.max(0, (y + .5) * ky - .5)), y0 = fy | 0, y1 = Math.min(sh - 1, y0 + 1), ty = fy - y0;
+      for (let x = 0; x < c.width; x++) { const fx = Math.min(sw - 1, Math.max(0, (x + .5) * kx - .5)), x0 = fx | 0, x1 = Math.min(sw - 1, x0 + 1), tx = fx - x0;
+        const p = (bg[y0 * sw + x0] * (1 - tx) + bg[y0 * sw + x1] * tx) * (1 - ty) + (bg[y1 * sw + x0] * (1 - tx) + bg[y1 * sw + x1] * tx) * ty, i = (y * c.width + x) * 4;
+        const r = Math.min(1, G[y * CW + x] / p), v = r > .86 ? 255 : Math.round(255 * Math.pow(r / .86, 2));
+        a[i] = a[i + 1] = a[i + 2] = v; } }
+    g.putImageData(d, 0, 0);
+  } catch(e) {}
+  return c;
+}
+/* more: the pages go after the passage open now (the rest of it); else a new passage */
+async function scanPhoto(files, more = false){
+  const x = scanState(); files = [...files].filter(f => /^image\//.test(f.type) || !f.type); if (!files.length || x.busy != null) return;
+  Object.assign(x, {busy: 0, msg: '', err: ''}); render(); scrollTo(0, 0);
+  const say = t => { if (t === x.msg) return; x.msg = t; const b = $('#scanbusy'); if (b) b.textContent = t; };
+  let w = null, wp = null, step = 'load', at = 0, stop; const got = [];
+  const halt = new Promise((ok, ng) => stop = ng); halt.catch(() => {}); x.stop = () => stop(new Error('stop'));
+  const lim = (p, ms) => Promise.race([p, halt, new Promise((ok, ng) => setTimeout(() => ng(new Error('slow')), ms))]);
+  const pre = () => files.length > 1 ? `${at + 1}/${files.length}枚目　` : '', pc = m => { const v = Math.floor((m.progress || 0) * 10) * 10; return v ? ` ${v}%` : ''; };
+  try {
+    const T = await lim(scanLoad(), 60000);
+    wp = T.createWorker('eng', 1, {logger: m => {
+      if (m.status === 'recognizing text') say(`${pre()}英文を読み取っています…${pc(m)}`);
+      else if (step === 'load' && /traineddata/.test(m.status || '')) say(`読み取りの準備をしています…${pc(m)}`); }});
+    w = await lim(wp, 120000);
+    step = 'read';
+    for (at = 0; at < files.length; at++) { say(`${pre()}英文を読み取っています…`); got.push(scanClean((await lim(w.recognize(await scanImage(files[at])), 90000)).data?.text)); }
+  } catch(e) {
+    if (e?.message === 'stop') step = 'stop';
+    else if (!got.some(Boolean)) x.err = step === 'load' ? '読み取りの準備ができませんでした。インターネットにつないで、もう一度ためしてください。' : '英文が読み取れませんでした。もう一度ためしてください。';
+  }
+  if (w) w.terminate().catch(() => {}); else wp?.then(v => v.terminate()).catch(() => {});   // stopped while it was being made
+  x.stop = null;
+  if (step !== 'stop' && !x.err) {
+    const t = scanJoin(got.filter(Boolean).join('\n\n'));
+    if ((t.match(/[A-Za-z]+/g) || []).length < 5) x.err = '英文が読み取れませんでした。明るいところで、英文が画面いっぱいになるように撮ってみてください。';
+    else if (more && x.text) { x.text = scanJoin(x.text + '\n\n' + t); x.home = false; scanSave(); }
+    else scanNew(t);
+    if (!x.err && at < files.length) toast(`${at + 1}枚目は読み取れませんでした`);
+  }
+  x.busy = null; if (x.err) x.home = true;
+  if (route.tab === 'decks' && route.scan) { render(); scrollTo(0, 0); }
+  reloadIfQuiet();
+}
+/* 「長文で出た単語」: made if needed and put first among the decks in use, as 辞書で調べた単語 */
+const scanDeckId = () => Object.values(S.custom).filter(d => d && d.scan && !d.del && Array.isArray(d.cards)).sort((a, b) => (a.created || 0) - (b.created || 0) || (a.id < b.id ? -1 : 1))[0]?.id || null;
+function scanDeckFirst(){
+  let id = scanDeckId(), made = false;
+  if (!id) { id = createDeck(SCAN_NAME, []); Object.assign(S.custom[id], {scan: 1, desc: '長文の写真から入れた単語'}); touchDeck(id); made = true; }
+  if (S.settings.active[0] !== id) setSetting('active', [id, ...S.settings.active.filter(x => x !== id)]);
+  return {id, made};
+}
+const scanSnap = () => { const id = scanDeckId(), x = scanState(); return {id, deck: id ? clone(S.custom[id]) : null, active: [...S.settings.active], sel: [...x.sel], cur: x.cur}; };
+function scanUndo(){
+  const u = SCAN_UNDO; SCAN_UNDO = null; $('#toastroot').innerHTML = ''; if (!u) return;
+  const now = Date.now(), id = scanDeckId(), x = scanState();
+  if (u.deck) { S.custom[u.id] = {...u.deck, upd: now}; touchDeck(u.id); }
+  else if (id) { S.custom[id] = {id, del: true, upd: now, cards: []}; delete S.prog[id]; markDirty('prog_' + id); touchDeck(id); }
+  setSetting('active', u.active); if (x.cur === u.cur) x.sel = new Set(u.sel); x.added = null; scanSave(); if (sheetOpen()) closeSheet(); render(); toast('元に戻しました');
+}
+/* the marked words in: a word the app has as a reference to its card (once, whatever forms were marked); the others: the sheet */
+function scanAdd(){
+  const x = scanState(), keys = [...x.sel]; if (!keys.length) return;
+  const miss = keys.filter(k => !scanEntry(k)), got = keys.filter(k => scanEntry(k));
+  if (!got.length) return scanMissSheet(miss);
+  const snap = scanSnap(), {id, made} = scanDeckFirst(), D = S.custom[id], has = c => D.cards.some(y => y.ref ? y.ref === dictRef(c) : y.k === c.k);
+  let n = 0, had = 0;
+  for (const k of got) {
+    const e = scanEntry(k), c = [...e.heads, ...e.ders].length ? dictMain(e) : null;
+    if (c) { if (has(c)) had++; else { D.cards.push(storeCard({ref: dictRef(c), w: c.w, s: [{p: c.p, m: c.m}]})); n++; } continue; }
+    if (D.cards.some(y => !y.ref && normW(y.w) === e.k)) { had++; continue; }
+    const y = e.own.find(o => o.deck !== id) || dictPseudo(e); D.cards.push(storeCard({w: y.w, s: y.s})); n++;   // one of your other decks': a copy
+  }
+  touchDeck(id); SCAN_UNDO = snap; x.sel = new Set(miss); x.last = null; x.added = id; x.addT = Date.now(); scanSave(); render();
+  const said = n ? `${made ? `単語帳「${SCAN_NAME}」をつくって` : `「${D.name}」に`}${n}語入れました${had ? `（${had}語は入っていました）` : ''}` : `${had}語とも、もう「${D.name}」に入っています`;
+  if (miss.length) scanMissSheet(miss, said, !!n);   // said in the sheet (a toast would cover it)
+  else toast(n ? `${said}。新しい単語の最初に出ます` : said, n ? {label: '元に戻す', act: 'scanUndo'} : null, 6000);
+}
+function scanMissSheet(ws, said = '', undo = false){
+  openSheet(`<div class="sheet-h"><h3>極にない単語</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    ${said ? `<p class="scm-done">${esc(said)}${undo ? `<button class="link" data-act="scanUndo">元に戻す</button>` : ''}</p><p class="bs-note">${kPhrases('ここの単語は、極にまだ載っていません。')}</p>` : ''}<p class="bs-note">${kPhrases(`意味を入れた単語だけ、「${SCAN_NAME}」に入ります。`)}</p>
+    <div class="scmiss">${ws.map(w => `<div class="scm-row"><div class="scm-w"><b lang="en">${esc(w)}</b><a class="link" href="https://ejje.weblio.jp/content/${encodeURIComponent(w)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(w)} をWeblioで調べる（別のタブ）">Weblioで調べる${I.ext}</a></div>
+      <input class="input scm" data-w="${esc(w)}" placeholder="意味（例：思いがけない発見）" aria-label="${esc(w)} の意味"></div>`).join('')}</div>
+    <button class="btn btn-primary btn-block" data-act="scanAddOwn">${I.plus}意味を入れた単語を入れる</button>`, true);
+}
+function scanAddOwn(){
+  const rows = [...document.querySelectorAll('#sheetroot .scm')].map(i => [i.dataset.w, i.value.trim()]).filter(r => r[1]);
+  if (!rows.length) return toast('意味を入れてください');
+  const snap = scanSnap(), {id} = scanDeckFirst(), x = scanState(); let n = 0;
+  for (const [w, m] of rows) { const sn = parseSenseText(m); if (sn.length) { S.custom[id].cards.push(storeCard({w, s: sn})); n++; x.sel.delete(w); } }
+  touchDeck(id); SCAN_UNDO = snap; x.added = id; x.addT = Date.now(); scanSave(); closeSheet(); render();
+  toast(`「${S.custom[id].name}」に${n}語入れました`, {label: '元に戻す', act: 'scanUndo'}, 6000);
+}
+const SCAN_ACT = {
+  scanOpen: () => { closeSheet(); SCROLL.decks = scrollY; route.tab = 'decks'; route.deck = null; route.scan = true; render(); scrollTo(0, 0); guard(); },
+  scanClose: () => { const x = scanState();
+    if (x.edit) x.draft = $('#scantext')?.value;   // what was fixed stays for 英文を直す
+    if (x.busy == null && (x.home || x.edit) && x.text) { x.home = false; x.edit = false; render(); scrollTo(0, 0); return; }
+    x.stop?.(); route.scan = false; render(); scrollTo(0, SCROLL.decks || 0); },
+  scanStop: () => scanState().stop?.(),
+  scanStudy: t => { if (Date.now() - (scanState().addT || 0) > 700) ACT.studyDeck(t); },   // not the second tap of 入れる
+  scanFix: t => { const x = scanState(), a = t.dataset.from, b = t.dataset.to;
+    x.text = x.text.replace(new RegExp(`(^|[^A-Za-z'’-])(${a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![A-Za-z'’-])`, 'gi'), (m, q, w) => q + (/^[A-Z]/.test(w) ? b[0].toUpperCase() + b.slice(1) : b));
+    x.sel.delete(a); x.last = scanEntry(normW(b))?.k || normW(b); scanSave(); render(); toast(`${a} を ${b} に直しました`); },
+  scanTap: t => { const x = scanState(), k = t.dataset.k, on = !x.sel.has(k);
+    if (on) x.sel.add(k); else x.sel.delete(k); x.last = k; scanSave();
+    document.querySelectorAll(`.sw[data-k="${CSS.escape(k)}"]`).forEach(b => { b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    const d = $('#scdock'); if (d) { d.innerHTML = scanDockHTML(); scanDockH(); } },
+  scanAdd: () => scanAdd(),
+  scanAddOwn: () => scanAddOwn(),
+  scanUndo: () => scanUndo(),
+  scanHome: () => { const x = scanState(); x.home = true; x.err = ''; render(); scrollTo(0, 0); },
+  scanLoad: t => { const x = scanState(), y = x.list.find(z => z.id === t.dataset.id); if (!y) return;
+    x.list = [y, ...x.list.filter(z => z !== y)]; Object.assign(x, {cur: y.id, text: y.text, sel: scanKeys(y.sel), last: null, home: false, edit: false, draft: null, added: null}); scanSave(); render(); scrollTo(0, 0); },
+  scanDel: t => { const x = scanState(), i = x.list.findIndex(z => z.id === t.dataset.id); if (i < 0) return;
+    x.gone = {y: x.list[i], i, cur: x.cur === t.dataset.id}; x.list.splice(i, 1);
+    if (x.cur === t.dataset.id) Object.assign(x, {cur: null, text: '', sel: new Set(), last: null}); scanSave(); render();
+    toast('長文を消しました', {label: '元に戻す', act: 'scanUndel'}, 5000); },
+  scanUndel: () => { const x = scanState(), g = x.gone; if (!g) return; x.gone = null;
+    x.list.splice(Math.min(g.i, x.list.length), 0, g.y); if (g.cur) Object.assign(x, {cur: g.y.id, text: g.y.text, sel: scanKeys(g.y.sel)}); scanSave(); render(); },
+  scanEdit: () => { const x = scanState(); x.edit = true; x.err = ''; render(); scrollTo(0, 0); $('#scantext')?.focus(); },
+  scanCancel: () => { const x = scanState(); x.edit = false; x.draft = null; render(); },
+  scanUse: () => { const x = scanState(), t = scanClean($('#scantext')?.value, false);
+    if ((t.match(/[A-Za-z]+/g) || []).length < 3) return toast('英文が見つかりませんでした');
+    if (x.edit && x.text) { const ids = scanPassage(t).ids; scanFindIdioms(t).forEach(e => ids.add(e.k));   // the marked words still in it
+      Object.assign(x, {text: t, sel: new Set([...x.sel].filter(k => ids.has(k))), edit: false, draft: null, last: null}); scanSave(); }
+    else scanNew(t);
+    render(); scrollTo(0, 0); },
+};
+
 
 /* ---------- events ---------- */
 let RESET_UNDO = null, DECK_UNDO = null;   // 「元に戻す」: 記録をリセット's card and its record before the reset; 使うのをやめる's deck
@@ -7999,7 +8397,7 @@ const ACT = {
   // a tab comes back as it was left (the deck page with its filter, search and scroll); the tab you are on, tapped again, goes to the top
   // (for 単語帳: back to the list, as does すべて見る)
   tab: t => { const to = t.dataset.tab, same = to === route.tab; SCROLL[route.tab] = same ? 0 : scrollY; route.from = null;
-    if (to === 'decks' && (same || !t.classList.contains('tab'))) { PEEK.clear(); route.deck = null; SCROLL.decks = 0; if (!same) route.dq = ''; }   // the home's 単語帳を選ぶ / 切りかえ: the shelves, not a search left there
+    if (to === 'decks' && (same || !t.classList.contains('tab'))) { PEEK.clear(); route.deck = null; route.scan = false; SCROLL.decks = 0; if (!same) route.dq = ''; }   // the home's 単語帳を選ぶ / 切りかえ: the shelves, not a search left there
     route.tab = to; render(); scrollTo(0, SCROLL[to] || 0); },
   openDeck: t => { if (route.tab !== 'decks') SCROLL[route.tab] = scrollY; PEEK.clear(); route.tab = 'decks'; route.deck = t.dataset.id; route.from = null; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; route.sec = null; route.dtab = 'path'; render(); scrollTo(0,0); },
   backDecks: () => { PEEK.clear(); route.deck = null; route.sec = null;
@@ -8275,6 +8673,7 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('contextmenu', e => { const t = e.target.closest('.wrow'); if (!t) return; e.preventDefault(); const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c); });
 document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList?.contains('scanpk')) { e.preventDefault(); e.target.querySelector('input')?.click(); return; }
   if (e.key === 'Enter' && e.target.id === 'q' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); e.target.blur(); return; }
   if (e.key === 'Enter' && (e.target.id === 'obnick' || e.target.id === 'pfnick') && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); e.target.blur(); return; }   // not while a Japanese word is being converted
   if (e.key === 'Enter' && e.target.id === 'dq' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); route.dq = e.target.value; clearTimeout(dictT); dictRun(); e.target.blur(); return; }
@@ -8324,7 +8723,9 @@ document.addEventListener('input', e => {
   if (e.target.id === 'spellin' && !KANA.test(e.target.value)) $('#spellnote')?.remove();
   if (e.target.id === 'retypein') e.target.classList.remove('ng');
 });
+Object.assign(ACT, SCAN_ACT);
 document.addEventListener('change', e => {
+  if (e.target.id === 'scanfile' || e.target.id === 'scanmore' || e.target.id === 'scancam') { const fs = [...(e.target.files || [])]; e.target.value = ''; if (fs.length) scanPhoto(fs, e.target.id === 'scanmore'); return; }
   if (e.target.id === 'imptarget') { $('#impnamewrap').hidden = e.target.value !== '__new'; impPreview(); }
   if (e.target.id === 'impfile') { const f = e.target.files?.[0]; IMP.file = ''; if (f) f.text().then(t => { IMP.file = t; impPreview(); }, () => impPreview()); else impPreview(); }
   if (e.target.id === 'imptext' && impT) { clearTimeout(impT); impT = null; impPreview(); }
