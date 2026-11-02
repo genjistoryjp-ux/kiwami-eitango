@@ -2266,12 +2266,21 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-dev-promo{display:flex;flex-direction:column;gap:10px}
 .k-dev-promo[hidden]{display:none}
 .k-idv{font-variant-numeric:tabular-nums;letter-spacing:.04em}
-.k-bdgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.k-bdg{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:var(--r-pill);background:var(--fill);color:var(--ink);font-size:var(--fs-sub);font-weight:700}
-.k-bdg.dev{background:var(--ink);color:var(--surface)}
-.k-bdg.fnd{background:var(--blue);color:#fff}
+.k-marks{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}
+.k-mark{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:var(--r-pill);background:var(--fill);color:var(--ink);font-size:var(--fs-sub);font-weight:700;white-space:nowrap}
+.k-mark.dev{background:#26262C;color:#EBCB7A;box-shadow:inset 0 0 0 1px #D9B25A}
+.k-mark.fnd{background:linear-gradient(135deg,#F1D58A,#C9952F);color:#3B2A06;box-shadow:inset 0 0 0 1px rgba(120,80,10,.25)}
 .k-input::placeholder{color:var(--ink-3)}
 .k-pf-icons{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.k-pf-icons.more{grid-template-columns:repeat(4,1fr);row-gap:8px}
+.k-pf-icons button{position:relative}
+.k-pf-only{position:absolute;left:50%;bottom:-3px;transform:translateX(-50%);padding:1px 6px;border-radius:var(--r-pill);font-size:10.5px;font-weight:800;line-height:1.4;white-space:nowrap;background:linear-gradient(135deg,#F1D58A,#C9952F);color:#3B2A06}
+[data-v="ink"] .k-pf-only{background:#26262C;color:#EBCB7A}
+/* 創設メンバー: a gold ring round the icon; 開発者: an ink one with a gold line inside */
+.k-av.r-gold,.k-face.r-gold{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #C9952F}
+.k-av.r-ink,.k-face.r-ink{box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px #D9B25A,0 0 0 5px #26262C}
+.k-av.lg.r-gold{box-shadow:0 0 0 3px var(--bg),0 0 0 6px #C9952F}
+.k-av.lg.r-ink{box-shadow:0 0 0 3px var(--bg),0 0 0 5px #D9B25A,0 0 0 7px #26262C}
 .k-pf-icons button{display:grid;place-items:center;min-height:60px;border-radius:50%}
 .k-pf-icons .k-av{box-shadow:0 0 0 2px var(--bg),0 0 0 2px transparent;transition:box-shadow var(--dur-1) var(--ease-io)}
 .k-pf-icons [aria-checked="true"] .k-av{box-shadow:0 0 0 2px var(--bg),0 0 0 4.5px var(--ink)}
@@ -4170,7 +4179,7 @@ async function loadAcct(){
     Object.assign(Acct, {id, admin: !!ad?.exists(), perks: ps.docs.map(d => { const x = d.data(); return {code: x.code, kind: x.kind, days: x.days || 0, t: x.t?.toMillis?.() || Date.now()}; })});
     lsSet(ACCT_KEY + uid, JSON.stringify({id: Acct.id, admin: Acct.admin, perks: Acct.perks}));
   } catch(e) { return; }   // offline: what was kept on this device stands
-  if (['settings', 'stats'].includes(route.tab) && $('#screen').hidden && !sheetOpen()) render();
+  if ($('#screen').hidden && !sheetOpen()) render();   // the top bar's icon gets its ring, the settings and the profile what the account has
 }
 async function newId(fs, db, uid){
   for (let i = 0; i < 6; i++) {
@@ -5200,7 +5209,13 @@ const NICK_MAX = 10;
 const cleanNick = s => [...String(s ?? '').replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, '').trim()].slice(0, NICK_MAX).join('').trim();
 const nickOf = () => cleanNick(S.settings.nick);
 /* めくる's body line (#2B45D3 in src/chara) in another colour; the ring, the face and the paper stay, so it is still めくる */
-const AV = [['blue', '青', '#2B45D3'], ['purple', '紫', '#6B4FD8'], ['green', '緑', '#23885A'], ['orange', 'オレンジ', '#D9770F'], ['pink', 'ピンク', '#D4407A'], ['gray', '灰', '#5E5E68']];
+const AV = [['blue', '青', '#2B45D3'], ['purple', '紫', '#6B4FD8'], ['green', '緑', '#23885A'], ['orange', 'オレンジ', '#D9770F'], ['pink', 'ピンク', '#D4407A'], ['gray', '灰', '#5E5E68'],
+  ['gold', '金', '#B8862B'], ['ink', '墨', '#26262C']];
+/* 金 only for 創設メンバー, 墨 only for the 開発者 (the owner gets both); a colour once chosen stays shown */
+const AV_ONLY = {gold: () => Acct.admin || acctBadges().includes('創設メンバー'), ink: () => Acct.admin};
+const avChoices = () => AV.filter(a => !AV_ONLY[a[0]] || AV_ONLY[a[0]]());
+/* the ring round the icon: 墨 for the 開発者, 金 for 創設メンバー */
+const avRing = () => !Auth.user ? '' : Acct.admin ? ' r-ink' : acctBadges().includes('創設メンバー') ? ' r-gold' : '';
 const avOf = k => AV.find(a => a[0] === k) || AV[0];
 const AV_SRC = {};
 function avSrc(k){
@@ -5214,6 +5229,7 @@ const avHTML = (k, cls = '') => { const a = avOf(k), src = avSrc(a[0]);
   return `<span class="k-av${cls ? ' ' + cls : ''}" style="--av:${a[2]}" aria-hidden="true">${src ? `<img src="${src}" alt="" decoding="async">` : ''}</span>`; };
 /* the top bar's and the settings row's face: the icon once one is chosen, else the first letter of the nickname (or the account's name) */
 function faceHTML(cls, fallback = ''){
+  cls += avRing();
   if (S.settings.icon && MEKURU.happy) return avHTML(S.settings.icon, cls);
   const n = nickOf() || fallback;
   return `<span class="${cls}" aria-hidden="true">${n ? esc([...n][0]) : K_ICO.person}</span>`;
@@ -5238,12 +5254,12 @@ function profSheetHTML(){
   const nick = $('#pfnick') ? $('#pfnick').value : nickOf();
   return `<div class="sheet-h"><h3>プロフィール</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="k-pf">
-      <div class="k-pf-top">${avHTML(pfDraft.icon, 'lg')}</div>
+      <div class="k-pf-top">${avHTML(pfDraft.icon, 'lg' + avRing())}</div>
       <label class="k-pf-h" for="pfnick">ニックネーム</label>
       <input id="pfnick" class="k-input" type="text" maxlength="${NICK_MAX}" value="${esc(nick)}" placeholder="例：ゆうと" autocomplete="nickname" enterkeyhint="done" spellcheck="false">
       <p class="k-pf-s"><span class="k-ph">ニックネームでOK（本名じゃなくていい）、</span><span class="k-ph">${NICK_MAX}文字まで、</span><span class="k-ph">ほかの人には見えない</span></p>
       <p class="k-pf-h" id="pficon">アイコン</p>
-      <div class="k-pf-icons" role="radiogroup" aria-labelledby="pficon">${AV.map(([k, nm]) => `<button role="radio" aria-checked="${(pfDraft.icon || 'blue') === k}" aria-label="${nm}のめくる" data-act="pfIcon" data-v="${k}">${avHTML(k, 'md')}</button>`).join('')}</div>
+      <div class="k-pf-icons${avChoices().length > 6 ? ' more' : ''}" role="radiogroup" aria-labelledby="pficon">${avChoices().map(([k, nm]) => `<button role="radio" aria-checked="${(pfDraft.icon || 'blue') === k}" aria-label="${nm}のめくる${AV_ONLY[k] ? `（${k === 'ink' ? '開発者' : '創設メンバー'}だけ）` : ''}" data-act="pfIcon" data-v="${k}">${avHTML(k, 'md')}${AV_ONLY[k] ? `<span class="k-pf-only">${k === 'ink' ? '開発者' : '創設'}</span>` : ''}</button>`).join('')}</div>
       <p class="k-pf-h" id="pfgoal">目標</p>
       <div class="k-grp k-pick" role="radiogroup" aria-labelledby="pfgoal">${GOALS.map(([k, , long]) => `<button class="k-srow" role="radio" aria-checked="${pfDraft.goal === k}" data-act="pfGoal" data-v="${k}"><span class="txt"><span class="lab">${esc(long)}</span></span>${pfDraft.goal === k ? K_CHECK : ''}</button>`).join('')}</div>
       <p class="k-pf-s">いまは表示だけ。学習の中身は変わらない</p>
@@ -5906,11 +5922,11 @@ function viewStats(){
   const mins = Math.round(time / 60000), tm = mins >= 60 ? [Math.floor(mins / 60), '時間'] : [mins, '分'];
   // the profile: the icon, the nickname, the goal, the first day; under it the three numbers
   const nick = nickOf(), gl = goalOf(S.settings.goal), since = sinceText();
-  const top = `<section class="k-prof" aria-label="プロフィール"><div class="top">${avHTML(S.settings.icon, 'lg')}
+  const top = `<section class="k-prof" aria-label="プロフィール"><div class="top">${avHTML(S.settings.icon, 'lg' + avRing())}
       <div class="info"><h1 class="nm">${nick ? esc(nick) : '<button class="k-prof-set" data-act="profSheet">ニックネームを決める</button>'}</h1>
         <button class="k-prof-goal" data-act="profSheet" data-f="goal" aria-label="${gl ? `目標 ${esc(gl[2])}、変える` : '目標を決める'}"><span class="pill">${K_FLAG}${gl ? `<span class="k">目標</span>${esc(gl[1])}` : '目標を決める'}</span></button>
         ${since ? `<p class="since">${since}にはじめた</p>` : ''}${Auth.user && Acct.uid === Auth.user.uid && Acct.id ? `<p class="since">ユーザーID <span class="k-idv">${fmtId(Acct.id)}</span></p>` : ''}
-        ${Auth.user && acctBadges().length ? `<p class="k-bdgs">${acctBadges().map(b => `<span class="k-bdg ${b === '開発者' ? 'dev' : 'fnd'}">${b}</span>`).join('')}</p>` : ''}</div>
+        ${Auth.user && acctBadges().length ? `<p class="k-marks">${acctBadges().map(b => `<span class="k-mark ${b === '開発者' ? 'dev' : 'fnd'}">${b}</span>`).join('')}</p>` : ''}</div>
       <button class="k-prof-edit" data-act="profSheet" aria-label="プロフィールを編集"><span class="pill">${K_PEN}編集</span></button></div>
     ${danRow()}${kyuRow()}<div class="k-pst"><div><p class="n">${nLoc(mAll)}<small>語</small></p><p class="l">覚えた単語</p></div><div><p class="n">${nLoc(days)}<small>日</small></p><p class="l">学習した日</p></div><div><p class="n">${nLoc(tm[0])}<small>${tm[1]}</small></p><p class="l">学習した時間</p></div></div></section>`;
   const streak = `<section class="k-sec" aria-label="連続記録"><div class="k-sec-h"><h2 class="k-sec-t">連続記録</h2></div>${streakBlock(g)}${calBlock(st, g.fr)}${tktBlock(st)}</section>`;
@@ -8835,7 +8851,7 @@ const ACT = {
   profSheet: t => profSheet(t?.dataset?.f),
   pfIcon: t => { if (!pfDraft) return; const v = t.dataset.v; pfDraft.icon = v;
     document.querySelectorAll('.k-pf-icons [role="radio"]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === v)));
-    const tp = $('.k-pf-top'); if (tp) tp.innerHTML = avHTML(v, 'lg'); },
+    const tp = $('.k-pf-top'); if (tp) tp.innerHTML = avHTML(v, 'lg' + avRing()); },
   pfGoal: t => { if (!pfDraft) return; pfDraft.goal = t.dataset.v; openSheet(profSheetHTML(), false, true); $(`.k-pf [data-act="pfGoal"][data-v="${t.dataset.v}"]`)?.focus({preventScroll: true}); },
   pfSave: () => profSave(),
   achSheet: () => achSheet(),
