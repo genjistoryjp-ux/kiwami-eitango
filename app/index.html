@@ -5507,30 +5507,31 @@ function kyuOf(xp){
   return {kyu: 10 - i, name: `${10 - i}級`, xp, lo, hi, left: hi === null ? 0 : hi - xp, fr: hi === null ? 1 : (xp - lo) / (hi - lo)};
 }
 const xpBar = (fr, from) => `<span class="k-xbar" aria-hidden="true"><i${fr > 0 ? '' : ' class="zero"'} style="width:${(fr * 100).toFixed(1)}%${from != null ? `;--from:${(from * 100).toFixed(1)}%` : ''}"></i></span>`;
-/* past 1級, XP goes on as 稽古1, 稽古2, … (one each 2,500 XP), so something still grows after the 級 run out; null before 1級 */
+/* past 1級, XP goes on as 熟練1, 熟練2, … (one each 2,500 XP), so something still grows after the 級 run out; null before 1級 */
+const KEI_W = '熟練', keiName = n => KEI_W + n;
 const KEI = 2500, KYU_TOP = KYU[KYU.length - 1];
 function keiOf(xp){
   if (xp < KYU_TOP) return null;
   const i = Math.floor((xp - KYU_TOP) / KEI), lo = KYU_TOP + i * KEI;
-  return {lv: i + 1, name: `稽古${i + 1}`, xp, lo, hi: lo + KEI, left: lo + KEI - xp, fr: (xp - lo) / KEI};
+  return {lv: i + 1, name: keiName(i + 1), xp, lo, hi: lo + KEI, left: lo + KEI - xp, fr: (xp - lo) / KEI};
 }
 /* the 段 shows only from 1級 on: a dojo passed before that waits for it (as in 武道, 初段 comes after 1級) */
 const danShown = () => xpTotal() >= KYU_TOP ? danName() : undefined;
-/* the 記録 tab's profile: 3級, the bar, あと120XP; from 1級 on: 稽古3 and its bar */
+/* the 記録 tab's profile: 3級, the bar, あと120XP; from 1級 on: 熟練3 and its bar */
 function kyuRow(){
   const k = kyuOf(xpTotal()), kk = keiOf(k.xp);
   if (kk) { const dn = danShown(), hint = dn ? '' : djHint(), q = kk.name;
-    return `<div class="k-kyu" role="img" aria-label="${q}、稽古${kk.lv + 1}まであと${nLoc(kk.left)}XP、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${q}</span>${xpBar(kk.fr)}<span class="r" aria-hidden="true">あと${nLoc(kk.left)}XP</span></div>${hint ? `<p class="k-kyu-s" aria-hidden="true">${kPhrases(hint)}</p>` : ''}`; }
+    return `<div class="k-kyu" role="img" aria-label="${q}、${keiName(kk.lv + 1)}まであと${nLoc(kk.left)}XP、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${q}</span>${xpBar(kk.fr)}<span class="r" aria-hidden="true">あと${nLoc(kk.left)}XP</span></div>${hint ? `<p class="k-kyu-s" aria-hidden="true">${kPhrases(hint)}</p>` : ''}`; }
   return `<div class="k-kyu" role="img" aria-label="${k.name}、${k.kyu - 1}級まであと${nLoc(k.left)}XP、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${k.name}</span>${xpBar(k.fr)}<span class="r" aria-hidden="true">あと${nLoc(k.left)}XP</span></div>`;
 }
 /* the results: +38 XP, the 級 and its bar (filling from where it stood before this set); a 級 up says so, 1級 points to the 道場.
-   From 1級 on the same for 稽古: the 段 (once it shows) and 稽古 on the right, the 稽古 bar, 稽古4に上がった */
+   From 1級 on the same for 熟練: the 段 (once it shows) and 熟練 on the right, the 熟練 bar, 熟練4に上がった */
 function xpResHTML(gain, k0, k1){
   const e1 = keiOf(k1.xp);
   if (e1) {
     const e0 = keiOf(k0.xp), first = !e0, up = !first && e1.lv > e0.lv, dn = danShown(), h = dn ? '' : djHint(), from = first || up ? 0 : e0.fr;
-    const s = first ? `<b>1級になった</b>、${h ? kPhrases(h) : `ここからは稽古、稽古2まであと${nLoc(e1.left)}XP`}`
-      : up ? `<b>${e1.name}に上がった</b>、稽古${e1.lv + 1}まであと${nLoc(e1.left)}XP` : `稽古${e1.lv + 1}まで、あと${nLoc(e1.left)}XP${h ? `。${kPhrases(h)}` : ''}`;
+    const s = first ? `<b>1級になった</b>、${h ? kPhrases(h) : `ここからは${keiName(1)}、${keiName(2)}まであと${nLoc(e1.left)}XP`}`
+      : up ? `<b>${e1.name}に上がった</b>、${keiName(e1.lv + 1)}まであと${nLoc(e1.left)}XP` : `${keiName(e1.lv + 1)}まで、あと${nLoc(e1.left)}XP${h ? `。${kPhrases(h)}` : ''}`;
     const q = dn ? `${dn}・${e1.name}` : e1.name;
     return `<section class="rs-xp" aria-label="このセットで${nLoc(gain)}XP、${q}${up ? 'に上がった' : ''}"><div class="hd" aria-hidden="true"><p class="g"><b>+${nLoc(gain)}</b>XP</p><p class="q${first || up ? ' up' : ''}${dn ? ' jp' : ''}">${q}</p></div>
     ${xpBar(e1.fr, from)}<p class="s">${s}</p></section>`;
