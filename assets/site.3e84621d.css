@@ -573,3 +573,24 @@ ol.ms.one > li::before{display:none}
 .sd-promo-go{flex:none;font-weight:700;color:var(--blue)}
 .sd-side{font-size:14px;color:var(--sub);margin:0 0 6px}
 @media (prefers-color-scheme:dark){.sd-area{fill:rgba(92,124,255,.25)}.sd-grade.gS,.sd-rg.gS{fill:#F2B630;color:#F2B630}.sd-x{background:#fff;color:#000}}
+
+/* 志望校別 (/univ/) */
+.wl.ul2 a{font:600 15px var(--jp)}
+.u-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:18px 0 4px}
+.u-facts div{border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;background:var(--card)}
+.u-facts b{display:block;font:700 24px/1.2 var(--en)}
+.u-facts b small{font:500 13px var(--jp);margin-left:2px}
+.u-facts span{font-size:12px;color:var(--sub)}
+.u-p{margin:0 0 12px;font-size:14px;color:var(--sub);line-height:1.7}
+.u-cov{list-style:none;margin:0;padding:0}
+.u-cov li{display:grid;grid-template-columns:7.5em minmax(0,1fr) 3.2em 4.6em;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.u-cov li:first-child{border-top:0}
+.u-cov .u-l{font-size:14px;white-space:nowrap}
+.u-cov b{text-align:right;font:700 17px var(--en)}
+.u-cov b small{font:500 12px var(--jp)}
+.u-cov .u-a{text-align:right;font-size:12px;color:var(--mute);white-space:nowrap}
+.u-rel a{font:600 14px/22px var(--jp)}
+.univ-rk .rk-v small{font-size:11px}
+.univ-rk .rk-hd,.univ-rk .rk-row{grid-template-columns:28px minmax(0,1fr) 56px 44px}
+.univ-rk .rk-hd span{white-space:nowrap}
+@media (min-width:900px){.u-facts{grid-template-columns:repeat(4,minmax(0,1fr))}.univ-rk .rk-hd,.univ-rk .rk-row{grid-template-columns:40px minmax(0,1fr) 64px 56px}}

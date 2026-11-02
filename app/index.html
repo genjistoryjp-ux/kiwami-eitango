@@ -1538,12 +1538,17 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-fr-sp li:last-child{border-bottom:0}
 .k-fr-sp .t{flex:1;min-width:0}
 .k-fr-sp .ago{flex:none;font-size:var(--fs-min);color:var(--ink-3)}
-.k-fr-who{display:flex;align-items:center;gap:16px;margin-top:6px}
 .k-fr-nums{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .k-fr-nums .n{margin:0;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
 .k-fr-nums .n small{margin-left:1px;font-size:var(--fs-min);color:var(--ink-2)}
 .k-fr-nums .l{margin:0;font-size:var(--fs-min);color:var(--ink-2)}
 .k-fr-stamps{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.k-fr-nums.wk{margin-bottom:4px}
+.k-fr-bar{display:flex;align-items:center;gap:4px;min-height:44px;padding:4px max(var(--pad),env(safe-area-inset-left,0px)) 0}
+.k-fr-bar p{margin:0;font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);font-feature-settings:"palt"}
+.k-fr-old{margin-top:4px}
+.k-sec .k-fr-danger{margin-top:16px}
+.k-fr-row.me{cursor:pointer}
 .k-fr-stamp{min-height:46px;border-radius:12px;background:var(--fill);font-size:var(--fs-body);font-weight:700;color:var(--ink)}
 .k-fr-stamp:active{background:var(--blue-tint)}
 .btn.k-fr-danger{margin-top:18px;color:var(--ng-ink)}
@@ -4295,7 +4300,25 @@ function grpMine(){
     wxp += xp; wq += q; if (d === dn) { dxp = xp; dq = q; }
   }
   const last = Math.max(-1, ...[...sti.on].filter(d => d <= dayIdx())) + off;
-  return {name: gName(nickOf()) || 'ななし', icon: avOf(S.settings.icon)[0], dn, wk: gWeek(dn), dxp, dq, wxp, wq, st: sti.n, sl: sti.n ? clamp(last, dn - 3, dn) : dn - 1, pk: 0};
+  return {name: gName(nickOf()) || 'ななし', icon: avOf(S.settings.icon)[0], dn, wk: gWeek(dn), dxp, dq, wxp, wq, st: sti.n, sl: sti.n ? clamp(last, dn - 3, dn) : dn - 1, pk: 0, pf: grpProf(sti)};
+}
+/* the profile the group's friends see on my sheet: all-time XP (their app shows the 級 / 熟練 from it), the 段, words 覚えた, days
+   studied, questions answered, the best streak, and the badges got (ids, newest first) */
+function grpProf(sti = streakInfo()){
+  const x = achCtx(), A = S.ach || {}, ids = achList().filter(b => A[b.id] || achTest(b, x).ok).map(b => b.id);
+  ids.sort((a, b) => (A[b]?.d ?? 0) - (A[a]?.d ?? 0));
+  const r = recNums(), today = dayIdx(), d0 = Object.keys(S.daily).filter(k => { const d = S.daily[k]; return d && (d.n || 0) + (d.sw || 0) > 0; }).sort()[0];
+  // the last 400 days a letter each, the last today: 0-4 how much (the 記録 tab's squares), A-E the same on a day the streak counts
+  // (the calendar's band), f a day an お休みチケット kept the streak
+  let h = '';
+  for (let i = today - 399; i <= today; i++) { const d = S.daily[dayKey(i)], lv = heatLv(d ? (d.n || 0) + (d.sw || 0) : 0);
+    h += sti.on.has(i) ? 'ABCDE'[lv] : sti.frozen.has(i) ? 'f' : lv; }
+  // each built-in deck started: id|覚えた|学習済み|words|round once
+  const dk = r.started.filter(d => d.builtin).map(d => { const k = deckNow(d); return `${d.id}|${k.st.m}|${k.st.r}|${k.st.total}|${k.round ? 1 : 0}`; }).filter(t => +t.split('|')[2] > 0);
+  return {xp: Math.max(0, Math.round(xpTotal())), dan: danShown() || '', m: x.mAll, days: x.days, ans: x.ans, best: sti.best || 0, a: ids.slice(0, 60),
+    min: Math.round(r.time / 60000), cor: r.totC, goal: goalOf(S.settings.goal) ? S.settings.goal : '', since: d0 ? Math.round(Date.parse(d0) / DAY) : 0,
+    w: [r.m, r.l, r.all.length], s: [r.sl, r.stot, r.sc], dv: [r.dm, r.dl, r.allD.length], r30: [r.rn, r.rc, Math.round(S.settings.retention * 100)],
+    dk: dk.slice(0, 20), h: h.replace(/^0+/, ''), hd: today, fz: sti.freeze, fc: fcDays()};
 }
 /* what the rules will take, given what is there (o): never lower than it, the week only by what the days add (days not written
    since may each have held 3,000), the streak only on a day it has not grown yet (sl) and a day at a time; pk, last week's XP, is
@@ -4320,7 +4343,7 @@ async function grpPush(){
   const m = grpMine(); let again = false;
   await Promise.all(Grp.gs.map(async g => {
     const o = Grp.me[g], x = grpFit(m, o);
-    if (o && Object.keys(x).every(f => o[f] === x[f])) return;
+    if (o && Object.keys(x).every(f => JSON.stringify(o[f]) === JSON.stringify(x[f]))) return;
     try { await fs.setDoc(fs.doc(db, 'groups', g, 'members', uid), {...x, t: fs.serverTimestamp()}); Grp.me[g] = x; Grp.tries = 0; }
     catch(e) { if (e?.code === 'permission-denied') { again = true; await grpReadMe(g); } }
   }));
@@ -4359,7 +4382,7 @@ async function grpFetch(g){
     const [ms, sp] = await Promise.all([fs.getDocs(fs.collection(db, 'groups', g, 'members')),
       fs.getDocs(fs.query(fs.collection(db, 'groups', g, 'stamps'), fs.where('to', '==', uid)))]);
     if (ms.metadata?.fromCache) return;
-    const list = ms.docs.map(d => { const m = d.data(); return {uid: d.id, name: m.name, icon: m.icon, dn: m.dn, wk: m.wk, dxp: m.dxp, dq: m.dq, wxp: m.wxp, wq: m.wq, st: m.st, sl: m.sl, pk: m.pk || 0}; });
+    const list = ms.docs.map(d => { const m = d.data(); return {uid: d.id, name: m.name, icon: m.icon, dn: m.dn, wk: m.wk, dxp: m.dxp, dq: m.dq, wxp: m.wxp, wq: m.wq, st: m.st, sl: m.sl, pk: m.pk || 0, pf: m.pf || null}; });
     const mine = list.find(m => m.uid === uid);
     if (!mine) return grpDrop(g, 'out', x.name);
     const {uid: _u, ...me} = mine; Grp.me[g] = me;
@@ -4427,7 +4450,7 @@ function viewFriends(){
   const dn = gDay(), left = 7 - (dn + 3) % 7, rows = gRank(g, k), myRank = rows.length > 1 ? rows.find(r => r.me)?.rank : 0;
   const row = m => {
     const inner = `<span class="rk${m.v && m.rank <= 3 ? ' r' + m.rank : ''}">${m.rank}</span>${avHTML(m.icon)}<span class="nm">${esc(m.name)}${m.me ? '<small>あなた</small>' : ''}</span><span class="v">${nLoc(m.v)}<small>${unit}</small></span>`;
-    return `<li>${m.me ? `<div class="k-fr-row me">${inner}</div>` : `<button class="k-fr-row" data-act="grpMember" data-u="${esc(m.uid)}" aria-label="${m.rank}位 ${esc(m.name)} ${nLoc(m.v)}${unit}、スタンプを送る">${inner}</button>`}</li>`;
+    return `<li><button class="k-fr-row${m.me ? ' me' : ''}" data-act="grpMember" data-u="${esc(m.uid)}" aria-label="${m.rank}位 ${esc(m.name)} ${nLoc(m.v)}${unit}、${m.me ? '友達に見えるプロフィール' : 'プロフィールとスタンプ'}">${inner}</button></li>`;
   };
   const sp = (x.sp || []).filter(s => Date.now() - s.t < 7 * DAY).sort((a, b) => b.t - a.t).slice(0, 5);
   const who = u => x.ms.find(m => m.uid === u);
@@ -4461,7 +4484,7 @@ function grpJoin(code = ''){
       <input id="gcode" class="k-input" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="KG-XXXX-XXXX" maxlength="20" enterkeyhint="done" value="${esc(code ? fmtG(code) : '')}">
       <p id="gerr" class="small" role="alert" style="color:var(--again-t)"></p>
       <button class="btn btn-primary btn-block" type="submit">入る</button></form>
-    <p class="k-pf-s">グループの人には、ニックネームとアイコン、今週の数字（XP・解いた問題・連続日数）だけが見えます</p>`);
+    <p class="k-pf-s">グループの人には、ニックネームとアイコン、今週の数字（XP・解いた問題・連続日数）と、記録タブの記録（級・覚えた単語・学習した日・単語帳の進み・称号など）だけが見えます</p>`);
 }
 const GRP_ERR = {form: 'KG から始まる10文字のコードを入れてください', none: 'このコードのグループは見つかりません。打ちまちがいがないか確かめてください',
   full: 'このグループは20人でいっぱいです', ban: 'このグループには入れません', mine: 'このグループには、もう入っています', max: '入れるグループは5つまでです',
@@ -4518,14 +4541,77 @@ async function grpEnter(){
     closeSheet(); render(); scrollTo(0, 0); toast(`「${d.name}」に入りました`);
   } catch(e) { err.textContent = GRP_ERR[e] || (e?.code === 'permission-denied' ? 'このグループには入れませんでした（人数がいっぱいなど）' : '通信できませんでした。もう一度お試しください'); if (btn) btn.disabled = false; }
 }
+/* a member's page (from the ranking): their 記録, drawn as the 記録 tab draws mine from what their app wrote (pf), this week's
+   numbers, and for a friend the stamps (and 外す for the one who made the group). Mine: what my friends see, from my records now */
 function grpMember(u){
-  const g = grpCur(), x = Grp.by[g], m = x?.ms.find(y => y.uid === u); if (!m) return;
-  const own = x.owner === Auth.user?.uid;
-  openSheet(`<div class="sheet-h"><h3>${esc(m.name)}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-    <div class="k-fr-who">${avHTML(m.icon, 'md')}<div class="k-fr-nums">${GM.map(([k, l, un]) => `<div><p class="n">${nLoc(gVal(m, k))}<small>${un}</small></p><p class="l">${l}</p></div>`).join('')}</div></div>
-    <p class="k-pf-h">スタンプを送る</p>
+  if (!Grp.by[grpCur()]?.ms.some(y => y.uid === u)) return;
+  SCROLL.frl = scrollY; route.fr = u; calOffF = 0; render(); scrollTo(0, 0);
+}
+/* pf as the rules let it through, read safely: whole numbers, the lists their length, the days' letters only the ones used */
+function pfClean(p){
+  if (!p || typeof p !== 'object') return null;
+  const N = v => Math.max(0, Math.floor(+v) || 0), L = (v, n) => Array.from({length: n}, (_, i) => N(Array.isArray(v) ? v[i] : 0));
+  const h = typeof p.h === 'string' && /^[0-4A-Ef]*$/.test(p.h) ? p.h : '';
+  const dk = (Array.isArray(p.dk) ? p.dk : []).map(t => String(t).split('|')).map(([id, m, r, t, rd]) => ({d: deckById(id), m: N(m), r: N(r), total: N(t), round: rd === '1'}))
+    .filter(k => k.d?.builtin && k.total > 0 && k.r > 0 && k.r <= k.total && k.m <= k.r);
+  return {xp: N(p.xp), dan: typeof p.dan === 'string' ? p.dan.slice(0, 4) : '', m: N(p.m), days: N(p.days), ans: N(p.ans), best: N(p.best), min: N(p.min), cor: N(p.cor),
+    a: new Set((Array.isArray(p.a) ? p.a : []).filter(x => typeof x === 'string')), goal: goalOf(p.goal), since: N(p.since), w: L(p.w, 3), s: L(p.s, 3), dv: L(p.dv, 3),
+    r30: L(p.r30, 3), dk, h, hd: N(p.hd), fz: Math.min(2, N(p.fz)), fc: L(p.fc, 29)};
+}
+const dayText = i => { const d = new Date(i * DAY); return `${d.getUTCFullYear()}年${d.getUTCMonth() + 1}月${d.getUTCDate()}日`; };
+function viewFrRec(){
+  const g = grpCur(), x = Grp.by[g], m0 = x?.ms.find(y => y.uid === route.fr);
+  if (!m0) { route.fr = null; return viewFriends(); }
+  const u = m0.uid, me = u === Auth.user?.uid, m = me ? {...m0, ...grpMine()} : m0, own = !me && x.owner === Auth.user?.uid, p = pfClean(m.pf);   // mine: my numbers now
+  const bar = `<div class="k-fr-bar"><button class="k-hit44 k-back" data-act="frBack" aria-label="ランキングにもどる"><span class="k-circ">${K_BACK}</span></button>${me ? '<p>友達に見える、あなたの記録</p>' : ''}</div>`;
+  const today = dayIdx(), dq = m.dn === gDay() ? m.dq || 0 : 0, cur = gVal(m, 'st');
+  const wk = `<section class="k-sec" aria-label="今週"><div class="k-sec-h"><h2 class="k-sec-t">今週</h2></div><div class="k-fr-nums wk">${GM.map(([k, l, un]) => `<div><p class="n">${nLoc(gVal(m, k))}<small>${un}</small></p><p class="l">${l}</p></div>`).join('')}</div></section>`;
+  const stamps = me ? '' : `<section class="k-sec" aria-label="スタンプを送る"><div class="k-sec-h"><h2 class="k-sec-t">スタンプを送る</h2></div>
     <div class="k-fr-stamps">${STAMPS.map((s, i) => `<button class="k-fr-stamp" data-act="grpStamp" data-u="${esc(u)}" data-s="${i}">${s}</button>`).join('')}</div>
-    ${own ? `<button class="btn btn-ghost btn-block k-fr-danger" data-act="grpKick" data-u="${esc(u)}">このグループから外す</button>` : ''}`);
+    ${own ? `<button class="btn btn-ghost btn-block k-fr-danger" data-act="grpKick" data-u="${esc(u)}">このグループから外す</button>` : ''}</section>`;
+  const head = (inner = '') => `<section class="k-prof" aria-label="プロフィール"><div class="top">${avHTML(m.icon, 'lg')}
+      <div class="info"><h1 class="nm">${esc(m.name)}</h1>${inner}</div></div>`;
+  if (!p) return `${topbar()}${bar}${head()}</section><p class="k-empty k-fr-old">${kPhrases('くわしい記録は、この人のアプリが新しくなると見られる')}</p>${wk}${stamps}`;
+  // the days: on (the streak counted it: the calendar's band), frozen (an お休みチケット), and each day's square
+  const on = new Set(), frozen = new Set(), lv = new Map(), h0 = p.hd - p.h.length + 1;
+  [...p.h].forEach((c, k) => { const d = h0 + k; if (c === 'f') frozen.add(d); else if (c >= 'A') { on.add(d); lv.set(d, c.charCodeAt(0) - 65); } else lv.set(d, +c); });
+  const done = on.has(today), first = p.since || (p.h ? h0 : today);
+  const tm = p.min >= 60 ? [Math.floor(p.min / 60), '時間'] : [p.min, '分'];
+  const top = `${head(`${p.goal ? `<p class="k-prof-goal"><span class="pill">${K_FLAG}<span class="k">目標</span>${esc(p.goal[1])}</span></p>` : ''}${p.since ? `<p class="since">${dayText(p.since)}にはじめた</p>` : ''}`)}
+    ${p.dan ? `<div class="k-dan" role="img" aria-label="段は${esc(p.dan)}"><span class="q" aria-hidden="true">${esc(p.dan)}</span></div>` : ''}${kyuRow(p.xp)}
+    <div class="k-pst"><div><p class="n">${nLoc(p.m)}<small>語</small></p><p class="l">覚えた単語</p></div><div><p class="n">${nLoc(p.days)}<small>日</small></p><p class="l">学習した日</p></div><div><p class="n">${nLoc(tm[0])}<small>${tm[1]}</small></p><p class="l">学習した時間</p></div></div></section>`;
+  const ring = `<div class="k-stk"><div class="k-stk-ring" role="img" aria-label="今日は${dq}問">${kRing(done ? 1 : 0, 108, 48, 10)}<div class="in" aria-hidden="true">${K_ICO.flame}<b>${dq}</b><span>問</span></div></div>
+    <div class="k-stk-t">${kBig('連続', cur, '日')}${p.best > cur ? `<p class="l">自己ベストは${p.best}日</p>` : cur ? '<p class="l">自己ベストを更新中</p>' : ''}<p class="l fl${done ? ' lit' : ''}">${K_ICO.flame}${done ? '今日もやった' : '今日はまだ'}</p></div></div>`;
+  const streak = `<section class="k-sec" aria-label="連続記録"><div class="k-sec-h"><h2 class="k-sec-t">連続記録</h2></div>${ring}${calBlock({on, frozen}, done ? 1 : 0, {first})}${tktBlock({freeze: p.fz})}</section>`;
+  const ax = {st: {n: cur, best: p.best}, days: p.days, ans: p.ans, mAll: p.m, books: {}, run: {b: 0, n: 0}};
+  const ach = `<section class="k-sec" aria-label="実績"><div class="k-sec-h"><h2 class="k-sec-t"><button data-act="frAch">実績${K_ICO.chev}</button></h2></div>${achGrid({got: p.a, x: ax})}</section>`;
+  const sofar = `<section class="k-sec" aria-label="これまで"><div class="k-sec-h"><h2 class="k-sec-t">これまで</h2></div>
+    <div class="k-wd2 top0"><div><p class="t">解いた問題</p><p class="n">${nLoc(p.ans)}<small>問</small></p></div><div><p class="t">正答率</p><p class="n">${p.ans ? Math.min(100, Math.round(p.cor / p.ans * 100)) : 0}<small>%</small></p></div></div>${heatBlock(i => lv.get(i) || 0)}</section>`;
+  const [wm, wl, wt] = p.w, ml = Math.min(wl, Math.max(0, wt - wm)), pc = v => wt ? (Math.min(v, wt) / wt * 100).toFixed(1) : 0, bks = p.dk.map(k => k.d);
+  const words = `<section class="k-sec" aria-label="覚えた単語"><div class="k-sec-h has-sub"><h2 class="k-sec-t">覚えた単語</h2><p class="k-sec-s">「覚えた」は、3週間あけても答えられた単語</p></div>
+    <div class="k-wd">${kBig('', nLoc(wm), '語', bks.length ? `／${esc(booksText(bks))}の${nLoc(wt)}語` : wt ? `／${nLoc(wt)}語` : '')}
+      <div class="k-sbar" aria-hidden="true">${wm ? `<i class="k" style="width:${pc(wm)}%"></i>` : ''}${ml ? `<i class="l" style="width:${pc(ml)}%"></i>` : ''}</div>
+      <div class="k-lg"><span class="k">覚えた<b>${nLoc(wm)}</b></span><span class="l">学習中<b>${nLoc(ml)}</b></span><span class="m">まだ<b>${nLoc(Math.max(0, wt - wm - ml))}</b></span></div></div>
+    <div class="k-wd2"><div><p class="t">学習済みの意味</p><p class="n">${nLoc(p.s[0])}<small>／${nLoc(p.s[1])}</small></p><p class="s">意味をぜんぶ学習済み ${nLoc(p.s[2])}語</p></div>
+      <div><p class="t">覚えた派生語</p><p class="n">${nLoc(p.dv[0])}<small>／${nLoc(p.dv[2])}</small></p><p class="s">学習中 ${nLoc(p.dv[1])}語</p></div></div></section>`;
+  const dkRow = k => { const pct = k.round ? pctOf(k.m, k.total) : pctOf(k.r, k.total), what = k.round ? '覚えた' : '学習済み';
+    const parts = [['覚えた', k.m], ['学習中', k.r - k.m], ['まだ', k.total - k.r]].filter(x => x[1] > 0).map(([a, v]) => `${a}${nLoc(v)}語`).join('、');
+    return `<div class="k-dk">${bookCover(k.d, 'card', {paper: false})}<span class="i"><span class="nm">${esc(k.d.name)}</span><span class="now">${k.round ? `${K_ICO.redo}一周して、いまは復習中` : `あと${nLoc(k.total - k.r)}語`}</span>
+      <span class="k-bar-row">${kBar({total: k.total, m: k.m, r: k.r})}<span class="k-bar-n">${what} ${pct}%</span></span><span class="r">${nLoc(k.total)}語のうち、${parts}</span></span></div>`; };
+  const books = p.dk.length ? `<section class="k-sec" aria-label="単語帳ごとの進み"><div class="k-sec-h"><h2 class="k-sec-t">単語帳ごとの進み</h2></div><div class="k-dks">${p.dk.map(dkRow).join('')}</div></section>` : '';
+  const [rn, rc, ret] = p.r30;
+  const rev30 = `<section class="k-sec" aria-label="この30日の復習"><div class="k-sec-h"><h2 class="k-sec-t">この30日の復習</h2></div>
+    <div class="k-wd2 top0"><div><p class="t">正答率</p><p class="n">${rn ? Math.min(100, Math.round(rc / rn * 100)) : '—'}${rn ? '<small>%</small>' : ''}</p>${ret ? `<p class="s">目安は${ret}%</p>` : ''}</div><div><p class="t">復習した回数</p><p class="n">${nLoc(rn)}<small>回</small></p></div></div></section>`;
+  // what is due, from the day their app last wrote (a day or more ago: what fell before today is today's)
+  const sh = Math.max(0, today - p.hd), fc = [p.fc.slice(0, sh + 1).reduce((a, v) => a + v, 0), ...p.fc.slice(sh + 1)];
+  while (fc.length < 29) fc.push(0);
+  return `${topbar()}${bar}${top}${wk}${streak}${ach}${sofar}${words}${books}${rev30}${fcBlock(fc)}${stamps}`;
+}
+/* 実績 › on a member's page: every badge by kind, theirs in colour */
+function frAch(){
+  const g = grpCur(), m0 = Grp.by[g]?.ms.find(y => y.uid === route.fr); if (!m0) return;
+  const me = m0.uid === Auth.user?.uid, m = me ? {...m0, ...grpMine()} : m0, p = pfClean(m.pf); if (!p) return;
+  achSheet({got: p.a, x: {st: {n: gVal(m, 'st'), best: p.best}, days: p.days, ans: p.ans, mAll: p.m, books: {}, run: {b: 0, n: 0}}, name: me ? 'あなた' : m0.name});
 }
 async function grpStamp(u, s){
   const {fs, db} = Auth.api || {}, uid = Auth.user?.uid, g = grpCur(); if (!fs || !uid || !g) return;
@@ -4556,7 +4642,7 @@ function grpMenu(){
   const own = x.owner === Auth.user?.uid;
   openSheet(`<div class="sheet-h"><h3>${esc(x.name)}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <div class="k-fr-inv in"><div><p class="l">招待コード</p><p class="c">${fmtG(g)}</p></div><button class="btn btn-ghost btn-sm" data-act="grpCopy">コピー</button><button class="btn btn-primary btn-sm" data-act="grpShare">送る</button></div>
-    <p class="k-pf-s">${x.ms.length}人／20人。グループの人に見えるのは、ニックネームとアイコン、今週の数字だけです</p>
+    <p class="k-pf-s">${x.ms.length}人／20人。グループの人に見えるのは、ニックネームとアイコン、今週の数字と、記録タブの記録（級・覚えた単語・学習した日・単語帳の進み・称号など）だけです</p>
     ${own ? `<form id="grenameform" class="k-code"><label class="k-pf-h" for="grname">グループの名前</label>
       <input id="grname" class="k-input" type="text" maxlength="20" value="${esc(x.name)}" autocomplete="off" enterkeyhint="done">
       <button class="btn btn-ghost btn-block" type="submit">名前を変える</button></form>
@@ -4883,7 +4969,7 @@ function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0
 /* closing a set's results goes back to where it started: a deck page (route stays on it), else the home */
 const backLabel = () => route.tab === 'decks' && route.deck ? '単語帳へもどる' : 'ホームへ';
 function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); tutDrop(); tutPend.length = 0; Q = null; SW = null; if (DJ) { clearInterval(DJ.iv); clearTimeout(DJ.next); DJ = null; } const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); reloadIfQuiet(); }
-const layerOpen = () => sheetOpen() || !$('#screen').hidden || (route.tab === 'decks' && (!!route.deck || !!route.scan));
+const layerOpen = () => sheetOpen() || !$('#screen').hidden || (route.tab === 'decks' && (!!route.deck || !!route.scan)) || (route.tab === 'friends' && !!route.fr);
 addEventListener('popstate', e => {
   if (!IS_WEB) return;
   if (e.state?.kt) { HG = true; return; }   // forward onto the marker again
@@ -4893,6 +4979,7 @@ addEventListener('popstate', e => {
   else if (!$('#screen').hidden) { if (DJ && !DJ.done) djQuitAsk(); else closeScreen(); }   // 道場: quitting fails it, so it asks
   else if (route.tab === 'decks' && route.deck) ACT.backDecks();
   else if (route.tab === 'decks' && route.scan) ACT.scanClose();
+  else if (route.tab === 'friends' && route.fr) ACT.frBack();
   else { history.back(); return; }   // a marker left behind by ×: this back was meant for the page before
   if (layerOpen()) guard();
 });
@@ -4932,7 +5019,7 @@ function render(){
   v.classList.toggle('v2', nw); v.classList.toggle('home', route.tab === 'home'); v.classList.toggle('dk', route.tab === 'decks'); v.classList.toggle('dkp', dkp); v.classList.toggle('kst', route.tab === 'stats'); v.classList.toggle('kcf', route.tab === 'settings'); v.classList.toggle('kfr', route.tab === 'friends'); document.body.classList.toggle('v2bg', nw);
   v.innerHTML = route.tab === 'home' ? viewHome()
     : route.tab === 'decks' ? (route.deck && deckById(route.deck) ? viewDeck() : viewDecks())
-    : route.tab === 'stats' ? viewStats() : route.tab === 'friends' ? viewFriends() : viewSettings();
+    : route.tab === 'stats' ? viewStats() : route.tab === 'friends' ? (route.fr ? viewFrRec() : viewFriends()) : viewSettings();
   v.querySelectorAll('.chips.filter').forEach((e, i) => { if (sx[i]) e.scrollLeft = sx[i]; });
   if (still) v.querySelectorAll('.ctadock').forEach(d => d.classList.add('still'));
   if (sel) v.querySelector(sel)?.focus({preventScroll:true});
@@ -4940,7 +5027,7 @@ function render(){
   viewKey = $('#screen').hidden ? key : '';   // drawn under the study screen: it rises when the screen closes
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false')); grpDot();
   renderSync(); shownDay = dayIdx();
-  if (route.tab === 'decks' && (route.deck || route.scan)) guard();
+  if ((route.tab === 'decks' && (route.deck || route.scan)) || (route.tab === 'friends' && route.fr)) guard();
   deckIO(v); djAfter(v);
   if (said && $('#mkbubble')) { $('#mkbubble').textContent = said; $('#mkbubble').hidden = false; $('#mkbubble').dataset.tap = 1; }
   // めくる waits at the home card's goal and talks only when tapped (a bubble of its own would cover the buttons above it)
@@ -5551,7 +5638,7 @@ function deckMenu(d){
 /* the tab's title and the three numbers under it (覚えた単語, 学習した日, 学習した時間; the profile with its name, icon and goal is
    not in the app yet); 連続記録 (the top bar's ring, large: today's words done ÷ today's goal), the month's calendar and the お休み
    チケット; 覚えた単語 of the decks started, with meanings and derivatives; each deck started; the reviews of the next 4 weeks */
-let calOff = 0;   // the calendar's month: 0 this month, 1 the one before …
+let calOff = 0, calOffF = 0;   // the calendar's month: 0 this month, 1 the one before … (calOffF: a friend's)
 const K_TK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8a2 2 0 0 1 2-2z"/><path d="M15 7.5v9" stroke-dasharray="1.6 2.1" stroke-linecap="round"/></svg>';
 const kBig = (pre, n, unit, of = '') => `<p class="k-big">${pre ? `<span class="pre">${pre}</span>` : ''}<span class="n">${n}</span><span class="unit">${unit}</span>${of ? `<span class="of">${of}</span>` : ''}</p>`;
 /* today's goal as the top bar works it out: done (reviews and new words today) out of done + what is left */
@@ -5575,12 +5662,12 @@ function streakBlock(g = goalToday()){
 }
 /* the month's calendar, Sunday first: the days done joined by a band (cut at the week's ends), a day an お休みチケット kept the
    streak on the band with the ticket, today the small ring (today's progress), the rest grey */
-function calBlock(st, fr){
+function calBlock(st, fr, fx){
   const today = dayIdx(), t = new Date(today * DAY), y0 = t.getUTCFullYear(), m0 = t.getUTCMonth();
-  const keys = Object.keys(S.daily).sort(), f = keys.length ? new Date(keys[0]) : t;
+  const keys = Object.keys(S.daily).sort(), f = fx ? new Date(Math.min(fx.first, today) * DAY) : keys.length ? new Date(keys[0]) : t;
   const maxOff = Math.max(0, (y0 - f.getUTCFullYear()) * 12 + m0 - f.getUTCMonth());
-  calOff = clamp(calOff, 0, maxOff);
-  const y = new Date(Date.UTC(y0, m0 - calOff, 1)).getUTCFullYear(), m = new Date(Date.UTC(y0, m0 - calOff, 1)).getUTCMonth();
+  const off = clamp(fx ? calOffF : calOff, 0, maxOff); if (fx) calOffF = off; else calOff = off;
+  const y = new Date(Date.UTC(y0, m0 - off, 1)).getUTCFullYear(), m = new Date(Date.UTC(y0, m0 - off, 1)).getUTCMonth();
   const first = Math.round(Date.UTC(y, m, 1) / DAY), last = Math.round(Date.UTC(y, m + 1, 0) / DAY), wd0 = new Date(first * DAY).getUTCDay();
   const band = d => st.on.has(d) || st.frozen.has(d);
   let cells = '<span class="d"></span>'.repeat(wd0), n = 0;
@@ -5593,9 +5680,9 @@ function calBlock(st, fr){
     } else if (d === today) cells += `<span class="d now" aria-label="今日 ${dn}日">${kRing(fr, 34, 15.2, 2.6)}${dn}</span>`;
     else cells += `<span class="d">${dn}</span>`;
   }
-  const nav = (d, lab, dis, path) => `<button data-act="calMonth" data-d="${d}" aria-label="${lab}"${dis ? ' disabled' : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg></button>`;
+  const nav = (d, lab, dis, path) => `<button data-act="calMonth" data-d="${d}"${fx ? ' data-f="1"' : ''} aria-label="${lab}"${dis ? ' disabled' : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg></button>`;
   return `<div class="k-cal"><div class="k-cal-h"><p class="k-cal-m">${y !== y0 ? `${y}年` : ''}${m + 1}月<span>${n}日やった</span></p>
-      <div class="k-cal-nav">${nav(1, '前の月', calOff >= maxOff, 'M14.5 6l-6 6 6 6')}${nav(-1, '次の月', calOff <= 0, 'M9.5 6l6 6-6 6')}</div></div>
+      <div class="k-cal-nav">${nav(1, '前の月', off >= maxOff, 'M14.5 6l-6 6 6 6')}${nav(-1, '次の月', off <= 0, 'M9.5 6l6 6-6 6')}</div></div>
     <div class="k-cal-w" aria-hidden="true">${'日月火水木金土'.split('').map(w => `<span>${w}</span>`).join('')}</div>
     <div class="k-cal-g">${cells}</div>
     <div class="k-cal-lg"><span><i class="sw"></i>やった日</span><span>${K_TK}お休みチケットを使った日</span></div></div>`;
@@ -5604,14 +5691,15 @@ const tktBlock = st => `<div class="k-tkt"><div class="top"><p class="n">お休�
   <p class="s"><span class="k-ph">1日休んでも、連続が切れない</span><br><span class="k-ph">7日続けるごとに1枚もらえる、</span><span class="k-ph">2枚まで持てる</span></p></div>`;
 /* the last 20 weeks, a square a day (weeks in columns, Sunday on top): how many questions (and sorted words), the app blue
    deeper the more — as the 記録 tab showed it before the new look (0, under 10, under 30, under 60, 60 and up) */
-function heatBlock(){
+const heatLv = n => n <= 0 ? 0 : n < 10 ? 1 : n < 30 ? 2 : n < 60 ? 3 : 4;
+function heatBlock(at){
   const today = dayIdx(), dow = new Date(today * DAY).getUTCDay(), weeks = 20, start = today - dow - (weeks - 1) * 7;
   let cells = '', on = 0;
   for (let i = start; i < start + weeks * 7; i++) {
     if (i > today) { cells += '<i class="fut"></i>'; continue; }
-    const d = S.daily[dayKey(i)] || {}, n = (d.n || 0) + (d.sw || 0), l = n === 0 ? 0 : n < 10 ? 1 : n < 30 ? 2 : n < 60 ? 3 : 4;
-    if (n) on++;
-    cells += `<i class="l${l}${i === today ? ' now' : ''}" title="${mdLabel(i)} ${n ? n + '問' : '学習なし'}"></i>`;
+    const d = at ? null : S.daily[dayKey(i)] || {}, n = at ? 0 : (d.n || 0) + (d.sw || 0), l = at ? at(i) : heatLv(n);
+    if (l) on++;
+    cells += `<i class="l${l}${i === today ? ' now' : ''}" title="${mdLabel(i)} ${!l ? '学習なし' : at ? '学習した' : n + '問'}"></i>`;
   }
   return `<div class="k-heat"><div class="g" role="img" aria-label="この20週の学習、${on}日学習した">${cells}</div>
     <div class="ft" aria-hidden="true"><span>この20週で${on}日</span><span class="key">少${[0, 1, 2, 3, 4].map(l => `<i class="l${l}"></i>`).join('')}多</span></div></div>`;
@@ -5718,6 +5806,7 @@ const ACH_CAT = [
   {k: 'fun', t: 'ほかにも', s: ''},
   {k: 'secret', t: 'ひみつの称号', s: ''},
 ];
+const ACH_KNOWN = ['streak', 'days', 'ans', 'master'];   // a friend's: the kinds whose あと… their numbers tell
 const ACH_GRID = [['streak', 'master', 'book', 'pf'], ['days', 'ans', 'run', 'dojo']];   // the 記録 tab: two blocks of 4 kinds
 let ACH_L = null;
 function achList(){
@@ -5837,31 +5926,31 @@ const achLeft = (b, t) => t.left ? `あと${nLoc(t.left)}${b.unit}` : '';
 const achHint = b => b.hint ? b.hint.map(p => `<span class="k-ph">${p}</span>`).join('') : '';
 /* the 記録 tab's grid, two blocks of 4 kinds: per kind, the highest one got (top row) and the next one (bottom row, faint with
    あと…); the rest (ほかにも, the secret ones) is in the sheet */
-function achGrid(){
-  const x = achCtx(), L = achList(), A = S.ach || {};
+function achGrid(o){
+  const x = o ? o.x : achCtx(), L = achList(), A = o ? {} : S.ach || {}, got = o ? b => o.got.has(b.id) : b => !!A[b.id] || achTest(b, x).ok;
   return ACH_GRID.map(cats => { const top = [], next = [];
     for (const cat of cats) {
-      const bs = L.filter(b => b.cat === cat), got = b => !!A[b.id] || achTest(b, x).ok;
+      const bs = L.filter(b => b.cat === cat);
       let hi = null, nx = null;
       if (cat === 'book') {
         const have = bs.filter(got); hi = have.sort((a, b) => (A[b.id]?.d ?? 1e9) - (A[a.id]?.d ?? 1e9))[0] || null;   // the latest got
-        const not = bs.filter(b => !got(b)), act = activeIds();
+        const not = bs.filter(b => !got(b)), act = o ? [] : activeIds();
         nx = not.find(b => act.includes(b.deck) && x.books[b.deck]?.left < x.books[b.deck]?.total) || not.find(b => act.includes(b.deck)) || not[0] || null;
       } else { hi = bs.filter(got).at(-1) || null; nx = bs.find(b => !got(b)) || null; }
       top.push(hi ? medalHTML(hi, true) : '<div class="k-bd none"></div>');
-      next.push(nx ? medalHTML(nx, false, achLeft(nx, achTest(nx, x)) || achHint(nx)) : '<div class="k-bd none"></div>');
+      next.push(nx ? medalHTML(nx, false, (!o || ACH_KNOWN.includes(nx.cat) ? achLeft(nx, achTest(nx, x)) : '') || achHint(nx)) : '<div class="k-bd none"></div>');
     }
     return `<div class="k-bdg">${top.some(h => !h.includes('none')) ? top.join('') : ''}${next.some(h => !h.includes('none')) ? next.join('') : ''}</div>`; }).join('');
 }
 /* 実績 › : every badge by kind, the day each was got or how far it is; the secret ones say only how many are still hidden */
-function achSheet(){
-  const x = achCtx(), L = achList(), A = S.ach || {}, got = b => !!A[b.id] || achTest(b, x).ok, n = L.filter(got).length;
+function achSheet(o){
+  const x = o ? o.x : achCtx(), L = achList(), A = o ? {} : S.ach || {}, got = o ? b => o.got.has(b.id) : b => !!A[b.id] || achTest(b, x).ok, n = L.filter(got).length;
   const cats = ACH_CAT.map(c => { const bs = L.filter(b => b.cat === c.k); if (!bs.length) return '';
     const hidden = c.k === 'secret' ? bs.filter(b => !got(b)).length : -1;
     const h = hidden < 0 ? esc(c.t) : `${esc(c.t)}<span class="k-ach-left">${hidden ? `あと${hidden}個` : 'ぜんぶ見つけた'}</span>`;
     return `<section class="k-ach-c"><h4 class="k-ach-h">${h}</h4>${c.s ? `<p class="k-ach-s">${esc(c.s)}</p>` : ''}<div class="k-bdg">${bs.map(b => { const t = achTest(b, x), g = got(b);
-      return medalHTML(b, g, g ? achDay(A[b.id]) || '今日' : b.secret ? '' : achHint(b) || achLeft(b, t)); }).join('')}</div></section>`; }).join('');
-  openSheet(`<div class="sheet-h"><h3>実績</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+      return medalHTML(b, g, g ? o ? '' : achDay(A[b.id]) || '今日' : b.secret ? '' : achHint(b) || (!o || ACH_KNOWN.includes(b.cat) ? achLeft(b, t) : '')); }).join('')}</div></section>`; }).join('');
+  openSheet(`<div class="sheet-h"><h3>${o ? `${esc(o.name)}の実績` : '実績'}</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <p class="k-ach-sum">${L.length}個のうち、<b>${n}</b>個取った</p>${cats}<button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
 }
 /* the badges a set (or a dojo test) earned, up to 4 (a secret one first, under 「ひみつの称号を見つけた！」) */
@@ -5938,9 +6027,9 @@ function keiOf(xp){
 /* the 段 shows only from 1級 on: a dojo passed before that waits for it (as in 武道, 初段 comes after 1級) */
 const danShown = () => xpTotal() >= KYU_TOP ? danName() : undefined;
 /* the 記録 tab's profile: 3級, the bar, あと120XP; from 1級 on: 熟練3 and its bar */
-function kyuRow(){
-  const k = kyuOf(xpTotal()), kk = keiOf(k.xp);
-  if (kk) { const dn = danShown(), hint = dn ? '' : djHint(), q = kk.name;
+function kyuRow(xp){
+  const k = kyuOf(xp ?? xpTotal()), kk = keiOf(k.xp);
+  if (kk) { const dn = xp != null || danShown(), hint = dn ? '' : djHint(), q = kk.name;
     return `<div class="k-kyu" role="img" aria-label="${q}、${keiName(kk.lv + 1)}まであと${nLoc(kk.left)}XP、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${q}</span>${xpBar(kk.fr)}<span class="r" aria-hidden="true">あと${nLoc(kk.left)}XP</span></div>${hint ? `<p class="k-kyu-s" aria-hidden="true">${kPhrases(hint)}</p>` : ''}`; }
   return `<div class="k-kyu" role="img" aria-label="${k.name}、${k.kyu - 1}級まであと${nLoc(k.left)}XP、これまで${nLoc(k.xp)}XP"><span class="q" aria-hidden="true">${k.name}</span>${xpBar(k.fr)}<span class="r" aria-hidden="true">あと${nLoc(k.left)}XP</span></div>`;
 }
@@ -6347,9 +6436,10 @@ function djListSheet(){
     <p class="k-ach-sum">${dn ? `いまは<b class="jp">${dn}</b>、` : ''}6つのうち、<b>${np}</b>つ合格</p><p class="k-ach-s">${kPhrases('単語帳をぜんぶ学習済みにすると、その道場があらわれる、合格した数で段が上がる')}</p>
     <ul class="k-djl">${DJ_IDS.map(row).join('')}</ul><button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
 }
-function viewStats(){
-  const g = goalToday(), {st} = g, today = dayIdx();
-  // the decks started (any word learned; else the ones in use): what 覚えた単語 counts
+/* the 記録 tab's numbers (also what a group's friends see of me): the decks started (any word learned; else the ones in use),
+   what 覚えた単語 counts there, the meanings and derivatives; every day's questions, time and the last 30 days' reviews */
+function recNums(){
+  const today = dayIdx();
   let started = decks().filter(d => deckStats(d).r > 0); if (!started.length) started = activeIds().map(deckById).filter(Boolean);
   const ids = started.map(d => d.id), all = cardsOf(ids), allD = [...new Set(started.flatMap(d => d.dcards))];
   let m = 0, l = 0, sl = 0, stot = 0, sc = 0, dm = 0, dl = 0;
@@ -6361,6 +6451,31 @@ function viewStats(){
   let days = 0, time = 0, tot = 0, totC = 0, rn = 0, rc = 0;
   for (const [k, d] of Object.entries(S.daily)) { if (!d) continue; if ((d.n || 0) + (d.sw || 0) > 0) days++; time += d.wt || d.t || 0;
     tot += d.n || 0; totC += d.c || 0; if (today - Math.round(Date.parse(k) / DAY) < 30) { rn += d.rn || 0; rc += d.rc || 0; } }   // as the 記録 tab counted before the new look
+  return {started, all, allD, m, l, sl, stot, sc, dm, dl, mAll, days, time, tot, totC, rn, rc};
+}
+/* これからの復習: how many reviews fall on today (what is left) and each of the 28 days on */
+function fcDays(){
+  const today = dayIdx(), fc = new Array(29).fill(0);
+  for (const c of cardsOf(activeIds(), true)) { const p = prog(c); if (!isReview(p) || p.sus) continue; const i = Math.max(0, p.due - today); if (i < 29) fc[i]++; }
+  return fc;
+}
+/* これからの復習: today (what is left) to 4 weeks on, one bar a day; tomorrow's bar in the app blue, the average dotted */
+function fcBlock(fc){
+  const N = fc.length;
+  const mx = Math.max(4, ...fc), stp = niceStep(mx), tp = Math.ceil(mx / stp) * stp, H = 124, avg = Math.round(fc.reduce((a, v) => a + v, 0) / N);
+  const xl = [[0, '今日'], [7, '1週間後'], [14, '2週間後'], [21, '3週間後'], [28, '4週間後']];
+  return `<section class="k-sec" aria-label="これからの復習"><div class="k-sec-h"><h2 class="k-sec-t">これからの復習</h2></div>
+    <div class="k-fc"><div class="top">${kBig('明日', nLoc(fc[1]), '語')}<p class="v">1日平均 <b>${nLoc(avg)}</b>語</p></div>
+      <div class="row2"><p>${fc[1] ? aboutMin(fc[1]) : '復習なし'}</p><p>${avg ? aboutMin(avg) : ''}</p></div>
+      <div class="k-chart" role="img" aria-label="これからの復習、今日${fc[0]}語、明日${fc[1]}語、1日平均${avg}語">
+        <div class="gl" style="top:0"><span>${tp}</span></div><div class="gl base" style="top:${H}px"></div>
+        <div class="bars">${fc.map((v, i) => `<i${i === 1 ? ' class="tm"' : ''} style="height:${(v / tp * H).toFixed(1)}px"></i>`).join('')}</div>
+        ${avg ? `<div class="avg" style="top:${(H - avg / tp * H).toFixed(1)}px"><span>平均</span></div>` : ''}</div>
+      <div class="k-xl" aria-hidden="true">${xl.map(([i, t]) => `<span${i ? ` style="left:calc(3.5px + (100% - 7px) * ${i / 28})"` : ' class="l0"'}>${t}</span>`).join('')}</div></div></section>`;
+}
+function viewStats(){
+  const g = goalToday(), {st} = g;
+  const {started, all, allD, m, l, sl, stot, sc, dm, dl, mAll, days, time, tot, totC, rn, rc} = recNums();
   const mins = Math.round(time / 60000), tm = mins >= 60 ? [Math.floor(mins / 60), '時間'] : [mins, '分'];
   // the profile: the icon, the nickname, the goal, the first day; under it the three numbers
   const nick = nickOf(), gl = goalOf(S.settings.goal), since = sinceText();
@@ -6397,18 +6512,7 @@ function viewStats(){
   const dks = started.filter(d => deckStats(d).r > 0);
   const books = dks.length ? `<section class="k-sec" aria-label="単語帳ごとの進み"><div class="k-sec-h"><h2 class="k-sec-t"><button data-act="tab" data-tab="decks">単語帳ごとの進み${K_ICO.chev}</button></h2></div><div class="k-dks">${dks.map(dkRow).join('')}</div></section>` : '';
   // これからの復習: today (what is left) to 4 weeks on, one bar a day; tomorrow's bar in the app blue, the average dotted
-  const N = 29, fc = new Array(N).fill(0);
-  for (const c of cardsOf(act, true)) { const p = prog(c); if (!isReview(p) || p.sus) continue; const i = Math.max(0, p.due - today); if (i < N) fc[i]++; }
-  const mx = Math.max(4, ...fc), stp = niceStep(mx), tp = Math.ceil(mx / stp) * stp, H = 124, avg = Math.round(fc.reduce((a, v) => a + v, 0) / N);
-  const xl = [[0, '今日'], [7, '1週間後'], [14, '2週間後'], [21, '3週間後'], [28, '4週間後']];
-  const fcs = `<section class="k-sec" aria-label="これからの復習"><div class="k-sec-h"><h2 class="k-sec-t">これからの復習</h2></div>
-    <div class="k-fc"><div class="top">${kBig('明日', nLoc(fc[1]), '語')}<p class="v">1日平均 <b>${nLoc(avg)}</b>語</p></div>
-      <div class="row2"><p>${fc[1] ? aboutMin(fc[1]) : '復習なし'}</p><p>${avg ? aboutMin(avg) : ''}</p></div>
-      <div class="k-chart" role="img" aria-label="これからの復習、今日${fc[0]}語、明日${fc[1]}語、1日平均${avg}語">
-        <div class="gl" style="top:0"><span>${tp}</span></div><div class="gl base" style="top:${H}px"></div>
-        <div class="bars">${fc.map((v, i) => `<i${i === 1 ? ' class="tm"' : ''} style="height:${(v / tp * H).toFixed(1)}px"></i>`).join('')}</div>
-        ${avg ? `<div class="avg" style="top:${(H - avg / tp * H).toFixed(1)}px"><span>平均</span></div>` : ''}</div>
-      <div class="k-xl" aria-hidden="true">${xl.map(([i, t]) => `<span${i ? ` style="left:calc(3.5px + (100% - 7px) * ${i / 28})"` : ' class="l0"'}>${t}</span>`).join('')}</div></div></section>`;
+  const fcs = fcBlock(fcDays());
   const say = MEKURU.happy ? `<section class="k-sec k-say" aria-label="めくるから">${mekuru('happy')}<p class="k-bubble">${kPhrases('覚えた単語も、忘れかけたころに、また出すよ')}</p></section>` : '';
   return `${topbar()}${top}${streak}${ach}${sofar}${words}${books}${rev30}${fcs}${say}`;
 }
@@ -6523,7 +6627,7 @@ function privacySheet(){
   const acct = !!FIREBASE;
   const rows = [
     ['保存するもの', `学習記録（どの単語にいつ答えて、合っていたか）、設定、自作の単語帳とメモ。${acct ? 'ログイン中は、メールアドレスと名前も' : ''}`],
-    ['保存先と、見られる人', acct ? 'ログインしないと、この端末の中だけ（どこにも送らない）。ログインすると、アカウント（GoogleのFirebase）にも保存する。ほかの人からは見えない（運営者が不具合を調べるときに見ることはある）。友達のグループに入ると、そのグループの人にだけ、ニックネーム・アイコン・今週の数字（XP、解いた問題、連続日数）が見える'
+    ['保存先と、見られる人', acct ? 'ログインしないと、この端末の中だけ（どこにも送らない）。ログインすると、アカウント（GoogleのFirebase）にも保存する。ほかの人からは見えない（運営者が不具合を調べるときに見ることはある）。友達のグループに入ると、そのグループの人にだけ、ニックネーム・アイコン・今週の数字（XP、解いた問題、連続日数）と、記録タブの記録（級、覚えた単語の数、学習した日、単語帳の進み、称号など）が見える'
       : 'この端末の中だけ（どこにも送らない）'],
     acct ? ['集計', 'アカウントの記録を、だれのものかわからない形にまとめて、出題の改善に使うことがある'] : null,
     IS_WEB ? ['アクセス解析', 'Cloudflare Web Analytics で、開かれた回数や見られたページを数えている。Cookie は使わず、だれが見たかはわからない。学習記録は送らない'] : null,
@@ -9060,13 +9164,13 @@ const SCAN_ACT = {
 /* ---------- events ---------- */
 let RESET_UNDO = null, DECK_UNDO = null;   // 「元に戻す」: 記録をリセット's card and its record before the reset; 使うのをやめる's deck
 const ACT = {
-  grpNew: () => grpNew(), grpJoin: () => grpJoin(), grpMenu: () => grpMenu(), grpMember: t => grpMember(t.dataset.u),
+  grpNew: () => grpNew(), grpJoin: () => grpJoin(), grpMenu: () => grpMenu(), grpMember: t => grpMember(t.dataset.u), frBack: () => { route.fr = null; render(); scrollTo(0, SCROLL.frl || 0); }, frAch: () => frAch(),
   grpStamp: t => grpStamp(t.dataset.u, +t.dataset.s), grpKick: t => grpKick(t), grpLeave: t => grpLeave(t), grpClose: t => grpClose(t),
   grpCopy: () => copyText(fmtG(grpCur()), '招待コードをコピーしました'), grpShare: () => grpShare(),
-  grpSel: t => { route.grp = t.dataset.g; render(); }, grpRetry: () => { Grp.failed = false; render(); grpLoad(true); }, grpGm: t => { route.gm = t.dataset.k; render(); },
+  grpSel: t => { route.grp = t.dataset.g; route.fr = null; render(); }, grpRetry: () => { Grp.failed = false; render(); grpLoad(true); }, grpGm: t => { route.gm = t.dataset.k; render(); },
   // a tab comes back as it was left (the deck page with its filter, search and scroll); the tab you are on, tapped again, goes to the top
   // (for 単語帳: back to the list, as does すべて見る)
-  tab: t => { const to = t.dataset.tab, same = to === route.tab; if (to === 'friends') grpLoad().then(grpPend); SCROLL[route.tab] = same ? 0 : scrollY; route.from = null;
+  tab: t => { const to = t.dataset.tab, same = to === route.tab; if (to === 'friends') grpLoad().then(grpPend); if (same) route.fr = null; SCROLL[route.tab] = same ? 0 : scrollY; route.from = null;
     if (to === 'decks' && (same || !t.classList.contains('tab'))) { PEEK.clear(); route.deck = null; route.scan = false; SCROLL.decks = 0; if (!same) route.dq = ''; }   // the home's 単語帳を選ぶ / 切りかえ: the shelves, not a search left there
     route.tab = to; render(); scrollTo(0, SCROLL[to] || 0); },
   openDeck: t => { if (route.tab !== 'decks') SCROLL[route.tab] = scrollY; PEEK.clear(); route.tab = 'decks'; route.deck = t.dataset.id; route.from = null; route.filter = 'all'; route.cat = ''; route.q = ''; route.limit = 150; route.sec = null; route.dtab = 'path'; render(); scrollTo(0,0); },
@@ -9167,7 +9271,7 @@ const ACT = {
   saveSheet: () => saveSheet(),
   rulesSheet: () => rulesSheet(),
   privacySheet: () => privacySheet(),
-  calMonth: t => { calOff += +t.dataset.d; const sh = $('#sheetroot .k-cal'); if (sh) { const st = streakInfo(); sh.outerHTML = calBlock(st, goalToday().fr); } else render(); },
+  calMonth: t => { if (t.dataset.f) { calOffF += +t.dataset.d; render(); return; } calOff += +t.dataset.d; const sh = $('#sheetroot .k-cal'); if (sh) { const st = streakInfo(); sh.outerHTML = calBlock(st, goalToday().fr); } else render(); },
   // 苦手を特訓: the decks in use, or one deck (its page's まちがえた単語: data-id)
   drill: t => { const ids = t.dataset.id ? [t.dataset.id] : null, cards = drillCards(t.dataset.kind, ids || activeIds()); if (!cards.length) return toast('対象の単語はありません');
     startQuiz({cards: cards.slice(0, S.settings.setSize), drill: t.dataset.kind, ...(ids ? {deckIds: ids} : {})}); },
