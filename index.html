@@ -302,6 +302,7 @@ ol.ms .mh .topb,ol.ms .mh .share{margin-left:0}
 .wd .ex small{display:block;font-size:13px;color:var(--sub)}
 .wd .br{margin:6px 0 0;font-size:13px;line-height:1.6;color:var(--mute)}
 .wd .br::before{content:"コアイメージから：";font-weight:700}
+.wd .ga .br::before{content:"→ ";font-weight:400}   /* with the 語源 欄 above: the bridges follow on from its 今の意味 */
 .wd .core{margin:0 0 12px;font-size:16px;line-height:1.6;font-weight:700}
 .wd .ety{margin:0 0 12px;font-size:14px;line-height:1.6;color:var(--sub)}
 .wd .core + .ety{margin-top:-8px}
@@ -651,6 +652,47 @@ ol.ms.one > li::before{display:none}
 .univ-rk .rk-hd,.univ-rk .rk-row{grid-template-columns:28px minmax(0,1fr) 56px 44px}
 .univ-rk .rk-hd span{white-space:nowrap}
 @media (min-width:900px){.u-facts{grid-template-columns:repeat(4,minmax(0,1fr))}.univ-rk .rk-hd,.univ-rk .rk-row{grid-template-columns:40px minmax(0,1fr) 64px 56px}}
+/* 語源 欄 (gogen_html): the word cut into its parts, 直訳 → つまり → 今の意味, the same-root words, くわしく. Blue is for links only */
+.art .gx{margin-bottom:32px}
+.art .gx h2{margin-bottom:14px}
+.gx .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--sub);background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:0 6px;margin-left:8px;vertical-align:3px;line-height:18px}
+.gx-sp{display:flex;margin:0 0 16px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.gx-sp>span{flex:1 1 0;display:flex;flex-direction:column;align-items:center;padding:12px 8px 11px;line-height:1.35;text-align:center;min-width:0}
+.gx-sp>span+span{border-left:1px solid var(--line)}
+.gx-sp b{font:800 28px/1.1 var(--en);color:var(--ink);letter-spacing:.01em;overflow-wrap:anywhere}
+.gx-sp small{margin-top:7px;font-size:14px;font-weight:700;color:var(--ink)}
+.gx-sp em{font-style:normal;font-size:12px;color:var(--mute);margin-top:2px}
+.gx-sp em u{text-decoration:none;font-family:var(--en);font-weight:700;color:var(--sub)}
+.gx-sp .sf{flex:0 0 30%;background:var(--soft)}
+.gx-sp .sf b{font-weight:600;font-size:22px;color:var(--sub);margin-top:4px}
+.gx-sp .sf small,.gx-sp .un small{color:var(--sub);font-weight:500}
+.gx-sp .un{background:var(--soft)}
+.gx-sp .un b{color:var(--sub)}
+.gx-st{list-style:none;margin:0 0 0 2px;padding:0 0 0 12px;border-left:2px solid var(--line)}
+.gx-st li{display:grid;grid-template-columns:64px 1fr;align-items:baseline;padding:3px 0}
+.gx-st li>span{font-size:12px;font-weight:700;color:var(--mute)}
+.art .gx-st p{margin:0;font-size:16px;font-weight:500;line-height:1.6}
+.gx-st li:first-child p{font-weight:700}
+.gx-st li:last-child{position:relative}
+.gx-st li:last-child::before{content:"";position:absolute;left:-14px;top:4px;bottom:4px;border-left:2px solid var(--blue)}
+.art .gx-st li:last-child p{font-size:18px;font-weight:800}
+.gx-st mark{background:linear-gradient(transparent 62%,rgba(8,63,249,.16) 62%);color:inherit;padding:0 1px}
+.art .gx-cmp{margin:12px 0 0;font-size:15px;line-height:1.7}
+.gx-cmp b{font-family:var(--en)}
+.gx-fam{margin:18px 0 0;font-size:13px;color:var(--sub)}
+.gx-fam ul{list-style:none;margin:4px 0 0;padding:0;border-top:1px solid var(--line)}
+.gx-fam li a{display:flex;align-items:center;gap:10px;min-height:46px;border-bottom:1px solid var(--line);color:var(--sub);font-size:13px;text-decoration:none}
+.gx-fam li a b{font:600 16px var(--en);color:var(--blue)}
+.gx-fam li a b u{text-decoration:none;font-weight:800}
+.gx-fam li a span{color:var(--ink);font-size:14px}
+.gx-fam li a::after{content:"›";margin-left:auto;color:var(--mute);font-size:18px}
+.gx details{margin:4px 0 -8px}
+.gx summary{list-style:none;display:inline-flex;align-items:center;gap:8px;padding:12px 0 4px;font-size:13px;color:var(--sub);cursor:pointer}
+.gx summary::-webkit-details-marker{display:none}
+.gx summary::after{content:"";width:6px;height:6px;border:solid var(--sub);border-width:0 1.5px 1.5px 0;transform:rotate(45deg) translateY(-2px)}
+.gx details[open] summary::after{transform:rotate(-135deg)}
+.art .gx details p{margin:4px 0 0;font-size:13px;color:var(--sub);line-height:1.7}
+@media (prefers-color-scheme:dark){.gx-st mark{background:linear-gradient(transparent 62%,rgba(92,124,255,.22) 62%)}}
 </style>
 </head>
 <body>
