@@ -3497,15 +3497,20 @@ const prog = c => S.prog[c.deck]?.[c.k];
 function setProg(c, p){ (S.prog[c.deck] ||= {})[c.k] = p; save(); markDirty('prog_' + c.deck); }
 function findCard(deck, k){ const d = deckById(deck); return d?.cards.find(c => c.k === k) || d?.dcards.find(c => c.k === k) || d?.scards.find(c => c.k === k) || d?.todo?.find(c => c.k === k); }
 
-/* ---------- FSRS-4.5 ---------- */
-const W = [0.4872,1.4003,3.7145,13.8206,5.1618,1.2298,0.8975,0.031,1.6474,0.1367,1.0461,2.1072,0.0793,0.3246,1.587,0.2272,2.8755];
-const DECAY = -0.5, FACTOR = 19/81;
+/* ---------- FSRS-6 (from 2026-11-03; FSRS-4.5 before) ----------
+   The default parameters and formulas of open-spaced-repetition's py-fsrs. Records kept their s (the days until recall
+   falls to 90%) and d (1–10): both mean the same in FSRS-6, so a word's next review is computed from them as they are */
+const W = [0.212,1.2931,2.3065,8.2956,6.4133,0.8334,3.0194,0.001,1.8722,0.1666,0.796,1.4835,0.0614,0.2629,1.6483,0.6014,1.8729,0.5425,0.0912,0.0658,0.1542];
+const DECAY = -W[20], FACTOR = Math.pow(0.9, 1/DECAY) - 1;
 const fR   = (t,s) => Math.pow(1 + FACTOR*t/s, DECAY);
 const fIvl = s => s/FACTOR * (Math.pow(S.settings.retention, 1/DECAY) - 1);
-const fD0  = g => clamp(W[4] - (g-3)*W[5], 1, 10);
-const fD   = (d,g) => clamp(W[7]*fD0(4) + (1-W[7])*(d - W[6]*(g-3)), 1, 10);
+const fD0r = g => W[4] - Math.exp(W[5]*(g-1)) + 1;
+const fD0  = g => clamp(fD0r(g), 1, 10);
+const fD   = (d,g) => clamp(W[7]*fD0r(4) + (1-W[7])*(d + (10-d)*(-W[6]*(g-3))/9), 1, 10);   // linear damping, mean reversion
 const fSr  = (d,s,r,g) => s*(1 + Math.exp(W[8])*(11-d)*Math.pow(s,-W[9])*(Math.exp((1-r)*W[10]) - 1)*(g===2?W[15]:1)*(g===4?W[16]:1));
-const fSf  = (d,s,r) => W[11]*Math.pow(d,-W[12])*(Math.pow(s+1,W[13]) - 1)*Math.exp((1-r)*W[14]);
+const fSf  = (d,s,r) => Math.min(W[11]*Math.pow(d,-W[12])*(Math.pow(s+1,W[13]) - 1)*Math.exp((1-r)*W[14]), s/Math.exp(W[17]*W[18]));
+/* answered again the same day (苦手を特訓 and the like): the short-term stability; 正解 and 簡単 never lower it */
+const fSs  = (s,g) => s*Math.max(g >= 3 ? 1 : 0, Math.exp(W[17]*(g-3+W[18]))*Math.pow(s,-W[19]));   // 難しい: a little lower
 const isReview = p => p && p.st === 2;
 /* settled: answered right in reviews on two later days than it was first learned (s1 = the first of them, sd = the
    second, always after s1; sd stays once set). Only then do its next meaning and its derivatives open: one right answer
@@ -3517,9 +3522,9 @@ const settled = p => isReview(p) && (p.s1 != null ? p.sd > p.s1 : p.sd != null ?
 /* right answers still needed before it settles: 2, 1 (one later day already, or 知ってる waiting for its check) or 0 */
 const settleLeft = p => settled(p) ? 0 : isReview(p) && (p.s1 != null || p.sd != null || p.k) ? 1 : 2;
 function retr(p, today=dayIdx()){ return isReview(p) ? fR(Math.max(0, today - dayIdx(p.last)), p.s) : 0; }
-/* a new word's starting stability: もう一度 / 難しい as FSRS-4.5 (tomorrow), 正解 / 簡単 nearer FSRS-6 (2 and 7 days at 90%):
-   a word got right was first recalled again only after 4 days, too late for many (initial-interval study, 2026-10) */
-const S0 = [W[0], W[1], 2.3, 7.0];
+/* a new word's starting stability: もう一度 / 難しい tomorrow, 正解 2 days, 簡単 7 days (at 90%; FSRS-6 says 8): a word got
+   right was first recalled again only after 4 days under FSRS-4.5, too late for many (initial-interval study, 2026-10) */
+const S0 = [W[0], W[1], W[2], 7.0];
 /** g: 1 もう一度 / 2 難しい / 3 正解 / 4 簡単 */
 function nextState(p, g, now=Date.now(), fuzz=true){
   const today = dayIdx(now);
@@ -3529,8 +3534,8 @@ function nextState(p, g, now=Date.now(), fuzz=true){
     const t = Math.max(0, today - dayIdx(p.last));
     const r = fR(t, p.s);
     d = fD(p.d, g);
-    if (g === 1) { s = Math.min(p.s, fSf(p.d, p.s, r)); l++; }
-    else if (t === 0) s = p.s;
+    if (g === 1) { s = Math.min(p.s, fSf(p.d, p.s, r)); l++; }   // a miss is a miss, the same day too (back soon)
+    else if (t === 0) s = fSs(p.s, g);
     else s = fSr(p.d, p.s, r, g);
   }
   s = clamp(s, 0.1, 36500);
@@ -8098,7 +8103,7 @@ const swEarly = (st = swStats()) => st.n >= 10 && st.hit / st.n < 0.7;
 const swCheck = p => isReview(p) && !!p.k && (p.r || 0) === 1;   // not answered since it was sorted as 知ってる
 function swKnown(prev, c, now){
   const early = swEarly(), np = {...nextState(prev, early ? 3 : 4, now, false), k:1};
-  np.s = early ? W[2] : W[3];   // the sort's 知ってる keeps its stability as before (S0 is for words actually learned)
+  np.s = early ? 3.7145 : 13.8206;   // the sort's 知ってる keeps its stability as before (FSRS-4.5's; S0 is for words actually learned)
   np.due = dayIdx(now) + (early ? 3 + keyHash(c.k) % 5 : 7 + keyHash(c.k) % 15);
   return np;
 }
