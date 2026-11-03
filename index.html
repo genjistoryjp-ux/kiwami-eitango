@@ -251,6 +251,11 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 .wsec h2{margin:0 0 12px;font-size:19px;line-height:1.45;padding-bottom:8px;border-bottom:2px solid var(--ink)}
 .wsec h3{margin:20px 0 6px;font-size:16px}
 .wsec h2 + h3{margin-top:0}
+.unl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px}
+.unl li{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.unl a{color:var(--blue);font-weight:700;text-decoration:none;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.unl span{flex:none;color:var(--sub);font-size:13px}
+@media (max-width:520px){.unl{grid-template-columns:1fr}}
 .wst{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .wst li{border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;background:var(--card);display:flex;flex-direction:column;gap:2px}
 .wst b{font:700 24px/1.2 var(--en)}
