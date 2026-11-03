@@ -263,7 +263,7 @@
   }
 
   // the share pictures: 1200×630 (for X, as the link's own picture is) and 1080×1920 (an Instagram/LINE story)
-  var JP = '"Noto Sans JP","Hiragino Sans","Yu Gothic UI",sans-serif', EN = 'Figtree,' + JP;
+  var JP = '"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Noto Sans CJK JP","Yu Gothic UI","Meiryo",sans-serif', EN = 'Figtree,' + JP;
   var BLUE = '#083FF9', INKC = '#1a1a1a', SUBC = '#5f5f5f';
   var gradeColor = function (gr) { return gr === 'S' ? '#C98A00' : gr[0] === 'A' ? BLUE : gr[0] === 'E' ? '#9a9a9a' : INKC; };
   // the largest font size (at most fs) that keeps text within w
