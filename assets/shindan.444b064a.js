@@ -20,10 +20,32 @@
     usage: '語法（前置詞・to do／doing など）で落としています。単語ページの「語法チェック」とアプリの4択で練習できます。',
     speed: '知識はあるのに、答えるまでに時間がかかっています。アプリの4択の復習で、見た瞬間にわかる単語をふやしましょう。'
   };
-  // the estimated vocabulary (中学＋受験英単語) as the level of university it reads: about the words that cover 95% of
-  // the exam texts (see /articles/how-many-words/: 共通テスト 3,755, 私立 4,473, 国立 4,928; 早慶 need more)
-  var UNIV = [[5600, '早慶・旧帝大レベル'], [5000, 'MARCH・関関同立レベル'], [4400, '日東駒専・産近甲龍レベル'], [3700, '共通テストレベル'],
-              [2700, '高校基礎レベル'], [0, '中学レベル']];
+  // the result's type and level (src/site/shindan_types.json): the type is the strongest axis (all of them within 20
+  // points: オールラウンダー), the level the estimated vocabulary (中学＋受験英単語) as the university it reads: about the
+  // words that cover 95% of the exam texts (see /articles/how-many-words/: 共通テスト 3,755, 私立 4,473, 国立 4,928; 早慶 need more).
+  // Each pair has a page of its own, /shindan/r/<level>-<type>/, with its own link picture: that is the address shared
+  var TY = {"types":[{"k":"vocab","name":"歩く辞書型","desc":"知っている単語の数で勝負するタイプ。見たことのない単語に出会うと、つい調べたくなる。"},{"k":"poly","name":"行間読み型","desc":"1つの単語の、2つ目・3つ目の意味まで読みとれるタイプ。長文の「その意味で来たか」に強い。"},{"k":"deriv","name":"品詞職人型","desc":"名詞・形容詞・副詞の形を正しく使い分けるタイプ。空所補充や英作文で点を落とさない。"},{"k":"idiom","name":"熟語ハンター型","desc":"単語を組み合わせた熟語に強いタイプ。会話文や並べかえの問題で力を出せる。"},{"k":"usage","name":"語法マニア型","desc":"前置詞や to do／doing の使い分けまで気にするタイプ。文法問題で差をつけられる。"},{"k":"speed","name":"瞬発力型","desc":"見た瞬間に答えが浮かぶタイプ。時間の足りない長文で、いちばん頼りになる。"},{"k":"all","name":"オールラウンダー型","desc":"6つの力に大きな穴がないタイプ。苦手がないのが、いちばんの武器。"}],"levels":[{"k":"sokei","min":5600,"name":"早慶・旧帝大レベル","words":"5,600語以上"},{"k":"march","min":5000,"name":"MARCH・関関同立レベル","words":"5,000〜5,600語"},{"k":"nikkoma","min":4400,"name":"日東駒専・産近甲龍レベル","words":"4,400〜5,000語"},{"k":"kyotsu","min":3700,"name":"共通テストレベル","words":"3,700〜4,400語"},{"k":"kiso","min":2700,"name":"高校基礎レベル","words":"2,700〜3,700語"},{"k":"chugaku","min":0,"name":"中学レベル","words":"2,700語未満"}]};
+  var tyOf = function (k) { return TY.types.filter(function (t) { return t.k === k; })[0]; };
+  var typeOf = function (sc) {
+    var by = HEX.slice().sort(function (x, y) { return sc[y] - sc[x] || HEX.indexOf(x) - HEX.indexOf(y); });
+    return sc[by[0]] - sc[by[by.length - 1]] < 20 ? 'all' : by[0];
+  };
+  var levelOf = function (words) { for (var i = 0; words < TY.levels[i].min; i++); return TY.levels[i]; };
+  var titleOf = function (t) { return t >= 90 ? '極（きわみ）' : t >= 75 ? '上級者' : t >= 60 ? '中級者' : t >= 45 ? '初級者' : 'これから伸びる'; };
+  var totalOf = function (sc) { return Math.round(HEX.reduce(function (s, a) { return s + sc[a]; }, 0) / HEX.length); };
+  // a result as the share link carries it: the 6 scores and the words, "78.90.65.50.80.70.5200"
+  var code = function (sc) { return HEX.map(function (a) { return sc[a]; }).concat([sc.words]).join('.'); };
+  var uncode = function (s) {
+    var v = String(s || '').split('.').map(Number);
+    if (v.length !== 7 || v.some(function (x, i) { return !(x === Math.floor(x) && x >= 0 && x <= (i < 6 ? 100 : 20000)); })) return null;
+    var sc = { words: v[6] };
+    HEX.forEach(function (a, i) { sc[a] = v[i]; });
+    sc.total = totalOf(sc); sc.title = titleOf(sc.total); sc.type = typeOf(sc); sc.lv = levelOf(sc.words);
+    return sc;
+  };
+  // a friend's result, from the link they shared (kept for this tab: their chart goes beside mine when I finish)
+  var FR_KEY = 'kiwami.sd.friend';
+  var friend = function () { try { return uncode(sessionStorage.getItem(FR_KEY)); } catch (e) { return null; } };
   var MK = {
     perfect: ['満点？ はいはい、答え見たんでしょ', 'ぼくの出番ゼロ。もう帰っていい？', '満点でドヤ顔してるの、画面ごしに見えてる', '強すぎ。正直ちょっと気持ち悪い',
               'カンニング疑惑。あとで職員室に来て', 'で、満点とって何が言いたいの？'],
@@ -42,8 +64,9 @@
   };
   // a line cut where it can break: after 、。？！… or a space (so a bubble never wraps in the middle of a phrase)
   var phrases = function (t) { return t.match(/[^、。？！… ]+[、。？！… ]*|[、。？！… ]+/g) || [t]; };
-  var root = document.getElementById('sd');
-  if (!root) return;
+  // #sd: the 診断 itself (/shindan/); #sdf: a shared result (/shindan/r/<level>-<type>/?s=…), drawn at the end of this file
+  var root = document.getElementById('sd'), frRoot = root ? null : document.getElementById('sdf');
+  if (!root && !frRoot) return;
   var D = null, S = null;
   var E = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var markup = function (s) { return E(s).replace(/⟦(.*?)⟧/g, '<b>$1</b>').replace(/___/g, '<span class="sd-blank" aria-label="空所">　　　</span>'); };
@@ -129,12 +152,11 @@
     var r = S.log.filter(function (l) { return l.ok; }).map(function (l) { return l.ms / EXPECT[l.a]; }).sort(function (x, y) { return x - y; });
     var med = r.length ? r[Math.floor(r.length / 2)] : 3;
     sc.speed = Math.round(clamp(100 - (med - 0.5) * 80, 10, 100));
-    sc.total = Math.round(HEX.reduce(function (s, a) { return s + sc[a]; }, 0) / HEX.length);
+    sc.total = totalOf(sc);
     var L = clamp(S.ax.vocab.lv, 0, 5), f = Math.floor(L), w = D.words;
     sc.words = Math.round((f >= 5 ? w[5] : w[f] + (w[f + 1] - w[f]) * (L - f)) / 10) * 10;
-    sc.title = sc.total >= 90 ? '極（きわみ）' : sc.total >= 75 ? '上級者' : sc.total >= 60 ? '中級者' : sc.total >= 45 ? '初級者' : 'これから伸びる';
-    for (var u = 0; sc.words < UNIV[u][0]; u++);
-    sc.univ = UNIV[u][1];
+    sc.title = titleOf(sc.total);
+    sc.type = typeOf(sc); sc.lv = levelOf(sc.words);
     return sc;
   }
 
@@ -167,9 +189,11 @@
   }
   var pts = function (ps) { return ps.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); };
 
-  function hexSVG(sc) {
+  // the chart; fr: a friend's result drawn under mine (dashed); still: drawn where it ends (no opening out)
+  function hexSVG(sc, fr, still) {
     var cx = 170, cy = 165, R = 104;
     var rings = [1, 2, 3, 4, 5].map(function (k) { return '<polygon points="' + pts(hexPoints(null, cx, cy, R * k / 5)) + '" class="sd-ring' + (k === 5 ? ' out' : '') + '"/>'; }).join('');
+    var frArea = fr ? '<polygon points="' + pts(hexPoints(fr, cx, cy, R)) + '" class="sd-fra"/>' : '';
     var spokes = hexPoints(null, cx, cy, R).map(function (p) { return '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) + '" class="sd-ring"/>'; }).join('');
     var marks = GRADES.map(function (g, k) { return '<text x="' + (cx + 5) + '" y="' + (cy - R * (k + 1) / 5 + 9).toFixed(1) + '" class="sd-gm">' + g + '</text>'; }).join('');
     var labels = hexPoints(null, cx, cy, R + 34).map(function (p, i) {
@@ -177,8 +201,8 @@
       return '<g class="sd-pop" style="animation-delay:' + (0.9 + i * 0.09).toFixed(2) + 's"><text x="' + p[0].toFixed(1) + '" y="' + y.toFixed(1) + '" text-anchor="middle" class="sd-lab">' + NAME[a] + '</text>'
         + '<text x="' + p[0].toFixed(1) + '" y="' + (y + 27).toFixed(1) + '" text-anchor="middle" class="sd-grade g' + grade(sc[a])[0] + '">' + grade(sc[a]) + '</text></g>';
     }).join('');
-    return '<svg class="sd-hex" viewBox="0 0 340 340" role="img" aria-label="' + HEX.map(function (a) { return NAME[a] + ' ' + grade(sc[a]); }).join('、') + '">'
-      + rings + spokes + marks + '<polygon points="' + pts(hexPoints(sc, cx, cy, R, 0)) + '" class="sd-area"/>' + labels + '</svg>';
+    return '<svg class="sd-hex' + (still ? ' sd-still' : '') + '" viewBox="0 0 340 340" role="img" aria-label="' + HEX.map(function (a) { return NAME[a] + ' ' + grade(sc[a]); }).join('、') + '">'
+      + rings + spokes + marks + frArea + '<polygon points="' + pts(hexPoints(sc, cx, cy, R, still ? 1 : 0)) + '" class="sd-area"/>' + labels + '</svg>';
   }
 
   // the chart opens out from the middle, overshooting a little before it settles
@@ -212,106 +236,175 @@
         + (it[4] ? '<p class="sd-note">' + E(it[4]) + '</p>' : '')
         + '<a href="/search/?q=' + encodeURIComponent(it[0]) + '" lang="en">' + E(it[0]) + ' の意味と例文 →</a></li>';
     }).join('');
+    var ty = tyOf(sc.type), fr = friend();
+    var vs = fr ? '<div class="sd-vs"><p class="sd-vs-h">' + (sc.total > fr.total ? '友達に勝ちました' : sc.total < fr.total ? '友達の勝ち…' : '友達と引き分け') + '</p>'
+      + '<p class="sd-vs-n"><span class="me"><i></i>あなた <b class="num">' + sc.total + '</b>点・' + E(ty.name) + '</span><span class="fr"><i></i>友達 <b class="num">' + fr.total + '</b>点・' + E(tyOf(fr.type).name) + '</span></p></div>' : '';
     root.innerHTML = '<div class="sd-res">'
       + '<p class="sd-rl">あなたの英単語力</p><p class="sd-total"><b class="num">' + sc.total + '</b><small>点</small><span class="sd-title">' + E(sc.title) + '</span></p>'
-      + '<p class="sd-words">推定語彙数 <b class="num">約' + sc.words.toLocaleString('ja-JP') + '語</b><span class="sd-univ">' + sc.univ + '</span><small>（中学の単語＋受験英単語の範囲で）</small></p>'
+      + '<p class="sd-words">推定語彙数 <b class="num">約' + sc.words.toLocaleString('ja-JP') + '語</b><span class="sd-univ">' + E(sc.lv.name) + '</span><small>（中学の単語＋受験英単語の範囲で）</small></p>'
+      + '<div class="sd-ty"><span class="sd-chip">タイプ</span><b>' + E(ty.name) + '</b><p>' + E(ty.desc) + '</p></div>'
       + '<div class="sd-mk"><img src="/assets/mekuru.svg" alt="めくる" width="60" height="60"><p>' + phrases(sc.mk).map(function (x) { return '<span class="nw">' + E(x) + '</span>'; }).join('') + '</p></div>'
-      + hexSVG(sc)
+      + vs + hexSVG(sc, fr)
       + '<ul class="sd-rows">' + rows + '</ul>'
+      + '<div class="sd-share"><p class="sd-share-h">結果をシェアして、友達と比べよう</p><a class="sd-x" target="_blank" rel="noopener">Xでシェア</a><a class="sd-line" target="_blank" rel="noopener">LINEで送る</a>'
+      + '<button type="button" class="sd-img">結果の画像</button><button type="button" class="sd-img sd-story">ストーリー用の画像</button></div>'
       + '<div class="sd-adv"><b>伸ばすなら「' + NAME[weak] + '」</b><p>' + ADVICE[weak] + '</p><a class="sd-app" href="/app/">無料アプリで覚える →</a></div>'
-      + '<div class="sd-share"><a class="sd-x" target="_blank" rel="noopener">Xでシェア</a><button type="button" class="sd-img">結果の画像を保存</button></div>'
       + (miss.length ? '<details class="sd-rev"><summary>まちがえた問題（' + miss.length + '問）</summary><ol>' + review + '</ol></details>' : '<p class="sd-perfect">全問正解です。</p>')
       + '<button type="button" class="sd-again">もう一度うける</button>'
       + '<p class="sd-cn">問題は毎回ちがいます。点数は30問から出した目安です。</p></div>';
-    var text = '英単語力診断：' + sc.total + '点（' + sc.title + '）\n語彙 約' + sc.words.toLocaleString('ja-JP') + '語＝' + sc.univ + '\n'
-      + HEX.map(function (a) { return NAME[a] + grade(sc[a]); }).join(' ') + '\nめくる「' + sc.mk + '」\n#英単語力診断';
-    root.querySelector('.sd-x').href = 'https://x.com/intent/post?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(SITE);
-    S.text = text;
+    var url = SITE + 'r/' + sc.lv.k + '-' + sc.type + '/?s=' + code(sc);
+    var text = '英単語力診断の結果は「' + ty.name + '」\n' + sc.lv.name + '（推定語彙数 約' + sc.words.toLocaleString('ja-JP') + '語）・' + sc.total + '点\n'
+      + 'めくる「' + sc.mk + '」\n#英単語力診断';
+    root.querySelector('.sd-x').href = 'https://x.com/intent/post?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+    root.querySelector('.sd-line').href = 'https://line.me/R/share?text=' + encodeURIComponent(text.replace(/\n#.*$/, '') + '\nあなたは何型？\n' + url);
+    S.text = text; S.url = url;
     root.scrollIntoView({ block: 'start' });
     grow(sc);
   }
 
-  function drawImage() {
-    var sc = S.sc, W = 1200, H = 630, c = document.createElement('canvas');
-    c.width = W; c.height = H;
-    var g = c.getContext('2d'), jp = '"Noto Sans JP","Hiragino Sans","Yu Gothic UI",sans-serif', en = 'Figtree,' + jp;
-    g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
-    g.fillStyle = '#083FF9'; g.fillRect(0, 0, W, 12);
-    g.fillStyle = '#1a1a1a'; g.font = '700 36px ' + jp; g.textBaseline = 'alphabetic';
-    g.fillText('英単語力診断', 72, 90);
-    g.fillStyle = '#083FF9'; g.font = '700 140px ' + en; g.fillText(String(sc.total), 64, 236);
-    var tw = g.measureText(String(sc.total)).width;
-    g.fillStyle = '#1a1a1a'; g.font = '700 38px ' + jp; g.fillText('点', 72 + tw, 232);
-    g.font = '700 34px ' + jp; g.fillText(sc.title, 72, 296);
-    g.fillStyle = '#5f5f5f'; g.font = '500 26px ' + jp; g.fillText('推定語彙数 約' + sc.words.toLocaleString('ja-JP') + '語', 72, 346);
-    g.fillStyle = '#083FF9';
-    for (var fs = 32; fs > 20; fs--) { g.font = '700 ' + fs + 'px ' + jp; if (g.measureText(sc.univ).width <= 520) break; }
-    g.fillText(sc.univ, 72, 392);
-    // めくる and what it says, in a bubble pointing at it
-    if (S.mkImg && S.mkImg.complete && S.mkImg.naturalWidth) g.drawImage(S.mkImg, 50, 416, 116, 116);
-    g.font = '700 25px ' + jp;
-    var lines = [], cur = '';
-    phrases(sc.mk).forEach(function (x) {
-      if (g.measureText(cur + x).width <= 380 || !cur) cur += x; else { lines.push(cur); cur = x; }
-      while (g.measureText(cur).width > 380) { var k = cur.length - 1; while (k > 1 && g.measureText(cur.slice(0, k)).width > 380) k--; lines.push(cur.slice(0, k)); cur = cur.slice(k); }
+  // the share pictures: 1200×630 (for X, as the link's own picture is) and 1080×1920 (an Instagram/LINE story)
+  var JP = '"Noto Sans JP","Hiragino Sans","Yu Gothic UI",sans-serif', EN = 'Figtree,' + JP;
+  var BLUE = '#083FF9', INKC = '#1a1a1a', SUBC = '#5f5f5f';
+  var gradeColor = function (gr) { return gr === 'S' ? '#C98A00' : gr[0] === 'A' ? BLUE : gr[0] === 'E' ? '#9a9a9a' : INKC; };
+  // the largest font size (at most fs) that keeps text within w
+  function fitFont(g, text, weight, fs, family, w) {
+    for (; fs > 14; fs--) { g.font = weight + ' ' + fs + 'px ' + family; if (g.measureText(text).width <= w) break; }
+    return fs;
+  }
+  function drawHex(g, sc, cx, cy, R, fl, fg) {
+    [1, 2, 3, 4, 5].forEach(function (k) { var p = hexPoints(null, cx, cy, R * k / 5); g.beginPath(); p.forEach(function (q, i) { i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }); g.closePath(); g.strokeStyle = k === 5 ? '#c9c9c9' : '#e5e5e5'; g.lineWidth = 2; g.stroke(); });
+    g.strokeStyle = '#e5e5e5';
+    hexPoints(null, cx, cy, R).forEach(function (q) { g.beginPath(); g.moveTo(cx, cy); g.lineTo(q[0], q[1]); g.stroke(); });
+    g.fillStyle = '#9a9a9a'; g.font = '700 ' + Math.round(fl * 0.72) + 'px ' + EN; g.textAlign = 'left';
+    GRADES.forEach(function (gr, k) { g.fillText(gr, cx + 7, cy - R * (k + 1) / 5 + fl * 0.64); });
+    var p = hexPoints(sc, cx, cy, R);
+    g.beginPath(); p.forEach(function (q, i) { i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }); g.closePath();
+    g.fillStyle = 'rgba(8,63,249,.28)'; g.fill(); g.strokeStyle = BLUE; g.lineWidth = 4; g.lineJoin = 'round'; g.stroke();
+    g.textAlign = 'center';
+    hexPoints(null, cx, cy, R + fg * 1.4).forEach(function (q, i) {
+      var y = q[1] + (i === 0 ? -fg * 0.55 : i === 3 ? fg * 0.1 : -fg * 0.2), gr = grade(sc[HEX[i]]);
+      g.fillStyle = INKC; g.font = '700 ' + fl + 'px ' + JP; g.fillText(NAME[HEX[i]], q[0], y);
+      g.fillStyle = gradeColor(gr); g.font = '800 ' + fg + 'px ' + EN; g.fillText(gr, q[0], y + fg * 1.05);
+    });
+    g.textAlign = 'left';
+  }
+  // めくる at (x, y), size s, and what it says in a bubble to its right, lines at most w wide
+  function drawMekuru(g, text, x, y, s, fs, w) {
+    if (S.mkImg && S.mkImg.complete && S.mkImg.naturalWidth) g.drawImage(S.mkImg, x, y, s, s);
+    g.font = '700 ' + fs + 'px ' + JP;
+    var lines = [], cur = '', lh = Math.round(fs * 1.44);
+    phrases(text).forEach(function (t) {
+      if (g.measureText(cur + t).width <= w || !cur) cur += t; else { lines.push(cur); cur = t; }
+      while (g.measureText(cur).width > w) { var k = cur.length - 1; while (k > 1 && g.measureText(cur.slice(0, k)).width > w) k--; lines.push(cur.slice(0, k)); cur = cur.slice(k); }
     });
     lines.push(cur);
-    var bx = 172, by = 428, bw = Math.max.apply(null, lines.map(function (l) { return g.measureText(l).width; })) + 44, bh = 26 + lines.length * 36, r = 18;
+    var bx = x + s + 6, bw = Math.max.apply(null, lines.map(function (l) { return g.measureText(l).width; })) + fs * 1.76, bh = fs + lines.length * lh, by = y + s / 2 - bh / 2, r = 18;
     g.beginPath(); g.moveTo(bx + r, by); g.lineTo(bx + bw - r, by); g.arcTo(bx + bw, by, bx + bw, by + r, r); g.lineTo(bx + bw, by + bh - r);
     g.arcTo(bx + bw, by + bh, bx + bw - r, by + bh, r); g.lineTo(bx + r, by + bh); g.arcTo(bx, by + bh, bx, by + bh - r, r);
     g.lineTo(bx, by + bh / 2 + 10); g.lineTo(bx - 14, by + bh / 2); g.lineTo(bx, by + bh / 2 - 10); g.lineTo(bx, by + r); g.arcTo(bx, by, bx + r, by, r); g.closePath();
-    g.fillStyle = '#ffffff'; g.fill(); g.strokeStyle = '#1a1a1a'; g.lineWidth = 2.5; g.lineJoin = 'round'; g.stroke();
-    g.fillStyle = '#1a1a1a';
-    lines.forEach(function (l, k) { g.fillText(l, bx + 22, by + 44 + k * 36); });
-    g.font = '700 24px ' + jp; g.fillText('極（きわみ）', 72, 604);
+    g.fillStyle = '#ffffff'; g.fill(); g.strokeStyle = INKC; g.lineWidth = 2.5; g.lineJoin = 'round'; g.stroke();
+    g.fillStyle = INKC; g.textAlign = 'left';
+    lines.forEach(function (l, k) { g.fillText(l, bx + fs * 0.88, by + fs * 0.5 + lh * 0.5 + fs * 0.36 + k * lh); });
+  }
+  function pill(g, text, x, y, fs, center) {
+    g.font = '700 ' + fs + 'px ' + JP;
+    var w = g.measureText(text).width + fs * 1.3, h = fs * 1.7, x0 = center ? x - w / 2 : x;
+    g.fillStyle = BLUE; g.beginPath(); g.roundRect ? g.roundRect(x0, y, w, h, h / 2) : g.rect(x0, y, w, h); g.fill();
+    g.fillStyle = '#ffffff'; g.textAlign = 'center'; g.fillText(text, x0 + w / 2, y + h / 2 + fs * 0.36); g.textAlign = 'left';
+  }
+
+  function drawImage() {
+    var sc = S.sc, ty = tyOf(sc.type), W = 1200, H = 630, c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    var g = c.getContext('2d');
+    g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+    g.fillStyle = BLUE; g.fillRect(0, 0, W, 12);
+    g.textBaseline = 'alphabetic';
+    g.fillStyle = SUBC; g.font = '500 26px ' + JP; g.fillText('英単語力診断の結果', 72, 74);
+    g.fillStyle = INKC; fitFont(g, ty.name, '800', 76, JP, 560); g.fillText(ty.name, 68, 158);
+    fitFont(g, sc.lv.name, '700', 30, JP, 520); pill(g, sc.lv.name, 72, 186, +g.font.match(/(\d+)px/)[1]);
+    g.fillStyle = SUBC; g.font = '500 24px ' + JP; g.fillText('推定語彙数 約' + sc.words.toLocaleString('ja-JP') + '語', 74, 290);
+    g.fillStyle = BLUE; g.font = '700 84px ' + EN; g.fillText(String(sc.total), 70, 380);
+    var tw = g.measureText(String(sc.total)).width;
+    g.fillStyle = INKC; g.font = '700 30px ' + JP; g.fillText('点　' + sc.title, 78 + tw, 376);
+    drawMekuru(g, sc.mk, 54, 410, 112, 24, 360);
+    g.font = '700 24px ' + JP; g.fillStyle = INKC; g.fillText('極（きわみ）', 72, 604);
     var bw2 = g.measureText('極（きわみ）').width;
-    g.fillStyle = '#5f5f5f'; g.font = '500 20px ' + en; g.fillText('kiwami-eitango.com/shindan/', 72 + bw2 + 16, 603);
-    var cx = 870, cy = 318, R = 168;
-    g.strokeStyle = '#e5e5e5'; g.lineWidth = 2;
-    [1, 2, 3, 4, 5].forEach(function (k) { var p = hexPoints(null, cx, cy, R * k / 5); g.beginPath(); p.forEach(function (q, i) { i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }); g.closePath(); g.strokeStyle = k === 5 ? '#c9c9c9' : '#e5e5e5'; g.stroke(); });
-    g.strokeStyle = '#e5e5e5';
-    hexPoints(null, cx, cy, R).forEach(function (q) { g.beginPath(); g.moveTo(cx, cy); g.lineTo(q[0], q[1]); g.stroke(); });
-    g.fillStyle = '#9a9a9a'; g.font = '700 16px ' + en;
-    GRADES.forEach(function (gr, k) { g.fillText(gr, cx + 7, cy - R * (k + 1) / 5 + 14); });
-    var p = hexPoints(sc, cx, cy, R);
-    g.beginPath(); p.forEach(function (q, i) { i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }); g.closePath();
-    g.fillStyle = 'rgba(8,63,249,.28)'; g.fill(); g.strokeStyle = '#083FF9'; g.lineWidth = 4; g.lineJoin = 'round'; g.stroke();
+    g.fillStyle = SUBC; g.font = '500 20px ' + EN; g.fillText('kiwami-eitango.com/shindan/', 72 + bw2 + 16, 603);
+    drawHex(g, sc, 870, 318, 168, 22, 40);
+    return c;
+  }
+
+  function drawStory() {
+    var sc = S.sc, ty = tyOf(sc.type), W = 1080, H = 1920, c = document.createElement('canvas'), mid = W / 2;
+    c.width = W; c.height = H;
+    var g = c.getContext('2d');
+    g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+    g.fillStyle = BLUE; g.fillRect(0, 0, W, 18);
+    g.textBaseline = 'alphabetic'; g.textAlign = 'center';
+    g.fillStyle = SUBC; g.font = '500 40px ' + JP; g.fillText('英単語力診断の結果', mid, 200);
+    g.fillStyle = INKC; fitFont(g, ty.name, '800', 120, JP, 940); g.textAlign = 'center'; g.fillText(ty.name, mid, 340);
+    fitFont(g, sc.lv.name, '700', 50, JP, 860); pill(g, sc.lv.name, mid, 392, +g.font.match(/(\d+)px/)[1], true);
     g.textAlign = 'center';
-    hexPoints(null, cx, cy, R + 56).forEach(function (q, i) {
-      var y = q[1] + (i === 0 ? -22 : i === 3 ? 4 : -8), gr = grade(sc[HEX[i]]);
-      g.fillStyle = '#1a1a1a'; g.font = '700 22px ' + jp; g.fillText(NAME[HEX[i]], q[0], y);
-      g.fillStyle = gr === 'S' ? '#C98A00' : gr[0] === 'A' ? '#083FF9' : gr[0] === 'E' ? '#9a9a9a' : '#1a1a1a'; g.font = '800 40px ' + en; g.fillText(gr, q[0], y + 42);
-    });
+    g.fillStyle = SUBC; g.font = '500 40px ' + JP; g.fillText('推定語彙数 約' + sc.words.toLocaleString('ja-JP') + '語', mid, 560);
+    g.fillStyle = BLUE; g.font = '700 120px ' + EN;
+    var t = String(sc.total), tw = g.measureText(t).width;
+    g.font = '700 44px ' + JP;
+    var sw = g.measureText('点　' + sc.title).width, x0 = mid - (tw + 8 + sw) / 2;
+    g.textAlign = 'left'; g.fillStyle = BLUE; g.font = '700 120px ' + EN; g.fillText(t, x0, 700);
+    g.fillStyle = INKC; g.font = '700 44px ' + JP; g.fillText('点　' + sc.title, x0 + tw + 8, 694);
+    drawHex(g, sc, mid, 1120, 240, 34, 60);
+    drawMekuru(g, sc.mk, 90, 1570, 170, 38, 640);
+    g.textAlign = 'center';
+    g.fillStyle = INKC; g.font = '700 46px ' + JP; g.fillText('あなたは何型？', mid, 1812);
+    g.fillStyle = SUBC; g.font = '500 34px ' + EN; g.fillText('kiwami-eitango.com/shindan/', mid, 1866);
     g.textAlign = 'left';
     return c;
   }
 
-  function saveImage() {
+  function saveImage(story) {
     var pic = S.mkImg && S.mkImg.decode ? S.mkImg.decode().catch(function () {}) : Promise.resolve();
     Promise.all([document.fonts && document.fonts.ready ? document.fonts.ready : null, pic]).then(function () {
-      drawImage().toBlob(function (blob) {
+      var name = story ? 'kiwami-shindan-story.png' : 'kiwami-shindan.png';
+      (story ? drawStory() : drawImage()).toBlob(function (blob) {
         if (!blob) return;
         var file = null;
-        try { file = new File([blob], 'kiwami-shindan.png', { type: 'image/png' }); } catch (e) {}
+        try { file = new File([blob], name, { type: 'image/png' }); } catch (e) {}
         if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-          navigator.share({ files: [file], text: S.text + '\n' + SITE }).catch(function () {});
+          navigator.share({ files: [file], text: S.text + '\n' + S.url }).catch(function () {});
           return;
         }
         var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob); a.download = 'kiwami-shindan.png';
+        a.href = URL.createObjectURL(blob); a.download = name;
         document.body.appendChild(a); a.click(); a.remove();
         setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
       }, 'image/png');
     });
   }
 
+  // a shared result (/shindan/r/<level>-<type>/?s=…): the friend's numbers and chart over the type's own text, and kept
+  // for this tab so their chart goes beside mine at the end of my 診断. Without ?s= (or a bad one) the page stays as built
+  function friendPage(el) {
+    var sc = uncode((location.search.match(/[?&]s=([\d.]+)/) || [])[1]), box = el.querySelector('.sd-frx');
+    if (!sc || !box) return;
+    try { sessionStorage.setItem(FR_KEY, code(sc)); } catch (e) {}
+    box.innerHTML = '<p class="sd-rl">友達の結果</p><p class="sd-total"><b class="num">' + sc.total + '</b><small>点</small><span class="sd-title">' + E(sc.title) + '</span></p>'
+      + '<p class="sd-words">推定語彙数 <b class="num">約' + sc.words.toLocaleString('ja-JP') + '語</b></p>' + hexSVG(sc, null, true);
+    var go = el.querySelector('.sd-go');
+    if (go) go.textContent = 'あなたも診断して、比べる';
+  }
+
+  if (frRoot) { friendPage(frRoot); return; }
+  // came from a friend's result: say so above the start button
+  var frs = friend(), startBtn = root.querySelector('.sd-start');
+  if (frs && startBtn) startBtn.insertAdjacentHTML('beforebegin', '<p class="sd-frb">友達の結果は <b>' + frs.total + '点・' + E(tyOf(frs.type).name) + '</b>。あなたは勝てる？</p>');
   root.addEventListener('click', function (ev) {
     var t = ev.target.closest('button');
     if (!t) return;
     if (t.classList.contains('sd-start') || t.classList.contains('sd-again')) start();
     else if (t.classList.contains('sd-o')) answer(+t.dataset.k);
     else if (t.classList.contains('sd-skip')) answer(-1);
-    else if (t.classList.contains('sd-img')) saveImage();
+    else if (t.classList.contains('sd-img')) saveImage(t.classList.contains('sd-story'));
   });
   document.addEventListener('keydown', function (ev) {
     if (!S || !S.cur || S.cur.done || ev.metaKey || ev.ctrlKey || ev.altKey) return;
