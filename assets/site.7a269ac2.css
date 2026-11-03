@@ -286,6 +286,10 @@ ol.ms .mh .topb,ol.ms .mh .share{margin-left:0}
 .wd .core + .ety{margin-top:-8px}
 .ety b{color:var(--ink);margin-right:4px}
 .wd .etl{font-size:12px;font-weight:700;color:var(--sub);border:1px solid var(--line);border-radius:3px;padding:0 6px;margin-right:8px}
+.fm{list-style:none;margin:6px 0 14px;padding:12px 14px;background:var(--soft);border-radius:8px;display:grid;gap:6px}
+.fm li{font-size:15px;line-height:1.6}
+.fm b{font:700 17px/1.4 var(--en)}
+.fm small{margin-left:6px;font-size:13px;color:var(--sub)}
 .ety i{font-style:normal;margin:0 6px;color:var(--mute)}
 .qz{margin:0;padding:0;list-style:none}
 .qz li{position:relative;padding:10px 0 10px 1.4em;border-top:1px solid var(--line)}
