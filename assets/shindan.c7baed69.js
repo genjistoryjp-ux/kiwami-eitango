@@ -1,10 +1,10 @@
 /* 英単語力診断 (/shindan/): 30 questions, 6 for each of 5 axes, and the speed of every answer.
    Each axis is adaptive: it starts at tier 3 of 5, a right answer moves it up, a wrong one down (smaller steps later),
-   and where it ends is the axis' score. The questions come from /assets/shindan.ffb02097.json (build.py shindan_data):
+   and where it ends is the axis' score. The questions come from /assets/shindan.09baa955.json (build.py shindan_data):
    {pool: {axis: [tier 1 items … tier 5 items]}, words: [estimated vocabulary at tier 0 … 5]}, an item being
    [prompt, sentence, answer, [wrong options], note]. Nothing is sent anywhere; the result is drawn here and on a canvas. */
 (function () {
-  var URL_DATA = '/assets/shindan.ffb02097.json', SITE = 'https://kiwami-eitango.com/shindan/';
+  var URL_DATA = '/assets/shindan.09baa955.json', SITE = 'https://kiwami-eitango.com/shindan/';
   var AX = ['vocab', 'poly', 'deriv', 'idiom', 'usage'];
   var NAME = { vocab: '単語力', poly: '多義語力', deriv: '派生語力', idiom: '熟語力', usage: '語法力', speed: 'スピード' };
   var CHIP = { vocab: '単語', poly: '多義語', deriv: '派生語', idiom: '熟語', usage: '語法' };
