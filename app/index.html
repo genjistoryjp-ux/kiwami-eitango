@@ -3941,10 +3941,18 @@ const SYNC_EVERY = 60000;
 const UID_KEY = 'tangoloop.uid';   // the account this device last merged with: its first sync on a device takes the account's settings
 const lsGet = k => { try { return localStorage.getItem(k); } catch(e) { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} };
-/* アクセス解析 (Google アナリティクス, loaded by the page on kiwami-eitango.com only): how far people get, as numbers only (no word,
-   no name, nothing typed). Once a day: the words 覚えた, the days studied, the streak, the questions answered and the minutes; a set
+/* アクセス解析 (Google アナリティクス, loaded by the page on kiwami-eitango.com only): how far people get, as numbers (no name,
+   nothing typed), plus each word answered (gaWord below). Once a day: the words 覚えた, the days studied, the streak, the questions answered and the minutes; a set
    finished: its size and right answers; 仕分け finished: how many it sorted */
 function ga(ev, p){ try { if (typeof gtag === 'function') gtag('event', ev, p || {}); } catch(e) {} }
+/* a word's first answer in a set, for みんなが間違えやすい単語: the word and whether it was right (the app's own decks only, never a
+   word typed into 自作の単語帳) */
+function gaWord(it, ok, practice){
+  try {
+    const c = it.c; if (!deckById(c.deck)?.builtin) return;
+    ga('word_answer', {word: String(c.w).slice(0, 100), deck: c.deck, qtype: it.type, correct: ok ? 1 : 0, review: isReview(it.p0) ? 1 : 0, practice: practice ? 1 : 0});
+  } catch(e) {}
+}
 function gaDaily(){
   try {
     const t = dayIdx(); if (+lsGet('tangoloop.gad') === t) return;
@@ -7680,6 +7688,7 @@ function answer(ok, grade){
   if (it.first === null && ok && grade == null && !practice && !it.sameDay) { noteRT(rk, ms); snap.rt = rk; }
   if (grade != null) ok = grade > 1;
   snap.res = ok;   // this answer's bar in the steps
+  if (it.first === null) gaWord(it, ok, practice);
   const tier = ok && grade == null && it.first === null && !it.sameDay && it.type in SLOW_DEF ? speedTier(rk, ms) : 0;
   showRate(tier, true);   // the tier it earned pops; a miss clears it
   let np = null;
