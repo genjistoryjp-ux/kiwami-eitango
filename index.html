@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>(function(){try{if(/[?&]home(=|&|$)/.test(location.search))return;try{var f=document.referrer&&new URL(document.referrer);if(f&&(f.origin!==location.origin||f.pathname.indexOf('/app/')!==0))return}catch(e){}var sa=false;try{sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){}var p=false;try{var o=JSON.parse(localStorage.getItem('tangoloop.v1')||'null'),g=o&&o.prog;p=!!g&&typeof g==='object'&&Object.keys(g).some(function(k){return g[k]&&typeof g[k]==='object'&&Object.keys(g[k]).length>0})}catch(e){}if(sa||p)location.replace('/app/'+location.hash)}catch(e){}})();</script>
-<title>極（きわみ）｜英単語の意味と入試データ</title>
-<meta name="description" content="共通テスト・大学入試の英文で、英単語がどれだけ、どの意味で使われたかを数えたサイト。共通テスト12本に出た英単語ランキング、意味をまちがえやすい単語。覚えるのは無料のアプリで。">
+<title>極（きわみ）英単語｜英単語の意味・語源と入試データ</title>
+<meta name="description" content="共通テスト・大学入試の英文で、英単語がどれだけ、どの意味で使われたかを数えたサイト。共通テスト12本に出た英単語ランキング、意味をまちがえやすい単語、語源と接頭語・接尾語。覚えるのは無料のアプリで。">
 <link rel="canonical" href="https://kiwami-eitango.com/">
 <meta name="google-adsense-account" content="ca-pub-3219062907495876">
 <script>if(location.hostname==="kiwami-eitango.com"){var a=document.createElement("script");a.async=true;a.crossOrigin="anonymous";a.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3219062907495876";document.head.appendChild(a)}</script>
-<meta property="og:type" content="website"><meta property="og:site_name" content="極（きわみ）"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="極（きわみ）｜英単語の意味と入試データ"><meta property="og:description" content="共通テスト・大学入試の英文で、英単語がどれだけ、どの意味で使われたかを数えたサイト。共通テスト12本に出た英単語ランキング、意味をまちがえやすい単語。覚えるのは無料のアプリで。"><meta property="og:url" content="https://kiwami-eitango.com/"><meta property="og:image" content="https://kiwami-eitango.com/ogp.png?v=eff554af"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="極（きわみ）英単語アプリ"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website"><meta property="og:site_name" content="極（きわみ）"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="極（きわみ）英単語｜英単語の意味・語源と入試データ"><meta property="og:description" content="共通テスト・大学入試の英文で、英単語がどれだけ、どの意味で使われたかを数えたサイト。共通テスト12本に出た英単語ランキング、意味をまちがえやすい単語、語源と接頭語・接尾語。覚えるのは無料のアプリで。"><meta property="og:url" content="https://kiwami-eitango.com/"><meta property="og:image" content="https://kiwami-eitango.com/ogp.png?v=eff554af"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="極（きわみ）英単語アプリ"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#111114" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -90,7 +90,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 /* layout: one column on a phone (ranking first), main + side from 900px */
 .page{display:flex;flex-direction:column}
 .col-m,.col-s{display:contents}
-.a-rank{order:1}.a-miss{order:2}.a-art{order:3}.a-app{order:4}.a-about{order:5}
+.a-rank{order:1}.a-miss{order:2}.a-art{order:3}
+.a-afx{order:3}.a-app{order:4}.a-about{order:5}
 .a-app{margin-top:32px}
 .a-about{margin-top:12px}
 .sec{padding:32px 0 0}
@@ -694,6 +695,41 @@ ol.ms.one > li::before{display:none}
 .art .gx details p{margin:4px 0 0;font-size:13px;color:var(--sub);line-height:1.7}
 @media (prefers-color-scheme:dark){.gx-st mark{background:linear-gradient(transparent 62%,rgba(92,124,255,.22) 62%)}}
 .gx-st .gx-ar{font-style:normal;font-weight:400;color:var(--mute);margin:0 .3em}
+.gx-af{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:16px 0 0;font-size:13px;color:var(--sub)}
+.gx-af span{margin-right:2px}
+.gx-af a{display:inline-flex;align-items:baseline;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--ink);font-size:13px;text-decoration:none}
+.gx-af a b{font:600 15px var(--en);color:var(--blue)}
+.gx-af a:hover{border-color:var(--blue)}
+.ax-kind{margin:8px 0 0;font-size:13px;font-weight:700;color:var(--sub)}
+.ax h1{margin:4px 0 8px}
+.ax-box{display:flex;flex-wrap:wrap;gap:0;margin:16px 0 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.ax-box div{flex:1 1 33%;min-width:96px;padding:10px 12px}
+.ax-box div+div{border-left:1px solid var(--line)}
+.ax-box dt{font-size:11px;font-weight:700;color:var(--mute)}
+.ax-box dd{margin:2px 0 0;font-size:15px;font-weight:700;color:var(--ink);line-height:1.5}
+.ax-box dd[lang=en]{font-family:var(--en);font-weight:600;white-space:pre-wrap}
+.ax-pt{margin:16px 0 0;padding:0 0 0 1.2em;font-size:15px;line-height:1.75}
+.ax-pt li+li{margin-top:6px}
+.ax-pr{list-style:none;margin:8px 0 0;padding:0;border-top:1px solid var(--line)}
+.ax-pr li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.ax-pr li>a,.ax-pr li>b{font:600 16px var(--en)}
+.ax-pr li>a{color:var(--blue)}
+.ax-pr li>b{color:var(--ink)}
+.ax-pr i{font-style:normal;color:var(--mute)}
+.ax-pr span{flex:1 1 auto;min-width:0;font-size:13px;color:var(--sub)}
+.ax-pr em{font-style:normal;font-size:11px;font-weight:700;color:var(--sub);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-right:6px}
+.ax-ew u{text-decoration:underline 2px;text-underline-offset:4px}
+.ax-ls{list-style:none;margin:6px 0 18px;padding:0;border-top:1px solid var(--line)}
+.ax-ls a{display:flex;align-items:baseline;gap:10px;min-height:46px;padding:10px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.ax-ls a b{font:600 16px var(--en);color:var(--blue);flex:none}
+.ax-ls a span{font-size:14px}
+.ax-ls a small{margin-left:auto;font:400 13px var(--en);color:var(--mute)}
+.ax-ls a::after{content:"›";color:var(--mute);font-size:18px}
+.ax h3{margin:18px 0 0;font-size:15px}
+.ax .wsec h2 small{font-size:13px;font-weight:500;color:var(--mute);margin-left:10px}
+.dv .afx{margin:2px 0 0;font-size:13px;color:var(--sub)}
+.dv .afx a{font:600 14px var(--en);color:var(--blue)}
+.dv .afx span{font-family:var(--en)}
 </style>
 </head>
 <body>
@@ -748,6 +784,11 @@ ol.ms.one > li::before{display:none}
   <section class="sec a-art">
     <div class="sh"><h2>受験英語の記事</h2><a href="/articles/">すべて見る →</a></div>
     <ul class="alist hl"><li><a href="/articles/derivatives/"><b>英単語の派生語は覚えるべき？入試に多い派生語と覚え方</b><span>differ より different、respond より response のほうが多くの入試に出ていました。大学入試1,176本で見出し語と派生語を比べ、語尾で品詞を見分ける方法、否定の接頭辞、覚え方をまとめます。</span></a></li><li><a href="/articles/exam-meanings/"><b>英単語の意外な意味｜入試では最初に覚える訳より多く出る意味</b><span>demand は「需要」、field は「分野」。大学入試の英文を1文ずつ調べると、まず思い浮かぶ訳よりほかの意味のほうがずっと多く使われていた英単語が106語ありました。ずれ方のパターン別に、文の数つきで紹介します。</span></a></li><li><a href="/articles/how-many-words/"><b>大学受験に必要な英単語は何語？入試の英文を数えてわかった目安</b><span>国公立・私立の大学入試1,176本に出た語を多い順に並べ、上位何語で共通テスト・国立・公立・私立の英文の何%が読めるかを計算しました。95%に届くのは共通テストで約3,800語、国立で約4,900語です。</span></a></li><li><a href="/articles/how-to-memorize/"><b>英単語の覚え方｜受験生が忘れずに覚える手順を入試データで解説</b><span>受験生向けの英単語の覚え方。大学入試1,176本で単語の出かたを数えたデータをもとに、覚える順番、1つの意味から始める理由、思い出す練習と復習の間隔、1日の量の決め方、覚えたかの確かめ方まで説明します。</span></a></li><li><a href="/articles/kyotsu-vs-niji/"><b>共通テストと二次・私大で出る英単語のちがい｜入試データで比較</b><span>共通テスト12本と大学入試1,176本で、受験英単語2,500語の出かたを比べました。共通テストに多い語、共通テストには出ないのに二次・私大でよく出る語、国立と私立で多い語を表にまとめ、覚える順番も紹介します。</span></a></li><li><a href="/articles/march-kankandoritsu/"><b>MARCH・関関同立の英単語レベル｜大学別の難しさと出る単語</b><span>MARCH・関関同立の9大学の入試英語に、めったに出ない語がどれだけ出るかを大学別に数えました。同志社・明治・関西学院の差、会話文の語、グループごとに多い単語、大学別の対策まで。</span></a></li></ul>
+  </section>
+  <section class="sec a-afx">
+    <div class="sh"><h2>接頭語・接尾語</h2><a href="/gogen/">一覧を見る →</a></div>
+    <p class="lead">単語の終わりを見れば品詞がわかります。</p>
+    <p class="rel"><a href="/gogen/suffix/tion/">-tion 名詞</a><a href="/gogen/suffix/ize/">-ize 動詞</a><a href="/gogen/suffix/ous/">-ous 形容詞</a><a href="/gogen/suffix/ly/">-ly 副詞</a><a href="/gogen/prefix/un/">un- 否定</a><a href="/gogen/prefix/re/">re- 再び</a></p>
   </section>
 </div>
 <aside class="col-s" aria-label="ランキングとアプリ">
