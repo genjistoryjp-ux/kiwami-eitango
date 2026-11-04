@@ -3941,6 +3941,17 @@ const SYNC_EVERY = 60000;
 const UID_KEY = 'tangoloop.uid';   // the account this device last merged with: its first sync on a device takes the account's settings
 const lsGet = k => { try { return localStorage.getItem(k); } catch(e) { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} };
+/* アクセス解析 (Google アナリティクス, loaded by the page on kiwami-eitango.com only): how far people get, as numbers only (no word,
+   no name, nothing typed). Once a day: the words 覚えた, the days studied, the streak, the questions answered and the minutes; a set
+   finished: its size and right answers; 仕分け finished: how many it sorted */
+function ga(ev, p){ try { if (typeof gtag === 'function') gtag('event', ev, p || {}); } catch(e) {} }
+function gaDaily(){
+  try {
+    const t = dayIdx(); if (+lsGet('tangoloop.gad') === t) return;
+    const sti = streakInfo(), p = grpProf(sti); lsSet('tangoloop.gad', String(t));
+    ga('study_progress', {learned_words: p.m, study_days: p.days, streak: sti.n || 0, best_streak: p.best, answers: p.ans, minutes: p.min, decks: p.dk.length, goal: p.goal || 'none'});
+  } catch(e) {}
+}
 /* soon: an edit outside a study set (settings, decks, memos) is saved after 3 s; answers wait for the set's end or a minute */
 function markDirty(name, soon=false){ if (Sync.bad[name]?.fatal) delete Sync.bad[name]; Sync.dirty.add(name); scheduleFlush(soon); }   // a doc the cloud refused is tried once more after it changes
 function scheduleFlush(soon=false){
@@ -8097,6 +8108,7 @@ function renderResults(){
   const before = streakInfo(), won = checkGoal(), st = won ? streakInfo() : before;
   if (won) { Q.won = true; setTimeout(() => { if (Q?.won && Q.done) haptic(true); }, lessMotion() ? 0 : 600); }   // with the flame
   const prac = !!Q.opts.practice, pct = Math.round(ok / n * 100);
+  if (!Q.gaSent) { Q.gaSent = true; ga('set_complete', {questions: n, correct: ok, new_words: learned, reviews: reviewed, practice: prac ? 1 : 0}); }
   // 実績: an all-Perfect set and a day back after a break are counted, then what the records reach now is this set's (kept on Q:
   // drawing the results again, or 1問もどす and back, shows the same badges; one already stored is never shown twice)
   if (!prac) { achCount(its); Q.ach = [...(Q.ach || []), ...achGrant(false)]; }
@@ -8363,6 +8375,7 @@ function renderSwipeDone(){
   stopCountdown();
   const unk = SW.hist.filter(h => !h.known).map(h => h.c), known = SW.hist.length - unk.length;
   const ks = swStats(), k = Math.min(unk.length, S.settings.setSize);
+  if (!SW.gaSent) { SW.gaSent = true; ga('swipe_done', {sorted: SW.hist.length, known, unknown: unk.length}); }
   const lines = [SW.stop && unk.length >= SW.stop && SW.i < SW.cards.length ? `最初に覚える${unk.length}語がそろった` : '',
     known ? `「知ってる」の単語は、${swEarly(ks) ? '3日〜1週間' : '1〜3週間'}後に4択でたしかめる` : '',
     ks.n >= 5 ? `これまでの「知ってる」の的中率は${Math.round(ks.hit / ks.n * 100)}%${swEarly(ks) ? '、はずれが多めなので、たしかめを早めに出す' : ''}` : ''].filter(Boolean);
@@ -9840,7 +9853,7 @@ function start(data){
   tutInit();                                                                  // めくるの一言: on for a learner with nothing on record yet
   if (!S.settings.onboarded && hasProgress()) S.settings.onboarded = true;   // people who already study skip the welcome
   if (!S.ach || lsGet(ACH_VK) !== ACH_V) { achGrant(true); lsSet(ACH_VK, ACH_V); }   // 実績, the first time and when the list grows: everything the records already reach is put in quietly (no celebrations)
-  applyZoom(); render(); initSync(); initFirebase();
+  applyZoom(); render(); initSync(); initFirebase(); setTimeout(gaDaily, 4000);
   const boot = document.getElementById('boot');   // the first screen is up: the loading logo fades and goes
   if (boot) { requestAnimationFrame(() => { boot.classList.add('out'); setTimeout(() => boot.remove(), 260); }); }
   const de = dq && dictIndex().map.get(normW(dq));
@@ -9851,4 +9864,4 @@ function start(data){
 try { window.claude?.hot?.snapshot?.(() => ({tab:route.tab, deck:route.deck})); } catch(e) {}
 try { window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {}); } catch(e) { start({}); }
 </script>
-<script>if(location.hostname==="kiwami-eitango.com"){var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",'{"token": "5dedc341bc184ed59cae8fbf670adedf"}');document.body.appendChild(s)}</script></body></html>
+<script>if(location.hostname==="kiwami-eitango.com"){var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",'{"token": "5dedc341bc184ed59cae8fbf670adedf"}');document.body.appendChild(s)}</script><script>if(location.hostname==="kiwami-eitango.com"){window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","G-4FGEKWQYJH");var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-4FGEKWQYJH";document.head.appendChild(g);(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","z8dzjgoq2v");}</script></body></html>
