@@ -2600,6 +2600,45 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-opts.size button:nth-child(3){font-size:var(--fs-cta)}
 /* 1日の新しい単語: the one big card */
 .k-goal{margin:0 max(var(--pad),env(safe-area-inset-left,0px));background:var(--fill);border-radius:var(--r-card);padding:18px 14px}
+/* 志望校 (homeUniv, univInfo, univSheet): the share in big type, the bar (中学 grey, the app blue, a mark at 90%), the words to 90% */
+.k-uv{display:flex;flex-direction:column;align-items:stretch;width:auto;margin:0 max(var(--pad),env(safe-area-inset-left,0px));background:var(--fill);border-radius:var(--r-card);padding:14px 16px 16px;text-align:left;color:var(--ink)}
+button.k-uv{width:calc(100% - 2 * max(var(--pad),env(safe-area-inset-left,0px)))}
+.k-uv.in{margin:4px 0 0;width:auto}
+.k-uv-nm{display:flex;align-items:center;gap:2px;font-size:var(--fs-name);font-weight:700;line-height:1.45;font-feature-settings:"palt"}
+.k-uv-nm .k-chev{margin-left:auto}
+.k-uv-top{display:flex;align-items:baseline;gap:6px;margin-top:4px}
+.k-uv-n{font-size:34px;font-weight:800;line-height:1.1;letter-spacing:-.01em;font-variant-numeric:tabular-nums;color:var(--blue)}
+.k-uv-n small{font-size:18px;font-weight:700;margin-left:1px}
+.k-uv-rd{font-size:var(--fs-body);font-weight:700;color:var(--ink-2)}
+.k-uv-bar{position:relative;display:block;height:8px;margin:12px 0 22px;border-radius:var(--r-bar);background:var(--track)}
+.k-uv-bar i{position:absolute;top:0;bottom:0;left:0;border-radius:var(--r-bar)}
+.k-uv-bar .b0{background:var(--ink-3)}
+.k-uv-bar .b1{background:var(--blue);border-radius:0 var(--r-bar) var(--r-bar) 0}
+.k-uv-bar em{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--ink);border-radius:1px}
+.k-uv-bar em span{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;font-size:11px;font-style:normal;font-weight:700;color:var(--ink-2);white-space:nowrap}
+.k-uv-next{font-size:var(--fs-body);font-weight:700;line-height:1.5;font-feature-settings:"palt"}
+.k-uv-next b{font-size:var(--fs-name);color:var(--blue)}
+.k-uv-how{display:block;margin-top:6px;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.55;font-feature-settings:"palt"}
+.k-uv-wait{display:block;margin-top:6px;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.5}
+.k-uv-ask{display:flex;align-items:center;gap:4px;margin:0 max(var(--pad),env(safe-area-inset-left,0px));background:var(--fill);border-radius:var(--r-card);padding:4px 6px 4px 16px}
+.k-uv-ask-main{flex:1;min-width:0;display:flex;flex-direction:column;padding:10px 0;text-align:left;color:var(--ink)}
+.k-uv-ask-main .t{display:flex;align-items:center;gap:2px;font-size:var(--fs-name);font-weight:700;color:var(--blue)}
+.k-uv-ask-main .s{font-size:var(--fs-sub);color:var(--ink-2);line-height:1.45;margin-top:1px}
+.k-uv-h{margin:18px 2px 8px;font-size:var(--fs-body);font-weight:800;line-height:1.4;font-feature-settings:"palt"}
+.k-uv-l,.k-uv-go,.k-uv-pick .k-grp{margin:0}
+.k-uv-go{margin-top:16px}
+.k-uv-w .lab{display:flex;align-items:baseline;gap:8px;min-width:0}
+.k-uv-w .lab b{flex:none;font-weight:700}
+.k-uv-w .lab .m{min-width:0;font-size:var(--fs-body);color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-uv-lead{margin:2px 2px 12px;font-size:var(--fs-sub);color:var(--ink-2);line-height:1.55}
+.k-uv-pick .k-input{margin-bottom:10px}
+.k-uv-f{margin:0 0 8px}
+.k-uv-f + .k-uv-none,.k-uv-f + .k-grp{margin-top:14px}
+.k-uv-none{margin:16px 2px;font-size:var(--fs-body);color:var(--ink-2)}
+.k-uv-pick .k-pick + .k-uv-h{margin-top:18px}
+.k-uv-pick{min-height:min(620px,72vh)}   /* narrowing never makes the sheet jump shorter */
+.k-uv-pick [hidden]{display:none}
+.k-uv-pick .k-srow.f{border-top:0}
 .k-goal .nm{font-size:var(--fs-name);font-weight:700;line-height:1.4;font-feature-settings:"palt"}
 .k-goal .st{display:flex;align-items:center;justify-content:space-between;margin:8px -2px 0}
 .k-goal .st button{width:48px;height:48px;display:grid;place-items:center;flex:none;color:var(--ink)}
@@ -5333,7 +5372,7 @@ function viewHome(){
     if (line) say = `<section class="k-sec k-say" aria-label="めくるから">${MEKURU[face] ? `<button class="k-mk-btn" data-act="mkTalk" aria-label="めくるに話しかける">${mekuru(face)}</button>` : ''}<p id="mkbubble" class="k-bubble" role="status" data-base="${esc(line)}">${kPhrases(line)}</p></section>`;
   }
   const note = act.length ? nudgeHTML() || instHTML('home') : '';
-  return `${topbar()}${hero}${grpHome()}${note ? `<div class="k-note">${note}</div>` : ''}${inUse}${again}${shelf}${say}`;
+  return `${topbar()}${hero}${grpHome()}${note ? `<div class="k-note">${note}</div>` : ''}${inUse}${act.length ? homeUniv() : ''}${again}${shelf}${say}`;
 }
 /* the hero's ⋯: the other ways to go on (each only when it starts something), how questions are asked, the day's new words,
    and 高速仕分け */
@@ -6578,6 +6617,122 @@ function goalCard(){
     <div class="st"><button data-act="paceStep" data-d="-5" aria-label="1日の新しい単語を5減らす"${n <= lo ? ' disabled' : ''}><i>${K_MINUS}</i></button><output class="num" aria-live="polite"><b>${n}</b><span>語</span></output><button data-act="paceStep" data-d="5" aria-label="1日の新しい単語を5増やす"${n >= hi ? ' disabled' : ''}><i>${K_PLUS2}</i></button></div>
     ${plan ? `<p class="plan">${esc(plan)}</p>` : ''}${c ? `<p class="note">${rev ? `復習${rev}語とあわせて、` : ''}今日の目標は${goal}語</p>` : ''}</div>`;
 }
+/* ---------- 志望校 ---------- */
+/* 志望校 (設定, S.settings.univ: its slug and univNm its name; '-' when the learner said no to choosing one): on the home,
+   how much of that university's English the learned words read and how many more words reach 90%. The numbers are the site's
+   (/univ/<slug>/me.json, as on the university's page; /univ/list.json the universities), kept in UNIV_LS so they open offline */
+const UNIV_BASE = IS_WEB ? '' : 'https://kiwami-eitango.com';
+const UNIV_LS = 'kiwami.univ';   // {list: [[slug, name, 国立|公立|私立]], at, me: {slug, d, at}}; never part of the learning record
+const UNIV_WEEK = 7 * 864e5;
+let UNIV = null;
+const univBusy = {}, univFail = {};
+function univStore(){ if (!UNIV) { try { UNIV = JSON.parse(localStorage.getItem(UNIV_LS) || 'null') || {}; } catch(e) { UNIV = {}; } } return UNIV; }
+function univKeep(){ try { localStorage.setItem(UNIV_LS, JSON.stringify(UNIV)); } catch(e) {} }
+/* one download at a time per file, and not again for a minute after one failed; done(ok) after */
+function univGet(path, put, done){
+  if (univBusy[path] || Date.now() - (univFail[path] || 0) < 6e4) return;
+  univBusy[path] = fetch(UNIV_BASE + path).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => { put(j); univKeep(); delete univFail[path]; return true; }, () => { univFail[path] = Date.now(); return false; })
+    .then(ok => { delete univBusy[path]; done?.(ok); });
+}
+const univSlug = () => { const v = S.settings.univ; return v && v !== '-' ? v : ''; };
+/* the chosen university's numbers, or null while they come (the home is drawn again when they do); a week-old copy is used
+   and refreshed behind */
+function univData(slug = univSlug()){
+  const u = univStore(), have = u.me?.slug === slug ? u.me : null;
+  if (slug && (!have || Date.now() - have.at > UNIV_WEEK))
+    univGet(`/univ/${slug}/me.json`, d => { u.me = {slug, d, at: Date.now()}; }, () => { if (univSlug() === slug && route.tab === 'home' && $('#screen').hidden && !sheetOpen()) render(); });
+  return have ? have.d : null;
+}
+/* the learned words (a card in review; another meaning of a word, word#n, left out; a derivative parent>word counts as its
+   word) and what they read: the same sums as the university's page */
+function univCalc(D){
+  const known = new Set();
+  for (const d of Object.values(S.prog || {}))
+    for (const [k, p] of Object.entries(d || {}))
+      if (isReview(p) && !k.includes('#')) known.add(k.split('>').pop().toLowerCase());
+  let have = D.base, mine = 0;
+  for (const [w, n] of D.w) if (known.has(w)) { have += n; mine++; }
+  const rest = D.w.filter(x => !known.has(x[0])), goal = 0.9 * D.T;
+  let need = 0, acc = have;
+  if (acc < goal) for (const x of rest) { acc += x[1]; need++; if (acc >= goal) break; }
+  const pct = n => 100 * n / D.T;
+  return {known: known.size, mine, rest, need, p: pct(have), base: pct(D.base), all: pct(D.base + D.w.reduce((a, x) => a + x[1], 0)), over: have >= goal, reach: acc >= goal};
+}
+const uv1 = n => n.toFixed(1);
+/* the bar: 中学の単語 grey, what the app added blue, a mark at 90% */
+const univBar = r => `<span class="k-uv-bar" role="img" aria-label="${uv1(r.p)}％、目標は90％"><i class="b0" style="width:${uv1(r.base)}%"></i><i class="b1" style="left:${uv1(r.base)}%;width:${uv1(Math.max(0, r.p - r.base))}%"></i><em style="left:90%"><span>90%</span></em></span>`;
+const univNext = (r, nm) => !r.rest.length ? `${nm}に出た受験英単語は、すべて覚えた` : r.over ? '90％をこえた'
+  : r.reach ? `90％まで、あと<b>${r.need.toLocaleString()}</b>語` : `受験英単語を全部覚えると${r.all.toFixed(0)}％`;
+const univNum = r => `<span class="k-uv-top"><b class="k-uv-n">${uv1(r.p)}<small>%</small></b><span class="k-uv-rd">が読める</span></span>`;
+const learnedCount = () => Object.values(S.prog || {}).reduce((n, d) => n + Object.values(d || {}).filter(isReview).length, 0);
+/* the home's 志望校: the share and the words to 90%; no university chosen yet, a quiet ask once 30 words are learned */
+function homeUniv(){
+  const slug = univSlug();
+  if (!slug) return S.settings.univ === '-' || learnedCount() < 30 ? ''
+    : `<section class="k-sec" aria-label="志望校"><div class="k-uv-ask"><button class="k-uv-ask-main" data-act="univSheet"><span class="t">志望校を選ぶ${K_CHEV}</span><span class="s">大学の英文の何％が読めるかがわかる</span></button><button class="iconbtn" data-act="univNo" aria-label="志望校を選ばない">${I.close}</button></div></section>`;
+  const D = univData(slug), nm = esc(S.settings.univNm || D?.nm || '志望校');
+  const head = `<div class="k-sec-h"><h2 class="k-sec-t">志望校</h2></div>`;
+  if (!D) return `<section class="k-sec" aria-label="志望校">${head}<div class="k-uv"><span class="k-uv-nm">${nm}の英文</span><span class="k-uv-wait">${univFail[`/univ/${slug}/me.json`] ? '読みこめなかった。通信できるところで開くと出る' : '読みこみ中…'}</span></div></section>`;
+  const r = univCalc(D);
+  return `<section class="k-sec" aria-label="志望校">${head}<button class="k-uv" data-act="univInfo"><span class="k-uv-nm">${nm}の英文${K_CHEV}</span>${univNum(r)}${univBar(r)}<span class="k-uv-next">${univNext(r, nm)}</span></button></section>`;
+}
+/* its sheet: how the share is made, the words to learn next (in the most papers first; not just / most, which the papers use
+   in a more basic sense), the university's page, and changing it */
+function univInfo(){
+  const slug = univSlug(), D = univData(slug);
+  if (!D) return univSheet();
+  const r = univCalc(D), nm = esc(D.nm);
+  const li = r.rest.filter(x => !x[5]).slice(0, 15).map(([w, , lv, m, , , np]) =>
+    `<button class="k-srow k-uv-w" data-act="dictOpen" data-k="${esc(normW(w))}"><span class="txt"><span class="lab"><b lang="en">${esc(w)}</b>${m ? `<span class="m">${esc(m)}</span>` : ''}</span><span class="sub">レベル${lv}・${D.np}本中${np}本に出た</span></span>${K_CHEV}</button>`).join('');
+  openSheet(`<div class="sheet-h"><h3>${nm}の英文</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="k-uv in">${univNum(r)}${univBar(r)}<span class="k-uv-next">${univNext(r, nm)}</span>
+      <span class="k-uv-how">中学の単語で${r.base.toFixed(0)}％、アプリで＋${uv1(r.p - r.base)}ポイント。覚えた${r.known.toLocaleString()}語のうち、${nm}の入試${D.np}本に出た${r.mine.toLocaleString()}語で計算しています</span></div>
+    ${li ? `<h4 class="k-uv-h">${nm}によく出る、まだ覚えていない単語</h4><div class="k-grp k-uv-l">${li}</div>` : ''}
+    <div class="k-grp k-uv-go">${kGo('univSheet', '志望校を変える', '', nm)}<a class="k-srow" href="${UNIV_BASE}/univ/${encodeURIComponent(slug)}/"${IS_WEB ? '' : ' target="_blank" rel="noopener"'}>${kTxt(`${nm}によく出る英単語`, 'サイトで見る')}${K_CHEV}</a></div>`);
+}
+/* the universities to choose from, by 国立・公立・私立: narrowed by kind, by region (where the main campus is) and by a name
+   typed in the box; 選ばない first */
+const UNIV_RG = ['北海道・東北', '関東', '中部', '近畿', '中国・四国', '九州・沖縄'];
+let univF = {t: '', r: ''};
+function univSheet(keep = false){
+  const u = univStore(), cur = S.settings.univ || '';
+  if (!u.list || Date.now() - (u.at || 0) > UNIV_WEEK)
+    univGet('/univ/list.json', l => { u.list = l; u.at = Date.now(); }, ok => { if ((ok || !u.list) && $('#sheetroot .k-uv-pick')) univSheet(true); });
+  const tl = {国立: '国立大学', 公立: '公立大学', 私立: '私立大学'};
+  if (!keep) univF = {t: '', r: ''};
+  const row = (v, nm, x) => `<button class="k-srow" role="radio" aria-checked="${cur === v}" data-act="univPick" data-v="${esc(v)}"${x ? ` data-q="${esc(nm)}" data-t="${esc(x[2])}" data-r="${esc(x[3] || '')}"` : ''}><span class="txt"><span class="lab">${esc(nm)}</span></span>${cur === v ? K_CHECK : ''}</button>`;
+  const chip = (k, v, l) => `<button class="chip" data-act="univF" data-k="${k}" data-v="${esc(v)}" aria-pressed="${univF[k] === v}">${l}</button>`;
+  const q = $('#univq')?.value || '';
+  const body = !u.list ? `<p class="k-uv-wait">${univFail['/univ/list.json'] ? '大学の一覧を読みこめなかった。通信できるところで、もう一度開いてね' : '読みこみ中…'}</p>`
+    : `<input id="univq" class="k-input" type="search" placeholder="大学名でさがす" value="${esc(q)}" autocomplete="off" enterkeyhint="search" spellcheck="false" aria-label="大学名でさがす">
+      <div class="chips k-uv-f" role="group" aria-label="国立・公立・私立">${chip('t', '', 'すべて')}${Object.keys(tl).map(x => chip('t', x, x)).join('')}</div>
+      ${u.list.some(x => x[3]) ? `<div class="chips k-uv-f" role="group" aria-label="地域">${chip('r', '', '全国')}${UNIV_RG.map(x => chip('r', x, x)).join('')}</div>` : ''}
+      <p class="k-uv-none" hidden>あてはまる大学がない</p>
+      <div class="k-grp k-pick" role="radiogroup" aria-label="選ばない" data-none>${row('-', '選ばない')}</div>`
+      + Object.keys(tl).map(t => { const xs = u.list.filter(x => x[2] === t); return xs.length ? `<h4 class="k-uv-h" data-g>${tl[t]}</h4><div class="k-grp k-pick" role="radiogroup" aria-label="${tl[t]}">${xs.map(x => row(x[0], x[1], x)).join('')}</div>` : ''; }).join('');
+  openSheet(`<div class="sheet-h"><h3>志望校</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="k-uv-pick"><p class="k-uv-lead">選んだ大学の入試の英文のうち、覚えた単語で何％が読めるかを、ホームに出します。</p>${body}</div>`, false, keep);
+  if (q || univF.t || univF.r) univFilter(q);
+}
+/* typing in the box: the universities whose name has it; a group left empty goes */
+function univFilter(q){
+  q = q.trim();
+  const on = !!(q || univF.t || univF.r);
+  for (const b of document.querySelectorAll('#sheetroot .k-uv-pick [data-q]'))
+    b.hidden = !!q && !b.dataset.q.includes(q) || !!univF.t && b.dataset.t !== univF.t || !!univF.r && b.dataset.r !== univF.r;
+  const nd = $('#sheetroot .k-uv-pick [data-none]'); if (nd) nd.hidden = on;   // narrowing: 選ばない steps aside
+  for (const g of document.querySelectorAll('#sheetroot .k-uv-pick .k-pick')) [...g.children].forEach((b, i, a) => b.classList.toggle('f', !b.hidden && !a.slice(0, i).some(x => !x.hidden)));   // the first row shown: no line above it
+  for (const h of document.querySelectorAll('#sheetroot .k-uv-pick [data-g]')) { const g = h.nextElementSibling, none = ![...g.children].some(b => !b.hidden); h.hidden = g.hidden = none; }
+  const n = $('#sheetroot .k-uv-none'); if (n) n.hidden = [...document.querySelectorAll('#sheetroot .k-uv-pick [data-q]')].some(b => !b.hidden);
+}
+function univPick(v){
+  const nm = v === '-' ? '' : (univStore().list || []).find(x => x[0] === v)?.[1] || '';
+  setSetting('univ', v); setSetting('univNm', nm);
+  if (v !== '-') univData(v);   // on its way while the sheet closes
+  closeSheet(); render();
+  toast(v === '-' ? '志望校は選ばないにした（設定でいつでも選べる）' : `志望校を${nm}にした`);
+}
 function viewSettings(){
   const s = S.settings, ret = s.retention < 0.875 ? 0.85 : s.retention < 0.925 ? 0.9 : 0.95;   // older saved values (80–97%) show as the nearest of the three
   const fold = `<div class="k-sec-h k-fold${moreSetOpen ? '' : ' has-sub'}"><div class="line"><h2 class="k-sec-t" id="morehd">学習のくわしい設定</h2><button class="k-fold-btn" data-act="moreSet" aria-expanded="${moreSetOpen}" aria-describedby="morehd">${moreSetOpen ? `たたむ${K_UP}` : `ひらく${K_DOWN}`}</button></div>${moreSetOpen ? '' : '<p class="k-sec-s">復習の上限や、派生語の出し方など</p>'}</div>`;
@@ -6600,6 +6755,7 @@ function viewSettings(){
     kOpts('dir', Object.entries(DIR_LABEL), '出題の向き', '自動は、覚え具合で英→日と日→英を切りかえる', s.dir || 'auto'),
     kOpts('mode', [['auto', '4択'], ['flash', 'カード']], '復習のしかた', 'カードは、めくって自分で採点する', isCardMode() ? 'flash' : 'auto')]), ' k-first')}
   ${more}
+  ${kSec('志望校', kGroup([kGo('univSheet', '大学', 'ホームに、英文の何％が読めるかが出る', univSlug() ? esc(s.univNm || '選んだ大学') : '選ばない')]))}
   ${kSec('表示', kGroup([kOpts('zoom', [[0.92, '小さめ'], [1, 'ふつう'], [1.12, '大きめ']], '文字の大きさ', '', s.zoom || 1, ' size'),
     kOpts('theme', [['auto', '自動'], ['light', 'オフ'], ['dark', 'オン']], 'ダークモード', '自動は、スマホの設定に合わせる', s.theme || 'auto')]))}
   ${kSec('音と振動', kGroup([kSw('autoSpeak', '単語を自動で読み上げる', 'オフにすると、聞き取りの問題も出ない'),
@@ -9201,6 +9357,11 @@ const ACT = {
   secSheet: t => { const d = deckById(route.deck); if (d) secSheet(d, +t.dataset.i); },
   manySheet: () => manySheet(),
   homeMore: () => homeMore(),
+  univSheet: () => univSheet(), univF: t => { const k = t.dataset.k; univF[k] = univF[k] === t.dataset.v ? '' : t.dataset.v;
+    for (const c of document.querySelectorAll(`#sheetroot .k-uv-f [data-k="${k}"]`)) c.setAttribute('aria-pressed', c.dataset.v === univF[k]);
+    univFilter($('#univq')?.value || ''); },
+  univInfo: () => univInfo(), univPick: t => univPick(t.dataset.v),
+  univNo: () => { setSetting('univ', '-'); render(); toast('志望校は、設定からいつでも選べる'); },
   swipeGo: () => { startSwipe(); closeSheet(); },   // from the ⋯ sheet: the sheet goes once the sort screen is up (no reload under it)
   // この単語帳に切りかえる: new words come from this deck first (the decks in use, in order)
   deckFirst: t => { const id = t.dataset.id, d = deckById(id); if (!d) return; setSetting('active', [id, ...S.settings.active.filter(x => x !== id)]); render(); toast(`新しい単語は「${bookName(d)}」から出します`); },
@@ -9515,6 +9676,7 @@ document.addEventListener('input', e => {
     const box = e.target.parentElement?.querySelector('.impx-on'); if (box && v.trim() && !box.checked) { box.checked = true; IMP.on.set(k, true); }
     impCount();
   }
+  if (e.target.id === 'univq') univFilter(e.target.value);
   if (e.target.id === 'spellin' && !KANA.test(e.target.value)) $('#spellnote')?.remove();
   if (e.target.id === 'retypein') e.target.classList.remove('ng');
 });
