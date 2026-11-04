@@ -709,3 +709,29 @@ ol.ms.one > li::before{display:none}
 .dv .afx{margin:2px 0 0;font-size:13px;color:var(--sub)}
 .dv .afx a{font:600 14px var(--en);color:var(--blue)}
 .dv .afx span{font-family:var(--en)}
+.u-me .ume{margin-top:12px;max-width:560px}
+.ume-top{display:flex;align-items:center;gap:14px;padding-bottom:14px}
+.ume-top>b{font-size:40px;font-weight:800;line-height:1;color:var(--ink);flex:none}
+.ume-top>b small{font-size:18px;margin-left:2px}
+.ume-top .bar{position:relative;display:block;flex:1;height:10px;border-radius:5px;background:var(--bar-off);overflow:visible}
+.ume-top .bar i{position:absolute;top:0;bottom:0}
+.ume-top .bar .b0{left:0;border-radius:5px 0 0 5px;background:var(--mute);opacity:.45}
+.ume-top .bar .b1{background:var(--blue);border-radius:0 5px 5px 0}
+.ume-top .bar em{position:absolute;top:-4px;bottom:-4px;border-left:2px solid var(--ink)}
+.ume-top .bar em span{position:absolute;top:100%;left:-12px;margin-top:2px;font:600 11px var(--en);font-style:normal;color:var(--sub)}
+.ume-gain{margin:6px 0 0;font-size:14px;color:var(--ink)}
+.ume-gain b{font-size:16px}
+.ume-sub{margin:4px 0 0;font-size:13px;color:var(--sub);line-height:1.7}
+.ume-next{margin:12px 0 0;font-size:16px;font-weight:700}
+.ume-next b{font-size:20px}
+.u-me h3{margin:20px 0 6px;font-size:15px}
+.ume-l{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.ume-l a{display:flex;align-items:baseline;gap:10px;min-height:44px;padding:10px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;min-width:0}
+.ume-l a b{font:600 16px var(--en);color:var(--blue);flex:none}
+.ume-l a span{font-size:13px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ume-l a small{margin-left:auto;font-size:13px;color:var(--sub);flex:none}
+.ume-none{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--card)}
+.ume-none p{margin:0;font-size:15px;line-height:1.7}
+.ume-none .ume-sub{margin-top:6px}
+.ume-note{margin-top:12px!important;font-size:12px!important;color:var(--mute)}
+.ume-go{display:inline-block;margin-top:14px;font-weight:700;color:var(--blue)}
