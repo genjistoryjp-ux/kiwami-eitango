@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.ea5719a6.css">
+<link rel="stylesheet" href="/assets/site.626dfacd.css">
 </head>
 <body>
 <header class="hd">
@@ -27,10 +27,10 @@
       <b>極（きわみ）</b>
       <small>英単語の意味と<br>入試データ</small>
     </a>
-    <nav class="hd-r" aria-label="アプリ"><a class="applink" href="/app/">無料アプリ</a></nav>
+    <nav class="hd-r" aria-label="アプリ"><a class="srlink" href="/search/" aria-label="英単語を調べる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a><a class="applink" href="/app/">無料アプリ</a></nav>
   </div>
   <div class="snav-w"><div class="wrap snav-in">
-    <nav class="snav" aria-label="メイン"><a href="/search/">単語を調べる</a><a href="/shindan/">単語力診断</a><a href="/words/">単語一覧</a><a href="/ranking/nyushi/">ランキング</a><a href="/univ/">志望校別</a><a href="/articles/" aria-current=page>記事</a><a href="/about/">極について</a></nav>
+    <nav class="snav" aria-label="メイン"><a href="/search/">単語を調べる</a><a href="/shindan/">単語力診断</a><a href="/kyotsu/">共通テスト</a><a href="/univ/">志望校別</a><a href="/gogen/">語源</a><a href="/ranking/nyushi/">ランキング</a><a href="/words/">単語一覧</a><a href="/articles/" aria-current=page>記事</a><script>(function(){var a=document.querySelector('.snav [aria-current]'),n=document.querySelector('.snav');if(!n)return;if(a&&n.scrollWidth>n.clientWidth){var p=a.previousElementSibling||a;n.scrollLeft+=p.getBoundingClientRect().left-n.getBoundingClientRect().left-12}var e=function(){var c=n.parentNode.classList;c.toggle('end',n.scrollLeft+n.clientWidth>=n.scrollWidth-4);c.toggle('st',n.scrollLeft>4)};e();n.addEventListener('scroll',e,{passive:true})})()</script></nav>
     <form class="hsrch" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語を調べる" aria-label="英単語か日本語で調べる" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required></form>
   </div></div>
 </header>
@@ -97,7 +97,7 @@
 <tr><td><a href="/words/context/" lang="en">context</a></td><td>背景、状況、文脈</td><td class="n">49%</td><td class="n">15%</td></tr>
 <tr><td><a href="/words/consistent/" lang="en">consistent</a></td><td>一貫した、〜と一致する</td><td class="n">30%</td><td class="n">9%</td></tr>
 <tr><td><a href="/words/legal/" lang="en">legal</a></td><td>法律の、合法の</td><td class="n">24%</td><td class="n">7%</td></tr>
-<tr><td><a href="/words/merely/" lang="en">merely</a></td><td>単に（〜にすぎない）</td><td class="n">26%</td><td class="n">8%</td></tr>
+<tr><td><a href="/words/merely/" lang="en">merely</a></td><td>単に<small class="g">〜にすぎない</small></td><td class="n">26%</td><td class="n">8%</td></tr>
 <tr><td><a href="/words/secure/" lang="en">secure</a></td><td>〜を確保する、安全な</td><td class="n">21%</td><td class="n">7%</td></tr>
 <tr><td><a href="/words/implication/" lang="en">implication</a></td><td>（予想される）影響、含意</td><td class="n">21%</td><td class="n">7%</td></tr>
 <tr><td><a href="/words/politics/" lang="en">politics</a></td><td>政治</td><td class="n">22%</td><td class="n">7%</td></tr>
@@ -160,10 +160,10 @@
 <h3>語の部品で品詞の見当をつける</h3>
 <p>派生語は、もとの語を知っていれば意味の見当がつきます。ただ、品詞が変わると文の中での働きも変わります。</p>
 <ul>
-<li><b>-ly</b> で終われば、多くは副詞</li>
-<li><b>-tion・-ment・-ency・-ance</b> は名詞</li>
-<li><b>-ical</b> は形容詞</li>
-<li><b>-er</b> は人を表すことが多い</li>
+<li><b>​-⁠ly</b> で終われば、多くは副詞</li>
+<li><b>​-⁠tion・​-⁠ment・​-⁠ency・​-⁠ance</b> は名詞</li>
+<li><b>​-⁠ical</b> は形容詞</li>
+<li><b>​-⁠er</b> は人を表すことが多い</li>
 <li><b>un-</b> は打ち消し</li>
 </ul>
 <p>この感覚を持っておくと、初めて見る形でも速く読めます。</p>
@@ -183,12 +183,12 @@
 <p>設問の言い回しは、たとえば次のような形です。</p>
 <div class="tbl"><table>
 <tr><th>語</th><th>設問での使われ方の例</th></tr>
-<tr><td>paragraph</td><td>In the third paragraph, the author suggests that ...（第3段落で、筆者は…と示唆している）</td></tr>
-<tr><td>statement</td><td>Which of the following statements is true according to the passage?（本文の内容に合う記述はどれか）</td></tr>
-<tr><td>summarize</td><td>Which of the following best summarizes the passage?（本文の要約として最も適切なものはどれか）</td></tr>
-<tr><td>suitable</td><td>Choose the most suitable word for each blank.（それぞれの空所に最も適した語を選べ）</td></tr>
-<tr><td>definition</td><td>Choose the best definition of the underlined word.（下線部の語の意味として最も適切なものを選べ）</td></tr>
-<tr><td>correspond</td><td>Which of the following corresponds most closely to the meaning of (A)?（(A)の意味に最も近いものはどれか）</td></tr>
+<tr><td>paragraph</td><td>In the third paragraph, the author suggests that ...<small class="g">第3段落で、筆者は…と示唆している</small></td></tr>
+<tr><td>statement</td><td>Which of the following statements is true according to the passage?<small class="g">本文の内容に合う記述はどれか</small></td></tr>
+<tr><td>summarize</td><td>Which of the following best summarizes the passage?<small class="g">本文の要約として最も適切なものはどれか</small></td></tr>
+<tr><td>suitable</td><td>Choose the most suitable word for each blank.<small class="g">それぞれの空所に最も適した語を選べ</small></td></tr>
+<tr><td>definition</td><td>Choose the best definition of the underlined word.<small class="g">下線部の語の意味として最も適切なものを選べ</small></td></tr>
+<tr><td>correspond</td><td>Which of the following corresponds most closely to the meaning of (A)?<small class="g">(A)の意味に最も近いものはどれか</small></td></tr>
 </table></div>
 <p><mark>本文が読めていても、設問の英語で迷うと時間を失います。</mark></p>
 <p class="tip">statement は「声明」より「（述べられた）内容、記述」、underlined は「下線を引かれた」と、設問での意味がすぐ出るようにしておきましょう。</p>
@@ -227,7 +227,7 @@
 <li>直後の言いかえ（that is、in other words）</li>
 <li>for example のあとの具体例</li>
 <li>but や however の前後の対比</li>
-<li>un- や -less のような語の部品</li>
+<li>un- や ​-⁠less のような語の部品</li>
 </ul>
 <p>知らない語に出会ったら、まず文の中での品詞を決め、プラスの意味かマイナスの意味かをつかむだけでも、先へ進める場面は多くあります。</p>
 <p class="tip">過去問を解くときから、知らない語で手を止めずに読み切る練習をしておきましょう。</p>
@@ -239,21 +239,34 @@
 <li>早慶に多いのは、undermine や nevertheless のような評論の語と、precisely や tendency のような派生語</li>
 <li>paragraph、statement、summarize のような設問の英語も、すぐ意味が出るようにしておく</li>
 <li>過去問で2回目に出会った語から覚え、上位5,000語の外は文脈から推測して読み進める</li>
-</ul><div class="appbox"><img src="/assets/mekuru.svg" alt="" width="52" height="52"><div><b>無料で覚えるなら 極のアプリ</b><p>入試で多い意味から、1つずつ覚えられます。<span class="nw">登録なし。</span></p><a href="/app/">アプリを開く →</a></div></div></article></main>
+</ul><div class="appbox"><img src="/assets/mekuru.svg" alt="" width="52" height="52"><div><b>無料で覚えるなら 極のアプリ</b><p>入試で多い意味から、1つずつ覚えられます。<span class="nw">登録なし。</span></p><a href="/app/">アプリを開く →</a></div></div></article></main><script>(function(){function f(){document.querySelectorAll('.post .tbl').forEach(function(t){var o=t.scrollWidth>t.clientWidth+2,h=t.previousElementSibling;if(o&&!(h&&h.classList.contains('tbl-h'))){h=document.createElement('p');h.className='tbl-h';h.textContent='横にスクロールできます →';t.before(h)}if(h&&h.classList.contains('tbl-h'))h.hidden=!o})}f();addEventListener('resize',f)})()</script>
 <footer class="ft">
   <div class="wrap">
     <div class="ft-logo"><span class="tile"><img src="/assets/brand.png" alt="" width="19" height="19"></span><b>極（きわみ）</b></div>
     <p class="ft-d">受験英単語の意味と、入試での使われ方のデータ</p>
-    <ul class="ft-l">
-      <li><a href="/ranking/nyushi/">大学入試英単語ランキング</a></li>
-      <li><a href="/ranking/kyotsu/">共通テスト英単語ランキング</a></li>
-      <li><a href="/words/">受験英単語一覧</a></li>
-      <li><a href="/articles/">受験英語の記事</a></li>
-      <li><a href="/app/">アプリを開く</a></li>
-      <li><a href="/about/">極について</a></li>
-      <li><a href="/privacy/">プライバシーポリシー・免責事項</a></li>
-      <li><a href="https://forms.gle/56xaeGjnA7WYgS3V6" target="_blank" rel="noopener">お問い合わせ</a></li>
-    </ul>
+    <div class="ft-g">
+      <div><h2>調べる・覚える</h2><ul class="ft-l">
+        <li><a href="/search/">英単語を調べる</a></li>
+        <li><a href="/words/">受験英単語一覧</a></li>
+        <li><a href="/gogen/">接頭語・接尾語（語源）</a></li>
+        <li><a href="/app/">アプリを開く</a></li>
+      </ul></div>
+      <div><h2>入試対策</h2><ul class="ft-l">
+        <li><a href="/kyotsu/">共通テスト直前の英単語</a></li>
+        <li><a href="/univ/">志望校別 よく出る英単語</a></li>
+        <li><a href="/shindan/">英単語力診断</a></li>
+        <li><a href="/articles/">受験英語の記事</a></li>
+      </ul></div>
+      <div><h2>データ</h2><ul class="ft-l">
+        <li><a href="/ranking/nyushi/">大学入試英単語ランキング</a></li>
+        <li><a href="/ranking/kyotsu/">共通テスト英単語ランキング</a></li>
+      </ul></div>
+      <div><h2>極（きわみ）</h2><ul class="ft-l">
+        <li><a href="/about/">極について</a></li>
+        <li><a href="/privacy/">プライバシーポリシー・免責事項</a></li>
+        <li><a href="https://forms.gle/56xaeGjnA7WYgS3V6" target="_blank" rel="noopener">お問い合わせ</a></li>
+      </ul></div>
+    </div>
     <div class="ft-c">© 2026 極（きわみ）</div>
   </div>
 </footer>

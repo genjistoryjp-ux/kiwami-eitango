@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.ea5719a6.css">
+<link rel="stylesheet" href="/assets/site.626dfacd.css">
 </head>
 <body>
 <header class="hd">
@@ -28,28 +28,41 @@
       <b>極（きわみ）</b>
       <small>英単語の意味と<br>入試データ</small>
     </a>
-    <nav class="hd-r" aria-label="アプリ"><a class="applink" href="/app/">無料アプリ</a></nav>
+    <nav class="hd-r" aria-label="アプリ"><a class="srlink" href="/search/" aria-label="英単語を調べる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a><a class="applink" href="/app/">無料アプリ</a></nav>
   </div>
   <div class="snav-w"><div class="wrap snav-in">
-    <nav class="snav" aria-label="メイン"><a href="/search/" aria-current=page>単語を調べる</a><a href="/shindan/">単語力診断</a><a href="/words/">単語一覧</a><a href="/ranking/nyushi/">ランキング</a><a href="/univ/">志望校別</a><a href="/articles/">記事</a><a href="/about/">極について</a></nav>
+    <nav class="snav" aria-label="メイン"><a href="/search/" aria-current=page>単語を調べる</a><a href="/shindan/">単語力診断</a><a href="/kyotsu/">共通テスト</a><a href="/univ/">志望校別</a><a href="/gogen/">語源</a><a href="/ranking/nyushi/">ランキング</a><a href="/words/">単語一覧</a><a href="/articles/">記事</a><script>(function(){var a=document.querySelector('.snav [aria-current]'),n=document.querySelector('.snav');if(!n)return;if(a&&n.scrollWidth>n.clientWidth){var p=a.previousElementSibling||a;n.scrollLeft+=p.getBoundingClientRect().left-n.getBoundingClientRect().left-12}var e=function(){var c=n.parentNode.classList;c.toggle('end',n.scrollLeft+n.clientWidth>=n.scrollWidth-4);c.toggle('st',n.scrollLeft>4)};e();n.addEventListener('scroll',e,{passive:true})})()</script></nav>
     <form class="hsrch" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語を調べる" aria-label="英単語か日本語で調べる" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required></form>
   </div></div>
 </header>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://kiwami-eitango.com/"}, {"@type": "ListItem", "position": 2, "name": "検索", "item": "https://kiwami-eitango.com/search/"}]}</script><main class="wrap"><nav class="crumb" aria-label="現在地"><a href="/">トップ</a> › 検索</nav><article class="art wd srch"><h1 id="sh">英単語を調べる</h1><form class="sbox" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語か日本語を入力" aria-label="英単語か日本語" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required><button type="submit">検索</button></form><div id="sr"><p class="lead2">さがしています…</p></div></article></main><script>(async function(){var P=new URLSearchParams(location.search),q=P.get('q')||'';try{q=q.normalize('NFKC')}catch(e){}q=q.trim();var I=document.querySelector('.sbox input'),O=document.getElementById('sr'),H=document.getElementById('sh');I.value=q;var E=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};if(!q){H.textContent='英単語を調べる';O.innerHTML='<p class="lead2">英単語か、日本語の意味を入れてください。</p>';I.focus();return}document.title='「'+q+'」の検索結果｜極（きわみ）';H.textContent='「'+q+'」の検索結果';var W;try{W=await fetch('/assets/words.e0981bb8.json').then(function(r){return r.json()})}catch(e){W=[]}var l=q.toLowerCase(),en=/^[a-z][a-z' -]*$/.test(l),R=[],msg='';var kq=/^[ァ-ヺー・]+$/.test(q),KS=function(x){return x[3]?x[3].split(' '):[]},KH=kq?W.filter(function(x){return KS(x).indexOf(q)>=0}):[];if(KH.length===1){location.replace('/words/'+encodeURIComponent(KH[0][0])+'/');return}if(en){var hit=W.filter(function(x){return x[0]===l})[0];if(hit){location.replace('/words/'+encodeURIComponent(l)+'/');return}var D=function(a,b){if(Math.abs(a.length-b.length)>2)return 9;var p=[],pp=[],i,j;for(j=0;j<=b.length;j++)p[j]=j;for(i=1;i<=a.length;i++){var c=[i];for(j=1;j<=b.length;j++){c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])c[j]=Math.min(c[j],pp[j-2]+1)}pp=p;p=c}return p[b.length]};var pre=W.filter(function(x){return l.length>=2&&x[0].indexOf(l)===0}).sort(function(a,b){return a[0].length-b[0].length||a[2]-b[2]});var near=W.map(function(x){return[x,D(l,x[0])]}).filter(function(z){return z[1]<=(l.length<5?1:2)&&pre.indexOf(z[0])<0}).sort(function(a,b){return a[1]-b[1]||a[0][2]-b[0][2]}).map(function(z){return z[0]});R=near.concat(pre).slice(0,30);msg='「'+E(q)+'」の単語ページはまだありません。'+(R.length?'もしかして：':'')}else{var X=function(x){return x[1].split(' / ').some(function(m){return m.replace(/[～〜]|（[^）]*）/g,'').split('、').indexOf(q)>=0})?0:1};var KP=kq?W.filter(function(x){return KH.indexOf(x)<0&&KS(x).some(function(k){return k.indexOf(q)===0})}).sort(function(a,b){return a[2]-b[2]}):[];R=KH.concat(KP,W.filter(function(x){return x[1].indexOf(q)>=0&&KH.indexOf(x)<0&&KP.indexOf(x)<0}).sort(function(a,b){return X(a)-X(b)||a[2]-b[2]})).slice(0,50);msg=R.length?(KH.length+KP.length?'「'+E(q)+'」にあたる英単語':'「'+E(q)+'」の意味をもつ単語（入試によく出る順）'):'「'+E(q)+'」の意味をもつ単語は、受験英単語の中に見つかりませんでした。'}O.innerHTML='<p class="lead2">'+msg+'</p>'+(R.length?'<ul class="alist sl">'+R.map(function(x){return'<li><a href="/words/'+encodeURIComponent(x[0])+'/"><b lang="en">'+E(x[0])+'</b><span>'+E(x[1])+'</span></a></li>'}).join('')+'</ul>':'')+'<p class="sapp"><a href="/app/?q='+encodeURIComponent(q)+'">アプリの辞書で「'+E(q)+'」を調べる →</a><small>中学の単語や熟語も入っています</small></p>'})();</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://kiwami-eitango.com/"}, {"@type": "ListItem", "position": 2, "name": "検索", "item": "https://kiwami-eitango.com/search/"}]}</script><main class="wrap"><nav class="crumb" aria-label="現在地"><a href="/">トップ</a> › 検索</nav><article class="art wd srch"><h1 id="sh">英単語を調べる</h1><form class="sbox" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語か日本語を入力" aria-label="英単語か日本語" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required><button type="submit">検索</button></form><div id="sr"><p class="lead2">さがしています…</p></div></article></main><script>(async function(){var P=new URLSearchParams(location.search),q=P.get('q')||'';try{q=q.normalize('NFKC')}catch(e){}q=q.trim();var I=document.querySelector('.sbox input'),O=document.getElementById('sr'),H=document.getElementById('sh');I.value=q;var E=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};if(!q){H.textContent='英単語を調べる';O.innerHTML='<p class="lead2">英単語か、日本語の意味を入れてください。</p>';I.focus();return}document.title='「'+q+'」の検索結果｜極（きわみ）';H.textContent='「'+q+'」の検索結果';var W;try{W=await fetch('/assets/words.e0981bb8.json').then(function(r){return r.json()})}catch(e){W=[]}var l=q.toLowerCase(),en=/^[a-z][a-z' -]*$/.test(l),R=[],msg='';var kq=/^[ァ-ヺー・]+$/.test(q),KS=function(x){return x[3]?x[3].split(' '):[]},KH=kq?W.filter(function(x){return KS(x).indexOf(q)>=0}):[];if(KH.length===1){location.replace('/words/'+encodeURIComponent(KH[0][0])+'/');return}if(en){var hit=W.filter(function(x){return x[0]===l})[0];if(hit){location.replace('/words/'+encodeURIComponent(l)+'/');return}var D=function(a,b){if(Math.abs(a.length-b.length)>2)return 9;var p=[],pp=[],i,j;for(j=0;j<=b.length;j++)p[j]=j;for(i=1;i<=a.length;i++){var c=[i];for(j=1;j<=b.length;j++){c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])c[j]=Math.min(c[j],pp[j-2]+1)}pp=p;p=c}return p[b.length]};var pre=W.filter(function(x){return l.length>=2&&x[0].indexOf(l)===0}).sort(function(a,b){return a[2]-b[2]||a[0].length-b[0].length});var near=W.map(function(x){return[x,D(l,x[0])]}).filter(function(z){return z[1]<=(l.length<5?1:2)&&pre.indexOf(z[0])<0}).sort(function(a,b){return a[1]-b[1]||a[0][2]-b[0][2]}).map(function(z){return z[0]});if(pre.length>=3){R=pre.slice(0,30);msg='「'+E(q)+'」で始まる単語（'+(pre.length>30?'入試によく出る30語':pre.length+'語・入試によく出る順')+'）'}else{R=pre.concat(near).slice(0,30);msg='「'+E(q)+'」の単語ページはまだありません。'+(R.length?'もしかして：':'')}}else{var X=function(x){return x[1].split(' / ').some(function(m){return m.replace(/[～〜]|（[^）]*）/g,'').split('、').indexOf(q)>=0})?0:1};var KP=kq?W.filter(function(x){return KH.indexOf(x)<0&&KS(x).some(function(k){return k.indexOf(q)===0})}).sort(function(a,b){return a[2]-b[2]}):[];R=KH.concat(KP,W.filter(function(x){return x[1].indexOf(q)>=0&&KH.indexOf(x)<0&&KP.indexOf(x)<0}).sort(function(a,b){return X(a)-X(b)||a[2]-b[2]})).slice(0,50);msg=R.length?(KH.length+KP.length?'「'+E(q)+'」にあたる英単語':'「'+E(q)+'」の意味をもつ単語（入試によく出る順）'):'「'+E(q)+'」の意味をもつ単語は、受験英単語の中に見つかりませんでした。'}O.innerHTML='<p class="lead2">'+msg+'</p>'+(R.length?'<ul class="alist sl">'+R.map(function(x){return'<li><a href="/words/'+encodeURIComponent(x[0])+'/"><b lang="en">'+E(x[0])+'</b><span>'+E(x[1])+'</span></a></li>'}).join('')+'</ul>':'')+'<p class="sapp"><a href="/app/?q='+encodeURIComponent(q)+'">アプリの辞書で「'+E(q)+'」を調べる →</a><small>中学の単語や熟語も入っています</small></p>'})();</script>
 <footer class="ft">
   <div class="wrap">
     <div class="ft-logo"><span class="tile"><img src="/assets/brand.png" alt="" width="19" height="19"></span><b>極（きわみ）</b></div>
     <p class="ft-d">受験英単語の意味と、入試での使われ方のデータ</p>
-    <ul class="ft-l">
-      <li><a href="/ranking/nyushi/">大学入試英単語ランキング</a></li>
-      <li><a href="/ranking/kyotsu/">共通テスト英単語ランキング</a></li>
-      <li><a href="/words/">受験英単語一覧</a></li>
-      <li><a href="/articles/">受験英語の記事</a></li>
-      <li><a href="/app/">アプリを開く</a></li>
-      <li><a href="/about/">極について</a></li>
-      <li><a href="/privacy/">プライバシーポリシー・免責事項</a></li>
-      <li><a href="https://forms.gle/56xaeGjnA7WYgS3V6" target="_blank" rel="noopener">お問い合わせ</a></li>
-    </ul>
+    <div class="ft-g">
+      <div><h2>調べる・覚える</h2><ul class="ft-l">
+        <li><a href="/search/">英単語を調べる</a></li>
+        <li><a href="/words/">受験英単語一覧</a></li>
+        <li><a href="/gogen/">接頭語・接尾語（語源）</a></li>
+        <li><a href="/app/">アプリを開く</a></li>
+      </ul></div>
+      <div><h2>入試対策</h2><ul class="ft-l">
+        <li><a href="/kyotsu/">共通テスト直前の英単語</a></li>
+        <li><a href="/univ/">志望校別 よく出る英単語</a></li>
+        <li><a href="/shindan/">英単語力診断</a></li>
+        <li><a href="/articles/">受験英語の記事</a></li>
+      </ul></div>
+      <div><h2>データ</h2><ul class="ft-l">
+        <li><a href="/ranking/nyushi/">大学入試英単語ランキング</a></li>
+        <li><a href="/ranking/kyotsu/">共通テスト英単語ランキング</a></li>
+      </ul></div>
+      <div><h2>極（きわみ）</h2><ul class="ft-l">
+        <li><a href="/about/">極について</a></li>
+        <li><a href="/privacy/">プライバシーポリシー・免責事項</a></li>
+        <li><a href="https://forms.gle/56xaeGjnA7WYgS3V6" target="_blank" rel="noopener">お問い合わせ</a></li>
+      </ul></div>
+    </div>
     <div class="ft-c">© 2026 極（きわみ）</div>
   </div>
 </footer>
