@@ -610,7 +610,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .lbtn .lg{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;flex:none}
 .lbtn .lg.g{background:#fff;color:#4285F4;border:1px solid var(--line)}
 .lbtn.apple{background:#000;color:#fff}
-.lbtn .lg.a{width:16px;height:20px;border-radius:0;background:#fff;-webkit-mask:radial-gradient(circle at 70% 18%,transparent 3px,#000 3.5px);mask:radial-gradient(circle at 70% 18%,transparent 3px,#000 3.5px);border-radius:45% 45% 50% 50%}
+.lbtn .lg.a{width:24px;height:22px;border-radius:0;fill:#fff}
 .lnote{margin:-6px 2px 0;font-size:12px;line-height:1.6;color:var(--muted);text-wrap:pretty}   /* under the Google button: school accounts */
 .or{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -1551,6 +1551,7 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-fr-row.me{cursor:pointer}
 .k-fr-stamp{min-height:46px;border-radius:12px;background:var(--fill);font-size:var(--fs-body);font-weight:700;color:var(--ink)}
 .k-fr-stamp:active{background:var(--blue-tint)}
+.k-fr-safe{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .btn.k-fr-danger{margin-top:18px;color:var(--ng-ink)}
 .k-fr-homew{padding:12px max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
 .k-fr-home{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px 10px 14px;border-radius:var(--r-card);background:var(--fill);text-align:left;color:var(--ink)}
@@ -1751,6 +1752,11 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .study.v2 .qundo,.res.v2 .qundo,.sw.v2 .qundo{height:44px;padding:0;border:0;border-radius:0;background:none;color:var(--ink);font-size:var(--fs-body)}
 .study.v2 .qundo span,.res.v2 .qundo span,.sw.v2 .qundo span{height:36px;display:flex;align-items:center;gap:4px;padding:0 13px 0 10px;border-radius:var(--r-pill);background:var(--fill);font-weight:700}
 .study.v2 .qundo svg,.res.v2 .qundo svg,.sw.v2 .qundo svg{width:18px;height:18px;flex:none}
+.study.v2 .qend,.sw.v2 .qend{display:flex;align-items:center;flex:none}   /* 1問もどす and, at the edge, the flag: its place stays when the other is hidden */
+.study.v2 .qrep,.sw.v2 .qrep{margin:0 -4px 0 0;color:var(--ink-2)}
+.qrep:disabled{visibility:hidden}
+.qend em{font-style:normal}
+@media (max-width:359px){.qend em{display:none}.study.v2 .qend .qundo span,.sw.v2 .qend .qundo span{padding:0 9px}}   /* the count sits in the middle: on the narrowest phones the arrow alone leaves it room */
 /* the steps: one bar a question (ok green, ng red, now blue, a missed one back later pale red, still to come grey); opaque and above
    the sheet's scrim, so they stay bright while the sheet is up */
 .study.v2 .segs{position:relative;z-index:46;flex:none;display:grid;grid-template-columns:repeat(var(--n),1fr);column-gap:3px;gap:0 3px;height:6px;margin-top:6px}
@@ -2752,6 +2758,11 @@ const EXTRA = self.__KD["extra"];
 const EXI = self.__KD["exi"];
 /* true in the standalone web build (own site, installable, offline); false inside a claude.ai artifact */
 const IS_WEB = true;
+/* true in the iPhone app (native/, Capacitor; build.py build_native): the web build's page inside the app, with IS_WEB too. There it
+   signs in natively, sends reminders, opens the site's pages in Safari and reads the example audio from the site */
+const IS_APP = /*__APP__*/false;
+const SITE = 'https://kiwami-eitango.com';
+const natPlug = n => { try { const C = window.Capacitor; return C?.Plugins?.[n] || C?.registerPlugin?.(n) || null; } catch(e) { return null; } };
 const BRAND = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAONklEQVR42u1ce7Bd0xn/fedx5XUlkUSUEG8JJcEExWCa6EzUFFXTJBgJoqpK9DFaZkrbGdNiWhRB6v1IRzxCpqGIakMqpUHFq5GkgiAiCXnee87Zv/5xv6Vfv659zgn3cXLtb2bPPo+19177e7/WAjLIIIMMMsgggwwyyCCDDDLIIIMMMsgggwy+CCBd8VCSnz5XRJiRoQuBZI5kPpOAzkX6IAAFACtFpKS/5QEkmUR0IKfr+SaSa0h+THIRycdIjvXjMmh/AuT1/GfG4TqVjP+xERm0HwEKeh6nCC+RrJAs65kk3yS5N0nJJKGDvB+SeZKvK8IrRgI26fmpzlBFOpeCzke+aFJwviK7bAiQKEFKJHfuKCIExMdUZLf3xowh3o5kiyI9MUQIBDnVEsy6q3qWzZS4gkcuya1InkTyMJJbO0LkvgjG+JcRKSjp+TZPgBSODSrEHlKNQCR3IjmJ5ELz3HdJTiU5utt7YwFBJHuSXG7UjyXGHEss/TyU5CiS+9WLHJKDlMPPInkvyRdJrnMSlzhv7CaSu3aWN9ZVgVheRCokpwE4E0BZA7MKgDyAeSJymCKaAB4CMAZAT73FGwBeALAGwCAAJQA99L/BABIA/QBsD6B/ZAoVffdASOpvOT0+AjBeRB4Pc+0oXBS6KgJX7lqa8v8GPedFpERyhSK/FUATgL30qIveitzAcDS/J4YJRb9vAjAAwFSSewFISEpHReiFLsuBiJDkcieJ4SXfcrr4bAD7ADgEQAuAoiKrmlSLOQp6b9kMnCzujIRhVxEgvNCiFFX4qh0nImWSkwA8AmBno6rEcXO+yvMEwGoALwJYCWA5gN4A9gCwUdXYMgDPAVgCYL6qSenOntDBKUb4eDcuuK/bk7zBGdGS+77WGdWKHm+Q3DELh/8foesMEQIhDvSuoPs8ieR7BsnrSE4kuSfJk12UHYg6Xq9tMi5sQeOKnPute0fH4eXUFX3LcSrVdRSSxVhgpZ+3IXkiyV+RPNiM+ZGJKQLynzJBWbdUKaJcVKjnBQ3HNblYICBsmldXMRXmI1s9P2g4PxB0dFoKottGuybgypkoteCCq5FaF7DqJyBtZrWckEszFPW3/iRXOWK+alSedMt8D8kBJPcgOYFknzrG70hyGslPnBGmI8JHJL9VgwhF8/mhiDqbT/JLJPs5Ccx1F0M6hOQHxhtZSHIMyT6qYoaSPJTkWJJTSN6uXF8LbI7oGos4z8kkB5K8L3JdgLUk3yf5bDDGaapsSzSkg0mud8m0kOBaQnJjFQQnNYiwiWQryQ9T9P4Omtr+dxXkx55xS3BJayTuZHOyr11JhAWuupVEkBBy/aU6EO/hRvPMq0nOU2O7KkVivFubmDmUjXr7aVr1LZK+zjecF2VcwglGAhKnh5M6ODLt/5kkz7XGm+SjEUmqOPtRqvE8+/9I45EVrCenbvLuwcNqyFS1QczFVVRLEkFUGvIrWqw5LsXm7Kr/t5i6csV8tsHZh1WeFa7ZNeW9JqoKbSG5mORtJL9t5pFvRCJMMS/X6oKhAB9XIUTgzJtN1Go5Mjzn0iqIfYHk2SR3JtmP5PUpKipI510kj9FmgXNJXkbyuSr3n0fy0EaUhFDv/U5EAtaozj5Wy5E/i6gC+31c8PGrEPs8LbC8oAi7guQBkfH7VVFFSQ0JqTj7VTb/ndMeRJAOKrQcCuDrWthYAuDvIrLcjLsTwCmmEBMgfL9KRC5Q3Vt2eXxpS5C2ddQFbwjACQB20zTyPSKySom1G4DXTPHFQ6vJotKkuXMu4xor5kwRkas7umjzmdRR5Pcmo1uTFDUUOPIDkr1qPKenxiDHkXzH3edlknvouD4k3460wZRJrtwM58BCi17/iXkvaZiSpBLB5upFc/p7A1igVa205yfKXXcD+D2AbXXcBs3Zb6vFmRMBbKc5fRhJSbRg8z6Ar4nIyyTnAzjIce8yAIcBuAbAMQCCp/M2gGf1PBlAc5VizjQA52hPa9LI3c+i6YpYQxY3UzczxZhaaNXz4zqH+w3XBz3+iJnjEJKHkNyXZE/z+xI33xBP3BAM8ZZQEQtlwdvQVsct1/FcMdzKSHUr/JY3YyyHhpLlGJIDALxrrg22YADJ3XUui0TkHZew2wfAjuaaUIW7UEQuD2M/b7myo9v/Cmqcvgrg2AjyKykIrhjC0RjEvF5f1CPnuhu8GlsEYD2AvpF3HgXgXwD+CWBx8GoMDDOdGtRnJwDuVQ+t2B614lxHpilU7xcA/NYgxSI65mWI/p4zBXVx3L8YwGkAjlTd/gdHUAGwCsDxIrJJ7YGHknppRQBDAVxH8gEAA5VpBkdq2MsArNB3KTd6gaagnsr9KXqUJO82ibQQAzxJ8hSSyzR+mGEad0u2ddE8b3SkRjzD/H95pEr2oKapl5jom/r9QJIPu3smJK+t1bHXKBKQF5EygKkAvqncknN+9I9F5GQAc40XAwB/FJG7AOwP4MsicpJKEEx/T6IE7hVW1kS8qiYTJG0T4eYVIvIegFP1t6LOYRcAz6vKhJPG2e4ejUcA1Y1l7Ww4TUW94AKtX4vIlYq8ng55O6jt+EhE3tExj7gxo5XAFVUXfVz7CQAMNq7hDhECiarJZ5QI1n74XqWcqp6/uTGNRQBFXInk/gDu1Il65M8DcDHJJkVe0d2mpxKwaIz4RsONADBKA58gEb0jHtKr5p7Nkemu1+awHiIyHcD3TAMXnaMAALNFZLXOqfEkgGROEbcvgFmGK8UQYgOA013Yvs6JdSEi5iMd5/VXyQmNUxudywsA95kItUdkyiHwKqvUTlWmyTsOD/2pM/Re7doll2vn8uRIAE+qyCdm8jl1B08UkTdUrVQcwgPi+kQIcLiXEj1yyo0HGSnLA3gFwGMG0YMjKmi95XJF7ndV1eSNJORUjb7U3vq/PSVAVN/+BsBAnXDOJLc+ATBWRB41iavAZUPcvVZGkLXGjSnqQysk+6uht/r/+aDG1A19uwbywrVFF6cENdcE4HAldq6hCGAyoEcAOEInXHQceYWIzA16P0SQmsga4ubyl8hjnnLqoBnALJL3oa1NfZizEbNcF/bayD1bnNeWALhIPaZKJD6ZYjwwaaTm3DCZCxUBFWO8ipp8u1J951JED2/l7rMmYlBfUoTZ0uBXXBobpsf/0/SyErpXyhoBACiIyCZth7zAtKyXzb0qAA4hebOInOFUaNdJgHE5z9eMYsUYMdFI8zhVA7FV8BbJ4XxwpJf/faOaaAxyyTBSQQkkQb+rRzZSbQRd9/QA5eRW7RmablIPOf2cM9eVAZxO8ocqxflGqYD1Nd1oietKO6FW/VSrWjSR6AxX+cqbjGbF5OJDZL2K5BySvyP5A5IHmUhcSP7CRdHhfL/etwfJx90c3iV5iTYF0FXGVmsfknRZh4TxeobrVgN+kiR5VpU+TokUSwJiFqSUII+OpKJv12xntTr1HFcTDs+Zrkm1OS6FfY9ZsT9Ia9ih0SBce157pyQ+C/KPNK2FFcf5k6pN0NxjX9cNQZJLbbuhG3+JVrseVsL9g2Qz/rvstIcGcKFKtb82hlUivacLSM529eiJkWbf693K/kQ7uvt1uhSY4spupinKi/bkYB/q6KI4MtLLuYJkX1/m8y9KchdlgEUkx0SesR3J11IKQP77wrBENdJYvLU2+NK0wpDksZ3enmI4cZhOJrSfhGzl9FrIr7JvRGLaVrZNQXre1ZfHGSTOIvl9kkeRvMjUiZMqdeeZJMcbicunvO8+JDe4+5zZJWrITOobbkKLdNFEzc5jg8gxkbLihzEJSEl3C8lnapQrY+XLp0kOqafbzbzvKJK3qlQ9aVrnpSvtwFEkryV5FcnBEbURFm3k6lgjVqmXAE4d7qndDWUjlaUaXRcjgqTW0+/plkc1RkdcWr9+DYQV7EoVkhdGVNCaNBVURZKOVlVYreO6YgouPW3Xs9P5tgVerCNgnicN0aTrFrZJREIOUH083PcI6TVPR/pJ12ulqmAIJlW2PPD2IKnRkHuLmUOuziVVebOgr/HXmBkOP8342LN0z4a+ZjlRi0NaomOHIb1Xv1pQd5ZRQ2kEuDLl3v3Vuxuui0q2USJJR25r01GNWTkRSdRQvQLA5mKWArgDwE4AJrlifchKLkJb09N8/bxORNZG1F2zZiqbTBZ2OoARkSaAAJvQtlj7Y51XXusLgwFsrd9L+v8GPV7Ta2aKyMvt1ZLSoZt1GM5ZCGC49mAWqqxmT4O1WrRZpom69Wir2/ZC24YcPfS+vTtBuDdopvUOEZkdGK1RCRDS1GNNMbtiKmRSBzHYAXNkSk03V2VLhZA0tD7/z0Xk0oZqzK3irk7QJFasJT3mKo7TlvOKMdBlc/jW8Yr5r2TO9ihHxiaRbQ/suEpkqZO9/4iG39zJuG57kZxbhQjhJVt1/PEm/E8iq21KKYvyNhda6mAKujVw4bkPf95oWDrLK9K6QTOAGwGMN3l3MeopD+AJLV+WSd4KYKIruviXLaOtjrsabTugrEJbXXmFGtKVan+W6ve8Kd5/oOPzAPYDMFbPA7UA1KwVspwr7G9C264qlwH4kynJNuZ2NYrMvHoyE0i+BeAnrl086Nu/hnougDO0qDNZPZRglJ8A8Lp6SHMBvCci6z/nNN8E8IApNJVI9kZbX2kRwJ7qbZUALBGRNyO2YsvYN9RFwXQ6eURkv7ghJCfr2q+d6tiDwgaIBbcLij1ybreU/GbuyLjlrbZ3qYgTjHGmJrqKLqrO14jAc+2dGrBpiAiBuse2loYIoxTxL+kKGkSSdzmLcGTQ7h5S0VfBMuiCrGrG3V28mWuGiQwyyCCDDDLIIIMMMsgggwwyyCCDDDLIIIPuCv8BjSzXJjxg5LsAAAAASUVORK5CYII=';
 if (BRAND) document.documentElement.style.setProperty('--brand', `url(${BRAND})`);   // once, for the small 極 on every 表紙 (deckCover)
 /* めくる, the app's character: a vocab card on its ring, doodled in a notebook margin. normal / happy (a good set) / cheer (after misses, back after a break) */
@@ -3241,7 +3252,7 @@ function mkGuide(){
   const c = counts(); return c.due ? (isCardMode() ? 'guide_revcard' : 'guide_rev') : c.newToday ? 'guide_new' : 'guide_done';
 }
 /* Firebase web config (public client ids), injected from firebase.config.json by the web build; null = no Google login */
-const FIREBASE = {"apiKey":"AIzaSyDo6nmhIEeA33nSWiv_1z0IUxpFHPhLq9M","authDomain":"kyokutan.firebaseapp.com","projectId":"kyokutan","storageBucket":"kyokutan.firebasestorage.app","messagingSenderId":"1048494403824","appId":"1:1048494403824:web:b5f7301b1e5e4541bf5235"};
+const FIREBASE = {"apiKey":"AIzaSyDo6nmhIEeA33nSWiv_1z0IUxpFHPhLq9M","authDomain":"kyokutan.firebaseapp.com","projectId":"kyokutan","storageBucket":"kyokutan.firebasestorage.app","messagingSenderId":"1048494403824","appId":"1:1048494403824:web:b5f7301b1e5e4541bf5235","apple":true};
 
 const DECK_META = [
   {id:'junior', name:'中学基礎', nick:'中学基礎', desc:'中学〜高校基礎の英単語（受験英単語とかぶる語は除く）', tag:'中学〜高1'},
@@ -4201,9 +4212,9 @@ async function initFirebase(){
     const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
     const [appM, authM, fs] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
     const app = appM.initializeApp(FIREBASE);
-    const auth = authM.getAuth(app), db = fs.getFirestore(app);
+    const auth = IS_APP ? authM.initializeAuth(app, {persistence: [authM.indexedDBLocalPersistence, authM.browserLocalPersistence]}) : authM.getAuth(app), db = fs.getFirestore(app);
     Auth.api = {authM, auth, fs, db}; Auth.failed = false;
-    try { await authM.getRedirectResult(auth); } catch(e) {}
+    if (!IS_APP) try { await authM.getRedirectResult(auth); } catch(e) {}
     authM.onAuthStateChanged(auth, async u => {
       Auth.user = u; Auth.ready = true; Sync.bad = {}; Sync.parts = {};
       if (u) {
@@ -4235,6 +4246,11 @@ const SCHOOL_TIP = 'kiwami.schooltip';   // the school-account toast was shown o
 async function signIn(kind='google'){
   const {authM, auth} = Auth.api || {};
   if (!authM) { toast(Auth.failed ? 'ログイン機能を読み込めませんでした。通信を確認してください' : '準備中です。少し待ってからお試しください'); return; }
+  if (IS_APP) {
+    try { await authM.signInWithCredential(auth, await natCred(kind)); closeSheet(); toast('ログインしました'); }
+    catch(e) { if (!/cancel|1001/i.test(String(e?.message || e?.code || ''))) toast(authMsg(e)); }
+    return;
+  }
   let provider;
   if (kind === 'apple') { provider = new authM.OAuthProvider('apple.com'); provider.addScope('email'); provider.setCustomParameters({locale: 'ja_JP'}); }
   else { provider = new authM.GoogleAuthProvider(); provider.setCustomParameters({prompt: 'select_account'}); }
@@ -4246,6 +4262,16 @@ async function signIn(kind='google'){
     try { await authM.signInWithRedirect(auth, provider); } catch(_) { toast(authMsg(e)); }
   }
 }
+/* the app: Google / Apple in the phone's own sign-in (the plugin, skipNativeAuth), whose credential signs in the page's Firebase */
+async function natCred(kind){
+  const fa = natPlug('FirebaseAuthentication'), {authM} = Auth.api;
+  if (kind === 'apple') {
+    const r = await fa.signInWithApple({skipNativeAuth: true});
+    return new authM.OAuthProvider('apple.com').credential({idToken: r.credential?.idToken, rawNonce: r.credential?.nonce});
+  }
+  const r = await fa.signInWithGoogle({skipNativeAuth: true});
+  return authM.GoogleAuthProvider.credential(r.credential?.idToken);
+}
 /* the chooser: Google / Apple / メールアドレス */
 function loginSheet(){
   openSheet(`<div class="sheet-h"><h3>ログイン</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
@@ -4253,7 +4279,7 @@ function loginSheet(){
     ${inApp ? '<p class="iab">このアプリ内のブラウザではGoogleログインが使えません。メールアドレスでログインするか、メニューの「ブラウザで開く」で開いてください。</p>'
       : `<button class="btn btn-ghost btn-block btn-big lbtn" data-act="signIn" data-kind="google"><span class="lg g">G</span>Googleでログイン</button>
     <p class="lnote">学校のアカウントはログインできないことがあり、卒業後は使えなくなります。自分のGoogleかメールで登録してね</p>
-    ${FIREBASE?.apple ? `<button class="btn btn-block btn-big lbtn apple" data-act="signIn" data-kind="apple"><span class="lg a"></span>Appleでサインイン</button>` : ''}`}
+    ${FIREBASE?.apple ? `<button class="btn btn-block btn-big lbtn apple" data-act="signIn" data-kind="apple"><svg class="lg a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Appleでサインイン</button>` : ''}`}
     <div class="or"><span>${inApp ? 'メールアドレスで' : 'またはメールアドレスで'}</span></div>
     <form id="mailform" style="display:flex;flex-direction:column;gap:10px">
       <div class="field"><label for="lmail">メールアドレス</label><input class="input" id="lmail" type="email" autocomplete="email" required></div>
@@ -4283,6 +4309,78 @@ async function resetPass(){
 async function signOutNow(){
   const {authM, auth} = Auth.api || {}; if (!authM) return;
   await flush(true); await authM.signOut(auth); toast('ログアウトしました（この端末の記録は残ります）');
+  if (IS_APP) natPlug('FirebaseAuthentication')?.signOut().catch(() => {});
+}
+/* アカウントを削除: what the account holds goes first, while still signed in: the groups (one's own closed, the others left),
+   ug, the records (users/<uid>/docs), then the perks, the ID and acct in one write (the rules let perks and the ID go only
+   with acct), then the account itself. Firebase wants a recent sign-in for that: older than 4 minutes, the same sign-in
+   again first (email: the password). This device's records stay */
+function delAcctSheet(){
+  const u = Auth.user; if (!u) return;
+  const pw = u.providerData[0]?.providerId === 'password';
+  openSheet(`<div class="sheet-h"><h3>アカウントを削除</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <p class="small">アカウントと、そこに保存した学習記録・ユーザーID・特典を消します。自分で作った友達グループは解散し、入っているグループからは抜けます。消したアカウントは元に戻せません。</p>
+    <p class="small muted">この端末の記録は残ります。消すときは「学習記録をリセット」を使ってください。</p>
+    ${pw ? '<div class="field"><label for="dpass">確認のため、パスワードを入れてください</label><input class="input" id="dpass" type="password" autocomplete="current-password"></div>' : ''}
+    <div id="derr" class="small" style="color:var(--again-t)"></div>
+    <button class="btn btn-ghost btn-block k-fr-danger" data-act="delAcct">アカウントを削除する</button>
+    <button class="btn btn-ghost btn-block" data-act="closeSheet">やめる</button>`);
+}
+async function delAcct(t){
+  if (!grpSure(t, 'もう一度押すと削除します（元に戻せません）')) return;
+  const {authM, fs, db} = Auth.api || {}, u = Auth.user; if (!authM || !u) return;
+  const err = $('#derr'), fail = m => { if (err) err.textContent = m; t.disabled = false; delete t.dataset.sure; t.textContent = 'アカウントを削除する'; };
+  t.disabled = true; t.textContent = '削除しています…';
+  const kind = u.providerData[0]?.providerId, fa = IS_APP ? natPlug('FirebaseAuthentication') : null, apple = !!fa && u.providerData.some(p => p.providerId === 'apple.com');
+  let code = '';   // Apple: a fresh sign-in on the native side gives the code that takes the token back, and lets that side delete the user
+  try {
+    if (apple) {
+      const r = await fa.signInWithApple({skipNativeAuth: false});
+      if (r.user?.uid !== u.uid) {   // another Apple ID: the native side has just signed it in, and made it if it was new
+        if (r.additionalUserInfo?.isNewUser) await fa.deleteUser().catch(() => {});
+        fa.signOut().catch(() => {}); return fail('このアカウントのApple IDでサインインしてください');
+      }
+      code = r.credential?.authorizationCode || '';
+    } else if (Date.now() - Date.parse((await u.getIdTokenResult()).authTime) > 4 * 60000) {
+      if (kind === 'password') await authM.reauthenticateWithCredential(u, authM.EmailAuthProvider.credential(u.email, $('#dpass')?.value || ''));
+      else if (IS_APP) await authM.reauthenticateWithCredential(u, await natCred(kind === 'apple.com' ? 'apple' : 'google'));
+      else await authM.reauthenticateWithPopup(u, kind === 'apple.com' ? new authM.OAuthProvider('apple.com') : new authM.GoogleAuthProvider());
+    }
+  } catch(e) { return fail(/cancel|1001|popup-closed/i.test(String(e?.message || e?.code || '')) ? '' : authMsg(e)); }
+  const uid = u.uid; let last = false;   // last: the user's own deletion was sent
+  try {
+    await loadAcct().catch(() => {});
+    await grpLoad(true).catch(() => {});
+    for (const g of [...Grp.gs]) await grpOut(g, Grp.by[g]?.owner === uid).catch(() => {});
+    Sync.col = null;   // nothing more goes to the account
+    const [docs, perks] = await Promise.all([fs.getDocsFromServer(fs.collection(db, 'users', uid, 'docs')), fs.getDocsFromServer(fs.query(fs.collection(db, 'perks'), fs.where('uid', '==', uid)))]);   // offline: rejects, where a cached read would look empty and leave them behind
+    const refs = [...docs.docs.map(d => d.ref), fs.doc(db, 'ug', uid)];
+    for (let i = 0; i < refs.length; i += 400) { const b = fs.writeBatch(db); refs.slice(i, i + 400).forEach(r => b.delete(r)); await b.commit(); }
+    const b = fs.writeBatch(db);
+    perks.docs.forEach(d => b.delete(d.ref));
+    if (Acct.uid === uid && Acct.id) b.delete(fs.doc(db, 'ids', Acct.id));
+    b.delete(fs.doc(db, 'acct', uid));
+    await b.commit();
+    last = true;
+    if (apple) {
+      if (code) await Promise.race([fa.revokeAccessToken({token: code}), new Promise(ok => setTimeout(ok, 8000))]).catch(() => {});   // never in the way of the deletion
+      await fa.deleteUser();
+      await authM.signOut(Auth.api.auth).catch(() => {});
+    } else await authM.deleteUser(u);
+  } catch(e) {
+    if (apple) fa.signOut().catch(() => {});
+    // the deletion may have gone through with only its reply lost: ask, because the records must not go back up under a deleted user
+    let alive = !last, gone = false;
+    if (last) try { await u.reload(); alive = true; } catch(x) { gone = /user-token-expired|user-not-found/.test(x?.code || ''); }
+    if (!gone) {
+      if (alive && Auth.user?.uid === uid) { Sync.col = fsCollection(fs, db, uid); pull().catch(() => {}); }   // still signed in: what was deleted goes back up from this device
+      return fail(e?.code === 'auth/requires-recent-login' ? 'もう一度ログインしてから、削除してください' : '削除できませんでした。通信を確認して、もう一度お試しください');
+    }
+    await authM.signOut(Auth.api.auth).catch(() => {});
+  }
+  if (IS_APP) natPlug('FirebaseAuthentication')?.signOut().catch(() => {});
+  try { localStorage.removeItem(ACCT_KEY + uid); localStorage.removeItem(GRP_KEY + uid); } catch(e) {}
+  closeSheet(); render(); toast('アカウントを削除しました（この端末の記録は残っています）', null, 4000);
 }
 
 /* ---------- ユーザーID と 特典コード (firestore.rules says who may write what) ----------
@@ -4353,13 +4451,26 @@ const gDay = (ms = Date.now()) => Math.floor((ms + 18000000) / DAY);
 const gWeek = dn => Math.floor((dn + 3) / 7);
 const fmtG = g => g.replace(/^KG(\w{4})(\w{4})$/, 'KG-$1-$2');
 const gName = s => [...(s || '').replace(/[\u0000-\u001f]/g, '').trim()].slice(0, 20).join('');
+/* words no name in a group may hold. NG_IN: anywhere in it, after taking out NG_OK (ordinary words that hold one). NG_WHOLE: ordinary
+   letters inside real names (Yamashita, としね), so only as the whole name; the Latin ones also as a word of their own */
+const NG_IN = ['死ね', '氏ね', '殺す', '殺し', 'ころす', '消えろ', 'きえろ', 'ちんこ', 'ちんぽ', 'まんこ', 'せっくす', 'れいぷ', '強姦', 'きちがい', '基地外', 'がいじ', 'きもい', 'うざい', '野郎', 'しねよ', 'しねや', 'ばかやろ',
+  'fuck', 'bitch', 'nigg', 'fagg', 'pussy', 'whore', 'asshole', 'dickhead', 'slut', 'bastard'];
+const NG_OK = ['ぱちんこ', 'がいじん', 'ころすけ', 'こころす', 'ちがいじ'];
+const NG_WHOLE = ['しね', 'おまえしね', 'くず', 'かす', 'ごみ', 'ばか', 'あほ', 'ぶす', 'でぶ', 'うんこ', 'shit', 'sex', 'cunt', 'ass', 'dick', 'rape'];
+const ngName = s => {
+  const t = String(s ?? '').normalize('NFKC').toLowerCase(), n = t.replace(/[\s._・\-]/g, '').replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 96)), m = NG_OK.reduce((x, w) => x.replaceAll(w, ''), n);
+  return NG_IN.some(w => m.includes(w)) || NG_WHOLE.includes(n) || /\b(shit|sex|cunt|ass|dick|rape)\b/.test(t);
+};
+/* ブロック: kept with the settings, so it follows the account. What that person shows on this screen goes; nothing changes on theirs */
+const grpBlocked = u => (S.settings.grpBlock || []).includes(u);
+const gShow = m => grpBlocked(m.uid) ? {...m, name: 'ブロック中', icon: ''} : m;
 function grpReset(uid){
   let c = null; try { c = uid && JSON.parse(lsGet(GRP_KEY + uid) || 'null'); } catch(e) {}
   Object.assign(Grp, {uid, gs: Array.isArray(c?.gs) ? c.gs : [], by: c?.by || {}, me: c?.me || {}, at: 0, ready: !!c, busy: false, failed: false, sent: {}, seen: c?.seen || 0});
 }
 function grpSave(){ if (Grp.uid) lsSet(GRP_KEY + Grp.uid, JSON.stringify({gs: Grp.gs, by: Grp.by, me: Grp.me, seen: Grp.seen})); }
 /* a stamp not seen yet: a dot on the 友達 tab until the tab is opened */
-const grpUnseen = () => !!Auth.user && Grp.uid === Auth.user.uid && Grp.gs.some(g => (Grp.by[g]?.sp || []).some(x => x.t > Grp.seen && Date.now() - x.t < 7 * DAY));
+const grpUnseen = () => !!Auth.user && Grp.uid === Auth.user.uid && Grp.gs.some(g => (Grp.by[g]?.sp || []).some(x => x.t > Grp.seen && Date.now() - x.t < 7 * DAY && !grpBlocked(x.from)));
 function grpDot(){ document.querySelector('.tab[data-tab="friends"]')?.classList.toggle('has-new', route.tab !== 'friends' && grpUnseen()); }
 /* my numbers now: this week's days (each at most 3,000, as the rules count them), today, the streak and the day it last grew.
    The week is Japan's; its days are this device's own (off: 0 in Japan, a day either way elsewhere) */
@@ -4371,7 +4482,7 @@ function grpMine(){
     wxp += xp; wq += q; if (d === dn) { dxp = xp; dq = q; }
   }
   const last = Math.max(-1, ...[...sti.on].filter(d => d <= dayIdx())) + off;
-  return {name: gName(nickOf()) || 'ななし', icon: avOf(S.settings.icon)[0], dn, wk: gWeek(dn), dxp, dq, wxp, wq, st: sti.n, sl: sti.n ? clamp(last, dn - 3, dn) : dn - 1, pk: 0, pf: grpProf(sti)};
+  return {name: (!ngName(nickOf()) && gName(nickOf())) || 'ななし', icon: avOf(S.settings.icon)[0], dn, wk: gWeek(dn), dxp, dq, wxp, wq, st: sti.n, sl: sti.n ? clamp(last, dn - 3, dn) : dn - 1, pk: 0, pf: grpProf(sti)};
 }
 /* the profile the group's friends see on my sheet: all-time XP (their app shows the 級 / 熟練 from it), the 段, words 覚えた, days
    studied, questions answered, the best streak, and the badges got (ids, newest first) */
@@ -4479,7 +4590,7 @@ function gVal(m, k){
 function gRank(g, k){
   const x = Grp.by[g], uid = Auth.user?.uid; if (!x) return [];
   const mine = grpFit(grpMine(), Grp.me[g]);
-  const rows = x.ms.map(m => m.uid === uid ? {...m, ...mine, me: true, v: gVal(mine, k)} : {...m, v: gVal(m, k)});
+  const rows = x.ms.map(m => m.uid === uid ? {...m, ...mine, me: true, v: gVal(mine, k)} : {...gShow(m), v: gVal(m, k)});
   rows.sort((a, b) => b.v - a.v || (a.me ? -1 : b.me ? 1 : 0) || String(a.name).localeCompare(String(b.name), 'ja'));
   rows.forEach((m, i) => m.rank = i && m.v === rows[i - 1].v ? rows[i - 1].rank : i + 1);
   return rows;
@@ -4488,7 +4599,7 @@ function gRank(g, k){
 function grpLast(g){
   const x = Grp.by[g], uid = Auth.user?.uid, dn = gDay(), cw = gWeek(dn); if (!x || (dn + 3) % 7 > 2) return null;
   const mine = grpFit(grpMine(), Grp.me[g]);
-  const rows = x.ms.map(m => { const y = m.uid === uid ? {...m, ...mine} : m; return {...y, me: m.uid === uid, v: y.wk === cw ? y.pk || 0 : y.wk === cw - 1 ? y.wxp : 0}; })
+  const rows = x.ms.map(m => { const y = m.uid === uid ? {...m, ...mine} : gShow(m); return {...y, me: m.uid === uid, v: y.wk === cw ? y.pk || 0 : y.wk === cw - 1 ? y.wxp : 0}; })
     .filter(r => r.v > 0).sort((a, b) => b.v - a.v);
   if (rows.length < 2) return null;
   rows.forEach((m, i) => m.rank = i && m.v === rows[i - 1].v ? rows[i - 1].rank : i + 1);
@@ -4523,7 +4634,7 @@ function viewFriends(){
     const inner = `<span class="rk${m.v && m.rank <= 3 ? ' r' + m.rank : ''}">${m.rank}</span>${avHTML(m.icon)}<span class="nm">${esc(m.name)}${m.me ? '<small>あなた</small>' : ''}</span><span class="v">${nLoc(m.v)}<small>${unit}</small></span>`;
     return `<li><button class="k-fr-row${m.me ? ' me' : ''}" data-act="grpMember" data-u="${esc(m.uid)}" aria-label="${m.rank}位 ${esc(m.name)} ${nLoc(m.v)}${unit}、${m.me ? '友達に見えるプロフィール' : 'プロフィールとスタンプ'}">${inner}</button></li>`;
   };
-  const sp = (x.sp || []).filter(s => Date.now() - s.t < 7 * DAY).sort((a, b) => b.t - a.t).slice(0, 5);
+  const sp = (x.sp || []).filter(s => Date.now() - s.t < 7 * DAY && !grpBlocked(s.from)).sort((a, b) => b.t - a.t).slice(0, 5);
   const who = u => x.ms.find(m => m.uid === u);
   const stamps = sp.length ? `<section class="k-sec" aria-label="届いたスタンプ"><div class="k-sec-h"><h2 class="k-sec-t">届いたスタンプ</h2></div><ul class="k-fr-sp">${sp.map(s => { const m = who(s.from); return m ? `<li>${avHTML(m.icon)}<span class="t"><b>${esc(m.name)}</b>から「${esc(STAMPS[s.s] || '')}」</span><span class="ago">${agoText(s.t)}</span></li>` : ''; }).join('')}</ul></section>` : '';
   const solo = x.ms.length < 2 ? frSay('招待コードを友達に送ると、ここに並ぶよ') : '';
@@ -4540,14 +4651,15 @@ function viewFriends(){
 /* the sheets: make one, join one (a code typed or from an invite link), a member (stamps; put out), the group (invite, name, leave/close).
    No nickname yet: asked for here, since the others see it */
 const grpNickField = () => nickOf() ? '' : `<label class="k-pf-h" for="gnick">あなたのニックネーム</label><input id="gnick" class="k-input" type="text" maxlength="${NICK_MAX}" placeholder="グループの人に見える名前" autocomplete="nickname" spellcheck="false">`;
-function grpNickOk(){ const e = $('#gnick'); if (!e) return true; const v = cleanNick(e.value); if (!v) return false; setSetting('nick', v); return true; }
+function grpNickOk(){ const e = $('#gnick'); if (!e) return true; const v = cleanNick(e.value); if (!v) return false; if (ngName(v)) throw 'ngn'; setSetting('nick', v); return true; }
+const grpRule = v => `<p class="k-pf-s">${v}と<a href="/terms/" target="_blank" rel="noopener">利用規約</a>に同意したことになります。不適切な内容や迷惑行為は、相手のページから通報・ブロックできます</p>`;
 function grpNew(){
   openSheet(`<div class="sheet-h"><h3>グループを作る</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <form id="grpform" class="k-code">${grpNickField()}<label class="k-pf-h" for="gname">グループの名前</label>
       <input id="gname" class="k-input" type="text" maxlength="20" placeholder="例：3年B組、部活のみんな" autocomplete="off" enterkeyhint="done">
       <p id="gerr" class="small" role="alert" style="color:var(--again-t)"></p>
       <button class="btn btn-primary btn-block" type="submit">作る</button></form>
-    <p class="k-pf-s">作ったら、招待コードを友達に送ってね。20人まで入れます</p>`);
+    <p class="k-pf-s">作ったら、招待コードを友達に送ってね。20人まで入れます</p>${grpRule('作る')}`);
 }
 function grpJoin(code = ''){
   openSheet(`<div class="sheet-h"><h3>招待コードで入る</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
@@ -4555,11 +4667,12 @@ function grpJoin(code = ''){
       <input id="gcode" class="k-input" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="KG-XXXX-XXXX" maxlength="20" enterkeyhint="done" value="${esc(code ? fmtG(code) : '')}">
       <p id="gerr" class="small" role="alert" style="color:var(--again-t)"></p>
       <button class="btn btn-primary btn-block" type="submit">入る</button></form>
-    <p class="k-pf-s">グループの人には、ニックネームとアイコン、今週の数字（XP・解いた問題・連続日数）と、記録タブの記録（級・覚えた単語・学習した日・単語帳の進み・称号など）だけが見えます</p>`);
+    <p class="k-pf-s">グループの人には、ニックネームとアイコン、今週の数字（XP・解いた問題・連続日数）と、記録タブの記録（級・覚えた単語・学習した日・単語帳の進み・称号など）だけが見えます</p>${grpRule('入る')}`);
 }
 const GRP_ERR = {form: 'KG から始まる10文字のコードを入れてください', none: 'このコードのグループは見つかりません。打ちまちがいがないか確かめてください',
   full: 'このグループは20人でいっぱいです', ban: 'このグループには入れません', mine: 'このグループには、もう入っています', max: '入れるグループは5つまでです',
-  name: 'グループの名前を入れてください', nick: 'ニックネームを入れてください（グループの人に見える名前）'};
+  name: 'グループの名前を入れてください', nick: 'ニックネームを入れてください（グループの人に見える名前）', ng: 'グループの名前に使えない言葉が入っています。ほかの名前にしてください',
+  ngn: 'このニックネームは使えません。ほかの名前にしてください', ngp: 'ニックネームに使えない言葉が入っています。プロフィールで変えてください'};
 async function grpMake(){
   const {fs, db} = Auth.api || {}, uid = Auth.user?.uid, err = $('#gerr'), btn = $('#grpform button[type=submit]');
   if (!fs || !uid || !err) return;
@@ -4568,6 +4681,8 @@ async function grpMake(){
     if (Grp.gs.length >= GRP_MAX) throw 'max';
     if (!grpNickOk()) throw 'nick';
     const name = gName($('#gname').value) || `${gName(nickOf()) || 'みんな'}のグループ`;
+    if (ngName(nickOf())) throw 'ngp';
+    if (ngName(name)) throw 'ng';
     btn.disabled = true;
     let g = '';
     for (let i = 0; i < 4 && !g; i++) {
@@ -4593,6 +4708,7 @@ async function grpEnter(){
     if (Grp.gs.includes(g)) throw 'mine';
     if (Grp.gs.length >= GRP_MAX) throw 'max';
     if (!grpNickOk()) throw 'nick';
+    if (ngName(nickOf())) throw 'ngp';
     btn.disabled = true;
     const gr = fs.doc(db, 'groups', g), x = await fs.getDoc(gr);
     if (!x.exists()) throw 'none';
@@ -4633,13 +4749,16 @@ const dayText = i => { const d = new Date(i * DAY); return `${d.getUTCFullYear()
 function viewFrRec(){
   const g = grpCur(), x = Grp.by[g], m0 = x?.ms.find(y => y.uid === route.fr);
   if (!m0) { route.fr = null; return viewFriends(); }
-  const u = m0.uid, me = u === Auth.user?.uid, m = me ? {...m0, ...grpMine()} : m0, own = !me && x.owner === Auth.user?.uid, p = pfClean(m.pf);   // mine: my numbers now
+  const u = m0.uid, me = u === Auth.user?.uid, bk = grpBlocked(u), m = me ? {...m0, ...grpMine()} : gShow(m0), own = !me && x.owner === Auth.user?.uid, p = pfClean(m.pf);   // mine: my numbers now
   const bar = `<div class="k-fr-bar"><button class="k-hit44 k-back" data-act="frBack" aria-label="ランキングにもどる"><span class="k-circ">${K_BACK}</span></button>${me ? '<p>友達に見える、あなたの記録</p>' : ''}</div>`;
   const today = dayIdx(), dq = m.dn === gDay() ? m.dq || 0 : 0, cur = gVal(m, 'st');
   const wk = `<section class="k-sec" aria-label="今週"><div class="k-sec-h"><h2 class="k-sec-t">今週</h2></div><div class="k-fr-nums wk">${GM.map(([k, l, un]) => `<div><p class="n">${nLoc(gVal(m, k))}<small>${un}</small></p><p class="l">${l}</p></div>`).join('')}</div></section>`;
+  const safe = `<section class="k-sec" aria-label="通報とブロック"><div class="k-fr-safe"><button class="btn btn-ghost" data-act="grpReport" data-u="${esc(u)}">通報する</button><button class="btn btn-ghost" data-act="grpBlock" data-u="${esc(u)}">${bk ? 'ブロックを解除' : 'ブロックする'}</button></div>
+    ${own ? `<button class="btn btn-ghost btn-block k-fr-danger" data-act="grpKick" data-u="${esc(u)}">このグループから外す</button>` : ''}
+    <p class="k-pf-s">ブロックすると、この人の名前・アイコン・くわしい記録・スタンプがあなたの画面に出なくなります。ランキングの順位と数字は残ります。相手には知らされません</p></section>`;
   const stamps = me ? '' : `<section class="k-sec" aria-label="スタンプを送る"><div class="k-sec-h"><h2 class="k-sec-t">スタンプを送る</h2></div>
-    <div class="k-fr-stamps">${STAMPS.map((s, i) => `<button class="k-fr-stamp" data-act="grpStamp" data-u="${esc(u)}" data-s="${i}">${s}</button>`).join('')}</div>
-    ${own ? `<button class="btn btn-ghost btn-block k-fr-danger" data-act="grpKick" data-u="${esc(u)}">このグループから外す</button>` : ''}</section>`;
+    <div class="k-fr-stamps">${STAMPS.map((s, i) => `<button class="k-fr-stamp" data-act="grpStamp" data-u="${esc(u)}" data-s="${i}">${s}</button>`).join('')}</div></section>${safe}`;
+  if (bk) return `${topbar()}${bar}<p class="k-empty">この人はブロックしています</p>${safe}`;
   const head = (inner = '') => `<section class="k-prof" aria-label="プロフィール"><div class="top">${avHTML(m.icon, 'lg')}
       <div class="info"><h1 class="nm">${esc(m.name)}</h1>${inner}</div></div>`;
   if (!p) return `${topbar()}${bar}${head()}</section><p class="k-empty k-fr-old">${kPhrases('くわしい記録は、この人のアプリが新しくなると見られる')}</p>${wk}${stamps}`;
@@ -4693,6 +4812,15 @@ async function grpStamp(u, s){
     Grp.sent[key] = Date.now(); closeSheet(); toast(`${m ? m.name + 'に' : ''}「${STAMPS[s]}」を送った`);
   } catch(e) { toast(e?.code === 'permission-denied' ? '少し待ってから、また送ってね' : '通信できませんでした'); }
 }
+function grpBlock(u){
+  const on = !grpBlocked(u), l = (S.settings.grpBlock || []).filter(x => x !== u);
+  setSetting('grpBlock', on ? [...l, u] : l); grpDot(); render(); scrollTo(0, 0); toast(on ? 'ブロックしました' : 'ブロックを解除しました');
+}
+/* 通報: to the contact form, with what is needed to find them: the group's code and the name shown */
+function grpReport(u){
+  const g = grpCur(), x = Grp.by[g], m = u && x?.ms.find(y => y.uid === u);
+  if (x) window.open(REP_FORM + encodeURIComponent(`【友達の通報】\nグループ：${fmtG(g)}${m ? `\n相手：${m.name}` : ''}\n\nこまっていること：\n`), '_blank');
+}
 /* two taps for what can't be undone: the first asks, the second does it */
 function grpSure(t, text){ if (t.dataset.sure) return true; t.dataset.sure = 1; t.textContent = text; return false; }
 async function grpKick(t){
@@ -4705,8 +4833,8 @@ async function grpKick(t){
     b.update(fs.doc(db, 'groups', g), {n: fs.increment(-1), ban: fs.arrayUnion(u), kick: u});
     b.delete(fs.doc(db, 'groups', g, 'members', u));
     await b.commit();
-    await grpFetch(g); grpSave(); closeSheet(); render(); toast(`${m.name}をグループから外しました`);
-  } catch(e) { if (e?.code === 'permission-denied') { await grpFetch(g); grpSave(); closeSheet(); render(); } toast(e?.code === 'permission-denied' ? `${m.name}は、もうグループにいませんでした` : '通信できませんでした。もう一度お試しください'); }
+    await grpFetch(g); grpSave(); closeSheet(); render(); toast(`${gShow(m).name}をグループから外しました`);
+  } catch(e) { if (e?.code === 'permission-denied') { await grpFetch(g); grpSave(); closeSheet(); render(); } toast(e?.code === 'permission-denied' ? `${gShow(m).name}は、もうグループにいませんでした` : '通信できませんでした。もう一度お試しください'); }
 }
 function grpMenu(){
   const g = grpCur(), x = Grp.by[g]; if (!x) return;
@@ -4718,9 +4846,9 @@ function grpMenu(){
       <input id="grname" class="k-input" type="text" maxlength="20" value="${esc(x.name)}" autocomplete="off" enterkeyhint="done">
       <button class="btn btn-ghost btn-block" type="submit">名前を変える</button></form>
       <button class="btn btn-ghost btn-block k-fr-danger" data-act="grpClose">グループを解散する</button>`
-    : `<button class="btn btn-ghost btn-block k-fr-danger" data-act="grpLeave">グループを抜ける</button>`}`);
+    : `<button class="btn btn-ghost btn-block" data-act="grpReport">このグループを通報する</button><button class="btn btn-ghost btn-block k-fr-danger" data-act="grpLeave">グループを抜ける</button>`}`);
 }
-const grpLink = g => `${location.origin}/app/?g=${g}`;
+const grpLink = g => `${IS_APP ? SITE : location.origin}/app/?g=${g}`;
 function grpShare(){
   const g = grpCur(), x = Grp.by[g]; if (!g) return;
   const text = `極（きわみ）で、いっしょに英単語やろう！グループ「${x?.name || ''}」の招待コード：${fmtG(g)}`;
@@ -4729,35 +4857,42 @@ function grpShare(){
 }
 async function grpRename(){
   const {fs, db} = Auth.api || {}, g = grpCur(), name = gName($('#grname')?.value); if (!fs || !g || !name) return;
+  if (ngName(name)) return toast(GRP_ERR.ng);
   try { await fs.updateDoc(fs.doc(db, 'groups', g), {name}); Grp.by[g].name = name; grpSave(); closeSheet(); render(); toast('名前を変えました'); }
   catch(e) { toast('通信できませんでした。もう一度お試しください'); }
 }
-async function grpLeave(t){
-  if (!grpSure(t, 'もう一度押すと抜けます')) return;
-  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid, g = grpCur(), name = Grp.by[g]?.name; if (!fs || !uid || !g) return;
-  try {
+/* out of group g: leaving (own false: my stamps leave with me), or closing it (own: the one who made it; everything in it goes) */
+async function grpOut(g, own){
+  const {fs, db} = Auth.api, uid = Auth.user.uid;
+  if (own) {
+    const [ms, sp] = await Promise.all([fs.getDocs(fs.collection(db, 'groups', g, 'members')), fs.getDocs(fs.collection(db, 'groups', g, 'stamps'))]);
+    for (let i = 0; i < sp.docs.length; i += 400) { const b = fs.writeBatch(db); sp.docs.slice(i, i + 400).forEach(d => b.delete(d.ref)); await b.commit(); }   // the stamps first, in parts
+    const b = fs.writeBatch(db);
+    ms.docs.forEach(d => b.delete(d.ref));
+    b.delete(fs.doc(db, 'groups', g)); b.set(fs.doc(db, 'ug', uid), {gs: fs.arrayRemove(g)}, {merge: true});
+    await b.commit();
+  } else {
     const col = fs.collection(db, 'groups', g, 'stamps'), [a, z] = await Promise.all([fs.getDocs(fs.query(col, fs.where('from', '==', uid))), fs.getDocs(fs.query(col, fs.where('to', '==', uid)))]);
-    const b = fs.writeBatch(db), gs = Grp.gs.filter(x => x !== g);
-    [...a.docs, ...z.docs].forEach(d => b.delete(d.ref));   // my stamps leave with me
+    const b = fs.writeBatch(db);
+    [...a.docs, ...z.docs].forEach(d => b.delete(d.ref));
     b.update(fs.doc(db, 'groups', g), {n: fs.increment(-1)});
     b.delete(fs.doc(db, 'groups', g, 'members', uid));
     b.set(fs.doc(db, 'ug', uid), {gs: fs.arrayRemove(g)}, {merge: true});
     await b.commit();
-    Grp.gs = gs; delete Grp.by[g]; delete Grp.me[g]; route.grp = gs[0] || null; grpSave(); closeSheet(); render(); toast(`「${name}」を抜けました`);
-  } catch(e) { toast('通信できませんでした。もう一度お試しください'); }
+  }
+  Grp.gs = Grp.gs.filter(x => x !== g); delete Grp.by[g]; delete Grp.me[g]; route.grp = Grp.gs[0] || null; grpSave();
+}
+async function grpLeave(t){
+  if (!grpSure(t, 'もう一度押すと抜けます')) return;
+  const uid = Auth.user?.uid, g = grpCur(), name = Grp.by[g]?.name; if (!Auth.api || !uid || !g) return;
+  try { await grpOut(g, false); closeSheet(); render(); toast(`「${name}」を抜けました`); }
+  catch(e) { toast('通信できませんでした。もう一度お試しください'); }
 }
 async function grpClose(t){
   if (!grpSure(t, 'もう一度押すと解散します（みんなのランキングも消えます）')) return;
-  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid, g = grpCur(), name = Grp.by[g]?.name; if (!fs || !uid || !g) return;
-  try {
-    const [ms, sp] = await Promise.all([fs.getDocs(fs.collection(db, 'groups', g, 'members')), fs.getDocs(fs.collection(db, 'groups', g, 'stamps'))]);
-    for (let i = 0; i < sp.docs.length; i += 400) { const b = fs.writeBatch(db); sp.docs.slice(i, i + 400).forEach(d => b.delete(d.ref)); await b.commit(); }   // the stamps first, in parts
-    const b = fs.writeBatch(db), gs = Grp.gs.filter(x => x !== g);
-    ms.docs.forEach(d => b.delete(d.ref));
-    b.delete(fs.doc(db, 'groups', g)); b.set(fs.doc(db, 'ug', uid), {gs: fs.arrayRemove(g)}, {merge: true});
-    await b.commit();
-    Grp.gs = gs; delete Grp.by[g]; delete Grp.me[g]; route.grp = gs[0] || null; grpSave(); closeSheet(); render(); toast(`「${name}」を解散しました`);
-  } catch(e) { toast('通信できませんでした。もう一度お試しください'); }
+  const uid = Auth.user?.uid, g = grpCur(), name = Grp.by[g]?.name; if (!Auth.api || !uid || !g) return;
+  try { await grpOut(g, true); closeSheet(); render(); toast(`「${name}」を解散しました`); }
+  catch(e) { toast('通信できませんでした。もう一度お試しください'); }
 }
 /* an invite link (/app/?g=KG…): the 友達 tab, and its join sheet once logged in */
 function grpDeep(){
@@ -4867,7 +5002,7 @@ async function devStop(code){
 }
 function syncLabel(){
   if (IS_WEB && FIREBASE && !Auth.user) return Auth.failed ? 'この端末に保存（ログイン機能を読み込めませんでした。通信が戻ると自動でつなぎ直します）'
-    : 'この端末だけに保存（ログインするとアカウントにも保存され、機種変更やブラウザのデータ削除でも消えません）';
+    : `この端末だけに保存（ログインするとアカウントにも保存され、機種変更${IS_APP ? '' : 'やブラウザのデータ削除'}でも消えません）`;
   if (Sync.state === 'on' && Auth.user) return `アカウントに保存済み（${Auth.user.email || Auth.user.displayName || 'ログイン中'}）`;
   return {on:'クラウドに保存中（他の端末と同期）', syncing:'同期しています…', err: fatalText() || '一部の記録がクラウドに保存できていません（この端末には保存済み。あとで自動でもう一度保存します）',
     local: IS_WEB ? 'この端末に保存（ほかの端末へはバックアップで移せます）' : 'この端末のブラウザに保存'}[Sync.state];
@@ -4894,7 +5029,7 @@ function nudgeHTML(){
   if (want > lv) { lsSet(NUDGE_KEY, String(want)); lsSet(NUDGE_DAY, String(today)); }
   else if (lsGet(NUDGE_DAY) !== String(today)) return '';
   return `<div class="nudge" role="note"><b>${n >= 100 ? '100語を超えた記録、ログインで守っとこ' : 'この記録、ログインで守っとこ'}</b>
-    <span>いまの記録は、この端末の中だけ。ログインしておけば、機種変更やブラウザのデータ削除でも消えずに、ほかの端末でも続きから使えるよ</span>
+    <span>いまの記録は、この端末の中だけ。ログインしておけば、機種変更${IS_APP ? '' : 'やブラウザのデータ削除'}でも消えずに、ほかの端末でも続きから使えるよ</span>
     <div class="btn-row"><button class="btn btn-primary" data-act="nudgeLogin">ログインして保存</button><button class="btn btn-ghost" data-act="nudgeLater">あとで</button></div></div>`;
 }
 
@@ -4922,7 +5057,7 @@ function reloadIfQuiet(){
   swNew = false; saveNow();
   Promise.race([flush(true).catch(() => {}), new Promise(r => setTimeout(r, 3000))]).then(() => { lsSet('kiwami.updated', '1'); location.reload(); });
 }
-if (IS_WEB) {
+if (IS_WEB && !IS_APP) {
   if ('serviceWorker' in navigator) {
     const hadSW = !!navigator.serviceWorker.controller;   // the first visit's takeover is not an update
     addEventListener('load', () => navigator.serviceWorker.register('/sw.js', {scope: '/'}).catch(() => {}));
@@ -4981,6 +5116,51 @@ async function downloadAllAudio(btn){
   out.textContent = '保存しました'; toast('音声をすべて保存しました。オフラインでも再生できます');
 }
 
+/* リマインダー (the app): a notification at the chosen time on each of the next 14 days; today's only while nothing was studied
+   today. Planned again each time the app goes to the background, so a day studied loses its own. Kept on this device (kiwami.remind) */
+const REM_KEY = 'kiwami.remind', REM_TIMES = ['07:00', '12:00', '17:00', '19:00', '20:00', '21:00', '22:00'];
+const remGet = () => { try { return {on: false, t: '20:00', ...JSON.parse(lsGet(REM_KEY) || '{}')}; } catch(e) { return {on: false, t: '20:00'}; } };
+const REM_LINES = ['今日の英単語、まだだよ。5分だけやろ', '忘れかけた単語が待ってるよ', '連続記録、今日もつなごう', '1セットだけ、いっしょにやろ'];
+async function remindPlan(){
+  const ln = IS_APP && natPlug('LocalNotifications'); if (!ln) return;
+  try {
+    const old = await ln.getPending();
+    if (old.notifications?.length) await ln.cancel({notifications: old.notifications.map(n => ({id: n.id}))});
+    const r = remGet(); if (!r.on) return;
+    const [h, m] = r.t.split(':').map(Number), now = new Date(), c = counts(), done = streakInfo().done, list = [];
+    for (let i = 0; i < 14; i++) {
+      const at = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, h, m);
+      if (at <= now || (i === 0 && done)) continue;
+      const body = i === 0 && c.due + c.newToday ? `今日は復習${c.due}語・新しい単語${c.newToday}語。5分だけやろ` : REM_LINES[(dayIdx() + i) % REM_LINES.length];
+      list.push({id: 100 + i, title: '極（きわみ）', body, schedule: {at, allowWhileIdle: true}});
+    }
+    if (list.length) await ln.schedule({notifications: list});
+  } catch(e) {}
+}
+async function remindToggle(){
+  const ln = natPlug('LocalNotifications'), r = remGet(); if (!ln) return;
+  if (!r.on) {
+    const p = await ln.requestPermissions().catch(() => null);
+    if (p?.display !== 'granted') { toast('通知がオフになっています。iPhoneの「設定」→「通知」→「極（きわみ）」でオンにしてね', null, 5000); return; }
+  }
+  r.on = !r.on; lsSet(REM_KEY, JSON.stringify(r)); await remindPlan(); render();
+  if (r.on) toast(`毎日${r.t}に知らせます`);
+}
+function remindSheet(){
+  const r = remGet();
+  openSheet(`<div class="sheet-h"><h3>知らせる時刻</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="k-grp">${REM_TIMES.map(t => `<button class="k-srow" data-act="remindAt" data-t="${t}">${kTxt(t)}${t === r.t ? `<span class="val">${I.check}</span>` : ''}</button>`).join('')}</div>`);
+}
+if (IS_APP) {
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') remindPlan(); });
+  setTimeout(remindPlan, 3000);
+  // the site's own pages (/…) open in Safari; the app's page stays
+  document.addEventListener('click', e => {
+    const a = e.target.closest?.('a[href]'), h = a?.getAttribute('href') || '';
+    if (/^\/(?!\/)/.test(h)) { e.preventDefault(); window.open(SITE + h, '_blank'); }
+  }, true);
+}
+
 /* ---------- toast / sheet / screen ---------- */
 let toastT = null;
 function toast(msg, action, ms=2400){
@@ -5034,7 +5214,8 @@ function bindSheetDrag(sh){
   };
   sh.addEventListener('pointerup', end); sh.addEventListener('pointercancel', end);
 }
-function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); reloadIfQuiet(); if (DJ?.wait && !DJ.done) setTimeout(djNext); }   // 道場: on after やめる？ is closed
+let QHOLD = null;   // 報告's sheet is up: what it is about (repOpen)
+function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); reloadIfQuiet(); if (DJ?.wait && !DJ.done) setTimeout(djNext); if (QHOLD) repDone(); }   // 道場: on after やめる？ is closed
 const sheetOpen = () => !!$('#sheetroot').firstChild;
 function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); viewKey = ''; tutDrop(); guard(); }   // viewKey: the home dock rises again when this closes
 /* closing a set's results goes back to where it started: a deck page (route stays on it), else the home */
@@ -5129,7 +5310,7 @@ function topbar(){
   const u = Auth.user, name = u ? (u.displayName || u.email || '') : '', who = nickOf() || name;   // the nickname first, else the account's name
   const av = IS_WEB && FIREBASE || u ? `<button id="syncbtn" class="k-hit k-avatar" data-act="me" aria-label="${esc(meLabel())}">${faceHTML('k-face', name)}<span id="syncdot" class="syncdot ${Sync.state}" aria-hidden="true"></span><span class="synclab sr-only">${syncShort()}</span></button>` : '';
   const glyph = BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極';   // on the web the logo goes back to the site's home (?home: a learner is not sent straight back here)
-  return `<header class="k-top v2">${IS_WEB ? `<a class="k-logo" href="/?home" aria-label="極（きわみ）のトップページへ">${glyph}</a>` : `<span class="k-logo" role="img" aria-label="極（きわみ）">${glyph}</span>`}
+  return `<header class="k-top v2">${IS_WEB && !IS_APP ? `<a class="k-logo" href="/?home" aria-label="極（きわみ）のトップページへ">${glyph}</a>` : `<span class="k-logo" role="img" aria-label="極（きわみ）">${glyph}</span>`}
     <div class="k-top-r"><button class="k-hit k-streak" data-act="streakSheet" aria-label="連続${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}、お休みチケット${st.freeze}枚"><span class="k-pill" aria-hidden="true"><span class="k-ring">${ring}</span>連続${st.n}日<span class="k-sep"></span><span class="k-tk">${K_ICO.ticket}お休み${st.freeze}枚</span></span></button>${av}</div></header>${iabNote()}`;
 }
 /* n / l / m: 未学習・学習中・覚えた by status(); r: 学習ずみ (learnedIn) and pct, the deck's % (deckPct); q: sorted as まだ, not
@@ -5850,6 +6031,7 @@ function profSheetHTML(){
 }
 function profSave(){
   const nick = cleanNick($('#pfnick')?.value), s = S.settings;
+  if (ngName(nick)) return toast(GRP_ERR.ngn);
   if (nick !== (s.nick || '') || pfDraft.icon !== (s.icon || '') || pfDraft.goal !== (s.goal || '')) {
     s.nick = nick; s.icon = pfDraft.icon; s.goal = pfDraft.goal; s.upd = Date.now(); save(); markDirty('meta', true);
   }
@@ -6640,7 +6822,7 @@ function goalCard(){
 /* 志望校 (設定, S.settings.univ: its slug and univNm its name; '-' when the learner said no to choosing one): on the home,
    how much of that university's English the learned words read and how many more words reach 90%. The numbers are the site's
    (/univ/<slug>/me.json, as on the university's page; /univ/list.json the universities), kept in UNIV_LS so they open offline */
-const UNIV_BASE = IS_WEB ? '' : 'https://kiwami-eitango.com';
+const UNIV_BASE = IS_WEB && !IS_APP ? '' : SITE;
 const UNIV_LS = 'kiwami.univ';   // {list: [[slug, name, 国立|公立|私立]], at, me: {slug, d, at}}; never part of the learning record
 const UNIV_WEEK = 7 * 864e5;
 let UNIV = null;
@@ -6708,7 +6890,7 @@ function univInfo(){
     <div class="k-uv in">${univNum(r)}${univBar(r)}<span class="k-uv-next">${univNext(r, nm)}</span>
       <span class="k-uv-how">中学の単語で${r.base.toFixed(0)}％、アプリで＋${uv1(r.p - r.base)}ポイント。覚えた${r.known.toLocaleString()}語のうち、${nm}の入試${D.np}本に出た${r.mine.toLocaleString()}語で計算しています</span></div>
     ${li ? `<h4 class="k-uv-h">${nm}によく出る、まだ覚えていない単語</h4><div class="k-grp k-uv-l">${li}</div>` : ''}
-    <div class="k-grp k-uv-go">${kGo('univSheet', '志望校を変える', '', nm)}<a class="k-srow" href="${UNIV_BASE}/univ/${encodeURIComponent(slug)}/"${IS_WEB ? '' : ' target="_blank" rel="noopener"'}>${kTxt(`${nm}によく出る英単語`, 'サイトで見る')}${K_CHEV}</a></div>`);
+    <div class="k-grp k-uv-go">${kGo('univSheet', '志望校を変える', '', nm)}<a class="k-srow" href="${UNIV_BASE}/univ/${encodeURIComponent(slug)}/"${IS_WEB && !IS_APP ? '' : ' target="_blank" rel="noopener"'}>${kTxt(`${nm}によく出る英単語`, 'サイトで見る')}${K_CHEV}</a></div>`);
 }
 /* the universities to choose from, by 国立・公立・私立: narrowed by kind, by region (where the main campus is) and by a name
    typed in the box; 選ばない first */
@@ -6779,10 +6961,12 @@ function viewSettings(){
     kOpts('theme', [['auto', '自動'], ['light', 'オフ'], ['dark', 'オン']], 'ダークモード', '自動は、スマホの設定に合わせる', s.theme || 'auto')]))}
   ${kSec('音と振動', kGroup([kSw('autoSpeak', '単語を自動で読み上げる', 'オフにすると、聞き取りの問題も出ない'),
     kOpts('rate', [[0.75, 'ゆっくり'], [0.95, 'ふつう'], [1.15, '速め']], '例文の読み上げの速さ'), kSw('sfx', '効果音'), kSw('haptic', '振動', '正解と不正解を振動でも知らせる')]))}
-  ${IS_WEB ? kSec('アプリとして使う', kGroup([inst, kGo('dlAudio', '音声をまとめてダウンロード', '<span data-prog>約25MBで、電波がなくても発音が聞ける</span>')])) : ''}
+  ${IS_APP ? kSec('通知', kGroup([`<button class="k-srow" role="switch" aria-checked="${remGet().on}" data-act="remindToggle">${kTxt('毎日のリマインダー', '決めた時刻に、今日の英単語を知らせる')}<span class="k-sw" aria-hidden="true"></span></button>`,
+      remGet().on ? kGo('remindSheet', '知らせる時刻', '', remGet().t) : '']))
+    : IS_WEB ? kSec('アプリとして使う', kGroup([inst, kGo('dlAudio', '音声をまとめてダウンロード', '<span data-prog>約25MBで、電波がなくても発音が聞ける</span>')])) : ''}
   ${IS_WEB && FIREBASE ? kSec('アカウント', kGroup([u ? `<div class="k-srow">${u.photoURL ? `<img class="k-me" src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}${kTxt(esc(u.displayName || 'ログイン中'), u.email ? esc(u.email) : '')}</div>
       <div class="k-srow">${kTxt('ユーザーID', Acct.uid === u.uid && Acct.id ? `<span class="k-idv">${fmtId(Acct.id)}</span>` : '準備中…')}${Acct.uid === u.uid && Acct.id ? '<button class="btn btn-ghost btn-sm" data-act="copyId">コピー</button>' : ''}</div>
-      ${kGo('codeSheet', '特典コード', isPlus() ? `極プラス（${esc(plusWhy())}）` : 'コードを持っていたら、ここで使う')}${Acct.admin ? kGo('devSheet', '開発者メニュー', 'コードを作る・見る') : ''}${kGo('signOut', 'ログアウト', 'この端末の記録は残る')}`
+      ${IS_APP ? '' : kGo('codeSheet', '特典コード', isPlus() ? `極プラス（${esc(plusWhy())}）` : 'コードを持っていたら、ここで使う')}${Acct.admin ? kGo('devSheet', '開発者メニュー', 'コードを作る・見る') : ''}${kGo('signOut', 'ログアウト', 'この端末の記録は残る')}${kGo('delAcctSheet', 'アカウントを削除', 'アカウントと、そこに保存した記録を消す')}`
       : kGo('signIn', 'ログインして記録を保存', 'スマホを変えても、続きからできる'), saveRow])) : ''}
   ${kSec('データ', kGroup([IS_WEB && FIREBASE ? '' : saveRow, kGo('backup', 'バックアップをとる', '記録と自作の単語帳を、ファイルに保存'), kGo('restoreSheet', 'バックアップから戻す', 'いまの記録は、ファイルの記録に置きかわる')]))}
   ${kSec('アプリについて', kGroup([kGo('showOnboard', 'アプリのしくみ', '忘れかけたころに出るしくみと、毎日の流れ'), IS_WEB ? kGo('privacySheet', '記録とプライバシー') : '',
@@ -6821,11 +7005,11 @@ function privacySheet(){
     ['保存先と、見られる人', acct ? 'ログインしないと、この端末の中だけ（どこにも送らない）。ログインすると、アカウント（GoogleのFirebase）にも保存する。ほかの人からは見えない（運営者が不具合を調べるときに見ることはある）。友達のグループに入ると、そのグループの人にだけ、ニックネーム・アイコン・今週の数字（XP、解いた問題、連続日数）と、記録タブの記録（級、覚えた単語の数、学習した日、単語帳の進み、称号など）が見える'
       : 'この端末の中だけ（どこにも送らない）'],
     acct ? ['集計', 'アカウントの記録を、だれのものかわからない形にまとめて、出題の改善に使うことがある'] : null,
-    IS_WEB ? ['アクセス解析', 'Cloudflare Web Analytics で、開かれた回数や見られたページを数えている。Cookie は使わず、だれが見たかはわからない。学習記録は送らない'] : null,
-    ['消し方', `「学習記録をリセット」で消せる${acct ? '（ログイン中はアカウントの記録も）' : ''}。自作の単語帳は、そのページで消せる`],
+    IS_APP ? null : IS_WEB ? ['アクセス解析', 'Cloudflare Web Analytics、Google アナリティクス、Microsoft Clarity で、開かれた回数や見られたページ、使われ方を数えている（Google アナリティクスと Clarity は Cookie を使う）。アプリからは、覚えた単語の数などの数字と、答えた単語とその正誤（アプリの単語帳の単語だけ）を送る。名前や入力した文字は送らない'] : null,
+    ['消し方', `「学習記録をリセット」で消せる${acct ? '（ログイン中はアカウントの記録も）。アカウントごと消すときは、設定の「アカウントを削除」' : ''}。自作の単語帳は、そのページで消せる`],
   ].filter(Boolean);
   openSheet(`<div class="sheet-h"><h3>記録とプライバシー</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-    <div class="k-grp">${rows.map(([b, t]) => `<div class="k-srow"><span class="txt"><span class="lab">${b}</span><span class="sub ml">${t}</span></span></div>`).join('')}</div>
+    <div class="k-grp">${rows.map(([b, t]) => `<div class="k-srow"><span class="txt"><span class="lab">${b}</span><span class="sub ml">${t}</span></span></div>`).join('')}${IS_WEB ? `<a class="k-srow" href="/privacy/">${kTxt('プライバシーポリシー', 'くわしい内容をサイトで見る')}${K_CHEV}</a><a class="k-srow" href="/terms/">${kTxt('利用規約')}${K_CHEV}</a>` : ''}</div>
     <button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
 }
 
@@ -7345,12 +7529,12 @@ let CD = null;
    A short interval rather than requestAnimationFrame, which some browsers pause; CSS smooths the steps. */
 function countdown(slow, done, tick, limit = S.settings.timeLimit * 1000, marks = []){
   stopCountdown();
-  const cd = CD = {t0: performance.now(), hiddenAt: 0};
+  const n0 = performance.now(), cd = CD = {t0: n0, hiddenAt: QHOLD || document.visibilityState === 'hidden' ? n0 : 0};   // started under 報告 or in the background: stopped until that ends
   const tm = $('#qtbar')?.parentElement;   // a small tick where the grade changes (and where the tip turns yellow)
   if (tm) { tm.querySelectorAll('.qtick').forEach(x => x.remove()); for (const ms of [...marks, slow]) if (ms > 0 && ms < limit) tm.insertAdjacentHTML('beforeend', `<span class="qtick" style="left:${((1 - ms / limit) * 100).toFixed(1)}%"></span>`); }
   cd.iv = setInterval(() => {
     if (CD !== cd) return clearInterval(cd.iv);
-    if (document.visibilityState === 'hidden') return;
+    if (document.visibilityState === 'hidden' || QHOLD) return;
     const bar = $('#qtbar'); if (!bar) return stopCountdown();
     const ms = performance.now() - cd.t0, left = Math.max(0, 1 - ms / limit);
     bar.style.width = (left * 100) + '%';
@@ -7365,8 +7549,9 @@ document.addEventListener('visibilitychange', () => {
   const now = performance.now(), hidden = document.visibilityState === 'hidden';
   for (const o of [Q && !Q.answered ? Q : null, CD]) {
     if (!o) continue;
-    if (hidden) o.hiddenAt = now; else if (o.hiddenAt) { o.t0 += now - o.hiddenAt; o.hiddenAt = 0; }
+    if (hidden) o.hiddenAt ||= now; else if (o.hiddenAt && !QHOLD) { o.t0 += now - o.hiddenAt; o.hiddenAt = 0; }   // 報告 still up: it ends the wait when it closes
   }
+  if (!hidden && Q?.lisHid && !Q.answered && !QHOLD && Q.cur?.type === 'lis') lisStart(Q.cur, ...Q.lisArgs);   // nobody heard it: once more, and the clock after it
 });
 /* the grade a right answer earns at this moment, shown beside the bar so the speed rule is visible */
 const RATE_NAME = {4: 'Perfect', 3: 'Excellent', 2: 'Great', 1: 'Good'};
@@ -7420,12 +7605,41 @@ const QI = {
   cross:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>',
   redo:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.2 13.4A7.4 7.4 0 1 1 17 6.6"/><path d="M17.6 3.4v3.9h-3.9"/></svg>',
   chev:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6l6 6-6 6"/></svg>',
+  flag:'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20.5V4.8M6 4.8c2.2-1.3 4-1.3 6 0s3.8 1.3 6 0v9c-2.2 1.3-4 1.3-6 0s-3.8-1.3-6 0"/></svg>',
 };
+/* 報告: the flag at the top of a question or a めくる card. The sheet asks what is wrong, then the contact form opens with the word
+   filled in. While the sheet is up the clock and the speed grade wait, as they do with the app in the background, and so does an
+   answer's move to the next question. 道場 has no flag: its 1 try a day runs against the clock */
+const REP_WHY = ['意味がちがう', '問題や選択肢がおかしい', '例文や訳がおかしい', '音声がおかしい', 'その他'];
+const REP_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSdwLbKbhK1fL3sqf8DmV_2Dlv0tS71suxtdhb6nKl8O-AfZCg/viewform?usp=pp_url&entry.1500580966=';
+const repBtn = (act, c) => { const d = deckById((c.parent || c).deck); return `<button class="iconbtn qx qrep" data-act="${act}" aria-label="この問題を報告" ${d && !d.builtin ? 'disabled' : ''}><span>${QI.flag}</span></button>`; };   // my own 単語帳: nothing for us to fix
+function holdClock(on){
+  const now = performance.now();
+  for (const o of [Q && !Q.answered ? Q : null, CD]) {
+    if (!o) continue;
+    if (on) o.hiddenAt = now; else if (o.hiddenAt) { o.t0 += now - o.hiddenAt; o.hiddenAt = document.visibilityState === 'hidden' ? now : 0; }   // still in the background: the wait goes on
+  }
+}
+function repOpen(c, mean, kind){
+  if (QHOLD) return;   // Enter on the flag under the sheet
+  QHOLD = {c, mean, kind, next: !!Q?.timer}; holdClock(true);
+  if (Q?.timer) { clearTimeout(Q.timer); Q.timer = null; }
+  openSheet(`<div class="sheet-h"><h3>この問題を報告</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    ${kGroup(REP_WHY.map((w, i) => kGo('repSend', w, '', '', ` data-r="${i}"`)))}
+    <p class="k-pf-s">えらぶと報告フォームが開きます。単語はもう入っているので、そのまま送れます</p>`);
+}
+function repDone(){ const h = QHOLD; QHOLD = null; holdClock(false); if (h.next) setTimeout(nextQ); }
+function repSend(i){
+  if (!QHOLD) return;
+  const {c, mean, kind} = QHOLD, deck = deckById((c.parent || c).deck)?.name;
+  closeSheet();
+  window.open(REP_FORM + encodeURIComponent(`【問題の報告】${REP_WHY[i]}\n単語：${c.w}\n意味：${mean || ''}\n問題：${kind || ''}\n${deck ? `単語帳：${deck}\n` : ''}\nくわしく（なくても大丈夫です）：\n`), '_blank');
+}
 function qHeader(){
   const cells = stepCells(), n = cells.length;
   return `<div class="qtop"><button class="iconbtn qx" data-act="quitQuiz" aria-label="やめる"><span>${QI.x}</span></button>
     <p class="qcount num" aria-label="${n}問のうち${stepAt(cells)}問目">${countHTML(cells)}</p>
-    <button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}><span>${QI.undo}1問もどす</span></button></div>
+    <div class="qend"><button class="qundo" data-act="undoAnswer" aria-label="1問もどす（最後の答えを取り消して、もう一度出す）" ${Q.hist?.length ? '' : 'disabled'}><span>${QI.undo}<em>1問もどす</em></span></button>${repBtn('repQ', Q.cur.c)}</div></div>
     <div class="segs${n > 20 ? ' dense' : ''}" role="progressbar" aria-label="このセットの進み具合" aria-valuemin="0" aria-valuemax="${Q.items.length}" aria-valuenow="${Q.cleared}" style="--n:${n}">${segsInner(cells)}</div>`;
 }
 /* 語法の形で覚える意味 (tend to do＝～する傾向がある): its one pattern is the headword + to do and the meaning starts with ～する／～し.
@@ -7541,7 +7755,7 @@ function renderQ(){
     ${flash ? '' : head}<div class="qstage"><div class="qcard${flash ? ' flashc' : ''}" id="qcard"${flash ? ' data-act="reveal"' : ''}>${flash ? head : ''}<div class="qcard-in">${card}</div></div></div>
     ${tl}<div id="qbody">${body}</div></div><div id="fb"></div>`;
   fitWord();
-  Q.t0 = performance.now(); Q.lockUntil = Q.t0 + 250; Q.timedOut = false; tutDrop();
+  Q.t0 = performance.now(); Q.hiddenAt = document.visibilityState === 'hidden' ? Q.t0 : 0; Q.lockUntil = Q.t0 + 250; Q.timedOut = false; tutDrop();
   const rk = rtKey(type);   // the speed lines: a question with a trap among its options is timed against its own kind
   const go = () => {
     if (clock) countdown(type === 'flash' ? S.settings.timeLimit * 500 : slowMs(rk), () => timeUp(it),
@@ -7579,11 +7793,11 @@ function lisFor(it){
 /* the word plays by itself; the clock (and the speed grade) start once it has finished.
    Tapping the big 🔊 plays it again (also in マナーモード) and the clock starts over when that ends */
 function lisStart(it, pos, clock, live, tap=false){
-  stopCountdown(); Q.lisArgs = [pos, clock, live];
+  stopCountdown(); Q.lisArgs = [pos, clock, live]; Q.lisHid = document.visibilityState === 'hidden';
   const tok = Q.lisTok = {};
   const go = () => {
     if (!Q || Q.lisTok !== tok || Q.cur !== it || Q.answered) return;
-    Q.lisTok = null; Q.t0 = performance.now();
+    Q.lisTok = null; Q.t0 = performance.now(); if (Q.hiddenAt) Q.hiddenAt = Q.t0;   // the clip ended under 報告: the wait counts from here
     if (clock) countdown(slowMs('lis'), () => timeUp(it), live ? ms => showRate(speedTier('lis', ms)) : null, undefined, live ? fastMs('lis') : []);
   };
   if (IOS && !tap) lastTap = performance.now();
@@ -7681,7 +7895,7 @@ function answer(ok, grade){
   const card = it.type === 'flash';
   (Q.hist ||= []).push(snap);
   const ub = $('.qundo'); if (ub) ub.disabled = false;
-  const ms = Math.min(60000, performance.now() - Q.t0);
+  const ms = Math.max(0, Math.min(60000, performance.now() - Q.t0));
   const rk = rtKey(it.type);   // 'e2j+' when a trap was among the options
   const g = grade ?? gradeFrom(it.type, ok, ms, Q.hint > 1, isReview(it.p0), rk);
   const practice = !!Q.opts.practice; snap.practice = practice;
@@ -8325,7 +8539,7 @@ function renderSwipe(){
   $('#screen').innerHTML = `<div class="screen-in sw v2">
     <div class="qtop"><button class="iconbtn qx" data-act="quitSwipe" aria-label="やめる"><span>${QI.x}</span></button>
       <p class="qcount num" aria-label="${SW.cards.length}枚のうち${SW.i + 1}枚目"><b>${SW.i + 1}</b>/${SW.cards.length}</p>
-      <button class="qundo" data-act="swUndo" aria-label="1枚もどす（最後の仕分けを取り消す）" ${SW.hist.length ? '' : 'disabled'}><span>${QI.undo}1枚もどす</span></button></div>
+      <div class="qend"><button class="qundo" data-act="swUndo" aria-label="1枚もどす（最後の仕分けを取り消す）" ${SW.hist.length ? '' : 'disabled'}><span>${QI.undo}<em>1枚もどす</em></span></button>${repBtn('repSw', c)}</div></div>
     <div class="sw-prog" role="progressbar" aria-label="仕分けの進み具合" aria-valuemin="0" aria-valuemax="${SW.cards.length}" aria-valuenow="${SW.i}"><i style="width:${SW.i/SW.cards.length*100}%"></i></div>
     ${timed ? TIMER_HTML : ''}
     <div class="swarea" id="swarea">${nx ? swCardHTML(nx, 'next') : ''}${swCardHTML(c, '')}</div>
@@ -8543,7 +8757,11 @@ function impPreview(){
 }
 let impT = null;
 async function offerFile(filename, text){
-  if (IS_WEB) {
+  if (IS_APP) {
+    try { const f = new File([text], filename, {type: 'application/json'}); if (navigator.canShare?.({files: [f]})) { await navigator.share({files: [f]}); return; } }
+    catch(e) { if (e?.name === 'AbortError') return; }
+  }
+  else if (IS_WEB) {
     try {
       const url = URL.createObjectURL(new Blob([text], {type: filename.endsWith('.json') ? 'application/json' : 'text/plain'}));
       const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
@@ -9359,7 +9577,7 @@ const SCAN_ACT = {
 let RESET_UNDO = null, DECK_UNDO = null;   // 「元に戻す」: 記録をリセット's card and its record before the reset; 使うのをやめる's deck
 const ACT = {
   grpNew: () => grpNew(), grpJoin: () => grpJoin(), grpMenu: () => grpMenu(), grpMember: t => grpMember(t.dataset.u), frBack: () => { route.fr = null; render(); scrollTo(0, SCROLL.frl || 0); }, frAch: () => frAch(),
-  grpStamp: t => grpStamp(t.dataset.u, +t.dataset.s), grpKick: t => grpKick(t), grpLeave: t => grpLeave(t), grpClose: t => grpClose(t),
+  grpStamp: t => grpStamp(t.dataset.u, +t.dataset.s), grpKick: t => grpKick(t), grpBlock: t => grpBlock(t.dataset.u), grpReport: t => grpReport(t.dataset.u), grpLeave: t => grpLeave(t), grpClose: t => grpClose(t),
   grpCopy: () => copyText(fmtG(grpCur()), '招待コードをコピーしました'), grpShare: () => grpShare(),
   grpSel: t => { route.grp = t.dataset.g; route.fr = null; render(); }, grpRetry: () => { Grp.failed = false; render(); grpLoad(true); }, grpGm: t => { route.gm = t.dataset.k; render(); },
   // a tab comes back as it was left (the deck page with its filter, search and scroll); the tab you are on, tapped again, goes to the top
@@ -9484,6 +9702,9 @@ const ACT = {
   lisPlay: () => { const it = Q?.cur; if (it?.type === 'lis' && !Q.answered && Q.lisArgs) { Q.lisTapped = true; lisStart(it, ...Q.lisArgs, true); } },
   noSound: () => noSound(),
   quitSwipe: () => closeScreen(),
+  repQ: () => { const it = Q?.cur; if (it) repOpen(it.c, (it.c.s[it.si] || it.c.s[0])?.m, TYPE_LABEL[(Q.answered && Q.hist?.at(-1)?.type) || it.type]); },   // a miss may already have changed its type for the retry
+  repSw: () => { if (SW && !SW.busy && !swOver()) { const c = SW.cards[SW.i]; repOpen(c, studyMain(c), 'めくる'); } },
+  repSend: t => repSend(+t.dataset.r),
   swYes: () => swDecide(true),
   swNo: () => swDecide(false),
   swUndo: () => swUndo(),
@@ -9573,6 +9794,11 @@ const ACT = {
   signIn: t => t.dataset.kind ? signIn(t.dataset.kind) : loginSheet(),
   resetPass: () => resetPass(),
   signOut: () => signOutNow(),
+  delAcctSheet: () => delAcctSheet(),
+  delAcct: t => delAcct(t),
+  remindToggle: () => remindToggle(),
+  remindSheet: () => remindSheet(),
+  remindAt: t => { const r = remGet(); r.t = t.dataset.t; lsSet(REM_KEY, JSON.stringify(r)); remindPlan(); closeSheet(); render(); toast(`毎日${r.t}に知らせます`); },
   copyId: () => { if (Acct.id) copyText(Acct.id, 'ユーザーIDをコピーしました'); },
   codeSheet: () => codeSheet(),
   devSheet: () => devSheet(),
@@ -9621,7 +9847,7 @@ const ACT = {
   backup: () => offerFile(`kiwami-backup-${dayKey(dayIdx())}.json`, backupJSON()),   // the old name (極単, kyokutan) is someone else's app now: never shown
   restoreSheet: () => openSheet(`<div class="sheet-h"><h3>バックアップから戻す</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
     <p class="small muted">書き出した .json ファイルを選ぶか、中身を貼り付けてください。今の記録は置き換わります。</p>
-    <input type="file" id="rfile" accept=".json,application/json" class="input"><textarea class="textarea" id="rtext" placeholder='{"app":"tangoloop", ...}'></textarea>
+    <input type="file" id="rfile" accept=".json,application/json" class="input"><textarea class="textarea" id="rtext" placeholder='バックアップの内容をここに貼り付け'></textarea>
     <div id="rinfo" class="small"></div><button class="btn btn-danger" data-act="restoreGo">置き換えて戻す</button>`),
   restoreGo: async () => {
     let text = $('#rtext').value.trim(); const f = $('#rfile').files?.[0];
