@@ -7451,7 +7451,10 @@ function ctxParts(c, si){
   if (own) target = {...target, e: sx.t, j: ''};
   if (!target?.e) return null;
   const mark = markWord(target.e, host.w); if (!mark.includes('class="mark"')) return null;
-  const mates = openIdx(host).filter(j => j !== i && host.s[j].m && !similar(host.s[j].m, target.m)).map(j => ({text: host.s[j].m, sub: `${host.w}の別の意味`}));
+  // one kanji in common and the same part of speech is a near-synonym too, which a sentence can't decide (threat 脅し、脅迫 / 脅威、恐れ; avoid 避ける / 回避する)
+  const kanji = m => String(m).replace(/[（(［\[][^）)］\]]*[）)］\]]/g, '').match(/[一-鿿々]/g) || [];
+  const nearSense = s => s.p === target.p && kanji(s.m).some(k => kanji(target.m).includes(k));
+  const mates = openIdx(host).filter(j => j !== i && host.s[j].m && !similar(host.s[j].m, target.m) && !nearSense(host.s[j])).map(j => ({text: host.s[j].m, sub: `${host.w}の別の意味`}));
   // 必修多義語 and the same spelling in another deck (中学基礎), once that card is learned: 中学基礎's fine 「元気な」 is the misreading
   // of 必修多義語's fine 「罰金」, and the other way round. Not between other decks: 受験英単語 and TOEIC share words whose meanings overlap
   // (extend 延長する / 伸ばす). Plain meanings only, on both sides: under a 語法 note (「（doing）～したことを覚えている」, 「（remember to ～）
