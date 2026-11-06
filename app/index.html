@@ -1,5 +1,4 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="中学の基礎から難関大まで、共通テスト・大学入試に出る英単語を無料で覚えるアプリ。受験英単語4,105語・熟語1,026・多義語を、派生語や発音・例文といっしょに。忘れかけたころに自動で復習。登録なし・広告なし。"><meta property="og:type" content="website"><meta property="og:site_name" content="極（きわみ）"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="極（きわみ）— 無料の英単語アプリ"><meta property="og:description" content="中学の基礎から難関大まで、共通テスト・大学入試に出る英単語を無料で覚えるアプリ。受験英単語4,105語・熟語1,026・多義語を、派生語や発音・例文といっしょに。忘れかけたころに自動で復習。登録なし・広告なし。"><meta property="og:url" content="https://kiwami-eitango.com/app/"><meta property="og:image" content="https://kiwami-eitango.com/ogp.png?v=eff554af"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="極（きわみ）英単語アプリ"><meta name="twitter:card" content="summary_large_image"><link rel="canonical" href="https://kiwami-eitango.com/app/"><meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#111114" media="(prefers-color-scheme: dark)"><link rel="manifest" href="../manifest.webmanifest"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96.png"><link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png"><link rel="apple-touch-icon" href="../icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="極"><meta name="apple-mobile-web-app-status-bar-style" content="default"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style><title>極（きわみ）｜大学入試・共通テストの英単語を無料で覚えるアプリ</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <!-- the first thing on screen while the page (fonts, styles and the 3MB script below) arrives: the logo and a thin bar,
      with its own few rules, since nothing below has loaded yet. start() fades it out; if the script never starts, it goes by itself -->
 </head><body><div id="boot" aria-hidden="true"><style>
@@ -226,8 +225,6 @@ p{margin:0}
 .switch[aria-checked="true"]::after{transform:translateX(18px)}
 .action{display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px dashed var(--line);font-weight:700;font-size:13.5px;text-align:left}
 .action .ico{color:var(--accent)}
-.ai-only{display:none!important}
-.has-ai .ai-only{display:flex!important}
 /* deck detail */
 .back{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-weight:700;font-size:13.5px;padding:6px 0}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
@@ -1022,7 +1019,6 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .kv div{background:var(--surface-2);border-radius:10px;padding:9px 10px;display:flex;flex-direction:column;min-width:0}
 .kv span{font-size:12px;color:var(--muted);font-weight:700}
 .kv b{font-size:15px;font-variant-numeric:tabular-nums}
-.ai-box{background:var(--surface-2);border-radius:12px;padding:12px 14px;white-space:pre-wrap;font-size:13.5px;line-height:1.7;border:1px solid var(--line)}
 .memo{background:var(--marker);color:#2b2508;border-radius:10px;padding:10px 12px;white-space:pre-wrap;font-size:13.5px}
 .cardview{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:24px 16px 18px}
 .plist{display:flex;flex-direction:column;max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:12px}
@@ -1729,7 +1725,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .sheet.v2 .bs-top > .iconbtn{margin:0}
 .sheet.v2 .kv div{border-radius:12px;background:var(--fill)}
 .sheet.v2 .mrow{min-height:52px}
-.sheet.v2 .ai-box,.sheet.v2 .plist{border-color:var(--hair)}
+.sheet.v2 .plist{border-color:var(--hair)}
 .sheet.v2:has(.cardview),.sheet.v2:has(.cardview) .dacts{background:var(--bg)}
 .sheet.v2 .tcard.cardview{border:0;border-radius:0;background:none;box-shadow:none;padding:6px 0 2px}
 .sheet.v2 .tcard.holed::before,.sheet.v2 .tcard .ring{display:none}
@@ -2772,7 +2768,7 @@ const AUD_A = AUD.a || {}, AUD_I = AUD.i || {}, AUD_H = AUD.h || {}, AUD_K = AUD
 const EXTRA = self.__KD["extra"];
 /* Kokoro example sentences (tools/pack_examples.py): g = gap ms, s[i] = the 8-hex keys of sprite eNNN joined, d[i] = their lengths in ms, x = keys never played */
 const EXI = self.__KD["exi"];
-/* true in the standalone web build (own site, installable, offline); false inside a claude.ai artifact */
+/* true in the standalone web build (own site, installable, offline); false in the old single-file copy */
 const IS_WEB = true;
 /* true in the iPhone app (native/, Capacitor; build.py build_native): the web build's page inside the app, with IS_WEB too. There it
    signs in natively, sends reminders, opens the site's pages in Safari and reads the example audio from the site */
@@ -3986,9 +3982,7 @@ function sfx(kind){
 }
 
 /* ---------- capabilities ---------- */
-const cap = name => (window.claude && typeof window.claude.use === 'function') ? window.claude.use(name).catch(() => null) : Promise.resolve(null);
-let AI = null;
-cap('sample').then(s => { if (s) { AI = s; document.body.classList.add('has-ai'); } });
+const cap = () => Promise.resolve(null);
 
 /* ---------- cloud sync (Firestore on the web, db in the artifact: private docs, one per deck) ---------- */
 /* Saving is batched: at the end of a set, when the app is hidden or closed, and otherwise at most once a minute.
@@ -4033,7 +4027,7 @@ function scheduleFlush(soon=false){
   Sync.timer = setTimeout(() => { Sync.timer = null; flush(); }, at - now);
 }
 const byteLen = s => s.length + (s.match(/[^\x00-\x7f]/g)?.length || 0) * 2;
-/* a map as JSON strings, each small enough for one document (Firestore 1 MiB, the claude.ai db 256 KiB) */
+/* a map as JSON strings, each small enough for one document (Firestore 1 MiB, the old db 256 KiB) */
 function packMap(map){
   const out = []; let cur = {}, size = 0;
   for (const [k, v] of Object.entries(map || {})) {
@@ -4074,7 +4068,7 @@ function docBodies(name){
   return out;
 }
 /* Firestore queues writes itself, so all docs go at once (they are on their way even if the page is closed right after);
-   the claude.ai db gets one write at a time */
+   the old db gets one write at a time */
 const eachDoc = (arr, fn) => Sync.par ? Promise.all(arr.map(fn)) : arr.reduce((p, x) => p.then(() => fn(x)), Promise.resolve());
 async function flush(force=false){
   if (!Sync.col || !Sync.dirty.size) return;
@@ -4114,7 +4108,7 @@ async function flush(force=false){
     scheduleFlush(Sync.again);
   }
 }
-const FATAL = ['invalid_argument', 'invalid-argument', 'quota_exceeded'];   // the claude.ai db / Firestore refusing a document as it is
+const FATAL = ['invalid_argument', 'invalid-argument', 'quota_exceeded'];   // the db refusing a document as it is
 function fatalText(){
   const f = Object.keys(Sync.bad).filter(n => Sync.bad[n].fatal); if (!f.length) return '';
   return f.some(n => n.startsWith('deck_')) ? '大きすぎてクラウドに保存できない単語帳があります（この端末には保存済み）。2冊に分けてください'
@@ -4227,7 +4221,7 @@ async function initSync(){
     const id = await u.id(); if (!id) return;
     const dc = db.collection('data/users/' + id);
     Sync.col = {doc: k => dc.doc(k), async get(){ const snap = await dc.get(); if (snap?.metadata?.fromCache) throw {code: 'unavailable'}; return snap; }};   // a cached view is not the account's records
-    Sync.uid = id; Sync.par = false; Sync.part = 170000;   // the claude.ai db takes documents up to 256 KiB (counted with the string's quotes escaped)
+    Sync.uid = id; Sync.par = false; Sync.part = 170000;   // the old db takes documents up to 256 KiB (counted with the string's quotes escaped)
     Sync.state = 'syncing'; renderSync();
     await pull();
     Sync.state = Sync.err ? 'err' : 'on'; renderSync();
@@ -5751,14 +5745,13 @@ function shelvesHTML(){
     + (plus.length ? sec('＋αの単語帳', `<ul class="k-rows">${plus.map(plusRow).join('')}</ul>`) : '')
     + sec('自分の単語帳', `<div class="k-shelf books"><button class="k-book" data-act="makeDeck"><span class="k-make-art" aria-hidden="true">${K_PLUS}</span><span class="k-book-name act">自分でつくる</span></button>${mine.map(myBook).join('')}</div>`, '英単語を貼るだけで、単語帳ができる');
 }
-/* 自分でつくる: the three ways (a name and the words pasted; a list or a file; an English text, where Claude is there) */
+/* 自分でつくる: the three ways (a name and the words pasted; a list or a file) */
 function makeDeckSheet(){
   const row = (act, ico, t, s, cls = '') => `<button class="k-mrow${cls}" data-act="${act}">${ico}<span>${t}<small>${s}</small></span></button>`;
   openSheet(`<div class="sheet-h"><h3>自分でつくる</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="k-menu">
     ${row('newDeck', K_ICO.newW, '新しい単語帳', '名前を付けて英単語を貼る。1語ずつ足してもよい')}
     ${row('importSheet', I.import, '貼って取りこむ', '英単語のリストやファイル（.txt .tsv .csv）から')}
-    ${row('scanOpen', I.camera, '長文の写真から', '解いた長文を撮って、知らない単語だけ入れる')}
-    ${row('aiDeck', I.spark, '英文から自動でつくる', 'Claudeが覚える単語を選んで、意味と例文を付ける', ' ai-only')}</div>`);
+    ${row('scanOpen', I.camera, '長文の写真から', '解いた長文を撮って、知らない単語だけ入れる')}</div>`);
 }
 function filterCards(d){
   const q = route.q.trim().toLowerCase(), blk = route.sec != null ? deckSections(d)[route.sec] : null;
@@ -7136,7 +7129,6 @@ function cardSheet(c, keep=false){
       <div><span>出題 / まちがい</span><b>${p?.r||0}回 / ${wrongCount(p)}回</b></div>
     </div>
     ${memo ? `<div class="memo">${esc(memo)}</div>` : ''}
-    <div class="ai-only" style="flex-direction:column;gap:8px"><button class="btn btn-soft" data-act="aiMnemonic" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">${I.spark}Claudeに覚え方を聞く</button><div id="aiout"></div></div>
     ${p?.wk ? '<div class="btn-row">' : ''}<button class="btn btn-ghost${p?.wk ? '' : ' btn-block'}" data-act="suspend" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">${p?.sus ? '出題に戻す' : '出題しない'}</button>${p?.wk ? `<button class="btn btn-ghost" data-act="unweak" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">苦手から外す</button></div>` : ''}
     ${deck && !deck.builtin ? `<div class="btn-row"><button class="btn btn-ghost" data-act="editCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">編集</button><button class="btn btn-danger" data-act="delCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">削除</button></div>` : ''}
     ${refIn ? `<button class="btn btn-ghost btn-block" data-act="unref" data-id="${esc(refIn)}" data-ref="${esc(c.deck + '|' + c.k)}">「${esc(deckById(refIn)?.name || '')}」から外す<small>学習記録は残ります</small></button>` : ''}
@@ -8882,78 +8874,6 @@ async function offerFile(filename, text){
     <button class="btn btn-primary" data-act="copyBox">コピー</button>`);
 }
 
-/* ---------- AI (Claude) ---------- */
-let aiCtl = null;
-async function aiMnemonic(c){
-  if (!AI) return;
-  const out = $('#aiout'); const btn = document.querySelector('[data-act="aiMnemonic"]');
-  aiCtl?.abort(); aiCtl = new AbortController();
-  out.innerHTML = '<div class="ai-box">考えています…</div>'; if (btn) btn.disabled = true;
-  const prompt = `あなたは日本人の英語学習者を教える英単語コーチです。次の英単語の「すべての意味」をまとめて長く記憶に残すための解説を、日本語で書いてください。Markdown記号（#、*、**）は使わないこと。
-単語: ${c.w}
-意味:
-${c.s.map((s,i) => `${i+1}. (${s.p || '?'}) ${s.m}`).join('\n')}
-次の4項目を、それぞれ見出し「◆コアイメージ」「◆成り立ち」「◆よく一緒に使う表現」「◆覚え方」を付けて書く。合計300字以内。
-・コアイメージ: 上の複数の意味が、1つのイメージからどう広がっているかを説明する（意味が1つなら、その語の感覚を一言で）。
-・成り立ち: 語源が確かな場合のみ書き、自信がなければ「◆成り立ち」の項目ごと省くこと。
-・よく一緒に使う表現: 英語のフレーズ2つに和訳を添える。違う意味のものを選ぶ。
-・覚え方: 日本人がつまずきやすい点や、似た単語との区別を1〜2行で。`;
-  try {
-    const {text} = await AI(prompt, {modelTier:'quick', signal:aiCtl.signal, onText:({text}) => { const b = out.querySelector('.ai-box'); if (b) b.textContent = text; }});
-    out.innerHTML = `<div class="ai-box"></div><button class="btn btn-ghost" data-act="saveMemo" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}" style="margin-top:8px;width:100%">メモとして保存</button>`;
-    out.querySelector('.ai-box').textContent = text; out.dataset.text = text;
-  } catch(e) {
-    if (e?.code === 'cancelled') return;
-    if (['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e?.code)) { document.body.classList.remove('has-ai'); out.innerHTML = ''; return; }
-    out.innerHTML = `<div class="ai-box">${e?.code === 'rate_limited' ? '少し時間をおいてから、もう一度お試しください。' : '回答を受け取れませんでした。もう一度お試しください。'}</div>`;
-  } finally { if (btn) btn.disabled = false; }
-}
-function aiDeckSheet(){
-  openSheet(`<div class="sheet-h"><h3>英文から単語帳をつくる</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-    <p class="small muted">ニュース記事、教科書、長文問題などの英文を貼り付けると、Claudeが覚えるべき単語を選んで意味と例文を付けます。</p>
-    <div class="field"><label for="aitext">英文</label><textarea class="textarea" id="aitext" placeholder="Paste an English article here..."></textarea></div>
-    <div class="field"><label for="ailevel">あなたのレベル</label><select class="select" id="ailevel">
-      <option value="高校生（英検2級前後）">高校生（英検2級前後）</option><option value="大学受験〜英検準1級">大学受験〜英検準1級</option><option value="TOEIC 600〜800">TOEIC 600〜800</option><option value="上級者（英検1級・TOEIC 900+）">上級者</option></select></div>
-    <button class="btn btn-primary" data-act="aiDeckGo">${I.spark}単語を選んでもらう</button><div id="aideckout"></div>`);
-}
-async function aiDeckGo(){
-  const text = ($('#aitext').value || '').trim(); const level = $('#ailevel').value;
-  const out = $('#aideckout'), btn = document.querySelector('[data-act="aiDeckGo"]');
-  if (text.length < 40) { out.innerHTML = '<p class="small" style="color:var(--again-t)">もう少し長い英文を貼り付けてください。</p>'; return; }
-  aiCtl?.abort(); aiCtl = new AbortController(); btn.disabled = true;
-  out.innerHTML = '<div class="ai-box">英文を読んでいます…（20秒ほどかかることがあります）</div>';
-  const prompt = `次の英文から、日本人の英語学習者（レベル: ${level}）が覚えるべき重要な英単語・熟語を最大20個選び、JSON配列だけを返してください。
-ルール:
-- 中学レベルの基本語（the, have, good, school など）と固有名詞は除外する。
-- 見出し語 "w" は原形・小文字。熟語も可。
-- "s" はその語の意味のリスト。1つ目はこの英文中での意味。そのあとに、学習者が知っておくべき別の重要な意味を最大3つ（本当にあるものだけ。品詞が違う意味も含めてよい）。
-- 各意味の "p" は 名 動 形 副 前 接 熟 のどれか1文字。"m" は日本語の訳語で16文字以内、他動詞は「～を…する」の形。
-- 1つ目の意味の "e" は英文中でその語が使われている1文をそのまま抜き出す（20語を超える場合は語の前後を残して短くする）。2つ目以降の "e" はその意味で使った短い自作の英文。
-- "j" は "e" の自然な和訳。
-形式の例: [{"w":"address","s":[{"p":"動","m":"（問題）に取り組む","e":"The government must address the housing shortage.","j":"政府は住宅不足に取り組まなければならない。"},{"p":"名","m":"住所","e":"Write your address here.","j":"ここに住所を書いてください。"},{"p":"名","m":"演説","e":"She gave a moving address.","j":"彼女は感動的な演説をした。"}]}]
-
-英文:
-"""
-${text.slice(0, 8000)}
-"""`;
-  try {
-    const arr = await AI.json(prompt, {modelTier:'default', signal:aiCtl.signal});
-    const items = (Array.isArray(arr) ? arr : []).filter(x => x && typeof x.w === 'string' && x.w.trim() && Array.isArray(x.s))
-      .map(x => ({w:x.w.trim(), s:x.s.filter(s => s && typeof s.m === 'string' && s.m.trim()).slice(0, 5)
-        .map(s => ({p:POS.includes(s.p) ? s.p : '', m:s.m.trim(), e:String(s.e||'').trim(), j:String(s.j||'').trim()}))}))
-      .filter(x => x.s.length);
-    if (!items.length) { out.innerHTML = '<div class="ai-box">単語を選べませんでした。別の英文で試してください。</div>'; return; }
-    window._aiItems = items;
-    out.innerHTML = `<div class="field"><label for="ainame">単語帳の名前</label><input class="input" id="ainame" value="英文から ${mdLabel(dayIdx())}"></div>
-      <div class="plist">${items.map((x,i) => `<label><input type="checkbox" checked data-i="${i}"><span><b>${esc(x.w)}</b> <span class="pos">${esc(x.s[0].p||'—')}</span> ${esc(x.s.map(s => s.m).join(' ／ '))}<br><span class="small muted">${esc(x.s[0].e)}</span></span></label>`).join('')}</div>
-      <button class="btn btn-primary" data-act="aiDeckSave" style="width:100%;margin-top:10px">チェックした単語で単語帳をつくる</button>`;
-  } catch(e) {
-    if (e?.code === 'cancelled') return;
-    if (['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e?.code)) { document.body.classList.remove('has-ai'); closeSheet(); toast('この画面ではClaudeを使えません'); return; }
-    out.innerHTML = `<div class="ai-box">${e?.code === 'rate_limited' ? '少し時間をおいてから、もう一度お試しください。' : e?.code === 'invalid_json' ? '結果を読み取れませんでした。もう一度お試しください。' : '回答を受け取れませんでした。もう一度お試しください。'}</div>`;
-  } finally { btn.disabled = false; }
-}
-
 /* ---------- sheets: decks / import / backup ---------- */
 function newDeckSheet(){
   IMP = {on: new Map(), mean: new Map(), file: '', last: null};
@@ -9831,7 +9751,7 @@ const ACT = {
       PEEK.add(t.dataset.deck + '\t' + t.dataset.k); syncDock(deckById(route.deck)); return; }
     const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c);
   },
-  closeSheet: () => { aiCtl?.abort(); closeSheet(); },
+  closeSheet: () => closeSheet(),
   // 辞書: an entry from the results or 最近しらべた単語 (or from another entry: ← goes back to it), its two buttons, a deck it is in
   // (its list, the word searched)
   dictOpen: t => { const k = t.dataset.k, e = dictIndex().map.get(k); if (!e) return toast('この単語は見つかりませんでした');
@@ -9857,8 +9777,6 @@ const ACT = {
     setProg(u.c, u.prev ? {...u.prev, u: Date.now()} : {st:0, last: Date.now()}); $('#toastroot').innerHTML = '';
     const open = $('#sheetroot [data-act="suspend"]'); if (open && open.dataset.deck === u.c.deck && open.dataset.k === u.c.k) cardSheet(u.c, true);
     render(); toast('元に戻しました'); },
-  aiMnemonic: t => { const c = findCard(t.dataset.deck, t.dataset.k); if (c) aiMnemonic(c); },
-  saveMemo: t => { const txt = $('#aiout')?.dataset.text; if (!txt) return; (S.notes[t.dataset.deck] ||= {})[t.dataset.k] = txt; save(); markDirty('note_' + t.dataset.deck, true); const c = findCard(t.dataset.deck, t.dataset.k); cardSheet(c, true); toast('メモを保存しました'); },
   newDeck: () => newDeckSheet(),
   makeDeck: () => makeDeckSheet(),
   addCard: t => cardForm(t.dataset.id, null),
@@ -9889,14 +9807,6 @@ const ACT = {
   exportDeck: t => { const d = deckById(t.dataset.id); offerFile(`${d.name}.txt`, [...d.cards, ...(d.todo || [])].map(c => [c.w,c.p,senseText(c),c.e,c.j].map(x => String(x||'').replace(/[\t\n]/g,' ')).join('\t')).join('\n')); },
   copyBox: () => { const b = $('#copybox'); const done = () => toast('コピーしました');
     try { navigator.clipboard.writeText(b.value).then(done, () => { b.select(); toast('選択しました。コピーしてください'); }); } catch(e) { b.select(); } },
-  aiDeck: () => aiDeckSheet(),
-  aiDeckGo: () => aiDeckGo(),
-  aiDeckSave: () => {
-    const picked = [...document.querySelectorAll('.plist input:checked')].map(i => window._aiItems[+i.dataset.i]).filter(Boolean);
-    if (!picked.length) { toast('単語を1つ以上選んでください'); return; }
-    const id = createDeck(($('#ainame').value || '英文から').slice(0,40), picked);
-    closeSheet(); route.tab = 'decks'; route.deck = id; render(); toast(`${picked.length}語の単語帳をつくりました`);
-  },
   set: t => { const k = t.dataset.k; let v = t.dataset.v; if (['setSize','rate','zoom','drillMin','timeLimit','retention'].includes(k)) v = +v; setSetting(k, v); applyZoom(); render(); refreshOpts(); },
   toggle: t => { setSetting(t.dataset.k, !S.settings[t.dataset.k]); render(); refreshOpts(); },
   // Q.tip cleared: 1問もどす and back draws the results again, and a card dealt with stays gone
@@ -10222,7 +10132,6 @@ function start(data){
   else if (!S.settings.onboarded && !dq) onboard();
   if (lsGet('kiwami.updated')) { lsSet('kiwami.updated', ''); setTimeout(() => toast('新しい版になりました'), 600); }
 }
-try { window.claude?.hot?.snapshot?.(() => ({tab:route.tab, deck:route.deck})); } catch(e) {}
-try { window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {}); } catch(e) { start({}); }
+try { start({}); } catch(e) { start({}); }
 </script>
 <script>if(location.hostname==="kiwami-eitango.com"){var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",'{"token": "5dedc341bc184ed59cae8fbf670adedf"}');document.body.appendChild(s)}</script><script>if(location.hostname==="kiwami-eitango.com"){window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","G-4FGEKWQYJH");var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-4FGEKWQYJH";document.head.appendChild(g);(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","z8dzjgoq2v");}</script></body></html>
