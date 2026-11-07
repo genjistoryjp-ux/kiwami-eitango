@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>極（きわみ）について｜作った理由とこだわり</title>
-<meta name="description" content="派生語まで覚えられる単語アプリがほしくて作った、極（きわみ）のこと。意味は1つずつ、忘却曲線にそった復習、入試データ。">
+<title>極（きわみ）について｜数えているものと数字の見方</title>
+<meta name="description" content="極（きわみ）は、共通テストと大学入試の英語1,600本を数えて、英単語がどのくらい、どの意味で出たかをまとめたサイトです。数えているもの、「1本」の数え方、各ページでわかること。">
 <link rel="canonical" href="https://kiwami-eitango.com/about/">
 <meta name="google-adsense-account" content="ca-pub-3219062907495876">
 <meta name="apple-itunes-app" content="app-id=6830993229">
 <script>if(location.hostname==="kiwami-eitango.com"){var a=document.createElement("script");a.async=true;a.crossOrigin="anonymous";a.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3219062907495876";document.head.appendChild(a)}</script>
-<meta property="og:type" content="website"><meta property="og:site_name" content="極（きわみ）"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="極（きわみ）について｜作った理由とこだわり"><meta property="og:description" content="派生語まで覚えられる単語アプリがほしくて作った、極（きわみ）のこと。意味は1つずつ、忘却曲線にそった復習、入試データ。"><meta property="og:url" content="https://kiwami-eitango.com/about/"><meta property="og:image" content="https://kiwami-eitango.com/ogp.png?v=eff554af"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="極（きわみ）英単語アプリ"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website"><meta property="og:site_name" content="極（きわみ）"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="極（きわみ）について｜数えているものと数字の見方"><meta property="og:description" content="極（きわみ）は、共通テストと大学入試の英語1,600本を数えて、英単語がどのくらい、どの意味で出たかをまとめたサイトです。数えているもの、「1本」の数え方、各ページでわかること。"><meta property="og:url" content="https://kiwami-eitango.com/about/"><meta property="og:image" content="https://kiwami-eitango.com/ogp.png?v=eff554af"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="極（きわみ）英単語アプリ"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#111114" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -63,7 +63,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 .logo small{display:none;color:var(--sub);font-size:12px;margin-left:6px;padding-left:10px;border-left:1px solid var(--line);line-height:1.3}
 .hd-r{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:14px;font-weight:500}
 .hd-r a:hover{color:var(--blue)}
-.hd-r .applink{color:var(--blue);font-weight:700}
+.hd-r .applink{color:var(--sub);font-weight:500;font-size:13px;padding:10px 0}   /* a quiet text link, not a button */
 .hd-r .srlink{display:grid;place-items:center;width:44px;height:44px;margin:-8px -6px -8px 0;color:var(--ink)}
 .hd-r .srlink svg{width:22px;height:22px}
 @media (min-width:900px){.hd-r .srlink{display:none}}
@@ -98,10 +98,20 @@ body:has(.hero) .hd-r .srlink{display:none}
 /* layout: one column on a phone (ranking first), main + side from 900px */
 .page{display:flex;flex-direction:column}
 .col-m,.col-s{display:contents}
-.a-rank{order:1}.a-miss{order:2}.a-art{order:3}
-.a-afx{order:3}.a-app{order:4}.a-about{order:5}
-.a-app{margin-top:32px}
-.a-about{margin-top:12px}
+.a-intro{order:0}.a-art{order:1}.a-cg{order:2}.a-miss{order:3}.a-rank{order:4}
+.a-feat{order:5}.a-afx{order:6}.a-about{order:7}.a-app{order:8}
+.a-about{margin-top:32px}
+.a-app{margin-top:12px}
+.intro p{margin:0 0 10px;font-size:15px;line-height:1.85}
+.intro p:last-child{margin-bottom:0}
+.intro a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+.alist.cgh b span{display:inline;margin:0;font-size:inherit;color:inherit;line-height:inherit}
+.cgh span[lang]{font-family:var(--en)}
+.appsm{border-top:1px solid var(--line);padding:14px 0 0;font-size:13px;color:var(--sub);line-height:1.6}
+.appsm p{margin:0}
+.appsm b{color:var(--ink);margin-right:8px}
+.appsm .aplinks{margin-top:4px}
+.appsm a{color:var(--blue);font-weight:500;display:inline-block;padding:6px 0}
 .sec{padding:32px 0 0}
 .sh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
 .sh h2{margin:0;font-size:20px;line-height:1.4;font-weight:700}
@@ -119,7 +129,7 @@ body:has(.hero) .hd-r .srlink{display:none}
 .rk-n{font:700 15px var(--en);color:var(--mute);text-align:center}
 .rk-n.top{color:#fff;background:var(--brand);border-radius:5px;height:24px;line-height:24px;font-size:13px}
 .rk-w{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-.rk-w a{font:700 16px var(--en);color:var(--ink);margin-right:8px}
+.rk-w a,.rk-w b{font:700 16px var(--en);color:var(--ink);margin-right:8px}
 .rk-w a::after{content:"";position:absolute;inset:0}
 .rk-row:hover .rk-w a{color:var(--blue)}
 .rk-w a:focus-visible{outline:0}
@@ -405,6 +415,7 @@ ol.ms > li{scroll-margin-top:16px}
 .wl li{display:flex;align-items:baseline;gap:10px;min-width:0;border-bottom:1px solid var(--line)}
 .wl li{position:relative}
 .wl a{font:600 16px var(--en);color:var(--blue);padding:12px 0;flex:none}
+.wl li>b{font:600 16px var(--en);color:var(--ink);padding:12px 0;flex:none}
 .wl a::after{content:"";position:absolute;inset:0}
 .wl li[hidden],.u-ts[hidden],.u-ts ul[hidden],.u-ts h3[hidden]{display:none}
 .u-find{margin:16px 0 0}
@@ -1006,6 +1017,19 @@ ol.ms.one > li::before{display:none}
 .cg-jp a{min-width:40px;min-height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 15px var(--en);color:var(--ink)}
 .cg-jp a:hover{border-color:var(--blue);color:var(--blue)}
 .cg-ix .u-ts{scroll-margin-top:8px}
+/* 数字の見方 (the one link that replaced the 「1本」 note) and a page's one app line */
+.cnote.cnt a{color:var(--blue);display:inline-block;padding:6px 0;margin:-6px 0}
+.apl{margin:24px 0 0;font-size:14px;line-height:1.6;color:var(--mute);display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}
+.apl a{color:var(--blue);font-weight:500;display:inline-block;padding:8px 0;margin:-8px 0}
+.apl small{font-size:12px}
+.wside .apl{margin:0}
+@media (max-width:899px){.wside .apl{border-top:1px solid var(--line);padding-top:18px}}
+.ct-go{margin:20px 0 !important}
+.ct-go a{display:inline-block;padding:12px 18px;border:1px solid var(--blue);border-radius:var(--r);color:var(--blue);font-weight:700;text-decoration:none !important}
+.ct-go a:hover{background:var(--blue-50)}
+.ab .pv b a{color:var(--blue)}
+.ab .pv b a:hover{text-decoration:underline}
+.post .apl a{text-decoration:none}
 </style>
 </head>
 <body>
@@ -1016,10 +1040,10 @@ ol.ms.one > li::before{display:none}
       <b>極（きわみ）</b>
       <small>英単語の意味と<br>入試データ</small>
     </a>
-    <nav class="hd-r" aria-label="アプリ"><a class="srlink" href="/search/" aria-label="英単語を調べる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a><a class="applink" href="/app/">無料アプリ</a></nav>
+    <nav class="hd-r" aria-label="検索とアプリ"><a class="srlink" href="/search/" aria-label="英単語を調べる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a><a class="applink" href="/app/">無料アプリ</a></nav>
   </div>
   <div class="snav-w"><div class="wrap snav-in">
-    <nav class="snav" aria-label="メイン"><a href="/search/">単語を調べる</a><a href="/shindan/">単語力診断</a><a href="/kyotsu/">共通テスト</a><a href="/univ/">志望校別</a><a href="/gogen/">語源</a><a href="/ranking/nyushi/">ランキング</a><a href="/words/">単語一覧</a><a href="/articles/">記事</a><script>(function(){var a=document.querySelector('.snav [aria-current]'),n=document.querySelector('.snav');if(!n)return;if(a&&n.scrollWidth>n.clientWidth){var p=a.previousElementSibling||a;n.scrollLeft+=p.getBoundingClientRect().left-n.getBoundingClientRect().left-12}var e=function(){var c=n.parentNode.classList;c.toggle('end',n.scrollLeft+n.clientWidth>=n.scrollWidth-4);c.toggle('st',n.scrollLeft>4)};e();n.addEventListener('scroll',e,{passive:true})})()</script></nav>
+    <nav class="snav" aria-label="メイン"><a href="/articles/">記事</a><a href="/chigai/">違い</a><a href="/gogen/">語源</a><a href="/words/">単語一覧</a><a href="/kyotsu/">共通テスト</a><a href="/univ/">志望校別</a><a href="/ranking/nyushi/">ランキング</a><a href="/shindan/">単語力診断</a><a href="/search/">単語を調べる</a><script>(function(){var a=document.querySelector('.snav [aria-current]'),n=document.querySelector('.snav');if(!n)return;if(a&&n.scrollWidth>n.clientWidth){var p=a.previousElementSibling||a;n.scrollLeft+=p.getBoundingClientRect().left-n.getBoundingClientRect().left-12}var e=function(){var c=n.parentNode.classList;c.toggle('end',n.scrollLeft+n.clientWidth>=n.scrollWidth-4);c.toggle('st',n.scrollLeft>4)};e();n.addEventListener('scroll',e,{passive:true})})()</script></nav>
     <form class="hsrch" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語を調べる" aria-label="英単語か日本語で調べる" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required></form>
   </div></div>
 </header>
@@ -1027,35 +1051,38 @@ ol.ms.one > li::before{display:none}
 <nav class="crumb" aria-label="現在地"><a href="/">トップ</a> › 極について</nav>
 <article class="art ab">
   <h1>極（きわみ）について</h1>
+  <p class="lede">極（きわみ）は、共通テストと大学入試の英語の問題を数えて、英単語がどのくらい出たか、どの意味で使われたかをまとめたサイトです。受験英単語の意味と例文も、1語ずつ載せています。</p>
 
-  <h2>極を作ったわけ</h2>
-  <p>学生のころ、ふつうの単語帳で、見出しの単語をがんばって全部覚えました。でも、いざ長文を読んでみたら、全然読めなかった。</p>
-  <p>原因は<b>派生語</b>でした。decide は知っているのに、decision や decisive が出てくると止まってしまう。</p>
-  <p>じゃあ派生語も覚えようと思っても、単語帳の派生語は小さく載っているだけで、正直、覚えさせる気がない。アプリを探しても、派生語までちゃんと扱ってくれるものは、ほとんどありませんでした。</p>
-  <p>「派生語までちゃんと覚えられるものがあったらいいのに」。そう思って作ったのが、極です。</p>
+  <h2>数えているもの</h2>
+  <p>数えたのは、令和6〜8年度の共通テスト英語12本と、国公立・私立157校の大学入試英語1,588本（2020〜2026年度）です。英文の単語は、あわせて約363万語になります。</p>
+  <p>この中で、受験英単語4,104語のそれぞれが、何本の試験に出たか、いくつの大学で出たかを数えています。単語は、見出し語と、-s・-ed・-ing のついた形や took・children のような不規則な形を、同じ単語として数えています。</p>
+  <p>意味がいくつもある単語は、入試の英文を1語につき最大180文取り出して、どの意味で使われていたかを1文ずつ調べました。単語ページの「どの意味で出たか」の割合は、この数です。</p>
 
-  <h2>名前のこと</h2>
-  <p>極（きわみ）は、「極み」からつけました。英単語を極めるところまで、ずっと使える単語帳にしたくて、この名前にしています。</p>
+  <h2 id="count">数字の見方</h2>
+  <p>このサイトの「本」は、英語の試験1回分のことです。</p>
+  <ul class="pv">
+    <li><b>大学入試の1本</b><span>大学・学部・日程ごとに1本と数えます。同じ大学でも、学部や日程がちがう問題は別の1本です。</span></li>
+    <li><b>共通テストの1本</b><span>リーディングとリスニングを別々に数えます。リスニングは、読み上げられる英文を数えています。令和6〜8年度の本試験と追試験で、あわせて12本です。</span></li>
+    <li><b>「出た大学入試 ◯本」</b><span>その単語が1回でも出た試験の本数です。同じ試験の中で何回出ても、1本と数えます。</span></li>
+  </ul>
 
-  <h2>こだわったところ</h2>
-  <h3>意味は、1つずつ</h3>
-  <p>1つの単語に意味がいくつもあると、一度に覚えようとしてもごちゃごちゃになります。だから極では、まず1つの意味を覚えて、それが身についたら、次の意味が出てくるようにしました。派生語も同じように、1つずつ増えていきます。</p>
-  <h3>忘却曲線にそって復習</h3>
-  <p>人は、覚えたことを時間とともに忘れていきます。極は、忘れかけたころに、もう一度その単語を出します。だから、少ない回数で長く覚えていられます。</p>
-  <h3>本物の入試データ</h3>
-  <p>共通テストや大学の入試の英文を実際に数えて、どの単語のどの意味がよく出るかを調べています。入試に出るところから覚えられるので、短い時間でも効果を感じられるようにしました。</p>
+  <h2>各ページでわかること</h2>
+  <ul class="pv">
+    <li><b><a href="/words/">単語ページ</a></b><span>受験英単語の意味と例文、派生語、語源。入試に何本出たか、どの意味で出たかも載せています。</span></li>
+    <li><b><a href="/chigai/">違い</a></b><span>affect と effect のような、まぎらわしい2語の見分け方。例文と確認問題、入試でどちらが多く出たかも。今は236組あります。</span></li>
+    <li><b><a href="/gogen/">語源（接頭語・接尾語）</a></b><span>-tion や un- のような部品の意味と、その部品が付いてできる単語の一覧です。今は58個あります。</span></li>
+    <li><b><a href="/articles/">記事</a></b><span>数えたデータをもとに、単語の覚え方や、大学ごとのちがいを書いた記事です。</span></li>
+    <li><b><a href="/kyotsu/">共通テスト直前</a>・<a href="/univ/">志望校別</a></b><span>共通テストや大学ごとに、よく出る単語と、どのレベルまでの単語で英文の何％が読めるかをまとめています。大学ごとのページは139校です。</span></li>
+    <li><b><a href="/ranking/nyushi/">ランキング</a></b><span>大学入試と共通テストに、何本出たかの多い順に並べた一覧です。</span></li>
+  </ul>
 
-  <h2>使う人へ</h2>
-  <p>新しい単語をどんどん進めたくなる気持ちは、すごくわかります。でも、本当に大事なのは<b>復習</b>です。覚えたつもりの単語も、復習しなければ少しずつ抜けていきます。</p>
-  <p>毎日、まずは復習から。それが、いちばんの近道です。</p>
+  <h2>作ったわけ</h2>
+  <p>学生のころ、ふつうの単語帳で、見出しの単語をがんばって全部覚えました。でも、いざ長文を読んでみたら、全然読めなかった。原因は<b>派生語</b>でした。decide は知っているのに、decision や decisive が出てくると止まってしまう。</p>
+  <p>「派生語までちゃんと覚えられるものがあったらいいのに」。そう思って、まず単語アプリを作りました。このサイトは、そのアプリと同じ単語帳をもとに、入試の英文を数えて、どの単語がどの意味で出ているかを調べたものです。<a href="/words/risk/">risk</a> のように、単語帳で最初に出てくる意味と、入試で多い意味がちがう単語もあります。</p>
 
   <h2>運営者</h2>
-  <p>極（きわみ）は、英語の勉強をしてきた運営者がひとりで作っています。ご意見や不具合の報告は、<a href="https://forms.gle/56xaeGjnA7WYgS3V6" target="_blank" rel="noopener">お問い合わせフォーム</a>から送れます。</p>
-
-  <div class="appbox">
-    <img src="/assets/mekuru.svg" alt="" width="52" height="52">
-    <div><b>無料で覚えるなら 極のアプリ</b><p>登録なし・広告なしで、今すぐ使えます。</p><div class="aplinks"><a href="/app/">アプリを開く →</a><a href="https://apps.apple.com/jp/app/id6830993229">iPhoneは App Store で →</a></div></div>
-  </div>
+  <p>極（きわみ）は、英語の勉強をしてきた運営者がひとりで作っています。意味や数字のまちがい、ページの不具合に気づいたら、<a href="/contact/">お問い合わせ</a>から教えてください。</p>
+  <p class="apl"><a href="/app/">極のアプリを開く ›</a><small>無料</small></p>
 </article>
 </main>
 
@@ -1086,13 +1113,13 @@ ol.ms.one > li::before{display:none}
         <li><a href="/about/">極について</a></li>
         <li><a href="/privacy/">プライバシーポリシー・免責事項</a></li>
         <li><a href="/terms/">利用規約</a></li>
-        <li><a href="https://forms.gle/56xaeGjnA7WYgS3V6" target="_blank" rel="noopener">お問い合わせ</a></li>
+        <li><a href="/contact/">お問い合わせ</a></li>
       </ul></div>
     </div>
     <div class="ft-c">© 2026 極（きわみ）</div>
   </div>
 </footer>
-<script src="/assets/sug.25f786df.js" defer></script>
+<script src="/assets/sug.d432a7dd.js" defer></script>
 <script>if(location.hostname==="kiwami-eitango.com"){window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","G-4FGEKWQYJH");var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-4FGEKWQYJH";document.head.appendChild(g);}</script><!-- Cloudflare Web Analytics --><script>if(location.hostname==="kiwami-eitango.com"){var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",'{"token": "5dedc341bc184ed59cae8fbf670adedf"}');document.body.appendChild(s)}</script>
 </body>
 </html>

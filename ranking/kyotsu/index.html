@@ -63,7 +63,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 .logo small{display:none;color:var(--sub);font-size:12px;margin-left:6px;padding-left:10px;border-left:1px solid var(--line);line-height:1.3}
 .hd-r{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:14px;font-weight:500}
 .hd-r a:hover{color:var(--blue)}
-.hd-r .applink{color:var(--blue);font-weight:700}
+.hd-r .applink{color:var(--sub);font-weight:500;font-size:13px;padding:10px 0}   /* a quiet text link, not a button */
 .hd-r .srlink{display:grid;place-items:center;width:44px;height:44px;margin:-8px -6px -8px 0;color:var(--ink)}
 .hd-r .srlink svg{width:22px;height:22px}
 @media (min-width:900px){.hd-r .srlink{display:none}}
@@ -98,10 +98,20 @@ body:has(.hero) .hd-r .srlink{display:none}
 /* layout: one column on a phone (ranking first), main + side from 900px */
 .page{display:flex;flex-direction:column}
 .col-m,.col-s{display:contents}
-.a-rank{order:1}.a-miss{order:2}.a-art{order:3}
-.a-afx{order:3}.a-app{order:4}.a-about{order:5}
-.a-app{margin-top:32px}
-.a-about{margin-top:12px}
+.a-intro{order:0}.a-art{order:1}.a-cg{order:2}.a-miss{order:3}.a-rank{order:4}
+.a-feat{order:5}.a-afx{order:6}.a-about{order:7}.a-app{order:8}
+.a-about{margin-top:32px}
+.a-app{margin-top:12px}
+.intro p{margin:0 0 10px;font-size:15px;line-height:1.85}
+.intro p:last-child{margin-bottom:0}
+.intro a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+.alist.cgh b span{display:inline;margin:0;font-size:inherit;color:inherit;line-height:inherit}
+.cgh span[lang]{font-family:var(--en)}
+.appsm{border-top:1px solid var(--line);padding:14px 0 0;font-size:13px;color:var(--sub);line-height:1.6}
+.appsm p{margin:0}
+.appsm b{color:var(--ink);margin-right:8px}
+.appsm .aplinks{margin-top:4px}
+.appsm a{color:var(--blue);font-weight:500;display:inline-block;padding:6px 0}
 .sec{padding:32px 0 0}
 .sh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
 .sh h2{margin:0;font-size:20px;line-height:1.4;font-weight:700}
@@ -119,7 +129,7 @@ body:has(.hero) .hd-r .srlink{display:none}
 .rk-n{font:700 15px var(--en);color:var(--mute);text-align:center}
 .rk-n.top{color:#fff;background:var(--brand);border-radius:5px;height:24px;line-height:24px;font-size:13px}
 .rk-w{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-.rk-w a{font:700 16px var(--en);color:var(--ink);margin-right:8px}
+.rk-w a,.rk-w b{font:700 16px var(--en);color:var(--ink);margin-right:8px}
 .rk-w a::after{content:"";position:absolute;inset:0}
 .rk-row:hover .rk-w a{color:var(--blue)}
 .rk-w a:focus-visible{outline:0}
@@ -405,6 +415,7 @@ ol.ms > li{scroll-margin-top:16px}
 .wl li{display:flex;align-items:baseline;gap:10px;min-width:0;border-bottom:1px solid var(--line)}
 .wl li{position:relative}
 .wl a{font:600 16px var(--en);color:var(--blue);padding:12px 0;flex:none}
+.wl li>b{font:600 16px var(--en);color:var(--ink);padding:12px 0;flex:none}
 .wl a::after{content:"";position:absolute;inset:0}
 .wl li[hidden],.u-ts[hidden],.u-ts ul[hidden],.u-ts h3[hidden]{display:none}
 .u-find{margin:16px 0 0}
@@ -1006,6 +1017,19 @@ ol.ms.one > li::before{display:none}
 .cg-jp a{min-width:40px;min-height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 15px var(--en);color:var(--ink)}
 .cg-jp a:hover{border-color:var(--blue);color:var(--blue)}
 .cg-ix .u-ts{scroll-margin-top:8px}
+/* 数字の見方 (the one link that replaced the 「1本」 note) and a page's one app line */
+.cnote.cnt a{color:var(--blue);display:inline-block;padding:6px 0;margin:-6px 0}
+.apl{margin:24px 0 0;font-size:14px;line-height:1.6;color:var(--mute);display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}
+.apl a{color:var(--blue);font-weight:500;display:inline-block;padding:8px 0;margin:-8px 0}
+.apl small{font-size:12px}
+.wside .apl{margin:0}
+@media (max-width:899px){.wside .apl{border-top:1px solid var(--line);padding-top:18px}}
+.ct-go{margin:20px 0 !important}
+.ct-go a{display:inline-block;padding:12px 18px;border:1px solid var(--blue);border-radius:var(--r);color:var(--blue);font-weight:700;text-decoration:none !important}
+.ct-go a:hover{background:var(--blue-50)}
+.ab .pv b a{color:var(--blue)}
+.ab .pv b a:hover{text-decoration:underline}
+.post .apl a{text-decoration:none}
 </style>
 </head>
 <body>
@@ -1016,10 +1040,10 @@ ol.ms.one > li::before{display:none}
       <b>極（きわみ）</b>
       <small>英単語の意味と<br>入試データ</small>
     </a>
-    <nav class="hd-r" aria-label="アプリ"><a class="srlink" href="/search/" aria-label="英単語を調べる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a><a class="applink" href="/app/">無料アプリ</a></nav>
+    <nav class="hd-r" aria-label="検索とアプリ"><a class="srlink" href="/search/" aria-label="英単語を調べる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a><a class="applink" href="/app/">無料アプリ</a></nav>
   </div>
   <div class="snav-w"><div class="wrap snav-in">
-    <nav class="snav" aria-label="メイン"><a href="/search/">単語を調べる</a><a href="/shindan/">単語力診断</a><a href="/kyotsu/">共通テスト</a><a href="/univ/">志望校別</a><a href="/gogen/">語源</a><a href="/ranking/nyushi/" aria-current=page>ランキング</a><a href="/words/">単語一覧</a><a href="/articles/">記事</a><script>(function(){var a=document.querySelector('.snav [aria-current]'),n=document.querySelector('.snav');if(!n)return;if(a&&n.scrollWidth>n.clientWidth){var p=a.previousElementSibling||a;n.scrollLeft+=p.getBoundingClientRect().left-n.getBoundingClientRect().left-12}var e=function(){var c=n.parentNode.classList;c.toggle('end',n.scrollLeft+n.clientWidth>=n.scrollWidth-4);c.toggle('st',n.scrollLeft>4)};e();n.addEventListener('scroll',e,{passive:true})})()</script></nav>
+    <nav class="snav" aria-label="メイン"><a href="/articles/">記事</a><a href="/chigai/">違い</a><a href="/gogen/">語源</a><a href="/words/">単語一覧</a><a href="/kyotsu/">共通テスト</a><a href="/univ/">志望校別</a><a href="/ranking/nyushi/" aria-current=page>ランキング</a><a href="/shindan/">単語力診断</a><a href="/search/">単語を調べる</a><script>(function(){var a=document.querySelector('.snav [aria-current]'),n=document.querySelector('.snav');if(!n)return;if(a&&n.scrollWidth>n.clientWidth){var p=a.previousElementSibling||a;n.scrollLeft+=p.getBoundingClientRect().left-n.getBoundingClientRect().left-12}var e=function(){var c=n.parentNode.classList;c.toggle('end',n.scrollLeft+n.clientWidth>=n.scrollWidth-4);c.toggle('st',n.scrollLeft>4)};e();n.addEventListener('scroll',e,{passive:true})})()</script></nav>
     <form class="hsrch" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語を調べる" aria-label="英単語か日本語で調べる" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required></form>
   </div></div>
 </header>
@@ -1036,7 +1060,7 @@ ol.ms.one > li::before{display:none}
   <a class="sd-promo" href="/kyotsu/"><span class="sd-promo-t"><b>共通テスト直前</b><small>直前に覚える英単語100語（意味をかくして確認）と、レベルごとに英文の何％が読めるか</small></span><span class="sd-promo-go">見る →</span></a>
   <details class="how">
     <summary>数え方</summary>
-    <ul><li>対象：令和6〜8年度の大学入学共通テスト「英語」12本（本試験と追試験の、リーディングとリスニングの読み上げ文）。</li><li>数えた単語：極のアプリの受験英単語のうち、基本の1,900語（2語以上のものはのぞく）。</li><li>語形で数えました：見出し語と、その変化形（-s・-ed・-ing のついた形や、took・children のような不規則な形）を同じ単語として数えています。found（find）や left（leave）のように、別の単語でもある形は数えていません。</li><li>本数と回数は、意味を区別せずに数えています（同じつづりなら、名詞も動詞も同じ単語です）。</li><li>並べ方：何本に出たか（本数）の多い順、同じなら合計回数の多い順。本数も回数も同じ単語は同じ順位です。</li><li>次の形は、多くが別の語や名前、出典の行なので数えていません：found（find の過去形）、adapted（出典の行（Adapted from））、retrieved（出典の行（Retrieved from））、united（国の名前（United States））、states（国の名前（United States））、bill（人の名前（Bill））、working（work の -ing 形）。</li><li>意味は、極のアプリで1つ目に出る意味です。ただし、入試の文を1語あたり最大180文読んで、どの意味で使われているかを調べた単語のうち、ほかの意味のほうが多かった7語（event、consider、attention、instead、exchange、appear、waste）は、いちばん多かった意味を「入試で多い意味」として載せています（event は30文のうち18文が「（重要な）出来事」、11文が「行事、催し」）。</li></ul>
+    <ul><li>対象：令和6〜8年度の大学入学共通テスト「英語」12本（本試験と追試験の、リーディングとリスニングの読み上げ文）。</li><li>数えた単語：極のアプリの受験英単語のうち、基本の1,900語（2語以上のものはのぞく）。</li><li>語形で数えました：見出し語と、その変化形（-s・-ed・-ing のついた形や、took・children のような不規則な形）を同じ単語として数えています。found（find）や left（leave）のように、別の単語でもある形は数えていません。</li><li>本数と回数は、意味を区別せずに数えています（同じつづりなら、名詞も動詞も同じ単語です）。</li><li>並べ方：何本に出たか（本数）の多い順、同じなら合計回数の多い順。本数も回数も同じ単語は同じ順位です。</li><li>次の形は、多くが別の語や名前、出典の行なので数えていません：found（find の過去形）、adapted（出典の行（Adapted from））、retrieved（出典の行（Retrieved from））、united（国の名前（United States））、states（国の名前（United States））、bill（人の名前（Bill））、working（work の -ing 形）。</li><li>意味は、極のアプリで1つ目に出る意味です。ただし、入試の文を1語あたり最大180文取り出して、どの意味で使われているかを調べた単語のうち、ほかの意味のほうが多かった7語（event、consider、attention、instead、exchange、appear、waste）は、いちばん多かった意味を「入試で多い意味」として載せています（event は30文のうち18文が「（重要な）出来事」、11文が「行事、催し」）。</li></ul>
   </details>
   <div class="appbox">
     <img src="/assets/mekuru.svg" alt="" width="52" height="52">
@@ -1072,13 +1096,13 @@ ol.ms.one > li::before{display:none}
         <li><a href="/about/">極について</a></li>
         <li><a href="/privacy/">プライバシーポリシー・免責事項</a></li>
         <li><a href="/terms/">利用規約</a></li>
-        <li><a href="https://forms.gle/56xaeGjnA7WYgS3V6" target="_blank" rel="noopener">お問い合わせ</a></li>
+        <li><a href="/contact/">お問い合わせ</a></li>
       </ul></div>
     </div>
     <div class="ft-c">© 2026 極（きわみ）</div>
   </div>
 </footer>
-<script src="/assets/sug.25f786df.js" defer></script>
+<script src="/assets/sug.d432a7dd.js" defer></script>
 <script>if(location.hostname==="kiwami-eitango.com"){window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","G-4FGEKWQYJH");var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-4FGEKWQYJH";document.head.appendChild(g);}</script><!-- Cloudflare Web Analytics --><script>if(location.hostname==="kiwami-eitango.com"){var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",'{"token": "5dedc341bc184ed59cae8fbf670adedf"}');document.body.appendChild(s)}</script>
 </body>
 </html>
