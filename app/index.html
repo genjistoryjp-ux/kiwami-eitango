@@ -174,6 +174,16 @@ p{margin:0}
 .tip-l .mekuru{width:46px;height:46px}
 .tip-l p{font-size:14px;font-weight:600;line-height:1.55;color:var(--ink)}
 .nudge.tip .ts{font-size:inherit;color:inherit}
+/* 復習の量 on the home (a heavy day): two short lines of めくる in normal weight, a text button and a small x at the top right (the hero's button stays the only filled one) */
+.nudge.tip.slim{position:relative;flex-direction:row;align-items:center;gap:4px;padding:8px 40px 8px 10px}
+.tip.slim .tip-l{flex:1;min-width:0;gap:6px}
+.tip.slim .tip-l .mekuru{width:34px;height:34px}
+.tip.slim .tip-l p{font-size:14px;font-weight:400;line-height:1.5}
+.tip.slim .ts{display:inline-block}
+.tip-go{flex:none;display:flex;align-items:center;min-height:44px;font-size:14px;font-weight:700;color:var(--blue);white-space:nowrap}
+.tip-go svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tip-x{position:absolute;top:0;right:0;width:40px;height:44px;display:grid;place-items:center;color:var(--muted)}
+.tip-x .ico{width:14px;height:14px;stroke-width:2.2}
 /* the tab bar (new look): white 94% over a blur, a hairline on top; 58px + the home indicator (.ctadock sits at bottom:58px) */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--tabbar-bg);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--hair);padding:4px max(6px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(6px,env(safe-area-inset-left,0px))}
 .tabbar-in{max-width:560px;height:54px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
@@ -1034,6 +1044,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 #screen:not([hidden]) ~ #toastroot .toast:not(:has(.toast-btn)){pointer-events:none}
 .toast-btn{min-height:44px;margin:-10px -16px -10px 0;padding:0 14px;border-radius:0 12px 12px 0;background:color-mix(in srgb,var(--bg) 16%,transparent)}
 .toast{animation-name:toastin;width:max-content}   /* its own width, centred (left:50% alone would cap it at half the screen) */
+.toast>span{white-space:pre-line}   /* a line break in the message is kept */
 @keyframes toastin{from{transform:translate(-50%,6px);opacity:.4}}
 @keyframes fade{from{opacity:0}}
 @keyframes up{from{transform:translateY(30px);opacity:.5}}
@@ -1850,6 +1861,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .study.v2 .choice.ok .key{border-radius:50%;background:var(--ok);color:#fff}
 .study.v2 .choice.ng .key{border-radius:50%;background:var(--ng);color:#fff}
 .study.v2 .choice.ng .key svg{width:15px;height:15px}
+/* touch: no keyboard, so no 1–4 key; the ✓ / ✗ shows in its place on the answered options only */
+@media (hover:none) and (pointer:coarse){.study.v2 .choice{padding-left:16px}.study.v2 .choice:not(.ok):not(.ng) .key{display:none}}
 .study.v2 .crate{flex:none;height:26px;display:inline-flex;align-items:center;margin:0;padding:0 10px;border-radius:var(--r-pill);background:var(--ok-solid);color:#fff;font-family:var(--f-en);font-size:var(--fs-sub);font-weight:800;letter-spacing:.01em}
 .study.v2 .veil{border:1.5px dashed var(--track);border-radius:var(--r-card);background:var(--fill);color:var(--ink);font-size:var(--fs-name)}
 .study.v2 .veil small{font-size:var(--fs-min);font-weight:500;color:var(--ink-2)}
@@ -2698,6 +2711,9 @@ button.k-uv{width:calc(100% - 2 * max(var(--pad),env(safe-area-inset-left,0px)))
 .sw.v2{word-break:auto-phrase}
 .sw-prog{height:6px;margin-top:6px;border-radius:3px;background:var(--step-todo);overflow:hidden;flex:none}
 .sw-prog i{display:block;height:100%;border-radius:3px;background:var(--blue)}
+/* the clock sits under the card, as on a card question (.qclock.fl); its room is kept from the first card, so the card never moves */
+.sw.v2 .qtimer{flex:none;margin-top:14px}
+.sw.v2 .qtimer.off{visibility:hidden}
 .sw.v2 .swcard{background:var(--card-bg);border:1.5px solid var(--line-card);border-radius:var(--r-hero);box-shadow:none}
 .sw.v2 .swcard.next{border-color:var(--hair)}
 .sw.v2 .swcard.holed::before,.sw.v2 .swcard .ring{display:none}
@@ -3059,7 +3075,7 @@ const MK_LINES = {
   "4択は、選択肢を隠せるよ。先に答えを思い出すと、もっと覚えられる！"
  ],
  "tut_tipret": [
-  "復習が多いと感じたら、量を減らせるよ。増やして、忘れにくくすることもできる"
+  "復習が多いなら、量を減らせるよ"
  ],
  "tut_tiprem": [
   "毎日、ぼくが通知で呼びにいこうか？ 連続がつながった日は鳴らさないよ"
@@ -3194,7 +3210,7 @@ const mekuru = (mood, cls = '') => MEKURU[mood] ? `<img class="mekuru ${cls}" sr
    that turn up (a login, a backup); a few days' records (Safari → the home-screen app) keep it on from their first day, with
    the lines whose moment has passed counted as said (mv). f1 / d2: the first set finished / day 2 opened, kept for later */
 const TUT_KEY = 'kiwami.tut';
-let TUT = null, tutCur = null, tutHome = '', tutEat = 0, tutIO = null;   // tutCur: the line up now {k, el, after, home}; tutHome: the home's, kept through a redraw (tutIO: waiting for it to come into view)
+let TUT = null, tutCur = null, tutHome = '', tutEat = 0, tutSwAt = null, tutIO = null;   // tutCur: the line up now {k, el, after, home}; tutHome: the home's, kept through a redraw (tutIO: waiting for it to come into view)
 const tutPend = [];   // a grade's first line, said on the next card
 function tutInit(){
   try { TUT = JSON.parse(lsGet(TUT_KEY) || 'null'); } catch(e) { TUT = null; }
@@ -3229,7 +3245,9 @@ const TIP = {veil: {ok: () => !S.settings.veil && !isCardMode(), btn: 'オンに
 const tipNew = k => !!TUT && !TUT.tip?.[k] && !!MK_LINES['tut_tip' + k] && TIP[k].ok();
 const tipGap = () => dayIdx() - (TUT?.tipD || 0) >= 2;   // one tip holds the next for 2 days: two in a row read as nagging
 function tipDone(k){ (TUT.tip ||= {})[k] = 1; TUT.tipD = dayIdx(); if (k === 'blk') (TUT.seen ||= {}).blk1 = 1; tutSave(); }   // blk: tut_blk1 would only say it again
-const tipHTML = k => `<div class="nudge tip" role="note"><div class="tip-l">${mekuru('normal')}<p>${tutLine('tip' + k)}</p></div>
+const tipHTML = (k, slim) => slim ? `<div class="nudge tip slim" role="note"><div class="tip-l">${mekuru('normal')}<p>${tutLine('tip' + k)}</p></div>
+  <button class="tip-go" data-act="tipGo" data-k="${k}">${TIP[k].btn}${K_ICO.chev}</button><button class="tip-x" data-act="tipNo" data-k="${k}" aria-label="閉じる">${I.close}</button></div>`
+  : `<div class="nudge tip" role="note"><div class="tip-l">${mekuru('normal')}<p>${tutLine('tip' + k)}</p></div>
   <div class="btn-row"><button class="btn btn-primary" data-act="tipGo" data-k="${k}">${TIP[k].btn}</button><button class="btn btn-ghost" data-act="tipNo" data-k="${k}">閉じる</button></div></div>`;
 const TK = {もう一度: 'g1', 難しい: 'g2', 正解: 'g3', 簡単: 'g4', 知らない: 'no', 知ってる: 'yes', 連続: 'st', Perfect: 'pf'};
 /* a tut_* line: {x} filled in, [正解] drawn in that button's colour; each clause (up to 、。！) kept whole where it fits, 「…」 never split */
@@ -3259,14 +3277,17 @@ const tutDrop = () => { tutCur = null; };   // the screen under it was drawn aga
    a home line, in the page's flow, goes at the click, so nothing moves under the finger and a scroll leaves it */
 const TUT_EAT = '.grade,.choices,.dunno,.veil,.sw-no,.sw-yes,#swcard,.lisbtn,.qcard[data-act="reveal"]';   // .choices: a choice, or where it waits hidden
 const tutHit = e => tutCur.el?.contains(e.target) || e.target.closest?.(TUT_EAT);
+/* one exception: the card being sorted, tapped without moving, still turns (タップで意味), as it says; a drag on it doesn't sort */
 document.addEventListener('pointerdown', e => {
-  tutEat = 0; if (!tutCur || tutCur.home) return;
-  if (tutHit(e)) { e.stopPropagation(); tutEat = 1; }
+  tutEat = 0; tutSwAt = null; if (!tutCur || tutCur.home) return;
+  if (tutHit(e)) { e.stopPropagation(); tutEat = 1; if (!tutCur.el?.contains(e.target) && e.target.closest?.('#swcard')) tutSwAt = [e.clientX, e.clientY]; }
   tutClose();
 }, true);
-document.addEventListener('pointercancel', () => { tutEat = 0; }, true);   // a scroll: no click follows
+document.addEventListener('pointercancel', () => { tutEat = 0; tutSwAt = null; }, true);   // a scroll: no click follows
 document.addEventListener('click', e => {
-  if (tutEat) { tutEat = 0; e.stopPropagation(); e.preventDefault(); return; }
+  if (tutEat) { const a = tutSwAt; tutEat = 0; tutSwAt = null; e.stopPropagation(); e.preventDefault();
+    if (a && Math.abs(e.clientX - a[0]) <= 6 && Math.abs(e.clientY - a[1]) <= 6 && e.target.closest?.('#swcard')) swFlip();   // bindDrag's 6px
+    return; }
   if (!tutCur) return;
   if (tutHit(e)) { tutClose(); e.stopPropagation(); e.preventDefault(); return; }
   tutClose(tutCur.home);
@@ -3701,6 +3722,9 @@ function bumpDaily(o){
    is enough now, so a busy day still keeps the streak (the owner, 2026-10-26). Days before 2026-10-19 count if anything was
    studied. Every day is counted again by this rule. */
 const GOAL_FROM = '2026-10-19', STREAK_N = 10;
+/* お休みチケット: one for every 7 days in a row, 2 at most. From TKT3_FROM, someone who has never had one gets the first on the
+   day the run reaches 3, so a single day off in the first week does not end it; days before TKT3_FROM count as they did */
+const TKT3_FROM = '2026-11-07';
 const MILESTONES = [3, 7, 14, 30, 50, 100, 150, 200, 300, 365, 500, 1000];
 function dayOn(k){ const d = S.daily[k]; return !!d && (k < GOAL_FROM ? (d.n || 0) + (d.sw || 0) > 0 : !!d.g || (d.n || 0) >= STREAK_N); }
 /* questions still to answer today before the streak grows (0 once today counts) */
@@ -3710,15 +3734,17 @@ function streakInfo(){
   const today = dayIdx(), on = new Set(), frozen = new Set();
   const days = Object.keys(S.daily).filter(dayOn).map(k => Math.round(Date.parse(k) / DAY)).sort((a,b) => a - b);
   days.forEach(d => on.add(d));
-  let n = 0, run = 0, freeze = 0, best = 0, prev = 0;
+  const t3 = Math.round(Date.parse(TKT3_FROM) / DAY);
+  let n = 0, run = 0, freeze = 0, best = 0, prev = 0, got = false, gotToday = false;   // got: a ticket was ever given
   for (let d = days[0] ?? today; d <= today; d++) {
-    if (on.has(d)) { n++; run++; if (run % 7 === 0) freeze = Math.min(2, freeze + 1); }
+    if (on.has(d)) { n++; run++;
+      if (run % 7 === 0 || (!got && run === 3 && d >= t3)) { if (d === today) gotToday = freeze < 2; freeze = Math.min(2, freeze + 1); got = true; } }
     else if (d === today) {}                                   // today isn't over yet
     else if (freeze > 0) { freeze--; run = 0; frozen.add(d); }  // a missed day uses one お休みチケット
     else { if (n) prev = n; n = 0; run = 0; }
     best = Math.max(best, n);
   }
-  return {n, freeze, done: on.has(today), best, prev, on, frozen};
+  return {n, freeze, done: on.has(today), best, prev, on, frozen, gotToday};
 }
 function goalReached(){
   if (!activeIds().length) return false;
@@ -3729,7 +3755,7 @@ function checkGoal(){
   if (todayStat().g || !goalReached()) return false;
   xpOpen(); bumpDaily({g: 1, [XPK]: XP.goal}); return true;   // and its XP
 }
-const milestoneText = n => ({3: '3日連続！いい調子', 7: '1週間連続！', 14: '2週間連続！', 30: '1か月連続！', 50: '50日連続！',
+const milestoneText = (n, tk) => n === 3 && tk ? '3日連続！お休みチケットを1枚もらった' : ({3: '3日連続！いい調子', 7: '1週間連続！', 14: '2週間連続！', 30: '1か月連続！', 50: '50日連続！',
   100: '100日連続！すごい', 150: '150日連続！', 200: '200日連続！', 300: '300日連続！', 365: '1年連続！', 500: '500日連続！', 1000: '1000日連続！'})[n] || '';
 /* the streak's sheet (the top bar's pill): the 記録 tab's ring, the month and the お休みチケット, how the streak grows, the next milestone */
 function streakSheet(){
@@ -5214,10 +5240,28 @@ async function remindCheck(){
   r.on = false; lsSet(REM_KEY, JSON.stringify(r)); await remindPlan();
   if (route.tab === 'settings' && $('#screen').hidden && !sheetOpen()) render();
 }
-function remindSheet(){
-  const r = remGet();
+function remindSheet(ics){
+  const r = remGet();   // the .ics one keeps no time, so nothing is ticked there
   openSheet(`<div class="sheet-h"><h3>知らせる時刻</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
-    <div class="k-grp">${REM_TIMES.map(t => `<button class="k-srow" data-act="remindAt" data-t="${t}">${kTxt(t)}${t === r.t ? `<span class="val">${I.check}</span>` : ''}</button>`).join('')}</div>`);
+    <div class="k-grp">${REM_TIMES.map(t => `<button class="k-srow" data-act="${ics ? 'icsGo' : 'remindAt'}" data-t="${t}">${kTxt(t)}${!ics && t === r.t ? `<span class="val">${I.check}</span>` : ''}</button>`).join('')}</div>`);
+}
+/* the web app has no notifications: a daily event with an alarm, made here as a .ics file (nothing sent anywhere) for the phone's calendar.
+   Floating local time (no TZID), so it rings at that hour wherever the phone is. Saved as a file, never opened in place of the page:
+   the home-screen app on iPhone has no way back from a file shown full screen, so it is not offered there, nor in an app's own
+   browser (LINE …), which may not save files at all */
+const icsOK = () => IS_WEB && !IS_APP && !inApp && !(IOS && isStandalone());
+function icsGo(t){
+  const p = n => String(n).padStart(2, '0'), d = new Date(), [h, m] = t.split(':').map(Number);
+  const text = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//kiwami-eitango.com//daily//JA', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT',
+    `UID:daily-${Date.now()}@kiwami-eitango.com`, `DTSTAMP:${d.toISOString().replace(/[-:]|\.\d+/g, '')}`,
+    `DTSTART:${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}T${p(h)}${p(m)}00`, 'DURATION:PT10M', 'RRULE:FREQ=DAILY',
+    'SUMMARY:極で今日の英単語', `URL:${SITE}/app/`, `DESCRIPTION:${SITE}/app/`,
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:極で今日の英単語', 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR', ''].join('\r\n');
+  const url = URL.createObjectURL(new Blob([text], {type: 'text/calendar;charset=utf-8'}));
+  closeSheet();
+  const a = document.createElement('a'); a.href = url; a.download = 'kiwami.ics'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  toast(`保存したファイルを開いて追加すると、\n毎日${t}に知らせます`, null, 6000);
 }
 if (IS_APP) {
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') remindPlan(); else if (route.tab === 'settings') remindCheck(); });
@@ -5468,7 +5512,7 @@ function revSheet(){
 }
 /* 設定 →「使い方」: what people miss, each row going to the thing itself */
 const tipsRows = () => { const a = activeIds().length, r = remGet();
-  return `${kSec('覚え方を変える', kGroup([IS_APP ? (r.on ? kGo('remindSheet', '毎日のリマインダー', '', r.t) : kGo('remindToggle', '毎日のリマインダー', '決めた時刻に、今日の英単語を知らせる', 'オフ')) : '',
+  return `${kSec('覚え方を変える', kGroup([IS_APP ? (r.on ? kGo('remindSheet', '毎日のリマインダー', '', r.t) : kGo('remindToggle', '毎日のリマインダー', '決めた時刻に、今日の英単語を知らせる', 'オフ')) : icsOK() ? kGo('icsSheet', 'カレンダーで毎日知らせる') : '',
     kSw('veil', '4択の選択肢を隠す', '先に答えを思い出してから、タップで選択肢を見る'), kGo('revSheet', '復習の量を変える', '多いときは減らす、忘れにくくしたいときは増やす'),
     kGo('paceSheet', '1日の新しい単語を変える'), kGo('studyOpts', '出題のしかたを変える', '4択かカードか、英→日か日→英か、1セットの問題数、制限時間'),
     kSw('deriv', '派生語も出題する', 'オフにすると、見出し語が早く進む')]))}
@@ -5605,9 +5649,11 @@ function viewHome(){
   const heroCls = covers.length === 1 ? ` book-${bookOf(covers[0]).k}` : '';
   // the number: のこり N語 with the goal and the streak it makes, or 40語 クリア once the goal is done
   const goalN = done + total;
+  // the same number as 記録's これからの復習: what tomorrow will give (revPlan), what today's limit leaves to it said under it
+  const tr = act.length && hasProgress() ? revPlan(fcDays(), c.due) : null;
   const title = !act.length ? `<p class="k-hero-title"><span class="big">単語帳を選ぼう</span></p><p class="k-hero-sub">使う単語帳を選ぶと、今日の復習と新しい単語がここに出る</p>`
     : total ? `<p class="k-hero-title"><span class="pre">のこり</span><span class="n">${total}</span><span class="unit">語</span></p><p class="k-hero-sub"><span class="k-ph">目標の${goalN}語まで、</span><span class="k-ph">あと${aboutMin(total)}</span></p>
-      <p class="k-hero-sub k-hero-streak${hit ? ' lit' : ''}">${K_ICO.flame}${hit ? `連続${stk.n}日、今日もつながった` : streakNext(stk)}</p>${heavy && c.dueAll > c.due ? `<p class="k-hero-sub">${kPhrases(td.aw ? '休み明けは復習だけでOK。' : '多い日は今日の分だけでOK。')}${kPhrases('残りは明日から少しずつ出すよ')}</p>` : ''}`
+      <p class="k-hero-sub k-hero-streak${hit ? ' lit' : ''}">${K_ICO.flame}<span>${kPhrases(hit ? `連続${stk.n}日、今日もつながった` : streakNext(stk))}</span></p>${heavy && c.dueAll > c.due && !tr?.rest ? `<p class="k-hero-sub">${kPhrases(td.aw ? '休み明けは復習だけでOK。' : '多い日は今日の分だけでOK。')}${kPhrases('残りは明日から少しずつ出すよ')}</p>` : ''}`
     : `<p class="k-hero-title">${done ? `<span class="n">${done}</span><span class="unit">語</span><span class="post">クリア</span>` : '<span class="big">今日の分はクリア</span>'}</p>${hit ? `<p class="k-hero-sub k-hero-streak lit">${K_ICO.flame}連続${stk.n}日になった</p>` : ''}<p class="k-hero-sub">ここからは、やりたい分だけ</p>`;
   // today's road: 済み, 復習, 新しい in the same proportions as their labels (a label never narrower than its text)
   const segs = [['done', done, `済み${done}語`], ['rev', c.due, `復習${c.due}語`], ['new', c.newToday, `新しい${c.newToday}語`]].filter(x => x[1] > 0);
@@ -5620,10 +5666,8 @@ function viewHome(){
     : go ? `<button class="k-play" data-act="${go.act}"${go.more ? ' data-more="1"' : ''}${go.id ? ` data-id="${esc(go.id)}"` : ''}>${K_ICO.play}<span class="k-play-t"><span class="k-play-main">${esc(go.main)}</span><span class="k-play-sub">${lns.map(l => `<span class="ln">${kPhrases(l)}</span>`).join('')}</span></span></button>` : '';
   // the next thing after the main one, as a quiet button: today's おさらい (the goal's reviews already carry it)
   const subAct = act.length && sdWait && go && !/review|check/.test(go.kind) ? `<button class="k-sub-act" data-act="studyCheck"><span>今日のおさらい ${sdWait}語</span><span class="r">${aboutMin(Math.min(10, sdWait))}${K_ICO.chev}</span></button>` : '';
-  // the same number as 記録's これからの復習; today's rest is its own bar there, so it is said beside the number, not added in (0語 then, なし would deny it)
-  const fc = act.length && hasProgress() ? fcDays() : null, tmr = fc ? fc[1] : -1, rest = fc && stk.done ? fc[0] : 0;
   const hero = `<section class="k-first"><article class="k-hero${heroCls}" aria-label="今日の学習"><div class="k-hero-top">${heroCovers(covers)}<div class="k-hero-txt">${title}</div></div>
-    ${seg}<div class="k-hero-act">${play}${act.length ? `<button class="k-more" data-act="homeMore" aria-label="ほかのやり方">${K_ICO.more}</button>` : ''}</div>${subAct}</article>${tmr < 0 ? '' : `<button class="k-tmr" data-act="goFc"><span>明日の復習${rest ? `<small>今日の残り${nLoc(rest)}語も明日にまわる</small>` : ''}</span><b>${tmr || rest ? `<span class="num">${nLoc(tmr)}</span>語` : 'なし'}</b>${K_ICO.chev}</button>`}</section>`;
+    ${seg}<div class="k-hero-act">${play}${act.length ? `<button class="k-more" data-act="homeMore" aria-label="ほかのやり方">${K_ICO.more}</button>` : ''}</div>${subAct}</article>${!tr ? '' : `<button class="k-tmr" data-act="goFc"><span>明日の復習${tr.rest ? `<small>${kPhrases(`今日の分に入らない${nLoc(tr.rest)}語${tr.spread ? 'は、明日から少しずつ' : 'も、明日にまわる'}`)}</small>` : ''}</span><b>${tr.tmr ? `<span class="num">${nLoc(tr.tmr)}</span>語` : 'なし'}</b>${K_ICO.chev}</button>`}</section>`;
   // 使っている単語帳: the deck new words come from now says when it is round once (変える: 1日の新しい単語), a later one can be
   // put first, the one before the next deck offers it; a deck with nothing new left opens its page (ブロックごとの進み)
   const ds = act.map(deckById).filter(Boolean), going = ds.find(d => paceInfo([d.id]));
@@ -5656,16 +5700,17 @@ function viewHome(){
     if (html) say = `<section class="k-sec k-say tut" role="status" aria-label="めくるから">${mekuru('normal')}<p class="tb">${html}</p></section>`;
   } else if (act.length) {
     if (heavy === 'away' && homeSaid?.day !== today) homeSaid = {day: today, t: mkSay('home_back', {n: stk.n})};
-    const ms = milestoneText(stk.n);
-    const line = hit ? `${done ? `${done}語クリア！` : '今日の目標クリア！'}${ms ? ms : `連続${stk.n}日になったよ`}`
-      : heavy === 'away' && homeSaid.t ? homeSaid.t
-      : stk.freeze ? `お休みチケットが${stk.freeze}枚あるから、${stk.freeze}日休んでも連続は切れないよ` : '';
+    const ms = milestoneText(stk.n, stk.gotToday);
+    // a day that is already on: the hero and the top bar say the streak, so めくる speaks only on a milestone
+    const tkt = stk.freeze ? `お休みチケットが${stk.freeze}枚あるから、${stk.freeze}日休んでも連続は切れないよ` : '';
+    const line = hit ? (ms ? `${done ? `${done}語クリア！` : '今日の目標クリア！'}${ms}` : tkt)
+      : heavy === 'away' && homeSaid.t ? homeSaid.t : tkt;
     const face = hit ? 'cheer' : 'happy';
     if (line) say = `<section class="k-sec k-say" aria-label="めくるから">${MEKURU[face] ? `<button class="k-mk-btn" data-act="mkTalk" aria-label="めくるに話しかける">${mekuru(face)}</button>` : ''}<p id="mkbubble" class="k-bubble" role="status" data-base="${esc(line)}">${kPhrases(line)}</p></section>`;
   }
   // ひとこと: one card at a time, tipGap apart. 復習の量 on a heavy day, then 範囲 and 長文の写真 for those who stayed: the home has no way to either
   const dB = daysBefore(today), tipK = tk || !tipGap() ? '' : (heavy || c.due >= 30) && tipNew('ret') ? 'ret' : dB >= 3 && tipNew('blk') ? 'blk' : dB >= 5 && tipNew('scan') && learnedN() >= 100 ? 'scan' : '';
-  const note = act.length ? nudgeHTML() || (tipK ? (TUT.tipH = today, tipHTML(tipK)) : '') || instHTML('home') : '';   // tipH: tipD moves only on a tap, and a card up holds the results' card too
+  const note = act.length ? nudgeHTML() || (tipK ? (TUT.tipH = today, tipHTML(tipK, tipK === 'ret')) : '') || instHTML('home') : '';   // tipH: tipD moves only on a tap, and a card up holds the results' card too
   return `${topbar()}${hero}${grpHome()}${note ? `<div class="k-note">${note}</div>` : ''}${inUse}${act.length ? homeUniv() : ''}${again}${shelf}${say}`;
 }
 /* the hero's ⋯: the other ways to go on (each only when it starts something), how questions are asked, the day's new words,
@@ -6036,7 +6081,7 @@ function calBlock(st, fr, fx){
     <div class="k-cal-lg"><span><i class="sw"></i>やった日</span><span>${K_TK}お休みチケットを使った日</span></div></div>`;
 }
 const tktBlock = st => `<div class="k-tkt"><div class="top"><p class="n">お休みチケット ${st.freeze}枚</p><div class="ic" role="img" aria-label="2枚まで持てるうちの${st.freeze}枚">${[0, 1].map(i => `<span class="${i < st.freeze ? 'hv' : 'em'}">${K_TK}</span>`).join('')}</div></div>
-  <p class="s"><span class="k-ph">休んだ日に自動で使われて、</span><span class="k-ph">連続が切れない</span><br><span class="k-ph">7日続けるごとに1枚もらえる、</span><span class="k-ph">2枚まで持てる</span></p></div>`;
+  <p class="s"><span class="k-ph">休んだ日に自動で使われて、</span><span class="k-ph">連続が切れない</span><br><span class="k-ph">3日続けると最初の1枚、</span><span class="k-ph">そのあとは7日ごとに1枚、</span><span class="k-ph">2枚まで持てる</span></p></div>`;
 /* the last 20 weeks, a square a day (weeks in columns, Sunday on top): how many questions (and sorted words), the app blue
    deeper the more — as the 記録 tab showed it before the new look (0, under 10, under 30, under 60, 60 and up) */
 const heatLv = n => n <= 0 ? 0 : n < 10 ? 1 : n < 30 ? 2 : n < 60 ? 3 : 4;
@@ -6808,17 +6853,31 @@ function fcDays(){
   for (const c of cardsOf(activeIds(), true)) { const p = prog(c); if (!isReview(p) || p.sus) continue; const i = Math.max(0, p.due - today); if (i < 29) fc[i]++; }
   return fc;
 }
-/* これからの復習: today (what is left) to 4 weeks on, one bar a day; tomorrow's bar in the app blue, the average dotted */
-function fcBlock(fc){
-  const N = fc.length;
-  const mx = Math.max(4, ...fc), stp = niceStep(mx), tp = Math.ceil(mx / stp) * stp, H = 124, avg = Math.round(fc.reduce((a, v) => a + v, 0) / N);
+/* the reviews as they will come: today what is left of today's limit (counts().due), then each day what falls due and what the
+   days before left over (rest: what today's limit leaves out), up to that day's limit — dayCap's rule with the 14 days to today,
+   and maxRev. The home's 明日の復習 and 記録's これからの復習 say day 1 of it; what today can still do is not tomorrow's */
+function revPlan(fc, due = counts().due){
+  const today = dayIdx(), max = S.settings.maxRev || 9999, rn = [];
+  for (let d = today - 13; d <= today; d++) { const x = S.daily[dayKey(d)]; if (x?.n) rn.push(x.rn || 0); }
+  rn.sort((a, b) => a - b); const med = rn.length ? rn[rn.length >> 1] : 0;
+  const lim = n => { const cap = n >= 30 && (n >= max || n > 2 * med) ? Math.min(max, Math.max(2 * S.settings.setSize, Math.round(med * 1.5))) : 0;
+    return Math.min(max, cap > 0 && cap < n ? cap : Infinity); };
+  const rest = Math.max(0, fc[0] - due), plan = [fc[0] - rest];
+  for (let i = 1, carry = rest; i < fc.length; i++) { const n = fc[i] + carry, v = Math.min(n, lim(n)); plan.push(v); carry = n - v; }
+  return {plan, rest, tmr: plan[1], spread: plan[1] < fc[1] + rest};
+}
+/* これからの復習: today (what is left) to 4 weeks on, one bar a day; tomorrow's bar in the app blue, the average dotted.
+   Mine as revPlan lays them out (pl), a friend's as their due days */
+function fcBlock(fc, pl){
+  const bars = pl ? pl.plan : fc, N = bars.length, tm = bars[1];
+  const mx = Math.max(4, ...bars), stp = niceStep(mx), tp = Math.ceil(mx / stp) * stp, H = 124, avg = Math.round(bars.reduce((a, v) => a + v, 0) / N);
   const xl = [[0, '今日'], [7, '1週間後'], [14, '2週間後'], [21, '3週間後'], [28, '4週間後']];
   return `<section class="k-sec" id="fcsec" aria-label="これからの復習"><div class="k-sec-h"><h2 class="k-sec-t">これからの復習</h2></div>
-    <div class="k-fc"><div class="top">${kBig('明日', nLoc(fc[1]), '語')}<p class="v">1日平均 <b>${nLoc(avg)}</b>語</p></div>
-      <div class="row2"><p>${fc[1] ? aboutMin(fc[1]) : '復習なし'}</p><p>${avg ? aboutMin(avg) : ''}</p></div>
-      <div class="k-chart" role="img" aria-label="これからの復習、今日${fc[0]}語、明日${fc[1]}語、1日平均${avg}語">
+    <div class="k-fc"><div class="top">${kBig('明日', nLoc(tm), '語')}<p class="v">1日平均 <b>${nLoc(avg)}</b>語</p></div>
+      <div class="row2"><p>${tm ? aboutMin(tm) : '復習なし'}</p><p>${avg ? aboutMin(avg) : ''}</p></div>
+      <div class="k-chart" role="img" aria-label="これからの復習、今日${bars[0]}語、明日${tm}語、1日平均${avg}語">
         <div class="gl" style="top:0"><span>${tp}</span></div><div class="gl base" style="top:${H}px"></div>
-        <div class="bars">${fc.map((v, i) => `<i${i === 1 ? ' class="tm"' : ''} style="height:${(v / tp * H).toFixed(1)}px"></i>`).join('')}</div>
+        <div class="bars">${bars.map((v, i) => `<i${i === 1 ? ' class="tm"' : ''} style="height:${(v / tp * H).toFixed(1)}px"></i>`).join('')}</div>
         ${avg ? `<div class="avg" style="top:${(H - avg / tp * H).toFixed(1)}px"><span>平均</span></div>` : ''}</div>
       <div class="k-xl" aria-hidden="true">${xl.map(([i, t]) => `<span${i ? ` style="left:calc(3.5px + (100% - 7px) * ${i / 28})"` : ' class="l0"'}>${t}</span>`).join('')}</div></div></section>`;
 }
@@ -6861,7 +6920,7 @@ function viewStats(){
   const dks = started.filter(d => deckStats(d).r > 0);
   const books = dks.length ? `<section class="k-sec" aria-label="単語帳ごとの進み"><div class="k-sec-h"><h2 class="k-sec-t"><button data-act="tab" data-tab="decks">単語帳ごとの進み${K_ICO.chev}</button></h2></div><div class="k-dks">${dks.map(dkRow).join('')}</div></section>` : '';
   // これからの復習: today (what is left) to 4 weeks on, one bar a day; tomorrow's bar in the app blue, the average dotted
-  const fcs = fcBlock(fcDays());
+  const fc = fcDays(), fcs = fcBlock(fc, revPlan(fc));
   const say = MEKURU.happy ? `<section class="k-sec k-say" aria-label="めくるから">${mekuru('happy')}<p class="k-bubble">${kPhrases('覚えた単語も、忘れかけたころに、また出すよ')}</p></section>` : '';
   return `${topbar()}${top}${streak}${ach}${sofar}${words}${books}${rev30}${fcs}${say}`;
 }
@@ -7057,7 +7116,7 @@ function viewSettings(){
     kOpts('rate', [[0.75, 'ゆっくり'], [0.95, 'ふつう'], [1.15, '速め']], '例文の読み上げの速さ'), kSw('sfx', '効果音'), kSw('haptic', '振動', '正解と不正解を振動でも知らせる')]))}
   ${IS_APP ? kSec('通知', kGroup([`<button class="k-srow" role="switch" aria-checked="${remGet().on}" data-act="remindToggle">${kTxt('毎日のリマインダー', '決めた時刻に、今日の英単語を知らせる')}<span class="k-sw" aria-hidden="true"></span></button>`,
       remGet().on ? kGo('remindSheet', '知らせる時刻', '', remGet().t) : '']))
-    : IS_WEB ? kSec('アプリとして使う', kGroup([inst, kGo('dlAudio', '音声をまとめてダウンロード', '<span data-prog>約25MBで、電波がなくても発音が聞ける</span>')])) : ''}
+    : IS_WEB ? kSec('アプリとして使う', kGroup([inst, icsOK() ? kGo('icsSheet', 'カレンダーで毎日知らせる') : '', kGo('dlAudio', '音声をまとめてダウンロード', '<span data-prog>約25MBで、電波がなくても発音が聞ける</span>')])) : ''}
   ${IS_WEB && FIREBASE ? kSec('アカウント', kGroup([u ? `<div class="k-srow">${u.photoURL ? `<img class="k-me" src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}${kTxt(esc(u.displayName || 'ログイン中'), u.email ? esc(u.email) : '')}</div>
       <div class="k-srow">${kTxt('ユーザーID', Acct.uid === u.uid && Acct.id ? `<span class="k-idv">${fmtId(Acct.id)}</span>` : '準備中…')}${Acct.uid === u.uid && Acct.id ? '<button class="btn btn-ghost btn-sm" data-act="copyId">コピー</button>' : ''}</div>
       ${IS_APP ? '' : kGo('codeSheet', '特典コード', isPlus() ? `極プラス（${esc(plusWhy())}）` : 'コードを持っていたら、ここで使う')}${Acct.admin ? kGo('devSheet', '開発者メニュー', 'コードを作る・見る') : ''}${kGo('signOut', 'ログアウト', 'この端末の記録は残る')}${kGo('delAcctSheet', 'アカウントを削除', 'アカウントと、そこに保存した記録を消す')}`
@@ -7208,8 +7267,8 @@ function startQuiz(opts={}){
   const withChecks = !opts.practice && !opts.noChecks && opts.kind !== 'new' && (opts.kind === 'check' || cards.some(c => isReview(prog(c))));
   const have = new Set(cards), sd = withChecks ? sameDayWaiting(opts.deckIds || activeIds(), opts.only).filter(c => !have.has(c)).slice(0, opts.kind === 'check' ? 10 : 5) : [];
   if (!cards.length && !sd.length) { toast('今出題できる単語はありません'); return; }
-  const due0 = opts.practice ? 0 : counts().due, day0 = dayIdx();   // today's reviews left when the set starts
-  Q = {items: cards.map(c => ({c, p0:clone(prog(c)), type:null, first:null, tries:0})), queue:[], cleared:0, combo:0, maxCombo:0, due0, day0,
+  const due0 = opts.practice ? 0 : counts().due, day0 = dayIdx(), stk0 = streakInfo().done;   // today's reviews left when the set starts; today already counted
+  Q = {items: cards.map(c => ({c, p0:clone(prog(c)), type:null, first:null, tries:0})), queue:[], cleared:0, combo:0, maxCombo:0, due0, day0, stk0,
        flash: opts.flash || S.settings.mode === 'flash', start:Date.now(), opts};
   Q.queue = Q.items.map((_,i) => i);
   for (const c of sd) { Q.items.push({c, p0: clone(prog(c)), type: Q.flash ? null : 'e2j', first: null, tries: 0, check: true, sameDay: true}); Q.queue.push(Q.items.length - 1); }
@@ -8521,7 +8580,7 @@ function renderResults(){
     else { plan = nextBtn(); note = `${Q.opts.sec}をひととおり学習しました`; }
   } else plan = nextBtn();
   const plain = !prac && !dl;   // the usual set: today's おさらい, and 練習 under the words
-  const sdk = plain ? sameDayWaiting(ids).length : 0;
+  const sdw = plain ? sameDayWaiting(ids) : [], sdk = sdw.length;
   if (sdk) plan.subs.push(sub('studyCheck', `今日のおさらい ${sdk}語`, Math.min(10, sdk)));
 
   // ── the parts ──
@@ -8545,7 +8604,10 @@ function renderResults(){
   // the hero: the score in one big line, how it was counted, how far today's goal is; today's road; the button
   const title = fr ? `<p class="k-hero-title"><span class="n">${n}</span><span class="unit">語</span><span class="post">めくった</span></p>`
     : `<p class="k-hero-title"><span class="n">${pct}</span><span class="unit pct">%</span><span class="post">正解</span></p><p class="k-hero-sub">${kPhrases(`1回目で、${ok === n ? `${n}語ぜんぶ` : `${n}語中${ok}語`}`)}</p>`;
-  const goalLine = prac ? '練習なので、復習日と学習の記録は変わりません' : won || st.done || !left ? 'ここからは、やりたい分だけ' : `目標の${goalN}語まで、あと${left}語`;
+  // under the score: the streak this set made grow (at the goal its banner says so), then how far the goal still is
+  const joined = !prac && !won && st.done && Q.stk0 === false && Q.day0 === today;
+  const stkLine = joined ? `<p class="k-hero-sub k-hero-streak lit">${K_ICO.flame}連続${st.n}日${st.n === 1 ? '目' : ''}になった</p>` : '';
+  const goalLine = prac ? '練習なので、復習日と学習の記録は変わりません' : won || !left ? 'ここからは、やりたい分だけ' : `目標の${goalN}語まで、あと${left}語`;
   const segs = [['done', done, `済み${done}語`], ['rev', allDue.due, `復習${allDue.due}語`], ['new', allDue.newToday, `新しい${allDue.newToday}語`]].filter(x => x[1] > 0);
   const seg = prac || !goalN ? '' : !left ? `<div class="k-seg" role="img" aria-label="今日の目標${goalN}語が済み"><div class="k-seg-bar" style="grid-template-columns:1fr"><i class="done"></i></div><div class="k-seg-lab" style="grid-template-columns:1fr"><span class="done">済み${done}語</span></div></div>`
     : `<div class="k-seg" role="img" aria-label="今日の目標${goalN}語のうち、${segs.map(x => x[2]).join('、')}"><div class="k-seg-bar" style="grid-template-columns:${segs.map(x => x[1] + 'fr').join(' ')}">${segs.map(x => `<i class="${x[0]}"></i>`).join('')}</div>
@@ -8555,7 +8617,7 @@ function renderResults(){
   const subs = plan.subs.map(o => `<button class="k-sub-act rb"${attrs(o)}><span>${esc(o.label)}</span><span class="r">${o.k ? aboutMin(o.k) : ''}${K_ICO.chev}</span></button>`).join('');
   const covers = m?.decks?.length ? m.decks : fromSet(its.map(x => x.c));
   const hero = `<section class="rs-first"><article class="k-hero rs-hero" aria-label="このセットの結果"><div class="k-hero-top">${heroCovers(covers)}<div class="k-hero-txt">${title}
-      <p class="k-hero-sub">${kPhrases(goalLine)}</p>${note ? `<p class="k-hero-sub">${kPhrases(note)}</p>` : ''}</div></div>
+      ${stkLine}<p class="k-hero-sub">${kPhrases(goalLine)}</p>${note ? `<p class="k-hero-sub">${kPhrases(note)}</p>` : ''}</div></div>
     ${seg}${play || !prac ? `<div class="k-hero-act">${play}${prac ? '' : `<button class="k-more" data-act="homeMore" aria-label="ほかのやり方">${K_ICO.more}</button>`}</div>` : ''}${subs}</article></section>`;
   // the numbers: a small grey name over a bold figure, no boxes (3 at most)
   const nb = (v, u) => `<b>${v}</b>${u}`, took = secs < 60 ? nb(secs, '秒') : nb(Math.floor(secs / 60), '分') + (secs % 60 ? nb(secs % 60, '秒') : '');
@@ -8574,7 +8636,8 @@ function renderResults(){
       <span class="m">${c.isD ? `← ${esc(c.parent.w)}　` : ''}${esc(studyMain(c))}</span></span><span class="nx">${x.after ? `次は${ivlW(x.after.due - today)}` : ''}${QI.chev}</span></span></button></li>`; };
   const missI = order.filter(i => its[i].first === 1), restI = order.filter(i => its[i].first !== 1);
   const rowAct = (act, t, k) => `<button class="rs-row rb" data-act="${act}"><span>${t}</span><span class="r">${aboutMin(k)}${QI.chev}</span></button>`;
-  const practice = !plain ? '' : missed.length ? rowAct('practiceMiss', `${fr ? 'まだムリ' : 'まちがえた'}${missed.length}語を練習`, missed.length) : rowAct('practiceSet', '同じ単語で練習', n);
+  // the words missed at first all wait in today's おさらい (a set of new words): its button above is the one way to go over them
+  const practice = !plain ? '' : missed.length ? (sdk && missed.every(x => sdw.includes(x.c)) ? '' : rowAct('practiceMiss', `${fr ? 'まだムリ' : 'まちがえた'}${missed.length}語を練習`, missed.length)) : rowAct('practiceSet', '同じ単語で練習', n);
   const list = missI.length ? `<ul class="rs-wl">${missI.map(wRow).join('')}</ul>${practice}${restI.length ? `<ul class="rs-wl rest">${restI.map(wRow).join('')}</ul>` : ''}`
     : `<ul class="rs-wl">${restI.map(wRow).join('')}</ul>${practice}`;
   const words = `<section class="k-sec rs-sec"><div class="k-sec-h has-sub"><h2 class="k-sec-t">このセットの単語</h2><p class="k-sec-s">タップすると、例文や派生語まで見られる</p></div>${list}</section>`;
@@ -8642,8 +8705,8 @@ function renderSwipe(){
       <p class="qcount num" aria-label="${SW.cards.length}枚のうち${SW.i + 1}枚目"><b>${SW.i + 1}</b>/${SW.cards.length}</p>
       <div class="qend"><button class="qundo" data-act="swUndo" aria-label="1枚もどす（最後の仕分けを取り消す）" ${SW.hist.length ? '' : 'disabled'}><span>${QI.undo}<em>1枚もどす</em></span></button>${repBtn('repSw', c)}</div></div>
     <div class="sw-prog" role="progressbar" aria-label="仕分けの進み具合" aria-valuemin="0" aria-valuemax="${SW.cards.length}" aria-valuenow="${SW.i}"><i style="width:${SW.i/SW.cards.length*100}%"></i></div>
-    ${timed ? TIMER_HTML : ''}
     <div class="swarea" id="swarea">${nx ? swCardHTML(nx, 'next') : ''}${swCardHTML(c, '')}</div>
+    ${S.settings.timeLimit > 0 ? timed ? TIMER_HTML : '<div class="qtimer off" aria-hidden="true"></div>' : ''}
     <div class="swfoot">${!tk && SW.i < 3 + (S.settings.timeLimit > 0 ? SW.calm || 0 : 0) ? `<div class="swhelp">左右にスワイプで仕分け${timed ? '（時間切れは「知らない」）' : ''}<br>「知ってる」は${swEarly() ? '3日〜1週間' : '1〜3週間'}後に4択で確認します</div>` : ''}
       <div class="swbtns"><button class="btn sw-no" data-act="swNo">← 知らない<b class="num swn">${unk}</b></button>
       <button class="btn sw-yes" data-act="swYes">知ってる<b class="num swn">${known}</b> →</button></div></div></div>`;
@@ -9153,7 +9216,8 @@ function dictResHTML(){
   const rows = hits.slice(0, dictLimit).map(h => dictRow(h, x)).join('');
   const more = hits.length > dictLimit ? `<div class="more"><button class="link" data-act="dictMore">さらに表示（残り${hits.length - dictLimit}語）</button></div>` : '';
   if (!hits.length) return x.ja || /^[a-z][a-z' .-]+$/.test(x.q) ? dictMissHTML(x, true) : '<p class="dintro">見つかりませんでした</p>';   // x, 1, - : not a word to add
-  return `<div class="words dres">${rows}</div>${more}${!found && x.q && x.q.length >= 3 ? dictMissHTML(x, false) : ''}`;
+  const typing = hits.some(h => h.t === 2 && !h.fix);   // a word starts with it (opportunit → opportunity): still being typed, no 「載っていません」
+  return `<div class="words dres">${rows}</div>${more}${!found && !typing && x.q && x.q.length >= 3 ? dictMissHTML(x, false) : ''}`;
 }
 /* a word the app doesn't have: look it up outside (a new tab), then add it with the meaning found */
 function dictMissHTML(x, full){
@@ -9836,6 +9900,8 @@ const ACT = {
   delAcct: t => delAcct(t),
   remindToggle: () => remindToggle(),
   remindSheet: () => remindSheet(),
+  icsSheet: () => remindSheet(true),
+  icsGo: t => icsGo(t.dataset.t),
   remindAt: t => { const r = remGet(); r.t = t.dataset.t; lsSet(REM_KEY, JSON.stringify(r)); remindPlan(); closeSheet(); render(); toast(`毎日${r.t}に知らせます`); },
   copyId: () => { if (Acct.id) copyText(Acct.id, 'ユーザーIDをコピーしました'); },
   codeSheet: () => codeSheet(),

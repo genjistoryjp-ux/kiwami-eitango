@@ -83,10 +83,14 @@ body:has(.hero) .hd-r .srlink{display:none}
 .sbox input{flex:1;min-width:0;border:0;outline:0;font:400 16px var(--jp);color:var(--field-ink);background:none;-webkit-appearance:none;appearance:none}
 .sbox input::placeholder{color:var(--field-ph)}
 .sbox input::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
-.sbox button{height:44px;padding:0 18px;border:0;border-radius:6px;background:var(--btn-bg);color:#fff;font:700 15px var(--jp);cursor:pointer}
+.sbox button{height:44px;padding:0 18px;border:0;border-radius:6px;background:var(--btn-bg);color:var(--btn-ink,#fff);font:700 15px var(--jp);cursor:pointer}
 .sbox button:hover{background:#000}
 .sbox button:active{transform:translateY(1px)}
 @media (max-width:379px){.sbox button{padding:0 14px}}
+@media (prefers-color-scheme:dark){
+  .hero .sbox{--field-bg:#23356F;--field-ink:var(--ink);--field-ico:var(--sub);--field-ph:var(--sub);--btn-bg:var(--blue);--btn-ink:var(--bg)}
+  .hero .sbox button:hover{background:var(--blue-ink)}
+}
 .qw{margin-top:12px;font-size:13px;line-height:1.6;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
 .qw span{color:rgba(255,255,255,.82);flex-basis:100%}
 .qw a{padding:10px 2px;margin:-7px 0;font-family:var(--en);font-weight:600;font-size:15px;text-decoration:underline;text-decoration-color:rgba(255,255,255,.5);text-underline-offset:3px}
