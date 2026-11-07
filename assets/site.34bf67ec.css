@@ -144,6 +144,7 @@ body:has(.hero) .hd-r .srlink{display:none}
 .appbox b{display:block;font-size:15px;line-height:1.45}
 .appbox p{margin:2px 0 6px;font-size:13px;color:var(--sub);line-height:1.5}
 .appbox a{font-size:14px;color:var(--blue);font-weight:700}
+.aplinks{display:flex;flex-wrap:wrap;gap:4px 16px}
 .box{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--card)}
 .box h2{margin:0 0 8px;font-size:15px;font-weight:700}
 .box p{margin:0;font-size:13px;color:var(--sub);line-height:1.7}
