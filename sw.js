@@ -9,12 +9,12 @@
    - Google Fonts: served from cache, refreshed in the background
    - the page's data (d/: each deck, the audio indexes…): named by a hash of what they hold, so a file never changes; saved
      at install, served from the cache, and a file the current page no longer names is dropped */
-const APP = 'kyokutan-app-e454b0bb1f';
+const APP = 'kyokutan-app-ce2d28772b';
 const AUDIO = 'kyokutan-audio';
 const AUDIO_OLD = 'kyokutan-audio-f026ca2bc4';   // the last name that changed with the audio set: the same files, so they move over
 const FONTS = 'kyokutan-fonts-v1';
 const DATA = 'kyokutan-data';
-const DATA_FILES = ["./d/deck_j1.0a9b7b00dc.js", "./d/deck_j2.37b0709290.js", "./d/deck_j3.13ffd3d50f.js", "./d/deck_idioms.d32c42de25.js", "./d/deck_toeic.c1c4b899bf.js", "./d/deck_junior.b556b0c816.js", "./d/deck_tagi.e54ab562d5.js", "./d/deck_theme.0b9def073b.js", "./d/aud.68434beab2.js", "./d/exi.44c8b1f9bf.js", "./d/mekuru.80e52ef710.js", "./d/extra.dc919d4053.js"];
+const DATA_FILES = ["./d/deck_j1.cbcdf10127.js", "./d/deck_j2.52401eff3d.js", "./d/deck_j3.4d64e247a1.js", "./d/deck_idioms.48ae0fd647.js", "./d/deck_toeic.fdb09144f2.js", "./d/deck_junior.b556b0c816.js", "./d/deck_tagi.e54ab562d5.js", "./d/deck_theme.0b9def073b.js", "./d/aud.68434beab2.js", "./d/exi.44c8b1f9bf.js", "./d/mekuru.80e52ef710.js", "./d/extra.dc919d4053.js"];
 const LIB = 'kyokutan-lib-10.12.2';
 const PAGE_WAIT = 3000;
 const PAGES = ["./", "./app/"];   // the pages saved at install (the site's home and the app at ./app/; build.py fills it in)

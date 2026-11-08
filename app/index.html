@@ -1418,6 +1418,7 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-more svg{width:24px;height:24px;fill:currentColor}
 .k-sub-act{width:100%;min-height:48px;margin-top:10px;border-radius:var(--r-pill);background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px 0 20px;font-size:var(--fs-body);font-weight:700;text-align:left;font-feature-settings:"palt"}
 .k-sub-act .r{display:flex;align-items:center;flex:none;font-weight:500;color:rgba(255,255,255,.82)}
+.k-hero .k-sub-act + .k-sub-act{margin-top:8px}
 .k-sub-act svg,.k-foot svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .k-hero-none{margin-top:10px;font-size:var(--fs-body);color:rgba(255,255,255,.88)}
 /* 棚: a row of covers that scrolls sideways, the last one always cut at the edge */
@@ -1579,6 +1580,62 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-fr-home .m{font-size:var(--fs-sub);color:var(--ink-2);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .k-fr-home .s{font-size:var(--fs-body);font-weight:700}
 .k-fr-home svg{width:18px;height:18px;flex:none;fill:none;stroke:var(--ink-3);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* 先週の結果発表 (a full screen): the lines as the 記録 tab's chart (hairline grid, the scale's figures small and grey), me in the
+   app blue, the others in muted hues apart from it and from each other (light and dark each) */
+:root{--rc1:#C98A1B;--rc2:#1E9A8A;--rc3:#C2507A;--rc4:#7C8F25;--rc5:#A85A3C;--rc6:#9C4F9E;--rc7:#6B7785;--rc-gold:#C9961F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--rc1:#E0A84A;--rc2:#4CC2B1;--rc3:#E07FA3;--rc4:#A7BB4C;--rc5:#E37D5C;--rc6:#D08BD1;--rc7:#9AA4B1;--rc-gold:#E3B65A}}
+:root[data-theme="dark"]{--rc1:#E0A84A;--rc2:#4CC2B1;--rc3:#E07FA3;--rc4:#A7BB4C;--rc5:#E37D5C;--rc6:#D08BD1;--rc7:#9AA4B1;--rc-gold:#E3B65A}
+.rc{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px));font-feature-settings:"palt"}
+.rc .qtop{position:relative;display:flex;align-items:center;height:44px;padding:0;flex:none}
+.rc .qx{width:44px;height:44px;margin-left:-4px;padding:0;border-radius:0;color:var(--ink);background:none;display:grid;place-items:center}
+.rc .qx span{width:36px;height:36px;border-radius:50%;background:var(--fill);display:grid;place-items:center}
+.rc .qx svg{width:20px;height:20px}
+.rc-h{margin-top:6px}
+.rc-h h1{margin:0;font-size:var(--fs-sec);font-weight:800;line-height:1.3}
+.rc-h .d{display:flex;align-items:baseline;gap:8px;margin:3px 0 0;font-size:var(--fs-sub);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.rc-h .d b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;color:var(--ink)}
+.rc-h .d span{flex:none;white-space:nowrap}
+.k-segc.rc-seg{margin-top:14px}
+.rc-chart{position:relative;margin-top:14px;height:252px;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rc-chart>svg{position:absolute;left:0;top:0;display:block;overflow:visible}
+.rc-chart .gl{stroke:var(--hair);stroke-width:1}
+.rc-chart .gl.base{stroke:var(--track)}
+.rc-chart .gv{font-size:var(--fs-min);font-weight:600;fill:var(--ink-2);paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round}
+.rc-chart .dw{font-size:var(--fs-min);font-weight:500;fill:var(--ink-2);text-anchor:middle;opacity:.4;transition:opacity .2s}
+.rc-chart .dw.on{opacity:1;font-weight:700}
+.rc-chart .ln{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.9;transition:opacity .5s var(--ease-out)}
+.rc-chart .ld{fill:none;stroke-width:1.4;opacity:.7}
+.rc-chart .hd{stroke:var(--bg);stroke-width:1.5}
+.rc-chart.done .ln:not(.top):not(.me){opacity:.42}
+.rc-chart .ln.me{stroke-width:2.6;opacity:1}
+.rc-chart .ln.top{stroke-width:3.5;opacity:1}
+.rc-chart .ln.nd{stroke-dasharray:5 5;stroke-linecap:butt}
+.rc-lb{position:absolute;left:0;top:0;display:flex;align-items:center;gap:3px;height:22px;padding-right:2px;white-space:nowrap;pointer-events:none;will-change:transform}
+.rc-lb .av{position:relative;flex:none;display:block}
+.rc-lb .k-av{width:20px;height:20px;box-shadow:0 0 0 2px var(--lc)}
+.rc-lb b{font-size:12.5px;font-weight:800;color:var(--lc);font-variant-numeric:tabular-nums;text-shadow:0 0 3px var(--bg),0 0 2px var(--bg)}
+.rc-lb .cr{flex:none;width:14px;height:12px;display:none;color:var(--rc-gold)}
+.rc-lb .cr svg,.rc-win svg{display:block;width:100%;height:100%;fill:currentColor}
+.rc-lb.w .cr{display:block}
+@keyframes rc-cr{0%{transform:scale(0)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
+.rc-chart.done .rc-lb.w .cr{animation:rc-cr .45s var(--ease-out) both}
+.rc-win{display:flex;align-items:center;gap:8px;min-height:32px;margin:14px 0 0;font-size:18px;font-weight:700;line-height:1.35;opacity:0;transform:translateY(6px);transition:opacity .4s var(--ease-out),transform .4s var(--ease-out)}
+.rc-win.on{transform:none}
+.rc-win svg{flex:none;width:22px;height:20px;color:var(--rc-gold)}
+.rc-win b{font-weight:800}
+.rc-win.on,.rc-list.on{opacity:1;visibility:visible}
+.rc-list{list-style:none;margin:8px 0 0;padding:0;opacity:0;visibility:hidden;transition:opacity .5s var(--ease-out) .25s}
+.rc-list .k-fr-row{min-height:54px}
+.rc-list li:last-child.k-fr-row{border-bottom:0}
+.rc-list .av{flex:none;display:block;border-radius:50%}
+.rc-list .av[style] .k-av{box-shadow:0 0 0 2px var(--lc)}
+.rc-list .nm .n1{display:block;overflow:hidden;text-overflow:ellipsis}
+.rc-list .nm .nt{display:block;font-size:var(--fs-min);font-weight:500;color:var(--ink-2)}
+.rc-acts{margin-top:18px}
+.rc-acts .btn{min-height:48px}
+.rc-open{display:inline-flex;align-items:center;min-height:36px;margin-top:10px;padding:0 14px;border-radius:var(--r-pill);background:rgba(138,100,22,.14);color:#6B4A0E;font-size:var(--fs-sub);font-weight:800}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rc-open{background:rgba(227,182,90,.18);color:#F3E6C8}}
+:root[data-theme="dark"] .rc-open{background:rgba(227,182,90,.18);color:#F3E6C8}
 #view.dk .dsearch{margin:0;padding:8px max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px));background:var(--bg)}
 #view.dk .dsearch.on{padding-bottom:8px}
 #view.dk .dsearch .search{height:44px;gap:8px;padding:0 0 0 14px;border:0;border-radius:var(--r-pill);background:var(--fill);color:var(--ink-2)}
@@ -2023,6 +2080,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .fb.v2 .f-line + b{display:block;margin-top:8px}
 .fb.v2 .f-line .pos,.fb.v2 .fchip .pos{width:22px;min-width:22px;height:22px;font-size:var(--fs-min);align-self:center}
 .fb.v2 .f-en{font-family:var(--f-en);font-weight:600}
+.fb.v2 .f-use{font-weight:700;color:var(--ink);font-feature-settings:"palt"}
 .fb.v2 .pat{display:inline;margin-left:6px;font-family:var(--f-en);font-size:var(--fs-sub);font-weight:600;color:var(--ink-2)}
 .fb.v2 .morph{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
 .fb.v2 .m{display:inline-flex;align-items:center;gap:4px;min-height:28px;padding:0 8px;border-radius:var(--r-set);background:var(--fill)}
@@ -2757,7 +2815,7 @@ button.k-uv{width:calc(100% - 2 * max(var(--pad),env(safe-area-inset-left,0px)))
 <div id="toastroot" lang="ja"></div>
 <div id="sr" class="sr-only" aria-live="polite" lang="ja"></div>
 
-<script src="../d/deck_j1.0a9b7b00dc.js"></script><script src="../d/deck_j2.37b0709290.js"></script><script src="../d/deck_j3.13ffd3d50f.js"></script><script src="../d/deck_idioms.d32c42de25.js"></script><script src="../d/deck_toeic.c1c4b899bf.js"></script><script src="../d/deck_junior.b556b0c816.js"></script><script src="../d/deck_tagi.e54ab562d5.js"></script><script src="../d/deck_theme.0b9def073b.js"></script><script src="../d/aud.68434beab2.js"></script><script src="../d/exi.44c8b1f9bf.js"></script><script src="../d/mekuru.80e52ef710.js"></script><script src="../d/extra.dc919d4053.js"></script>
+<script src="../d/deck_j1.cbcdf10127.js"></script><script src="../d/deck_j2.52401eff3d.js"></script><script src="../d/deck_j3.4d64e247a1.js"></script><script src="../d/deck_idioms.48ae0fd647.js"></script><script src="../d/deck_toeic.fdb09144f2.js"></script><script src="../d/deck_junior.b556b0c816.js"></script><script src="../d/deck_tagi.e54ab562d5.js"></script><script src="../d/deck_theme.0b9def073b.js"></script><script src="../d/aud.68434beab2.js"></script><script src="../d/exi.44c8b1f9bf.js"></script><script src="../d/mekuru.80e52ef710.js"></script><script src="../d/extra.dc919d4053.js"></script>
 <script>
 'use strict';
 const RAW = {"j1":self.__KD["deck:j1"],"j2":self.__KD["deck:j2"],"j3":self.__KD["deck:j3"],"idioms":self.__KD["deck:idioms"],"toeic":self.__KD["deck:toeic"],"junior":self.__KD["deck:junior"],"tagi":self.__KD["deck:tagi"],"theme":self.__KD["deck:theme"]};
@@ -4527,7 +4585,7 @@ async function newId(fs, db, uid){
 const GRP_KEY = 'kiwami.grp.', GRP_MAX = 5, GRP_N = 20, GDAY_CAP = 3000;
 const STAMPS = ['えらい', 'すごい', 'ナイス', 'おつかれ', '負けないぞ', '追いつくぞ', 'さすが', 'いっしょにがんばろ'];
 const GM = [['wxp', '今週のXP', 'XP'], ['wq', '解いた問題', '問'], ['st', '連続', '日']];
-const Grp = {uid: null, gs: [], by: {}, me: {}, at: 0, ready: false, busy: false, failed: false, pend: '', sent: {}, seen: 0};
+const Grp = {uid: null, gs: [], by: {}, me: {}, at: 0, ready: false, busy: false, failed: false, pend: '', sent: {}, seen: 0, rw: {}};
 const gDay = (ms = Date.now()) => Math.floor((ms + 18000000) / DAY);
 const gWeek = dn => Math.floor((dn + 3) / 7);
 const fmtG = g => g.replace(/^KG(\w{4})(\w{4})$/, 'KG-$1-$2');
@@ -4553,23 +4611,25 @@ const grpBlocked = u => (S.settings.grpBlock || []).includes(u);
 const gShow = m => grpBlocked(m.uid) ? {...m, name: 'ブロック中', icon: ''} : m;
 function grpReset(uid){
   let c = null; try { c = uid && JSON.parse(lsGet(GRP_KEY + uid) || 'null'); } catch(e) {}
-  Object.assign(Grp, {uid, gs: Array.isArray(c?.gs) ? c.gs : [], by: c?.by || {}, me: c?.me || {}, at: 0, ready: !!c, busy: false, failed: false, sent: {}, seen: c?.seen || 0});
+  Object.assign(Grp, {uid, gs: Array.isArray(c?.gs) ? c.gs : [], by: c?.by || {}, me: c?.me || {}, at: 0, ready: !!c, busy: false, failed: false, sent: {}, seen: c?.seen || 0, rw: c?.rw && typeof c.rw === 'object' ? c.rw : {}});
 }
-function grpSave(){ if (Grp.uid) lsSet(GRP_KEY + Grp.uid, JSON.stringify({gs: Grp.gs, by: Grp.by, me: Grp.me, seen: Grp.seen})); }
+/* rw: the week each group's 先週の結果発表 was shown in (once a week by itself) */
+function grpSave(){ if (Grp.uid) lsSet(GRP_KEY + Grp.uid, JSON.stringify({gs: Grp.gs, by: Grp.by, me: Grp.me, seen: Grp.seen, rw: Object.fromEntries(Object.entries(Grp.rw || {}).filter(([g]) => Grp.gs.includes(g)))})); }
 /* a stamp not seen yet: a dot on the 友達 tab until the tab is opened */
 const grpUnseen = () => !!Auth.user && Grp.uid === Auth.user.uid && Grp.gs.some(g => (Grp.by[g]?.sp || []).some(x => x.t > Grp.seen && Date.now() - x.t < 7 * DAY && !grpBlocked(x.from)));
 function grpDot(){ document.querySelector('.tab[data-tab="friends"]')?.classList.toggle('has-new', route.tab !== 'friends' && grpUnseen()); }
 /* my numbers now: this week's days (each at most 3,000, as the rules count them), today, the streak and the day it last grew.
    The week is Japan's; its days are this device's own (off: 0 in Japan, a day either way elsewhere) */
 function grpMine(){
-  const dn = gDay(), off = dn - dayIdx(), w0 = dn - (dn + 3) % 7, sti = streakInfo(); let dxp = 0, dq = 0, wxp = 0, wq = 0;
+  const dn = gDay(), off = dn - dayIdx(), w0 = dn - (dn + 3) % 7, sti = streakInfo(), wx = [], wn = []; let dxp = 0, dq = 0, wxp = 0, wq = 0;
   for (let d = w0; d <= dn; d++) {
-    const k = dayKey(d - off), x = S.daily[k]; if (!x) continue;
-    const xp = Math.min(GDAY_CAP, Math.round(xpDay(k, x))), q = Math.min(GDAY_CAP, x.n || 0);
-    wxp += xp; wq += q; if (d === dn) { dxp = xp; dq = q; }
+    const k = dayKey(d - off), x = S.daily[k];
+    const xp = x ? Math.min(GDAY_CAP, Math.round(xpDay(k, x))) : 0, q = x ? Math.min(GDAY_CAP, x.n || 0) : 0;
+    wx.push(xp); wn.push(q); wxp += xp; wq += q; if (d === dn) { dxp = xp; dq = q; }
   }
   const last = Math.max(-1, ...[...sti.on].filter(d => d <= dayIdx())) + off;
-  return {name: (!ngName(nickOf()) && gName(nickOf())) || 'ななし', icon: avOf(S.settings.icon)[0], dn, wk: gWeek(dn), dxp, dq, wxp, wq, st: sti.n, sl: sti.n ? clamp(last, dn - 3, dn) : dn - 1, pk: 0, pf: grpProf(sti)};
+  // wx / wn: this week's days so far, Monday first (the 結果発表's lines)
+  return {name: (!ngName(nickOf()) && gName(nickOf())) || 'ななし', icon: avOf(S.settings.icon)[0], dn, wk: gWeek(dn), dxp, dq, wxp, wq, st: sti.n, sl: sti.n ? clamp(last, dn - 3, dn) : dn - 1, pk: 0, wx, wn, pf: grpProf(sti)};
 }
 /* the profile the group's friends see on my sheet: all-time XP (their app shows the 級 / 熟練 from it), the 段, words 覚えた, days
    studied, questions answered, the best streak, and the badges got (ids, newest first) */
@@ -4591,16 +4651,32 @@ function grpProf(sti = streakInfo()){
 }
 /* what the rules will take, given what is there (o): never lower than it, the week only by what the days add (days not written
    since may each have held 3,000), the streak only on a day it has not grown yet (sl) and a day at a time; pk, last week's XP, is
-   what o had when the week turned. Joining: a streak no longer than the app has been there (20744: 2026-10-18) */
+   what o had when the week turned. Joining: a streak no longer than the app has been there (20744: 2026-10-18).
+   The days (wx, wn) always add up to the week written (wxp, wq): what the rules hold back comes off the last days; what another
+   device brought is taken from its days, the rest onto the last days. pq, last week's questions, and px / pn, last week's days,
+   turn over as pk does; a week whose pq an older app left out stays without one (the rules take none then) */
+const gNat = (v, mx = GDAY_CAP) => clamp(Math.floor(+v) || 0, 0, mx);
+function gDays(a, b, tot){
+  const r = a.map((v, i) => Math.max(v, Array.isArray(b) ? gNat(b[i]) : 0)); let s = r.reduce((x, v) => x + v, 0);
+  for (let i = r.length - 1; i >= 0 && s > tot; i--) { const c = Math.min(r[i], s - tot); r[i] -= c; s -= c; }
+  for (let i = r.length - 1; i >= 0 && s < tot; i--) { const c = Math.min(GDAY_CAP - r[i], tot - s); r[i] += c; s += c; }
+  return r;
+}
 function grpFit(m, o){
-  const dn = m.dn;
-  if (!o || o.wk == null) return {...m, st: Math.min(m.st, dn - 20744 + 1), pk: 0};
-  const sameD = o.dn === dn, sameW = o.wk === m.wk, r = {...m}, gone = sameD ? 0 : GDAY_CAP * Math.min(dn - o.dn, 7);
+  const dn = m.dn, {px: _x, pn: _n, pq: _q, ...m0} = m;
+  if (!o || o.wk == null) return {...m0, st: Math.min(m.st, dn - 20744 + 1), pk: 0, pq: 0};
+  const sameD = o.dn === dn, sameW = o.wk === m.wk, r = {...m0}, gone = sameD ? 0 : GDAY_CAP * Math.min(dn - o.dn, 7);
   const pd = sameD ? o.dxp : 0, pq = sameD ? o.dq : 0, pw = sameW ? o.wxp : 0, pwq = sameW ? o.wq : 0, sl = o.sl ?? dn - 1;
   r.dxp = Math.max(r.dxp, pd); r.dq = Math.max(r.dq, pq);
   r.wxp = Math.min(Math.max(r.wxp, pw), pw + r.dxp - pd + gone); r.wq = Math.min(Math.max(r.wq, pwq), pwq + r.dq - pq + gone);
   if (r.st > o.st && sl < dn) { r.st = Math.min(r.st, o.st + dn - sl); r.sl = dn; } else { r.st = Math.min(r.st, o.st); r.sl = sl; }
   r.pk = sameW ? o.pk || 0 : o.wk === m.wk - 1 ? o.wxp : 0;
+  const lw = !sameW && o.wk === m.wk - 1, px = sameW ? o.px : lw ? o.wx : null, pn = sameW ? o.pn : lw ? o.wn : null;
+  if (!sameW || Number.isInteger(o.pq) && o.pq >= 0) r.pq = sameW ? o.pq : lw ? o.wq : 0;
+  if (Array.isArray(px)) r.px = px.slice(0, 7);
+  if (Array.isArray(pn)) r.pn = pn.slice(0, 7);
+  if (Array.isArray(m.wx)) r.wx = gDays(m.wx, sameW && o.wx, r.wxp);
+  if (Array.isArray(m.wn)) r.wn = gDays(m.wn, sameW && o.wn, r.wq);
   return r;
 }
 let grpT = 0;
@@ -4651,7 +4727,9 @@ async function grpFetch(g){
     const [ms, sp] = await Promise.all([fs.getDocs(fs.collection(db, 'groups', g, 'members')),
       fs.getDocs(fs.query(fs.collection(db, 'groups', g, 'stamps'), fs.where('to', '==', uid)))]);
     if (ms.metadata?.fromCache) return;
-    const list = ms.docs.map(d => { const m = d.data(); return {uid: d.id, name: ngName(m.name) ? 'ななし' : m.name, icon: m.icon, dn: m.dn, wk: m.wk, dxp: m.dxp, dq: m.dq, wxp: m.wxp, wq: m.wq, st: m.st, sl: m.sl, pk: m.pk || 0, pf: m.pf || null}; });
+    // the days and last week's questions only when written (an older app writes none of them)
+    const list = ms.docs.map(d => { const m = d.data(), ex = {}; ['wx', 'wn', 'px', 'pn'].forEach(f => { if (Array.isArray(m[f])) ex[f] = m[f].slice(0, 7); }); if (Number.isInteger(m.pq) && m.pq >= 0) ex.pq = m.pq;
+      return {uid: d.id, name: ngName(m.name) ? 'ななし' : m.name, icon: m.icon, dn: m.dn, wk: m.wk, dxp: m.dxp, dq: m.dq, wxp: m.wxp, wq: m.wq, st: m.st, sl: m.sl, pk: m.pk || 0, ...ex, pf: m.pf || null}; });
     const mine = list.find(m => m.uid === uid);
     if (!mine) return grpDrop(g, 'out', gShown(x.name));
     const {uid: _u, ...me} = mine; Grp.me[g] = me;
@@ -4692,6 +4770,133 @@ function grpLast(g){
   rows.forEach((m, i) => m.rank = i && m.v === rows[i - 1].v ? rows[i - 1].rank : i + 1);
   return {top: rows.filter(r => r.rank === 1), me: rows.find(r => r.me), n: rows.length};
 }
+/* ---------- 先週の結果発表 (Monday to Wednesday, a group where 2 or more did something last week, as 先週の結果) ----------
+   Everyone's last week a line each, the running total day by day (解いた問題 or XP), growing from Monday to Sunday; then the
+   one who did most and the ranking. Opened by itself the first time the 友達 tab shows the group that week (Grp.rw: the week
+   it was shown, by group), and again from the 先週の結果 card. A day's numbers come from what each app wrote (px / pn once they
+   have written this week, else wx / wn), scaled to add up to the week the rules took (pk / pq, wxp / wq); an older app wrote
+   no days: a dashed line straight to its total. pq left out by an older app: its questions are not known (listed, not drawn) */
+function raceDays(a, tot){
+  if (!Array.isArray(a) || !a.length) return null;
+  const v = a.slice(0, 7).map(x => gNat(x)), s = v.reduce((x, y) => x + y, 0);
+  if (!s) return tot ? null : v;
+  if (s === tot) return v;
+  const f = v.map(x => x * tot / s), r = f.map(Math.floor); let left = tot - r.reduce((x, y) => x + y, 0);
+  f.map((x, i) => [x - r[i], i]).sort((p, q) => q[0] - p[0]).forEach(([, i]) => { if (left > 0) { r[i]++; left--; } });
+  return r;
+}
+function grpRace(g){
+  const x = Grp.by[g], uid = Auth.user?.uid, dn = gDay(), cw = gWeek(dn); if (!x || (dn + 3) % 7 > 2) return null;
+  const mine = grpFit(grpMine(), Grp.me[g]);
+  const rows = x.ms.map(m => {
+    const me = m.uid === uid, y = me ? {...m, px: null, pn: null, pq: null, ...mine} : gShow(m), now = y.wk === cw, was = y.wk === cw - 1;
+    const xp = now ? y.pk || 0 : was ? y.wxp || 0 : 0, q = now ? (Number.isInteger(y.pq) && y.pq >= 0 ? y.pq : null) : was ? y.wq || 0 : 0;
+    return {uid: m.uid, name: y.name, icon: y.icon, me, xp, q, d: {xp: raceDays(now ? y.px : was ? y.wx : null, xp), q: q == null ? null : raceDays(now ? y.pn : was ? y.wn : null, q)}};
+  }).filter(r => r.xp > 0);
+  if (rows.length < 2) return null;
+  // a colour each in last week's XP order (ci), kept when the numbers switch as far as the lines drawn allow (raceRun)
+  rows.sort((a, b) => b.xp - a.xp || String(a.name).localeCompare(String(b.name), 'ja'));
+  let c = 0; rows.forEach(r => { r.ci = r.me ? 0 : ++c; });
+  return {g, name: x.name, rows, w0: dn - (dn + 3) % 7 - 7};
+}
+/* by k: the same number, the same place; not known (null): after everyone, without a place */
+function raceRank(rows, k){
+  const r = rows.map(x => ({...x, v: x[k], days: x.d[k]}));
+  r.sort((a, b) => (b.v ?? -1) - (a.v ?? -1) || (a.me ? -1 : b.me ? 1 : 0) || String(a.name).localeCompare(String(b.name), 'ja'));
+  r.forEach((m, i) => { m.rank = m.v == null ? 0 : i && m.v === r[i - 1].v ? r[i - 1].rank : i + 1; });
+  return r;
+}
+const RC_ICO = {crown: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 7.5l5 4.2L12 4.5l4.5 7.2 5-4.2-2 11.5h-15z"/></svg>'};
+const RC_K = [['q', '解いた問題', '問'], ['xp', 'XP', 'XP']];
+let RC = null;
+function raceOpen(g){
+  const r = grpRace(g); if (!r) return;
+  Grp.rw = {...(Grp.rw || {}), [g]: gWeek(gDay())}; grpSave();
+  // 解いた問題 first, unless fewer than 2 of them are known (older apps): XP then
+  RC = {...r, k: r.rows.filter(x => x.q != null && x.q > 0).length >= 2 ? 'q' : 'xp', raf: 0};
+  const d = RC.w0;
+  openScreen();
+  $('#screen').innerHTML = `<div class="screen-in rc"><div class="qtop"><button class="iconbtn qx" data-act="raceClose" aria-label="閉じる"><span>${QI.x}</span></button></div>
+    <header class="rc-h"><h1>先週の結果発表</h1><p class="d"><b>${esc(r.name)}</b><span>${mdLabel(d)}〜${mdLabel(d + 6)}</span></p></header>
+    <div class="k-segc rc-seg" role="tablist" aria-label="グラフの数字">${RC_K.map(([k, l]) => `<button role="tab" aria-selected="${k === RC.k}" data-act="raceK" data-k="${k}"><span>${l}</span></button>`).join('')}</div>
+    <div class="rc-chart" id="rcchart" data-act="raceSkip"></div>
+    <p class="rc-win" id="rcwin" role="status"></p>
+    <ol class="rc-list" id="rclist" aria-label="先週のランキング"></ol>
+    <div class="rc-acts"><button class="btn btn-ghost btn-block" data-act="raceAgain">もう一度</button></div></div>`;
+  raceRun();
+}
+function raceStop(){ if (RC) cancelAnimationFrame(RC.raf); RC = null; }
+function raceClose(){ closeScreen(); }   // the ×; closeScreen stops the drawing (raceStop), for Escape and back too
+/* draw it for RC.k: the lines (at most 8: the top 7 and me), each with its label at its head; end: no growing (reduced motion,
+   a tap on the chart, a turn of the phone) */
+function raceRun(end){
+  const box = $('#rcchart'); if (!box || !RC) return;
+  cancelAnimationFrame(RC.raf);
+  const k = RC.k, unit = RC_K.find(x => x[0] === k)[2], rk = raceRank(RC.rows, k), known = rk.filter(r => r.v != null), me = known.find(r => r.me);
+  let L = known.slice(0, 8); if (me && !L.includes(me)) L = [...known.slice(0, 7), me];
+  // the colours of the lines drawn, no two alike: me the app blue; the others their own (ci) where it is free, else the first free
+  const used = new Set(), oth = L.filter(r => !r.me);
+  oth.forEach(r => { r.c = r.ci <= 7 ? `var(--rc${r.ci})` : ''; if (r.c) used.add(r.ci); });
+  let f = 1; oth.forEach(r => { if (!r.c) { while (used.has(f)) f++; used.add(f); r.c = `var(--rc${f})`; } });
+  if (me) me.c = 'var(--blue)';
+  RC.w = box.clientWidth;
+  const W = Math.max(240, box.clientWidth || 343), G = 98, PW = W - G, LX = 10, PT = 24, PH = 196, H = PT + PH + 32;
+  const mx = Math.max(4, ...L.map(r => r.v)), stp = niceStep(mx), tp = Math.ceil(mx / stp) * stp;
+  const X = t => t / 7 * PW, Y = v => PT + PH - v / tp * PH;
+  // each line: its running total after each day (cum[0] = 0), or straight (days not known)
+  const lines = L.map(r => { const cum = [0]; if (r.days) for (let i = 0; i < 7; i++) cum.push(cum[i] + (r.days[i] || 0)); return {r, cum: r.days ? cum : null}; });
+  const val = (l, t) => { if (!l.cum) return l.r.v * t / 7; const i = Math.min(6, Math.floor(t)); return l.cum[i] + (l.cum[i + 1] - l.cum[i]) * (t - i); };
+  const pathAt = (l, t) => { if (!l.cum) return `M0 ${Y(0)}L${X(t).toFixed(1)} ${Y(val(l, t)).toFixed(1)}`;
+    let d = `M0 ${Y(0)}`; for (let i = 1; i <= Math.floor(t); i++) d += `L${X(i).toFixed(1)} ${Y(l.cum[i]).toFixed(1)}`;
+    return t % 1 ? d + `L${X(t).toFixed(1)} ${Y(val(l, t)).toFixed(1)}` : d; };
+  const top1 = known.filter(r => r.rank === 1), grid = [];
+  const gv = [];
+  for (let v = 0; v <= tp; v += stp) { grid.push(`<line class="${v ? 'gl' : 'gl base'}" x1="0" x2="${PW}" y1="${Y(v)}" y2="${Y(v)}"/>`); if (v) gv.push(`<text class="gv" x="0" y="${Y(v) - 4}">${nLoc(v)}</text>`); }
+  const days = '月火水木金土日'.split('').map((w, i) => `<text class="dw" x="${X(i + 0.5).toFixed(1)}" y="${PT + PH + 24}">${w}</text>`).join('');
+  const order = [...lines].sort((a, b) => (a.r.me ? 2 : a.r.rank === 1 ? 1 : 0) - (b.r.me ? 2 : b.r.rank === 1 ? 1 : 0));   // me on top, then the 1st
+  box.style.height = H + 'px';
+  box.setAttribute('role', 'img');
+  box.setAttribute('aria-label', `先週の${RC_K.find(x => x[0] === k)[1]}、` + known.map(r => `${r.rank}位 ${r.name} ${nLoc(r.v)}${unit}`).join('、'));
+  box.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${grid.join('')}${days}
+    ${order.map(l => `<path class="ln${l.r.me ? ' me' : ''}${l.r.rank === 1 ? ' top' : ''}${l.cum ? '' : ' nd'}" style="stroke:${l.r.c}" data-u="${esc(l.r.uid)}" d=""/>`).join('')}${gv.join('')}
+    ${order.map(l => `<path class="ld" style="stroke:${l.r.c}" data-u="${esc(l.r.uid)}" d=""/><circle class="hd" r="${l.r.rank === 1 ? 4.5 : 3.5}" style="fill:${l.r.c}" data-u="${esc(l.r.uid)}" cx="0" cy="${Y(0)}"/>`).join('')}</svg>
+    ${lines.map(l => `<div class="rc-lb${l.r.me ? ' me' : ''}" style="--lc:${l.r.c}" data-u="${esc(l.r.uid)}"><span class="av">${avHTML(l.r.icon)}</span><i class="cr">${RC_ICO.crown}</i><b>0</b></div>`).join('')}`;
+  const ps = new Map([...box.querySelectorAll('path.ln')].map(p => [p.dataset.u, p])), lds = new Map([...box.querySelectorAll('path.ld')].map(p => [p.dataset.u, p])), hds = new Map([...box.querySelectorAll('.hd')].map(p => [p.dataset.u, p])), dws = [...box.querySelectorAll('.dw')], lbs = new Map([...box.querySelectorAll('.rc-lb')].map(e => [e.dataset.u, e]));
+  const win = $('#rcwin'), list = $('#rclist');
+  win.innerHTML = top1.length ? `${RC_ICO.crown}<span>1位 <b>${top1.map(r => esc(r.name)).join('、')}</b> ${nLoc(top1[0].v)}${unit}</span>` : '';
+  list.innerHTML = rk.map(r => `<li class="k-fr-row${r.me ? ' me' : ''}"><span class="rk${r.rank && r.rank <= 3 ? ' r' + r.rank : ''}">${r.rank || '—'}</span><span class="av"${L.includes(r) ? ` style="--lc:${r.c}"` : ''}>${avHTML(r.icon)}</span>
+    <span class="nm"><span class="n1">${esc(r.name)}${r.me ? '<small>あなた</small>' : ''}</span>${r.v == null ? '<span class="nt">解いた問題の記録なし</span>' : !r.days ? '<span class="nt">日ごとの記録なし</span>' : ''}</span>
+    <span class="v">${r.v == null ? '—' : `${nLoc(r.v)}<small>${unit}</small>`}</span></li>`).join('');
+  const frame = t => {
+    lines.forEach(l => ps.get(l.r.uid)?.setAttribute('d', pathAt(l, t)));
+    // the labels at the heads, pushed apart to 22px (down, then back up from the bottom)
+    const at = lines.map(l => ({l, v: val(l, t), y: Y(val(l, t)) - 11})).sort((a, b) => a.y - b.y || b.v - a.v);
+    for (let i = 1; i < at.length; i++) at[i].y = Math.max(at[i].y, at[i - 1].y + 22);
+    const lo = PT + PH - 11; for (let i = at.length - 1; i >= 0; i--) at[i].y = Math.min(at[i].y, i === at.length - 1 ? lo : at[i + 1].y - 22);
+    // a dot at each head; a short leader to the label when it was pushed off its line (not on the start line: all of them stacked)
+    const x = X(t);
+    at.forEach(a => { const u = a.l.r.uid, e = lbs.get(u), hy = Y(a.v), ly = a.y + 11;
+      e.style.transform = `translate(${(x + LX).toFixed(1)}px,${a.y.toFixed(1)}px)`; e.lastChild.textContent = nLoc(Math.round(a.v));
+      hds.get(u)?.setAttribute('cx', x.toFixed(1)); hds.get(u)?.setAttribute('cy', hy.toFixed(1));
+      lds.get(u)?.setAttribute('d', t < 1 || Math.abs(ly - hy) < 4 ? '' : `M${(x + 2).toFixed(1)} ${hy.toFixed(1)}L${(x + LX - 2).toFixed(1)} ${ly.toFixed(1)}`); });
+    dws.forEach((e, i) => e.classList.toggle('on', t > i));   // the days reached so far
+  };
+  const done = () => { frame(7); box.classList.add('done'); lbs.forEach((e, u) => e.classList.toggle('w', top1.some(r => r.uid === u))); win.classList.add('on'); list.classList.add('on'); RC.raf = 0; RC.end = true; };
+  box.classList.remove('done'); win.classList.remove('on'); list.classList.remove('on'); RC.end = false;
+  if (end || lessMotion()) { done(); return; }
+  // a short wait on the start line, then about even days that slow down into Sunday (the finish)
+  const T = 3400, t0 = performance.now() + 250, ease = p => 1.5 * p - .5 * p * p;
+  const step = now => { if (!box.isConnected || !RC) return; const p = Math.max(0, Math.min(1, (now - t0) / T)); frame(7 * ease(p)); if (p < 1) RC.raf = requestAnimationFrame(step); else done(); };
+  frame(0); RC.raf = requestAnimationFrame(step);
+}
+function raceSet(k){ if (!RC || !RC_K.some(x => x[0] === k)) return; RC.k = k; document.querySelectorAll('.rc-seg button').forEach(b => b.setAttribute('aria-selected', b.dataset.k === k)); raceRun(); }
+/* opened by itself: the first 友達 tab of the week that shows this group (and nothing over it) */
+function raceAuto(){
+  // only on this session's load (Grp.at): the save kept from before may hold last week as it was on Friday; grpLoad's redraw comes back here
+  const g = grpCur(), cw = gWeek(gDay()); if (!g || !Grp.at || !Auth.user || Grp.uid !== Auth.user.uid || (Grp.rw || {})[g] === cw || !grpRace(g)) return;
+  setTimeout(() => { if (route.tab !== 'friends' || route.fr || grpCur() !== g || !$('#screen').hidden || sheetOpen() || (Grp.rw || {})[g] === cw) return; raceOpen(g); }, 250);
+}
+addEventListener('resize', () => { const b = $('#rcchart'); if (RC && b && b.clientWidth !== RC.w) raceRun(RC.end); });
 const agoText = t => { const s = (Date.now() - t) / 1000; return s < 60 ? 'たった今' : s < 3600 ? `${Math.floor(s / 60)}分前` : s < 86400 ? `${Math.floor(s / 3600)}時間前` : `${Math.floor(s / 86400)}日前`; };
 const grpCur = () => Grp.gs.includes(route.grp) ? route.grp : Grp.gs[0];
 /* the home's line under the hero: where I am in this week's XP */
@@ -4727,7 +4932,8 @@ function viewFriends(){
   const solo = x.ms.length < 2 ? frSay('招待コードを友達に送ると、ここに並ぶよ') : '';
   const lw = grpLast(g), lastHTML = !lw ? '' : `<section class="k-fr-last" aria-label="先週の結果"><p class="h">先週の結果</p>
     <p class="t">${K_ICO.crown || ''}1位 <b>${lw.top.map(r => esc(r.name)).join('、')}</b> ${nLoc(lw.top[0].v)}XP</p>
-    ${lw.me ? `<p class="s">${lw.me.rank === 1 ? 'あなたが1位！' : `あなたは${lw.me.rank}位（${nLoc(lw.me.v)}XP）`}・${lw.n}人中</p>` : '<p class="s">あなたは先週、このグループでの記録なし</p>'}</section>`;
+    ${lw.me ? `<p class="s">${lw.me.rank === 1 ? 'あなたが1位！' : `あなたは${lw.me.rank}位（${nLoc(lw.me.v)}XP）`}・${lw.n}人中</p>` : '<p class="s">あなたは先週、このグループでの記録なし</p>'}
+    <button class="rc-open" data-act="raceOpen">結果発表を見る</button></section>`;
   return `${head}${chips}<section class="k-fr-card" aria-label="${esc(x.name)}のランキング">
     <div class="k-fr-h"><div class="t"><h2>${esc(x.name)}</h2><p>${x.ms.length}人${myRank ? `・あなたは${myRank}位` : ''}・${left === 1 ? '明日の朝4時に' : `あと${left}日で`}リセット</p></div><button class="k-fr-menu" data-act="grpMenu" aria-label="グループの設定と招待">${K_ICO.more}</button></div>
     <div class="k-segc k-fr-seg" role="tablist" aria-label="ランキングの種類">${GM.map(m => `<button role="tab" aria-selected="${m[0] === k}" data-act="grpGm" data-k="${m[0]}"><span>${m[1]}</span></button>`).join('')}</div>
@@ -5336,7 +5542,7 @@ const sheetOpen = () => !!$('#sheetroot').firstChild;
 function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); viewKey = ''; tutDrop(); guard(); }   // viewKey: the home dock rises again when this closes
 /* closing a set's results goes back to where it started: a deck page (route stays on it), else the home */
 const backLabel = () => route.tab === 'decks' && route.deck ? '単語帳へもどる' : 'ホームへ';
-function closeScreen(){ clearTimeout(Q?.timer); stopCountdown(); tutDrop(); tutPend.length = 0; Q = null; SW = null; if (DJ) { clearInterval(DJ.iv); clearTimeout(DJ.next); DJ = null; } const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); reloadIfQuiet(); }
+function closeScreen(){ raceStop(); clearTimeout(Q?.timer); stopCountdown(); tutDrop(); tutPend.length = 0; Q = null; SW = null; if (DJ) { clearInterval(DJ.iv); clearTimeout(DJ.next); DJ = null; } const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); reloadIfQuiet(); }
 const layerOpen = () => sheetOpen() || !$('#screen').hidden || (route.tab === 'decks' && (!!route.deck || !!route.scan)) || (route.tab === 'friends' && !!route.fr);
 addEventListener('popstate', e => {
   if (!IS_WEB) return;
@@ -5397,6 +5603,7 @@ function render(){
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === route.tab ? 'page' : 'false')); grpDot();
   renderSync(); shownDay = dayIdx();
   if ((route.tab === 'decks' && (route.deck || route.scan)) || (route.tab === 'friends' && route.fr)) guard();
+  if (route.tab === 'friends' && !route.fr && $('#screen').hidden) raceAuto();   // 先週の結果発表, once a week by itself
   deckIO(v); djAfter(v);
   if (said && $('#mkbubble')) { $('#mkbubble').textContent = said; $('#mkbubble').hidden = false; $('#mkbubble').dataset.tap = 1; }
   // めくる waits at the home card's goal and talks only when tapped (a bubble of its own would cover the buttons above it)
@@ -5669,7 +5876,9 @@ function viewHome(){
   const play = !act.length ? `<button class="k-play" data-act="tab" data-tab="decks">${K_ICO.play}<span class="k-play-t"><span class="k-play-main">単語帳を選ぶ</span></span></button>`
     : go ? `<button class="k-play" data-act="${go.act}"${go.more ? ' data-more="1"' : ''}${go.id ? ` data-id="${esc(go.id)}"` : ''}>${K_ICO.play}<span class="k-play-t"><span class="k-play-main">${esc(go.main)}</span><span class="k-play-sub">${lns.map(l => `<span class="ln">${kPhrases(l)}</span>`).join('')}</span></span></button>` : '';
   // the next thing after the main one, as a quiet button: today's おさらい (the goal's reviews already carry it)
-  const subAct = act.length && sdWait && go && !/review|check/.test(go.kind) ? `<button class="k-sub-act" data-act="studyCheck"><span>今日のおさらい ${sdWait}語</span><span class="r">${aboutMin(Math.min(10, sdWait))}${K_ICO.chev}</span></button>` : '';
+  // and, once the day's reviews are done but more are due (past the day's limit), 復習を続ける under 新しい単語を覚える
+  const subAct = (act.length && sdWait && go && !/review|check/.test(go.kind) ? `<button class="k-sub-act" data-act="studyCheck"><span>今日のおさらい ${sdWait}語</span><span class="r">${aboutMin(Math.min(10, sdWait))}${K_ICO.chev}</span></button>` : '')
+    + (go?.kind === 'new' && !c.due && c.dueAll ? `<button class="k-sub-act" data-act="studyReview" data-more="1"><span>復習を続ける（のこり${nLoc(c.dueAll)}語）</span><span class="r">${aboutMin(setN(c.dueAll))}${K_ICO.chev}</span></button>` : '');
   const hero = `<section class="k-first"><article class="k-hero${heroCls}" aria-label="今日の学習"><div class="k-hero-top">${heroCovers(covers)}<div class="k-hero-txt">${title}</div></div>
     ${seg}<div class="k-hero-act">${play}${act.length ? `<button class="k-more" data-act="homeMore" aria-label="ほかのやり方">${K_ICO.more}</button>` : ''}</div>${subAct}</article>${!tr ? '' : `<button class="k-tmr" data-act="goFc"><span>明日の復習${tr.rest ? `<small>${kPhrases(`今日の分に入らない${nLoc(tr.rest)}語${tr.spread ? 'は、明日から少しずつ' : 'も、明日にまわる'}`)}</small>` : ''}</span><b>${tr.tmr ? `<span class="num">${nLoc(tr.tmr)}</span>語` : 'なし'}</b>${K_ICO.chev}</button>`}</section>`;
   // 使っている単語帳: the deck new words come from now says when it is round once (変える: 1日の新しい単語), a later one can be
@@ -5725,7 +5934,6 @@ function homeMore(){
   const dir = (S.settings.dir || 'auto') !== 'auto' ? `、${DIR_LABEL[S.settings.dir]}` : '';
   openSheet(`<div class="sheet-h"><h3>ほかのやり方</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div><div class="k-menu">
     ${c.due && moreNew ? row('goNew', K_ICO.newW, '新しい単語だけ先にやる') : ''}
-    ${!c.due && c.dueAll && c.newToday ? row('studyReview', K_ICO.redo, `目標より先の復習を続ける（のこり${c.dueAll}語）`, ' data-more="1"') : ''}
     ${!c.due && !c.newToday && c.dueAll && moreNew ? row('goNew', K_ICO.newW, 'もっと新しい単語を覚える') : ''}
     ${row('studyOpts', K_ICO.tune, `出題のしかた（いまは${isCardMode() ? 'カード' : '4択'}${dir}、1セット${S.settings.setSize}問）`)}
     ${row('paceSheet', K_ICO.cal, `1日の新しい単語を変える（いまは${n}語）`)}
@@ -7612,9 +7820,14 @@ function useMeaning(m, ans){
   const out = String(m).replace(BRK, x => /[A-Za-z＋×]|分詞|最上級|複数|数えられない/.test(x) || re.test(x.replace(/(^|[^A-Za-z])[AB](?![A-Za-z])/g, '$1')) ? '' : x).replace(/\s{2,}/g, ' ').trim();   // A / B are placeholders, not the article; grammar notes give the form away
   return out || m;
 }
+/* a 語法 question's sentence with the answer filled in: e (plain, for 🔊), h (the answer marked), j (its translation, if any) */
+function useEx(c, si){
+  const u = useQ(c, si); if (!u) return null;
+  return {e: u[0].replace('___', u[1]), h: esc(u[0]).replace('___', () => `<b>${esc(u[1])}</b>`), j: u[6] || ''};
+}
 function useNoteHTML(c, si){
-  const u = useQ(c, si); if (!u) return '';
-  return `<div class="usenote"><div class="fb-ex" lang="en">${esc(u[0]).replace('___', () => `<b>${esc(u[1])}</b>`)}</div>${u[5] ? `<div class="why"><span class="ety-k">語法</span>${esc(u[5])}</div>` : ''}</div>`;
+  const u = useQ(c, si), x = useEx(c, si); if (!u) return '';
+  return `<div class="usenote"><div class="fb-ex" lang="en">${x.h}</div>${x.j ? `<div class="fb-ja">${esc(x.j)}</div>` : ''}${u[5] ? `<div class="why"><span class="ety-k">語法</span>${esc(u[5])}</div>` : ''}</div>`;
 }
 /* 語源とコアイメージ: only after the answer, in a line or two */
 function etyHTML(c){
@@ -7967,13 +8180,13 @@ function lisFor(it){
   return !homophones.has(AUD_I[k]) && (!!p.nl || (keyHash(c.k) + (p.r || 0)) % 7 < 2);   // nl: heard wrong last time, so this review is 聞き取り again
 }
 /* the word plays by itself; the clock (and the speed grade) start once it has finished.
-   Tapping the big 🔊 plays it again (also in マナーモード) and the clock starts over when that ends */
+   Tapping the big 🔊 plays it again (also in マナーモード); once the clock runs, it keeps running (replaying doesn't buy time) */
 function lisStart(it, pos, clock, live, tap=false){
   stopCountdown(); Q.lisArgs = [pos, clock, live]; Q.lisHid = document.visibilityState === 'hidden';
   const tok = Q.lisTok = {};
   const go = () => {
     if (!Q || Q.lisTok !== tok || Q.cur !== it || Q.answered) return;
-    Q.lisTok = null; Q.t0 = performance.now(); if (Q.hiddenAt) Q.hiddenAt = Q.t0;   // the clip ended under 報告: the wait counts from here
+    Q.lisTok = null; Q.lisRun = it; Q.t0 = performance.now(); if (Q.hiddenAt) Q.hiddenAt = Q.t0;   // the clip ended under 報告: the wait counts from here
     if (clock) countdown(slowMs('lis'), () => timeUp(it), live ? ms => showRate(speedTier('lis', ms)) : null, undefined, live ? fastMs('lis') : []);
   };
   if (IOS && !tap) lastTap = performance.now();
@@ -8188,7 +8401,7 @@ function detailHTML(it, noProg = false){
    The same things 詳しく used to hold (detailHTML), in rows with a label column */
 function factsHTML(it, np, tip){
   const c = it.c, rows = [], row = (k, v, cls = '') => `<div class="f-row${cls}"><span class="f-k">${k}</span><div class="f-v">${v}</div></div>`;
-  if (it.type === 'use') { const u = useQ(c, it.si); if (u) rows.push(row('語法', `<span class="f-en" lang="en">${esc(u[0]).replace('___', () => `<b>${esc(u[1])}</b>`)}</span>${u[5] ? `<span class="f-sub">${esc(u[5])}</span>` : ''}`)); }
+  if (it.type === 'use') { const u = useQ(c, it.si); if (u) rows.push(row('語法', u[5] ? `<b class="f-use">${esc(u[5])}</b>` : `<span class="f-en" lang="en">${useEx(c, it.si).h}</span>`)); }
   const h = c.isS ? c.parent : c.isD ? null : c;
   if (h) {   // the other meanings met so far; those still to come as 「あと2つ」 and when they come
     const me = c.isS ? c.si : S.settings.senseCards ? 0 : it.si, gated = S.settings.senseCards;
@@ -8264,8 +8477,9 @@ function showFeedback(it, ok, np, back = -1, opt = {}){
     : gated ? sensesGated(c, 0, true)
     : sensesHTML(c, hit, 'none', true));
   // a miss: that meaning's example (the word marked), then the table; nothing behind 詳しく
-  const ex = s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null;
-  const exLine = (it.type !== 'ctx' ? scanCtxHTML(c) : '') + (ex && it.type !== 'flash' ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${markWord(ex.e, c.w)}</div><div class="fb-ja">${esc(ex.j)}</div></div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '');
+  const ux = it.type === 'use' ? useEx(c, it.si) : null;   // 語法: the question's own sentence, not the meaning's example
+  const ex = ux || (s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null);
+  const exLine = (it.type !== 'ctx' ? scanCtxHTML(c) : '') + (ex && it.type !== 'flash' ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${ex.h || markWord(ex.e, c.w)}</div>${ex.j ? `<div class="fb-ja">${esc(ex.j)}</div>` : ''}</div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '');
   const pk = Q.picked, tip = !ok && pk?.tip && !tipLeaks(pk.tip, [c.isS ? c.parent : c, pk.card]) ? pk.tip : '';
   const miss = !ok && !near, fold = auto || !!near;   // a right answer: the short version first, 詳しく for the rest
   $('#fb').innerHTML = `${miss || near ? '<div class="fb-scrim" aria-hidden="true"></div>' : ''}<div class="fb v2 ${near ? 'near' : ok ? 'ok' : 'ng'}" ${auto ? 'data-act="fbTap"' : ''}><div class="fb-in"><span class="grab" aria-hidden="true"></span><div class="fb-sc">
@@ -8477,8 +8691,9 @@ function resWordHTML(it){
   const head = `<div class="fb-word"><div class="e-line">${wordHTML(c, s0, 'e-word')}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(pos0)}" aria-label="発音">${QI.say}</button>${no}</div><div class="e-pron">${ipaHTML(c)}</div></div>`;
   const pos = pos0 && !c.isD ? `<span class="pos">${esc(pos0)}</span>` : '';
   const mean = `<div class="cmp"><div class="cmp-row ok"><span class="cmp-l">意味</span><p class="cmp-t">${pos}<b>${c.isD ? `${esc(c.m)}` : esc(studyMain(c))}</b></p>${c.isD ? `<small>← <span lang="en">${esc(c.parent.w)}</span></small>` : ''}</div></div>`;
-  const ex = s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null;
-  const exLine = scanCtxHTML(c) + (ex ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${markWord(ex.e, c.w)}</div><div class="fb-ja">${esc(ex.j)}</div></div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '');
+  const ux = it.type === 'use' ? useEx(c, it.si) : null;   // 語法: the question's own sentence, not the meaning's example
+  const ex = ux || (s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null);
+  const exLine = scanCtxHTML(c) + (ex ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${ex.h || markWord(ex.e, c.w)}</div>${ex.j ? `<div class="fb-ja">${esc(ex.j)}</div>` : ''}</div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '');
   return `<div class="fb v2 rs-sheet ${good ? 'ok' : 'ng'}"><div class="fb-in"><div class="fb-sc">
     <div class="fb-head"><span class="fb-tt">${mk}${verdict}</span><span class="sp"></span>${when}</div>
     ${head}${mean}<div class="fb-body">${exLine}${factsHTML(it, null, '')}</div></div>
@@ -9691,7 +9906,8 @@ const ACT = {
   grpNew: () => grpNew(), grpJoin: () => grpJoin(), grpMenu: () => grpMenu(), grpMember: t => grpMember(t.dataset.u), frBack: () => { route.fr = null; render(); scrollTo(0, SCROLL.frl || 0); }, frAch: () => frAch(),
   grpStamp: t => grpStamp(t.dataset.u, +t.dataset.s), grpKick: t => grpKick(t), grpBlock: t => grpBlock(t.dataset.u), grpReport: t => grpReport(t.dataset.u), grpLeave: t => grpLeave(t), grpClose: t => grpClose(t),
   grpCopy: () => copyText(fmtG(grpCur()), '招待コードをコピーしました'), grpShare: () => grpShare(),
-  grpSel: t => { route.grp = t.dataset.g; route.fr = null; render(); }, grpRetry: () => { Grp.failed = false; render(); grpLoad(true); }, grpGm: t => { route.gm = t.dataset.k; render(); },
+  grpSel: t => { route.grp = t.dataset.g; route.fr = null; render(); },
+  raceOpen: () => raceOpen(grpCur()), raceClose: () => raceClose(), raceK: t => raceSet(t.dataset.k), raceAgain: () => raceRun(), raceSkip: () => { if (RC && !RC.end) raceRun(true); }, grpRetry: () => { Grp.failed = false; render(); grpLoad(true); }, grpGm: t => { route.gm = t.dataset.k; render(); },
   // a tab comes back as it was left (the deck page with its filter, search and scroll); the tab you are on, tapped again, goes to the top
   // (for 単語帳: back to the list, as does すべて見る)
   tab: t => { const to = t.dataset.tab, same = to === route.tab; if (to === 'friends') grpLoad().then(grpPend); if (to === 'settings') remindCheck(); if (same) route.fr = null; SCROLL[route.tab] = same ? 0 : scrollY; route.from = null;
@@ -9817,7 +10033,7 @@ const ACT = {
   say: t => { playWord(t.dataset.w, t.dataset.p, true);   // 🔊 after an answer: it moves on once the word has finished
     if (Q?.answered && Q.timer) { clearTimeout(Q.timer); Q.timer = setTimeout(nextQ, (AUD_A[audioKey(t.dataset.w, t.dataset.p)]?.[2] || 800) + 300); } },
   sayex: t => playExample(t.dataset.w),
-  lisPlay: () => { const it = Q?.cur; if (it?.type === 'lis' && !Q.answered && Q.lisArgs) { Q.lisTapped = true; lisStart(it, ...Q.lisArgs, true); } },
+  lisPlay: () => { const it = Q?.cur; if (it?.type === 'lis' && !Q.answered && Q.lisArgs) { Q.lisTapped = true; if (Q.lisRun === it) playWord(it.c.w, Q.lisArgs[0], true); else lisStart(it, ...Q.lisArgs, true); } },
   noSound: () => noSound(),
   quitSwipe: () => closeScreen(),
   repQ: () => { const it = Q?.cur; if (it) repOpen(it.c, (it.c.s[it.si] || it.c.s[0])?.m, TYPE_LABEL[(Q.answered && Q.hist?.at(-1)?.type) || it.type]); },   // a miss may already have changed its type for the retry
