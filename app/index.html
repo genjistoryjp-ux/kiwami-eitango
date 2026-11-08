@@ -2294,6 +2294,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .k-chart .bars{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:space-between}
 .k-chart .bars i{display:block;width:7px;border-radius:3px 3px 1px 1px;background:var(--blue-2)}
 .k-chart .bars i.tm{background:var(--blue)}
+.k-chart[data-fc]{cursor:pointer;touch-action:pan-y}
+.k-chart .bars i.sel{background:var(--ink)}
+.k-chart .fc-tip{display:none;position:absolute;top:-26px;z-index:2;padding:2px 8px;border-radius:6px;background:var(--ink);color:var(--bg);font-size:var(--fs-min);font-weight:600;line-height:18px;white-space:nowrap;pointer-events:none;font-feature-settings:"palt"}
+.k-chart .fc-tip b{font-family:var(--f-en);font-weight:800;margin-left:6px}
 .k-xl{position:relative;height:22px;margin:6px 30px 0 0;font-size:var(--fs-min);font-weight:500;color:var(--ink-2);font-feature-settings:"palt"}
 .k-xl span{position:absolute;top:0;white-space:nowrap;transform:translateX(-50%)}
 .k-xl span.l0{transform:none;left:0}
@@ -6875,12 +6879,27 @@ function fcBlock(fc, pl){
   return `<section class="k-sec" id="fcsec" aria-label="これからの復習"><div class="k-sec-h"><h2 class="k-sec-t">これからの復習</h2></div>
     <div class="k-fc"><div class="top">${kBig('明日', nLoc(tm), '語')}<p class="v">1日平均 <b>${nLoc(avg)}</b>語</p></div>
       <div class="row2"><p>${tm ? aboutMin(tm) : '復習なし'}</p><p>${avg ? aboutMin(avg) : ''}</p></div>
-      <div class="k-chart" role="img" aria-label="これからの復習、今日${bars[0]}語、明日${tm}語、1日平均${avg}語">
+      <div class="k-chart" role="img" aria-label="これからの復習、今日${bars[0]}語、明日${tm}語、1日平均${avg}語" data-fc="${bars.join(',')}" data-d0="${dayIdx()}">
         <div class="gl" style="top:0"><span>${tp}</span></div><div class="gl base" style="top:${H}px"></div>
         <div class="bars">${bars.map((v, i) => `<i${i === 1 ? ' class="tm"' : ''} style="height:${(v / tp * H).toFixed(1)}px"></i>`).join('')}</div>
-        ${avg ? `<div class="avg" style="top:${(H - avg / tp * H).toFixed(1)}px"><span>平均</span></div>` : ''}</div>
+        ${avg ? `<div class="avg" style="top:${(H - avg / tp * H).toFixed(1)}px"><span>平均</span></div>` : ''}<div class="fc-tip" aria-hidden="true"></div></div>
       <div class="k-xl" aria-hidden="true">${xl.map(([i, t]) => `<span${i ? ` style="left:calc(3.5px + (100% - 7px) * ${i / 28})"` : ' class="l0"'}>${t}</span>`).join('')}</div></div></section>`;
 }
+function fcPick(ch, x){
+  const v = ch.dataset.fc.split(',').map(Number), N = v.length, r = ch.getBoundingClientRect(), gap = (r.width - 7) / (N - 1);
+  const i = Math.max(0, Math.min(N - 1, Math.round((x - r.left - 3.5) / gap))), d0 = +ch.dataset.d0;
+  const wd = '日月火水木金土'[new Date((d0 + i) * DAY).getUTCDay()];
+  const day = i === 0 ? '今日' : i === 1 ? '明日' : i === 2 ? 'あさって' : `${mdLabel(d0 + i)}（${wd}）`;
+  const tip = ch.querySelector('.fc-tip'), bx = ch.querySelectorAll('.bars i');
+  bx.forEach((b, k) => b.classList.toggle('sel', k === i));
+  tip.innerHTML = `${day}<b>${nLoc(v[i])}</b>語`;
+  tip.style.display = 'block';
+  const c = 3.5 + i * gap, w = tip.offsetWidth;
+  tip.style.left = `${Math.max(0, Math.min(r.width - w, c - w / 2)).toFixed(1)}px`;
+}
+document.addEventListener('pointerdown', e => { const ch = e.target.closest?.('.k-chart[data-fc]'); if (ch) fcPick(ch, e.clientX); }, {passive: true});
+document.addEventListener('pointermove', e => { const ch = e.target.closest?.('.k-chart[data-fc]');
+  if (ch && (e.pointerType === 'mouse' || e.buttons)) fcPick(ch, e.clientX); }, {passive: true});
 function viewStats(){
   const g = goalToday(), {st} = g;
   const {started, all, allD, m, l, sl, stot, sc, dm, dl, mAll, days, time, tot, totC, rn, rc} = recNums();
