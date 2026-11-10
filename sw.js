@@ -1,15 +1,18 @@
 /* 極（きわみ） service worker, at the site's root (scope /): the app (/app/) works offline after the first visit, and the site's
    pages (the home /, /ranking/…) open offline once seen.
    - the pages: network first, so a new version arrives as soon as you are online; on a weak signal (no answer in 3 s)
-     the saved page opens, and the download carries on in the background for next time. Whatever the network answers in
-     time is what opens, a 404 or other error page included (no saved home in place of a page that is not there)
+     the saved page opens. Whatever the network answers in
+     time is what opens, a 404 or other error page included (no saved home in place of a page that is not there).
+     A page not in PAGES (a ranking…) is saved when it arrives, late or not. PAGES (the home, the app) are saved at install
+     only, together with the data the app's page names; a newer app page whose data are not all saved yet does not open,
+     the saved one does (page and data are always of one version)
    - audio sprites (words sNNN, example sentences eNNN): cached on first play (the words also all at once from 設定).
      A sprite file never changes (tools/pack_*.py put new audio in new files), so this cache keeps one name and is never cleared
    - the login / sync library (Firebase, one fixed version): cached on first use, so an offline start still syncs later
    - Google Fonts: served from cache, refreshed in the background
    - the page's data (d/: each deck, the audio indexes…): named by a hash of what they hold, so a file never changes; saved
      at install, served from the cache, and a file the current page no longer names is dropped */
-const APP = 'kyokutan-app-ce2d28772b';
+const APP = 'kyokutan-app-fdd7e0684b';
 const AUDIO = 'kyokutan-audio';
 const AUDIO_OLD = 'kyokutan-audio-f026ca2bc4';   // the last name that changed with the audio set: the same files, so they move over
 const FONTS = 'kyokutan-fonts-v1';
@@ -21,10 +24,17 @@ const PAGES = ["./", "./app/"];   // the pages saved at install (the site's home
 const SHELL = [...PAGES, './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(Promise.all([caches.open(APP).then(c => c.addAll(SHELL)), caches.open(DATA).then(async c => {
+  e.waitUntil(Promise.all([caches.open(APP).then(c => Promise.all([   // the pages: asked of the server (a copy the browser kept could be the page before this version's data), not saved yet
+    Promise.all(PAGES.map(p => fetch(p, {cache: 'no-cache'}))), c.addAll(SHELL.slice(PAGES.length))]).then(r => r[0])), caches.open(DATA).then(async c => {
     const have = new Set((await c.keys()).map(r => new URL(r.url).pathname.split('/').pop()));
     await c.addAll(DATA_FILES.filter(f => !have.has(f.split('/').pop())));   // only the files this version added
-  })]).then(() => self.skipWaiting()));
+  })]).then(async ([got]) => {
+    // the pages name exactly this version's data files, or nothing is saved (caught mid-publish: the next check installs it)
+    const named = new Set((await Promise.all(got.map(r => r.clone().text()))).flatMap(dataOf));
+    if (got.some(r => !r.ok) || named.size !== DATA_FILES.length || !DATA_FILES.every(f => named.has(f.split('/').pop()))) throw new Error('page and data of different versions');
+    const c = await caches.open(APP);
+    await Promise.all(PAGES.map((p, i) => c.put(p, got[i])));
+  }).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
@@ -49,11 +59,21 @@ async function cacheFirst(req, name) {
   return res;
 }
 
-/* the page from the network, saved for next time; the event stays alive until it is saved even if the cache answered first */
+/* the data files (d/) a page names (build.py's <script src="d/…"> tags), and whether they are all saved */
+const dataOf = html => [...html.matchAll(/<script src="(?:\.\.\/)?d\/([^"]+)"/g)].map(m => m[1]);
+async function hasData(res) {
+  const have = new Set((await (await caches.open(DATA)).keys()).map(r => new URL(r.url).pathname.split('/').pop()));
+  return dataOf(await res.clone().text()).every(f => have.has(f));
+}
+const ownPage = url => { const p = new URL(url).pathname.replace(/index\.html$/, ''); return PAGES.some(q => new URL(q, self.registration.scope).pathname === p); };
+
+/* the page from the network, saved for next time; the event stays alive until it is saved even if the cache answered first.
+   Not PAGES: saved here, a new app page would sit beside the old version's data until every new file had come (a deck
+   gone from the app when offline); install saves them, once this version's data are all in */
 function fetchPage(e) {
   let saved;
   const net = fetch(e.request, {cache: 'no-cache'}).then(res => {   // revalidate, so a new version is never held back by the HTTP cache
-    if (res.ok) { const copy = res.clone(); saved = caches.open(APP).then(c => c.put(e.request, copy)); }
+    if (res.ok && !ownPage(e.request.url)) { const copy = res.clone(); saved = caches.open(APP).then(c => c.put(e.request, copy)); }
     return res;
   });
   e.waitUntil(net.then(() => saved, () => {}).catch(() => {}));
@@ -68,8 +88,8 @@ async function networkFirst(req, net) {
   if (!hit) return net.catch(() => Response.error());
   const late = new Promise(r => setTimeout(r, PAGE_WAIT, null));
   try {
-    const res = await Promise.race([net, late]);
-    return res || hit;                               // the network's answer, even a 404; no answer within 3 s: the saved page
+    const res = await Promise.race([ownPage(req.url) ? net.then(async r => !r.ok || await hasData(r) || !await hasData(hit) ? r : null) : net, late]);
+    return res || hit;                               // the network's answer, even a 404; no answer within 3 s, or an app page ahead of its data: the saved page
   } catch (err) {
     return hit;
   }

@@ -9,6 +9,11 @@
 #boot .bb{width:112px;height:3px;border-radius:3px;background:#E3E8FB;overflow:hidden}
 #boot .bb i{display:block;width:40%;height:100%;border-radius:3px;background:#083FF9;animation:boot-run 1.1s ease-in-out infinite}
 #boot.out{opacity:0;pointer-events:none}
+#boot.lost{animation:none}
+#boot .bm{box-sizing:border-box;max-width:min(100vw,360px);margin:0;padding:0 24px;text-align:center;color:#5E5E68;font-size:15px;line-height:1.7;word-break:keep-all}
+#boot .bm b{display:block;margin-bottom:6px;color:#121216;font-size:18px;line-height:1.5}
+#boot .br{min-height:46px;padding:0 24px;border:0;border-radius:12px;background:#083FF9;color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+@media (prefers-color-scheme:dark){#boot .bm{color:#A6A6B0}#boot .bm b{color:#ECECF1}}
 @keyframes boot-run{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
 @keyframes boot-gone{to{opacity:0;visibility:hidden}}
 @media (prefers-color-scheme:dark){#boot{background:#111114}#boot .bb{background:#2A2C3A}}
@@ -16,7 +21,8 @@
 </style><div class="bt"><span class="bl" role="img" aria-label="極"><i style="--brand:url(data:image/png;base64,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)"></i></span><span class="bb"><i></i></span></div></div>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Charis+SIL&family=Literata:opsz,wght@7..72,500;7..72,600&family=Figtree:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Noto+Sans:wght@400;500&family=Noto+Sans+JP:wght@400;500;700;800&family=Yuji+Boku&display=swap">
+<!-- the font sheet is big and nothing waits for it: a print sheet, turned on when it arrives (text shows in the phone's own face until then) -->
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Charis+SIL&family=Figtree:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Noto+Sans:wght@400;500&family=Noto+Sans+JP:wght@400;500;700;800&family=Yuji+Boku&display=swap">
 <style>
 /* Layout: one 560px study column. Every word lives on a ring-bound 単語カード; red ink + 赤シート for hiding answers; tab bar at the bottom. */
 /* Colour meanings (one each, everywhere):
@@ -882,7 +888,8 @@ input[type=range]{accent-color:var(--accent);width:130px}
   .wrow .wdot{grid-row:1 / span 2} .wrow .wmean{grid-column:2;grid-row:2;justify-self:start} .wrow .wdue{grid-column:3;grid-row:1 / span 2}
 }
 /* card sheet: the reset is a small text button, away from 出題しない (it can be undone from the notice) */
-.reset-link{align-self:center;min-height:40px;font-size:13.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+:is(#view.dk,.sheet.v2) .link.del-link{color:var(--ng-ink)}   /* card sheet: この単語を削除, the last row, away from 編集 */
+.reset-link{align-self:center;min-height:44px;font-size:13.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 /* settings: a segmented control under its label spans the row */
 .frow.wrap>.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;width:100%}
 .frow.wrap>.seg button{padding:9px 4px}
@@ -1042,6 +1049,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
    one without a button lets taps through; their button is a full-height tap target */
 #screen:not([hidden]) ~ #toastroot .toast{top:calc(8px + env(safe-area-inset-top,0px));bottom:auto;max-width:calc(100% - 112px);font-size:13.5px;line-height:1.4}
 #screen:not([hidden]) ~ #toastroot .toast:not(:has(.toast-btn)){pointer-events:none}
+#sheetroot:has(#acctask) ~ #toastroot .toast{top:calc(8px + env(safe-area-inset-top,0px));bottom:auto}   /* off the question's buttons */
 .toast-btn{min-height:44px;margin:-10px -16px -10px 0;padding:0 14px;border-radius:0 12px 12px 0;background:color-mix(in srgb,var(--bg) 16%,transparent)}
 .toast{animation-name:toastin;width:max-content}   /* its own width, centred (left:50% alone would cap it at half the screen) */
 .toast>span{white-space:pre-line}   /* a line break in the message is kept */
@@ -2115,6 +2123,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .fb.v2 .senses .sja{font-size:var(--fs-sub);color:var(--ink-2)}
 .fb.v2 .usenote .fb-ex b{color:var(--ok-ink)}
 .fb.v2 .usenote .why{font-size:var(--fs-sub)}
+.fb.v2 .fb-base{margin:10px 0 -4px;font-size:var(--fs-body);font-weight:700;line-height:1.5;color:var(--ink-2);overflow-wrap:anywhere;font-feature-settings:"palt"}
+.fb.v2 .fb-base b{font-family:var(--f-en);color:var(--ink)}
 /* おしい: the right spelling typed once more */
 .fb.v2 .retype{width:100%}
 .fb.v2 .retype input{height:56px;border-radius:var(--r-card);border:1.5px solid var(--line-card);background:var(--bg);font-family:var(--f-en);font-size:20px;font-weight:600}
@@ -2818,6 +2828,19 @@ button.k-uv{width:calc(100% - 2 * max(var(--pad),env(safe-area-inset-left,0px)))
 <script src="../d/deck_j1.cbcdf10127.js"></script><script src="../d/deck_j2.52401eff3d.js"></script><script src="../d/deck_j3.4d64e247a1.js"></script><script src="../d/deck_idioms.48ae0fd647.js"></script><script src="../d/deck_toeic.fdb09144f2.js"></script><script src="../d/deck_junior.b556b0c816.js"></script><script src="../d/deck_tagi.e54ab562d5.js"></script><script src="../d/deck_theme.0b9def073b.js"></script><script src="../d/aud.68434beab2.js"></script><script src="../d/exi.44c8b1f9bf.js"></script><script src="../d/mekuru.80e52ef710.js"></script><script src="../d/extra.dc919d4053.js"></script>
 <script>
 'use strict';
+/* the web build keeps the data (each deck, the audio indexes…) in files of their own (d/), read into self.__KD by the <script>
+   tags above this one. If one did not arrive (a weak signal; offline with a page saved without its data), its deck would drop
+   out of every list without a word, or the rest would break: the loading screen says so, with a button to load again, and
+   nothing below runs (the records are not read, so not touched) */
+if (document.querySelectorAll('script[src^="d/"],script[src^="../d/"]').length > Object.keys(self.__KD || {}).length) {
+  const b = document.getElementById('boot'), bar = b && b.querySelector('.bb');
+  if (bar) {
+    b.removeAttribute('aria-hidden'); b.classList.add('lost'); b.lang = 'ja';
+    bar.outerHTML = '<p class="bm" role="alert"><b>単語データを<wbr>読み込めませんでした</b>電波のいいところで、<wbr>もう一度ためしてね。<br>これまでの記録は<wbr>消えていません。</p><button class="br" type="button">もう一度読み込む</button>';
+    b.querySelector('.br').onclick = () => location.reload();
+  }
+  throw new Error('data files missing');
+}
 const RAW = {"j1":self.__KD["deck:j1"],"j2":self.__KD["deck:j2"],"j3":self.__KD["deck:j3"],"idioms":self.__KD["deck:idioms"],"toeic":self.__KD["deck:toeic"],"junior":self.__KD["deck:junior"],"tagi":self.__KD["deck:tagi"],"theme":self.__KD["deck:theme"]};
 /* Kokoro word audio: a = {key: [sprite, startMs, durMs]}, i = {key: pronunciation symbols}, h = heteronyms {word: {N, V}} */
 const AUD = unpackAud(self.__KD["aud"]);
@@ -3504,11 +3527,53 @@ function loadLocal(){
   try { const raw = localStorage.getItem(LS_KEY); if (raw) return normalize(JSON.parse(raw)); } catch(e) {}
   return blank();
 }
+/* 2つのタブ: every save also leaves its number in REV_KEY, ahead of the numbers of the other tabs' saves it was made on top of
+   (S's own key and what is in it stay as they were). savedRaw / savedJ: the storage's text and S as this tab last read or
+   wrote them - the storage no longer that text: another tab saved; S no longer that: something new here.
+   mineRev: this tab's last save, until a save made on top of it (or one with nothing of this tab's missing) is taken */
+const REV_KEY = LS_KEY + '.rev', TAB_ID = Math.random().toString(36).slice(2, 8);
+const lsRaw = k => { try { return localStorage.getItem(k); } catch(e) { return null; } };
+let tabRev = lsRaw(REV_KEY) || '', revTop = parseInt(tabRev) || 0, mineRev = '', savedRaw = lsRaw(LS_KEY);
 let S = loadLocal();
+let savedJ = JSON.stringify(S);
 let saveT = null;
 let saveWarned = false;
+/* the other tab's save comes in. Nothing new here and it was made on top of this tab's last save: its records as they are
+   (a reset or a deck deleted there too). Something not saved here yet, or a save made without this tab's last one (both in
+   the same moment; a tab still on a version that leaves no number): put together as two devices' are (pull).
+   A set in progress goes on over them, as it does over a pull. 0 nothing to take, 1 taken and nothing new here, 2 taken
+   and this tab has more to save */
+function otherTab(){
+  const r = lsRaw(REV_KEY) || '', raw = lsRaw(LS_KEY), seq = r !== tabRev && (!mineRev || r.split(',').includes(mineRev));
+  tabRev = r; revTop = Math.max(revTop, parseInt(r) || 0); if (raw === savedRaw) return 0;
+  let o = null; try { if (raw) o = normalize(JSON.parse(raw)); } catch(e) {}
+  savedRaw = raw; if (!o) return 0;   // nothing readable there (the browser's storage was emptied): this tab's records are written again
+  const mine = JSON.stringify(S) !== savedJ; savedJ = JSON.stringify(o);
+  if (mine) tabMerge(S, o); else { if (!seq) tabMerge(o, S); S = o; }   // into o: more to save only if o lacked something of this tab's
+  invalidateDecks(); deckSeenAll(); applyZoom(); setTimeout(() => { if ($('#screen').hidden) render(); });
+  if (JSON.stringify(S) !== savedJ) return 2;
+  mineRev = ''; return 1;
+}
+function tabMerge(L, R){
+  for (const [id, d] of Object.entries(R.custom)) if (!L.custom[id] || (d?.upd || 0) > (L.custom[id].upd || 0)) L.custom[id] = d;
+  for (const [deck, M] of Object.entries(R.prog)) { if (L.custom[deck]?.del) continue; const P = L.prog[deck] ||= {};
+    for (const [k, p] of Object.entries(M)) if (!P[k] || progTime(p) > progTime(P[k])) P[k] = p; }
+  for (const [k, v] of Object.entries(R.daily)) L.daily[k] = mergeDay(L.daily[k], v);
+  if ((R.settings.upd || 0) > (L.settings.upd || 0)) L.settings = R.settings;
+  for (const [deck, M] of Object.entries(R.notes)) { const N = L.notes[deck] ||= {}; for (const [k, v] of Object.entries(M)) if (!(k in N)) N[k] = v; }
+  if (R.ach && typeof R.ach === 'object') { if (!L.ach || typeof L.ach !== 'object') L.ach = {}; achMerge(L.ach, R.ach); }
+  if (R.dojo && typeof R.dojo === 'object') { if (!L.dojo || typeof L.dojo !== 'object') L.dojo = {}; djMerge(L.dojo, R.dojo); }
+}
+/* back in this tab (before the pull and the day check below look at S), and the other tab's save seen while this one is in view;
+   a tab out of view takes it when it is looked at again or just before it writes. The records' own key: a little later, as
+   the number follows them (none comes from a tab on a version before this) */
+const seeOther = () => { if (document.visibilityState === 'visible' && otherTab() === 2) save(); };
+document.addEventListener('visibilitychange', seeOther); addEventListener('pageshow', seeOther);
+addEventListener('storage', e => { if (e.key === REV_KEY) seeOther(); else if (e.key === LS_KEY) setTimeout(seeOther, 200); });
 function saveNow(){
-  try { localStorage.setItem(LS_KEY, JSON.stringify(S)); }
+  try { otherTab(); const j = JSON.stringify(S); if (j === savedRaw) return;
+    localStorage.setItem(LS_KEY, j); savedRaw = savedJ = j; mineRev = `${++revTop}.${TAB_ID}`;
+    localStorage.setItem(REV_KEY, tabRev = [mineRev, ...tabRev.split(',').filter(x => x && !x.endsWith('.' + TAB_ID))].slice(0, 5).join(',')); }
   catch(e) { if (!saveWarned) { saveWarned = true; setTimeout(() => toast('この端末に保存できませんでした。空き容量やプライベートモードを確認してください', null, 6000), 0); } }   // full storage / private mode: say it once
 }
 function save(){ clearTimeout(saveT); saveT = setTimeout(saveNow, 300); }
@@ -3776,7 +3841,7 @@ function drillCards(kind, ids=activeIds(), min = S.settings.drillMin || 2){
 function todayStat(){ return S.daily[dayKey(dayIdx())] || {}; }
 function bumpDaily(o){
   const k = dayKey(dayIdx()); const d = S.daily[k] ||= {};
-  for (const [f,v] of Object.entries(o)) d[f] = (d[f]||0) + v;
+  for (const [f,v] of Object.entries(o)) d[f] = Math.max(0, (d[f]||0) + v);
   save(); markDirty('meta');
 }
 /* 連続記録: a day counts once a set's worth of questions (STREAK_N, answered in study sets, not 練習) was done that day,
@@ -3872,24 +3937,37 @@ function senseDots(c){
 /* 休み明け・復習がたまった日: that day's review limit drops to about a usual day's (at least 2 sets), decided once when the
    day starts and kept all day, so the goal — and the 🔥 — stays within reach; the rest keeps coming a little each day and
    can still be done after the goal (のこりの復習). After 2+ days away, no new words are added to that day's goal. */
+/* a day's reviews that were due that day. rx: the ones answered before their day (苦手を特訓, a narrowed list): they are not
+   that day's reviews, so they take nothing from its limit; rn and rc still count them, as 記録 always has */
+const revDone = d => Math.max(d?.rd || 0, (d?.rn || 0) - (d?.rx || 0));   // rd: answered on or after their day; the larger, so two devices' days put together never count fewer than one did
+const revMed = a => { a = a.slice(-14).sort((x, y) => x - y); return a.length ? a[a.length >> 1] : 0; };
+/* the usual day: the reviews done on the last 14 days studied before today (whenever they were, so a long break keeps it),
+   the last of those days and how many days were studied in all */
 function studyMedian(){
-  const today = dayIdx(), rn = []; let last = -1;
-  for (let d = today - 14; d < today; d++) { const x = S.daily[dayKey(d)]; if (x?.n) { rn.push(x.rn || 0); last = d; } }
-  rn.sort((a, b) => a - b); return {med: rn.length ? rn[rn.length >> 1] : 0, last};
+  const to = dayKey(dayIdx() - 1), ks = Object.keys(S.daily).filter(k => S.daily[k]?.n && k <= to).sort(), rn = ks.slice(-14).map(k => revDone(S.daily[k]));
+  return {med: revMed(rn), last: ks.length ? Math.round(Date.parse(ks.at(-1)) / DAY) : -1, days: ks.length, rn};
 }
+/* more reviews than usual (u: studyMedian). revTwice: twice a usual day's, which counts only from the 7th day studied (in the
+   first days reviews grow every day and the usual day is still small) or after 2+ days away (gap). revCap: that day's limit,
+   0 for none: about a usual day's when revTwice, else just the setting's. dayCap, backlog and revPlan all ask here */
+const revTwice = (n, u, gap) => n >= 30 && n > 2 * u.med && (u.days >= 7 || gap);
+const revHeavy = (n, u, gap) => n >= 30 && n >= (S.settings.maxRev || 9999) || revTwice(n, u, gap);
+function revCap(n, u, gap){
+  const max = S.settings.maxRev || 9999, cap = revTwice(n, u, gap) ? Math.min(max, Math.max(2 * S.settings.setSize, Math.round(u.med * 1.5))) : max;
+  return n >= 30 && cap < n ? cap : 0;
+}
+/* the days after a 休み明け day (d: the day before) count as `gap` too while each of them is cut, so that what the first
+   day left keeps coming a little a day in the first days studied as well, not all at once on the second day */
+const revCarry = d => { for (let x; (x = S.daily[dayKey(d)])?.cap > 0; d--) if (x.aw || !S.daily[dayKey(d - 1)]?.n) return true; return false; };   // no aw on a day one came back to with a set left open or nothing ever answered: no study the day before marks it too
 function dayCap(){
   const td = todayStat(); if ('cap' in td) return td.cap > 0 ? td.cap : Infinity;
   if (!S.settings.onboarded || !activeIds().length) return Infinity;
-  const today = dayIdx(), dueAll = pools(activeIds()).due.length, max = S.settings.maxRev || 9999, {med, last} = studyMedian();
-  let cap = 0, aw = 0;
-  if (dueAll >= 30 && (dueAll >= max || dueAll > 2 * med)) {
-    cap = Math.min(max, Math.max(2 * S.settings.setSize, Math.round(med * 1.5)));
-    if (cap >= dueAll) cap = 0; else aw = !td.n && last >= 0 && last < today - 1 ? 1 : 0;
-  }
+  const today = dayIdx(), dueAll = pools(activeIds()).due.length, u = studyMedian(), gap = u.last < today - 1;
+  const cap = revCap(dueAll, u, gap || revCarry(today - 1)), aw = cap && !td.n && u.last >= 0 && gap ? 1 : 0;
   const d = S.daily[dayKey(today)] ||= {}; d.cap = cap; d.d0 = dueAll; if (aw) d.aw = 1; save(); markDirty('meta');
   return cap > 0 ? cap : Infinity;
 }
-const revLeft = () => Math.max(0, Math.min(S.settings.maxRev || 9999, dayCap()) - (todayStat().rn || 0));
+const revLeft = () => Math.max(0, Math.min(S.settings.maxRev || 9999, dayCap()) - revDone(todayStat()));
 function newLeftToday(){ dayCap(); return todayStat().aw ? 0 : Math.max(0, S.settings.newPerDay - (todayStat().nw||0)); }
 function counts(ids=activeIds(), only){
   const P = pools(ids, only);
@@ -4084,6 +4162,88 @@ const SYNC_EVERY = 60000;
 const UID_KEY = 'tangoloop.uid';   // the account this device last merged with: its first sync on a device takes the account's settings
 const lsGet = k => { try { return localStorage.getItem(k); } catch(e) { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} };
+/* 別のアカウント: this device's records were last merged with one account (UID_KEY) and a different one logs in. Mixing them is
+   asked first (合わせる / 切りかえる): until the answer nothing is merged or written (pull stops before Sync.synced). A device that
+   never merged (no UID_KEY) or holds no records is not asked. 切りかえる keeps this device's records under KEEP_KEY + the
+   account they belong to and goes on with the new account's own; they are back when that account logs in here again.
+   SW_KEY: when this device's records were last changed for another account's; a second tab of the browser sees it change and
+   reads the records again (acctStale) instead of mixing or saving the ones it still holds */
+const KEEP_KEY = 'tangoloop.keep.', SW_KEY = 'tangoloop.swap';
+let ACCT_ASK = null, ACCT_OK = null, acctT = 0, SW_AT = lsGet(SW_KEY);   // ASK: the account whose question waits; OK: the one that just answered 合わせる (until its pull)
+const hasRecords = () => hasProgress() || !!Object.keys(S.custom).length;
+const acctDrop = () => { ACCT_ASK = null; clearTimeout(acctT); if ($('#acctask')) closeSheet(); };
+const acctMem = () => { clearTimeout(saveT); Sync.dirty.clear(); invalidateDecks(); deckSeenAll(); DICT_UNDO = SCAN_UNDO = null; route.deck = null; route.scan = false; applyZoom(); };   // S was replaced: nothing of the one before stays in memory or waits to be sent
+function keepTake(uid){   // the records kept for this account: in place again, no longer kept
+  let o = null; try { o = JSON.parse(lsGet(KEEP_KEY + uid) || 'null'); } catch(e) {}
+  if (!o || typeof o !== 'object') return false;
+  const run = o.keepRun; delete o.keepRun; S = normalize(o); runSet(typeof run?.n === 'number' ? run : {n: 0, b: 0});
+  try { localStorage.removeItem(KEEP_KEY + uid); } catch(e) {}
+  return true;
+}
+function keepJoin(uid){   // the records kept for this account come into S beside what is there (each word's later record), no longer kept
+  let o = null; try { o = JSON.parse(lsGet(KEEP_KEY + uid) || 'null'); } catch(e) {}
+  if (!o || typeof o !== 'object') return;
+  const b = o.keepRun?.b || 0, r = runGet(); delete o.keepRun; const K = normalize(o);
+  for (const [deck, P] of Object.entries(K.prog)) { const L = S.prog[deck] ||= {}; for (const [k, p] of Object.entries(P)) if (!L[k] || progTime(p) > progTime(L[k])) L[k] = p; }
+  for (const [k, v] of Object.entries(K.daily)) S.daily[k] = mergeDay(S.daily[k], v);
+  for (const [id, d] of Object.entries(K.custom)) if (!S.custom[id] || (d.upd || 0) > (S.custom[id].upd || 0)) S.custom[id] = d;
+  for (const [deck, N] of Object.entries(K.notes)) S.notes[deck] = {...N, ...(S.notes[deck] || {})};
+  if (K.ach) achMerge(S.ach && typeof S.ach === 'object' ? S.ach : (S.ach = {}), K.ach);
+  if (K.dojo) djMerge(S.dojo && typeof S.dojo === 'object' ? S.dojo : (S.dojo = {}), K.dojo);
+  if (b > r.b) runSet({n: r.n, b});
+  try { localStorage.removeItem(KEEP_KEY + uid); } catch(e) {}
+  invalidateDecks(); deckSeenAll(); saveNow();
+}
+function acctFresh(uid){ lsSet(UID_KEY, uid); acctMem(); saveNow(); lsSet(SW_KEY, SW_AT = String(Date.now())); }   // S is another account's now
+function acctStale(again){   // another tab changed this device's records for another account's: this tab reads them. → true: it did
+  const at = lsGet(SW_KEY); if (!at || at === SW_AT) return false;
+  let o = null; try { o = JSON.parse(lsGet(LS_KEY)); } catch(e) {}
+  if (!o || typeof o !== 'object') return false;
+  SW_AT = at; S = normalize(o); acctMem(); if (ACCT_ASK) acctDrop();
+  if (!$('#screen').hidden) { closeSheet(); closeScreen(); }   // a set, 仕分け or 道場 that is up was the other account's: nothing more of it is recorded
+  else if (!sheetOpen()) render();
+  if (again && Sync.col) pull().then(grpSoon);
+  return true;
+}
+addEventListener('storage', e => { if (e.key === SW_KEY) acctStale(true); });
+function acctAsk(){   // pull: true = the question waits for its answer
+  acctStale();
+  const uid = Sync.uid, was = lsGet(UID_KEY), other = !!uid && was !== uid;
+  if (other && ACCT_OK === uid) keepJoin(uid);   // 合わせる was the answer: what is kept here for this account is its own, and comes in as well
+  else if (other && was && hasRecords()) { ACCT_ASK = uid; acctShow(); return true; }
+  else if (other && !hasRecords() && $('#screen').hidden && keepTake(uid)) { acctFresh(uid); if (!sheetOpen()) render(); }   // nothing here to mix: what was kept for this account comes back
+  if (ACCT_ASK) acctDrop();   // answered in another tab
+  ACCT_OK = null;             // an answer stands for this one pull: the next other account is asked again
+  return false;
+}
+function acctShow(){
+  clearTimeout(acctT); if (!ACCT_ASK) return;
+  if (ACCT_ASK !== Sync.uid) { acctDrop(); return; }   // logged out before answering
+  const mail = Auth.user?.email;
+  if (!$('#acctask') && $('#screen').hidden && !sheetOpen()) openSheet(`<div class="sheet-h"><h3>前とちがうアカウントです</h3></div>
+    <div class="k-confirm" id="acctask"><p class="t">この端末には、前のアカウントで使っていた記録がある</p>${mail ? `<p class="s" style="overflow-wrap:anywhere">いまのアカウント：${esc(mail)}</p>` : ''}
+    <p class="s">合わせる：この端末の記録を、このアカウントにも入れる。あとで分けることはできない</p>
+    <p class="s">切りかえる：このアカウントの記録だけにする。この端末の記録は消さずにとっておき、前のアカウントでログインすると戻る</p></div>
+    <button class="btn btn-ghost btn-block" data-act="acctJoin">記録を合わせる</button><button class="btn btn-ghost btn-block" data-act="acctSwap">このアカウントに切りかえる</button><button class="link reset-link" data-act="acctOut">ログアウトする</button>`, true);
+  acctT = setTimeout(acctShow, 1500);   // waits for the study set or the sheet that is up; comes back if something closed it unanswered
+}
+async function acctAnswer(swap){
+  if (acctStale(true)) return;
+  const uid = Sync.uid, was = lsGet(UID_KEY); if (!uid || ACCT_ASK !== uid) { acctShow(); return; }
+  if (swap && was && was !== uid) {
+    keepJoin(was);   // something is still kept for the account before: not written over
+    try { localStorage.setItem(KEEP_KEY + was, JSON.stringify({...S, keepRun: runGet()})); }   // 連続正解 is counted on the device: kept with its records
+    catch(e) { toast('この端末の空き容量が足りず、切りかえられませんでした', null, 5000); return; }   // nothing is thrown away to make room
+    if (!keepTake(uid)) { S = blank(); runSet({n: 0, b: 0}); }
+    acctFresh(uid);
+  } else { swap = false; ACCT_OK = uid; }
+  acctDrop(); if (swap) render();
+  await pull(); ACCT_OK = null;   // the pull did not get through: asked again when it does
+  if (Sync.uid !== uid) return;
+  Sync.state = Sync.err ? 'err' : 'on'; renderSync(); grpSoon();
+  if (swap) toast('切りかえました。前の記録はこの端末にとってあります', null, 5000); else if (Sync.synced === Sync.col) toast('記録を合わせました');
+  if (!S.settings.onboarded && !sheetOpen()) onboard(swap);   // a new account with nothing yet: the welcome says it (opening the sheet wipes the notice above)
+}
 /* アクセス解析 (Google アナリティクス, loaded by the page on kiwami-eitango.com only): how far people get, as numbers (no name,
    nothing typed), plus each word answered (gaWord below). Once a day: the words 覚えた, the days studied, the streak, the questions answered and the minutes; a set
    finished: its size and right answers; 仕分け finished: how many it sorted */
@@ -4139,7 +4299,7 @@ function docBodies(name){
   if (name === 'ach') return [[name, {aj:JSON.stringify(S.ach || {}), upd}]];
   if (name === 'dojo') return [[name, {oj:JSON.stringify(S.dojo || {}), upd}]];   // 極み道場: its own document too   // 実績: its own document, so an older version (which reads only meta's settings and dj) leaves it alone
   if (name.startsWith('deck_')) {   // a big deck is cut into parts as well (deck_u…~1 …); the head is written last and says how many (np)
-    const d = S.custom[name.slice(5)]; if (!d) return [];
+    const d0 = S.custom[name.slice(5)]; if (!d0) return []; const d = {...d0, gu: d0.upd};   // gu goes into the cloud's copy only: S stays as it was saved (otherTab)
     const {cards = [], np: _np, ...head} = d, P = [[]]; let size = byteLen(JSON.stringify(head));
     for (const c of cards) { const n = byteLen(JSON.stringify(c)) + 1;
       if (P.at(-1).length && size + n > Sync.part) { P.push([]); size = 0; } P.at(-1).push(c); size += n; }
@@ -4218,6 +4378,7 @@ async function pull(){
     return;
   }
   if (col !== Sync.col) return;                                     // signed out meanwhile
+  if (acctAsk()) return;                                            // another account than this device's records belong to: asked first
   Sync.synced = col; clearTimeout(Sync.retry);
   Sync.pulled = Date.now();
   const fresh = !hasProgress() && !Object.keys(S.custom).length;   // nothing studied or made here yet: only onboarding's picks
@@ -4253,6 +4414,8 @@ async function pull(){
       else if (lu > ru) Sync.dirty.add('meta');
       const rd = unpackMap(data, 'dj', 'daily');
       if (typeof data.dj !== 'string') Sync.dirty.add('meta');
+      { const tk = dayKey(dayIdx()), lt = S.daily[tk];   // today's limit was set here before these records came (a device not used for some days): set again from all of them
+        if (lt && !lt.n && 'cap' in lt && Object.keys(rd).some(k => k < tk && (rd[k]?.n || 0) > (S.daily[k]?.n || 0))) { delete lt.cap; delete lt.d0; delete lt.aw; changed = true; } }
       for (const [k,v] of Object.entries(rd)) { const m = mergeDay(S.daily[k], v); if (!sameObj(m, S.daily[k]||{})) { S.daily[k] = m; changed = true; } if (!sameObj(m, v)) Sync.dirty.add('meta'); }
       for (const k of Object.keys(S.daily)) if (!rd[k]) Sync.dirty.add('meta');
     } else if (id === 'ach') {   // 実績: each badge's earlier day
@@ -4268,8 +4431,10 @@ async function pull(){
       let cards = data.cards || [];
       for (let i = 1; i < np && cards; i++) { const q = deckParts[id]?.[i]; cards = q && q.upd === data.upd && Array.isArray(q.cards) ? cards.concat(q.cards) : null; }   // every part of the same save, or not this time
       Sync.parts[id] = np;
-      if ((L?.upd || 0) > (data.upd || 0)) Sync.dirty.add(id);
-      else if (cards && (!L || (data.upd||0) > (L.upd||0))) { const {np: _np, ...d} = clone({...data, cards}); S.custom[did] = d; changed = true; invalidateDecks(); }   // the db hands out frozen objects: keep a copy
+      const two = cards && L && !L.del && !data.del && L.upd !== data.upd && deckJoin(L, {...data, cards});   // on both devices: joined card by card
+      if (two) { if (two.inL) { S.custom[did] = two.d; changed = true; invalidateDecks(); deckSeen(did); } if (two.inR) Sync.dirty.add(id); }
+      else if ((L?.upd || 0) > (data.upd || 0)) Sync.dirty.add(id);
+      else if (cards && (!L || (data.upd||0) > (L.upd||0))) { const {np: _np, ...d} = clone({...data, cards}); S.custom[did] = d; changed = true; invalidateDecks(); deckSeen(did); }   // the db hands out frozen objects: keep a copy
     }
   }
   for (const [id, g] of Object.entries(maps)) {
@@ -4298,7 +4463,7 @@ async function pull(){
   for (const did of Object.keys(S.custom)) if (!seen.has('deck_'+did)) Sync.dirty.add('deck_'+did);
   for (const deck of Object.keys(S.notes)) if (!seen.has('note_'+deck) && Object.keys(S.notes[deck]).length) Sync.dirty.add('note_'+deck);
   if (Sync.uid) lsSet(UID_KEY, Sync.uid);
-  if (changed) { save(); invalidateDecks(); if ($('#screen').hidden) render(); }   // records from another device can bring back a retired deck in use
+  save(); if (changed) { invalidateDecks(); if ($('#screen').hidden) render(); }   // records from another device can bring back a retired deck in use
   if (Sync.err && !Object.keys(Sync.bad).length) { Sync.err = null; Sync.state = 'on'; renderSync(); }   // read from the server: an earlier failed read no longer stands
   scheduleFlush(true);
 }
@@ -4518,7 +4683,7 @@ async function delAcct(t){
     await authM.signOut(Auth.api.auth).catch(() => {});
   }
   if (IS_APP) natPlug('FirebaseAuthentication')?.signOut().catch(() => {});
-  try { localStorage.removeItem(ACCT_KEY + uid); localStorage.removeItem(GRP_KEY + uid); } catch(e) {}
+  try { localStorage.removeItem(ACCT_KEY + uid); localStorage.removeItem(GRP_KEY + uid); if (lsGet(UID_KEY) === uid) localStorage.removeItem(UID_KEY); } catch(e) {}   // the account is gone: this device's records are no account's, so the next login takes them without the question
   closeSheet(); render(); toast('アカウントを削除しました（この端末の記録は残っています）', null, 4000);
 }
 
@@ -4684,7 +4849,7 @@ function grpSoon(ms = 1500){ clearTimeout(grpT); if (ms < 60000) Grp.tries = 0; 
 /* my numbers to each group (only when something changed); refused (too soon after the last write): again in a minute, 3 times at
    most (a device whose clock is a day off is refused every time; the next set tries again) */
 async function grpPush(){
-  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid; if (!fs || !uid || Grp.uid !== uid || !Grp.gs.length) return;
+  const {fs, db} = Auth.api || {}, uid = Auth.user?.uid; if (!fs || !uid || Grp.uid !== uid || !Grp.gs.length || ACCT_ASK) return;
   const m = grpMine(); let again = false;
   await Promise.all(Grp.gs.map(async g => {
     const o = Grp.me[g], x = grpFit(m, o);
@@ -5349,7 +5514,7 @@ function iabNote(){
    waits for closeScreen / closeSheet) — after saving, and says so once. */
 let swNew = false;
 function reloadIfQuiet(){
-  if (!swNew || !$('#screen').hidden || sheetOpen() || $('#dfm')?.value.trim() || $('#dfe')?.value.trim() || SCAN?.busy != null || SCAN?.edit) return;   // nor with the 辞書's form half filled in
+  if (!swNew || !$('#screen').hidden || sheetOpen() || $('#toastroot .toast-btn') || $('#dfm')?.value.trim() || $('#dfe')?.value.trim() || SCAN?.busy != null || SCAN?.edit) return;   // nor with the 辞書's form half filled in
   swNew = false; saveNow();
   Promise.race([flush(true).catch(() => {}), new Promise(r => setTimeout(r, 3000))]).then(() => { lsSet('kiwami.updated', '1'); location.reload(); });
 }
@@ -5404,11 +5569,19 @@ function installSheet(){
 }
 async function downloadAllAudio(btn){
   const ids = [...new Set(Object.values(AUD_A).map(e => e[0]))].sort((a, b) => a - b);
-  btn.disabled = true; let done = 0; const out = btn.querySelector('[data-prog]') || btn;   // the 設定 row: its grey line shows how far
+  if (!navigator.serviceWorker?.controller) return toast('いまは音声を保存できません。ページを読み込み直すか、SafariやChromeで開いてね', null, 5000);   // the service worker does the keeping
+  btn.disabled = true; let done = 0, bad = 0, lost = 0; const got = []; const out = btn.querySelector('[data-prog]') || btn;   // the 設定 row: its grey line shows how far
   for (const i of ids) {
-    try { const r = await fetch(`../audio/${sprName('s', i)}.mp3`); if (r.ok) await r.arrayBuffer(); } catch(e) {}
+    try { const r = await fetch(`../audio/${sprName('s', i)}.mp3`); if (!r.ok) throw 0; await r.arrayBuffer(); got.push(r.url); } catch(e) { bad++; }
     done++; out.textContent = `ダウンロード中 ${Math.round(done / ids.length * 100)}%`;
   }
+  // sw.js keeps a file without waiting for it or telling, so look for each one here; with no room left on the phone they are not there
+  const miss = async () => { let n = 0; for (const u of got) if (!(await caches.match(u, {ignoreVary: true}).catch(() => 0))) n++; return n; };
+  if (await miss()) { await sleep(1500); lost = await miss(); }   // the last ones may still be on their way in
+  if (lost) { btn.disabled = false; out.textContent = '保存できませんでした';   // not 「もう一度押してね」: a press would only download the same again
+    return toast(`音声${lost < got.length ? 'の一部' : ''}を保存できませんでした。端末の空き容量を確認してね`, null, 5000); }
+  if (bad) { const n = bad < ids.length ? `${bad}個` : ''; btn.disabled = false; out.textContent = `${n}失敗。もう一度押してね`;   // saved ones stay: the next press fetches only the rest
+    return toast(`音声${n && `の一部（${n}）`}を保存できませんでした。電波のいいところで、もう一度押してね`, null, 5000); }
   out.textContent = '保存しました'; toast('音声をすべて保存しました。オフラインでも再生できます');
 }
 
@@ -5488,7 +5661,7 @@ let toastT = null;
 function toast(msg, action, ms=2400){
   const r = $('#toastroot');
   r.innerHTML = `<div class="toast" role="status"><span>${esc(msg)}</span>${action ? `<button class="toast-btn" data-act="${action.act}">${esc(action.label)}</button>` : ''}</div>`;
-  clearTimeout(toastT); toastT = setTimeout(() => r.innerHTML = '', ms);
+  clearTimeout(toastT); toastT = setTimeout(() => { r.innerHTML = ''; reloadIfQuiet(); }, ms);   // an update that waited for 元に戻す
 }
 /* web: the browser's back (Safari's edge swipe, Android's back) closes the top layer (sheet, study screen, deck page) instead of leaving the app.
    At most one marker entry: × and 閉じる leave it in place, and the next back only clears it */
@@ -5497,7 +5670,7 @@ if (IS_WEB) try { history.scrollRestoration = 'manual'; } catch(e) {}   // the m
 function guard(){ if (IS_WEB && !HG) { try { history.pushState({kt: 1}, ''); HG = true; } catch(e) {} } }
 function openSheet(html, modal=false, keep=false){
   const again = sheetOpen(), top = keep ? $('#sheetroot .sheet')?.scrollTop || 0 : 0;
-  if (!again && !$('#toastroot .toast-btn')) { clearTimeout(toastT); $('#toastroot').innerHTML = ''; }   // a plain notice would cover the new sheet's field; an undo one stays
+  if (!again && !$('#toastroot .toast-btn:not([data-act="undoDelCard"])')) { clearTimeout(toastT); $('#toastroot').innerHTML = ''; }   // a plain notice would cover the new sheet's field, and 削除しました the next word's lower buttons; any other undo one stays
   const v2 = true;   // every sheet: the new look (white, its title, its buttons)
   $('#sheetroot').innerHTML = `<div class="backdrop" ${modal ? '' : 'data-act="closeSheet"'}></div><div class="sheet${v2 ? ' v2' : ''}" role="dialog" aria-modal="true"><div class="sheet-in">${modal ? '' : '<div class="grab"></div>'}${html}</div></div>`;
   if (again) $('#sheetroot').querySelectorAll('.sheet,.backdrop').forEach(e => e.style.animation = 'none');   // a sheet already up: a redraw never replays the slide-in / fade
@@ -5539,7 +5712,7 @@ function bindSheetDrag(sh){
 let QHOLD = null;   // 報告's sheet is up: what it is about (repOpen)
 function closeSheet(){ $('#sheetroot').innerHTML = ''; if ($('#screen').hidden) document.body.classList.remove('locked'); reloadIfQuiet(); if (DJ?.wait && !DJ.done) setTimeout(djNext); if (QHOLD) repDone(); }   // 道場: on after やめる？ is closed
 const sheetOpen = () => !!$('#sheetroot').firstChild;
-function openScreen(){ const s = $('#screen'); s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); viewKey = ''; tutDrop(); guard(); }   // viewKey: the home dock rises again when this closes
+function openScreen(){ const s = $('#screen'); if ($('#toastroot .toast-btn')) { clearTimeout(toastT); $('#toastroot').innerHTML = ''; } s.hidden = false; s.scrollTop = 0; document.body.classList.add('locked'); viewKey = ''; tutDrop(); guard(); }   // viewKey: the home dock rises again when this closes
 /* closing a set's results goes back to where it started: a deck page (route stays on it), else the home */
 const backLabel = () => route.tab === 'decks' && route.deck ? '単語帳へもどる' : 'ホームへ';
 function closeScreen(){ raceStop(); clearTimeout(Q?.timer); stopCountdown(); tutDrop(); tutPend.length = 0; Q = null; SW = null; if (DJ) { clearInterval(DJ.iv); clearTimeout(DJ.next); DJ = null; } const s = $('#screen'); s.hidden = true; s.innerHTML = ''; document.body.classList.remove('locked'); render(); flush(); reloadIfQuiet(); }
@@ -5662,9 +5835,9 @@ const aboutMin = q => `約${Math.max(1, Math.round(q * secPerQ() / 60))}分`;
    'away' when the last study day before today is 2+ days back and nothing is done yet today */
 function backlog(c, td = todayStat()){
   if (td.cap > 0) return c.due ? (!td.n && td.aw ? 'away' : 'heavy') : '';   // a lighter day was set: say so, with its small number
-  const today = dayIdx(), {med, last} = studyMedian();
-  if (c.due < 30 || !(c.dueAll >= (S.settings.maxRev || 9999) || (c.dueAll >= 30 && c.dueAll > 2 * med))) return '';   // c.due: what today's limit still lets in
-  return !td.n && last < today - 1 ? 'away' : 'heavy';
+  const today = dayIdx(), u = studyMedian(), gap = u.last < today - 1;
+  if (c.due < 30 || !revHeavy(c.dueAll, u, gap || revCarry(today - 1))) return '';   // c.due: what today's limit still lets in
+  return !td.n && gap ? 'away' : 'heavy';
 }
 /* 完走の見込み: the cards still to learn in the active decks ÷ new words a day — the average of the last 14 days
    (from 3 days of record and 1 word a day), else the daily goal. No input fields: the line is a mirror of the pace.
@@ -7069,13 +7242,10 @@ function fcDays(){
    days before left over (rest: what today's limit leaves out), up to that day's limit — dayCap's rule with the 14 days to today,
    and maxRev. The home's 明日の復習 and 記録's これからの復習 say day 1 of it; what today can still do is not tomorrow's */
 function revPlan(fc, due = counts().due){
-  const today = dayIdx(), max = S.settings.maxRev || 9999, rn = [];
-  for (let d = today - 13; d <= today; d++) { const x = S.daily[dayKey(d)]; if (x?.n) rn.push(x.rn || 0); }
-  rn.sort((a, b) => a - b); const med = rn.length ? rn[rn.length >> 1] : 0;
-  const lim = n => { const cap = n >= 30 && (n >= max || n > 2 * med) ? Math.min(max, Math.max(2 * S.settings.setSize, Math.round(med * 1.5))) : 0;
-    return Math.min(max, cap > 0 && cap < n ? cap : Infinity); };
+  // the days to come with every day's goal done, today's too: each one more day studied, its reviews one more of the usual days (h)
+  const today = dayIdx(), max = S.settings.maxRev || 9999, u = studyMedian(), h = [...u.rn, revDone(todayStat()) + Math.min(fc[0], due)];
   const rest = Math.max(0, fc[0] - due), plan = [fc[0] - rest];
-  for (let i = 1, carry = rest; i < fc.length; i++) { const n = fc[i] + carry, v = Math.min(n, lim(n)); plan.push(v); carry = n - v; }
+  for (let i = 1, carry = rest, g = revCarry(today); i < fc.length; i++) { const n = fc[i] + carry, cap = revCap(n, {med: revMed(h), days: u.days + i}, g), v = Math.min(n, max, cap || Infinity); plan.push(v); h.push(v); carry = n - v; g = g && cap > 0; }
   return {plan, rest, tmr: plan[1], spread: plan[1] < fc[1] + rest};
 }
 /* これからの復習: today (what is left) to 4 weeks on, one bar a day; tomorrow's bar in the app blue, the average dotted.
@@ -7343,7 +7513,7 @@ function viewSettings(){
     kOpts('rate', [[0.75, 'ゆっくり'], [0.95, 'ふつう'], [1.15, '速め']], '例文の読み上げの速さ'), kSw('sfx', '効果音'), kSw('haptic', '振動', '正解と不正解を振動でも知らせる')]))}
   ${IS_APP ? kSec('通知', kGroup([`<button class="k-srow" role="switch" aria-checked="${remGet().on}" data-act="remindToggle">${kTxt('毎日のリマインダー', '決めた時刻に、今日の英単語を知らせる')}<span class="k-sw" aria-hidden="true"></span></button>`,
       remGet().on ? kGo('remindSheet', '知らせる時刻', '', remGet().t) : '']))
-    : IS_WEB ? kSec('アプリとして使う', kGroup([inst, icsOK() ? kGo('icsSheet', 'カレンダーで毎日知らせる') : '', kGo('dlAudio', '音声をまとめてダウンロード', '<span data-prog>約25MBで、電波がなくても発音が聞ける</span>')])) : ''}
+    : IS_WEB ? kSec('アプリとして使う', kGroup([inst, icsOK() ? kGo('icsSheet', 'カレンダーで毎日知らせる') : '', kGo('dlAudio', '音声をまとめてダウンロード', `<span data-prog>約${50}MB・Wi-Fiがおすすめ</span>`)])) : ''}
   ${IS_WEB && FIREBASE ? kSec('アカウント', kGroup([u ? `<div class="k-srow">${u.photoURL ? `<img class="k-me" src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}${kTxt(esc(u.displayName || 'ログイン中'), u.email ? esc(u.email) : '')}</div>
       <div class="k-srow">${kTxt('ユーザーID', Acct.uid === u.uid && Acct.id ? `<span class="k-idv">${fmtId(Acct.id)}</span>` : '準備中…')}${Acct.uid === u.uid && Acct.id ? '<button class="btn btn-ghost btn-sm" data-act="copyId">コピー</button>' : ''}</div>
       ${IS_APP ? '' : kGo('codeSheet', '特典コード', isPlus() ? `極プラス（${esc(plusWhy())}）` : 'コードを持っていたら、ここで使う')}${Acct.admin ? kGo('devSheet', '開発者メニュー', 'コードを作る・見る') : ''}${kGo('signOut', 'ログアウト', 'この端末の記録は残る')}${kGo('delAcctSheet', 'アカウントを削除', 'アカウントと、そこに保存した記録を消す')}`
@@ -7416,9 +7586,10 @@ function cardSheet(c, keep=false){
     </div>
     ${memo ? `<div class="memo">${esc(memo)}</div>` : ''}
     ${p?.wk ? '<div class="btn-row">' : ''}<button class="btn btn-ghost${p?.wk ? '' : ' btn-block'}" data-act="suspend" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">${p?.sus ? '出題に戻す' : '出題しない'}</button>${p?.wk ? `<button class="btn btn-ghost" data-act="unweak" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">苦手から外す</button></div>` : ''}
-    ${deck && !deck.builtin ? `<div class="btn-row"><button class="btn btn-ghost" data-act="editCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">編集</button><button class="btn btn-danger" data-act="delCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">削除</button></div>` : ''}
+    ${deck && !deck.builtin ? `<button class="btn btn-ghost btn-block" data-act="editCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">編集</button>` : ''}
     ${refIn ? `<button class="btn btn-ghost btn-block" data-act="unref" data-id="${esc(refIn)}" data-ref="${esc(c.deck + '|' + c.k)}">「${esc(deckById(refIn)?.name || '')}」から外す<small>学習記録は残ります</small></button>` : ''}
-    ${p && p.st ? `<button class="link reset-link" data-act="resetCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">この単語の記録をリセット</button>` : ''}`, false, keep);
+    ${p && p.st ? `<button class="link reset-link" data-act="resetCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">この単語の記録をリセット</button>` : ''}
+    ${deck && !deck.builtin ? `<button class="link reset-link del-link" data-act="delCard" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">この単語を削除</button>` : ''}`, false, keep);
 }
 /* past forms of the verbs idioms start with, so "took it for granted" is found from "take A for granted" */
 const IRR = {take:'took|taken', make:'made', come:'came', give:'gave|given', get:'got|gotten', go:'went|gone|goes', bring:'brought',
@@ -7460,9 +7631,8 @@ function markWord(sentence, word){
   if (/\s/.test(String(word).trim())) { const ph = markPhrase(sentence, word); if (ph) return ph; }
   const s = esc(sentence); const w = word.replace(/\b(A|B|one's)\b/g,'').trim().split(/\s+/)[0] || word;
   if (w.length < 3) return s;
-  const stem = w.length > 5 ? w.slice(0, w.length - 2) : w.length > 3 ? w.slice(0, w.length - 1) : w;
-  const re = new RegExp(`\\b(${stem.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}[a-z]*)`, 'i');
-  return s.replace(re, '<span class="mark">$1</span>');
+  const m = gapOf(sentence, w);   // the word スペル blanks: the headword or a form of it before a look-alike (clay, not class)
+  return m ? esc(sentence.slice(0, m.index)) + `<span class="mark">${esc(m[0])}</span>` + esc(sentence.slice(m.index + m[0].length)) : s;
 }
 /* an example sentence and its 🔊: the last word goes down with it, so the 🔊 never takes a line of its own (a marked phrase
    at the end goes down whole: a space inside a tag or a mark doesn't count) */
@@ -7474,11 +7644,20 @@ function exSay(html, e){
   }
   return `${html.slice(0, at + 1)}<span class="nw">${html.slice(at + 1)}<button class="sayex" data-act="sayex" data-w="${esc(e)}" lang="ja" aria-label="例文を聞く">${I.say}</button></span>`;
 }
-function blankWord(sentence, word){
+/* スペル's blank: the first word that starts like the headword, as before; when that is some other word (class for clay, spider for spin)
+   and the sentence has the word or a form of it, that one. A form in the blank (decided) is also taken as the answer (gapForm) */
+const isForm = (v, w) => v === w || wordForms(w).has(v) || baseForms(v).includes(w);
+const gapOf = (sentence, word) => {
   const stem = word.length > 5 ? word.slice(0, word.length - 2) : word.length > 3 ? word.slice(0, word.length - 1) : word;
   const re = new RegExp(`\\b${stem.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}[a-z]*`, 'i');
-  if (!re.test(sentence)) return '';
-  return esc(sentence.replace(re, '\u0000')).replace('\u0000', '<span class="mark">＿＿＿</span>');
+  const m = sentence.match(re), w = spellNorm(word);
+  if (!m || spellNorm(m[0]) === w) return m;
+  const ws = [...sentence.matchAll(/[a-z]+/gi)];   // the word itself comes before a form or a look-alike (even, not evening)
+  return ws.find(x => spellNorm(x[0]) === w) || (isForm(spellNorm(m[0]), w) ? m : ws.find(x => isForm(spellNorm(x[0]), w)) || m);
+};
+function blankWord(sentence, word){
+  const m = gapOf(sentence, word);
+  return m ? `${esc(sentence.slice(0, m.index))}<span class="mark">＿＿＿</span>${esc(sentence.slice(m.index + m[0].length))}` : '';
 }
 
 /* ---------- quiz ---------- */
@@ -7553,10 +7732,16 @@ function baseType(c, p){
 const normM = t => String(t).replace(/[～〜（）()、。・\s]/g, '');
 function kanjiPairs(t){ const out = new Set(); for (const r of String(t).match(/[\u4e00-\u9fff\u3005]+/g) || []) for (let i = 0; i < r.length - 1; i++) out.add(r.slice(i, i+2)); return out; }
 function similar(a, b){ if (normM(a) === normM(b)) return true; const A = kanjiPairs(a); for (const x of kanjiPairs(b)) if (A.has(x)) return true; return false; }
+/* a word or idiom whatever stands in its slots: take ～ for granted = take A for granted, remind O of ～ = remind A of B, look forward to ~ing = look forward to */
+const TWIN = new Map(), twinKey = w => { let k = TWIN.get(w); if (k === undefined) { const n = normW(w); TWIN.set(w, k = (n.includes(' ') && looseW(n).replace(/(^|\s)[oc](?=\s|$)/g, ' ').replace(/\s+/g, ' ').trim()) || n); } return k; };
+const otherDecks = c => { const w = twinKey(c.w); return cardsOf(decks().map(d => d.id)).filter(x => x.deck !== c.deck && twinKey(x.w) !== w); };   // not the same word in another deck: its meanings are right answers too
+/* a list of candidates, then the other decks' words: only reached when the deck runs out of words that share no meaning
+   (a deck of your own full of synonyms), so there are always three wrong options */
+function* poolAndRest(list, c){ yield* list; yield* shuffle(otherDecks(c)); }
 function distractorPool(c){
   const self = c.isS ? c.parent.k : c.k;
   let pool = (deckById(c.deck)?.cards || []).filter(x => x.k !== self);
-  if (pool.length < 12) pool = pool.concat(cardsOf(decks().map(d => d.id)).filter(x => x.deck !== c.deck));
+  if (pool.length < 12) pool = pool.concat(otherDecks(c));
   return shuffle(pool);
 }
 /* 熟語: an idiom card (the idioms deck or its meaning cards, or a phrase marked 熟 in your own deck; not "on purpose" as a
@@ -7569,8 +7754,12 @@ const NOT_VERB = new Set(('be a an the in on at as by for from of to with not no
 const headVerb = w => { const t = normW(w).split(' '); return t.length > 1 && !NOT_VERB.has(t[0]) ? t[0] : ''; };
 /* idiom meanings are verb phrases without kanji pairs, so they are also compared by their core: brackets and the leading
    particle dropped (「（仕事・責任など）を引き受ける」 = 「～を担当する、～を引き受ける」, 「を取っておく」 = 「取っておく」) */
-const corePieces = m => String(m).replace(/[（(][^）)]*[）)]/g, '').split(/[、，,／]/).map(t => normM(t).replace(/^(?:を|に|が|と|で|へ|の|から|より)+/, '')).filter(t => t.length >= 2);
+const corePieces = m => String(m).replace(/[（(][^）)]*[）)]/g, '').replace(/\b[AB]\b|[ＡＢ…]/g, '').split(/[、，,／；;・]/).flatMap(t => { t = normM(t); return [t, t.replace(/^(?:を|に|が|と|で|へ|の|から|より)+/, '')]; }).filter(t => t.length >= 2 || /^[一-鿿々]$/.test(t));
 const sameCore = (a, b) => { const A = new Set(corePieces(a)); return corePieces(b).some(t => A.has(t)); };
+/* every word, not only an idiom: a wrong option shares no piece of its meaning with the asked word, as written (sharesPiece) or by
+   its core (generally 「一般に、たいてい」 / mostly 「大部分は、主に、たいてい」, clever 「賢い、利口な」 / wise 「賢い、賢明な」). The same
+   meaning in other words (賢い / 頭がいい) is not caught */
+const alike = (a, b) => similar(a, b) || sharesPiece(a, b) || sameCore(a, b);
 /* a wrong option marked trap (a look-alike, an idiom with the same verb) makes the question harder: its answer time goes in a box of its own (rtKey) */
 function pickChoices(c, type, si, noConf){
   const target = c.s[si], pool = distractorPool(c), mine = c.isS ? c.parent.s : c.s;
@@ -7587,9 +7776,8 @@ function pickChoices(c, type, si, noConf){
   // 日→英 always; 英→日 only on a review of 4 days or more (not while it is new, nor when it is only heard): one of them, two from 15 days
   const p = prog(c), idiom = isIdiom(c), late = !noConf && isReview(p) && p.s >= 4;
   const verb = idiom && (type === 'j2e' || (type === 'e2j' && late)) ? headVerb(c.w) : '', nVerb = type === 'j2e' ? 3 : p?.s >= 15 ? 2 : 1;
-  const alike = (a, b) => similar(a, b) || (idiom && (sharesPiece(a, b) || sameCore(a, b)));
   let nv = 0;
-  for (const x of [...(verb ? pool.filter(x => headVerb(x.w) === verb) : []), ...ordered]) {
+  for (const x of poolAndRest([...(verb ? pool.filter(x => headVerb(x.w) === verb) : []), ...ordered], c)) {
     if (picked.length >= 3) break;
     const id = x.deck + '|' + x.k; if (used.has(id) || isNear(c.w, x.w)) continue;   // never an idiom that could answer for this one
     const sv = !!verb && headVerb(x.w) === verb; if (sv && nv >= nVerb) continue;
@@ -7640,7 +7828,7 @@ function pickOdd(c){
   let fake = null;
   for (const x of distractorPool(c)) {
     const ms = metSenses(x), cand = ms[Math.floor(Math.random() * ms.length)];
-    if (isNear(c.w, x.w) || c.s.some(s => similar(s.m, cand.m))) continue;
+    if (isNear(c.w, x.w) || c.s.some(s => alike(s.m, cand.m))) continue;
     fake = {card:x, text:cand.m, sub:`${x.w}の意味`, ok:true}; break;
   }
   if (!fake) return null;
@@ -7686,11 +7874,11 @@ function confPick(c, type, target){
     const x = (wordIndex().get(normW(w)) || []).find(y => { const q = prog(y); return isReview(q) && !q.sus; });
     if (!x || normW(x.w) === normW(c.w) || isNear(c.w, x.w)) continue;
     if (type === 'j2e') {
-      if (x.s.some(s => sharesPiece(s.m, target.m))) continue;   // the look-alike must not also mean the prompt
+      if (x.s.some(s => sharesPiece(s.m, target.m) || sameCore(s.m, target.m))) continue;   // the look-alike must not also mean the prompt
       return {card:x, text:x.w, sub:shownMeanings(x), ok:false, tip, trap:true};
     }
     const ms = metSenses(x), cand = ms.find(s => s.p === target.p) || ms[0];
-    if (!cand?.m || mine.some(s => sharesPiece(s.m, cand.m))) continue;
+    if (!cand?.m || mine.some(s => sharesPiece(s.m, cand.m) || sameCore(s.m, cand.m))) continue;
     return {card:x, text:qm(cand.m), sub:x.w, ok:false, tip, trap:true};
   }
   return null;
@@ -7740,7 +7928,7 @@ function ctxParts(c, si){
   // one kanji in common and the same part of speech is a near-synonym too, which a sentence can't decide (threat 脅し、脅迫 / 脅威、恐れ; avoid 避ける / 回避する)
   const kanji = m => String(m).replace(/[（(［\[][^）)］\]]*[）)］\]]/g, '').match(/[一-鿿々]/g) || [];
   const nearSense = s => s.p === target.p && kanji(s.m).some(k => kanji(target.m).includes(k));
-  const mates = openIdx(host).filter(j => j !== i && host.s[j].m && !similar(host.s[j].m, target.m) && !nearSense(host.s[j])).map(j => ({text: host.s[j].m, sub: `${host.w}の別の意味`}));
+  const mates = openIdx(host).filter(j => j !== i && host.s[j].m && !alike(host.s[j].m, target.m) && !nearSense(host.s[j])).map(j => ({text: host.s[j].m, sub: `${host.w}の別の意味`}));
   // 必修多義語 and the same spelling in another deck (中学基礎), once that card is learned: 中学基礎's fine 「元気な」 is the misreading
   // of 必修多義語's fine 「罰金」, and the other way round. Not between other decks: 受験英単語 and TOEIC share words whose meanings overlap
   // (extend 延長する / 伸ばす). Plain meanings only, on both sides: under a 語法 note (「（doing）～したことを覚えている」, 「（remember to ～）
@@ -7764,11 +7952,11 @@ function pickCtx(c, si){
   const {host, target} = x, used = new Set();
   const picked = shuffle(x.mates).slice(0, 3).map(o => ({card:c, text:o.text, sub:o.sub, ok:false}));
   const pool = distractorPool(c);
-  for (const pass of [0, 1]) for (const y of pool) {
+  for (const pass of [0, 1]) for (const y of pass ? poolAndRest(pool, c) : pool) {
     if (picked.length >= 3) break;
     if (used.has(y) || isNear(host.w, y.w)) continue;
     const ys = metSenses(y), cand = pass ? ys[0] : ys.find(s => s.p === target.p);
-    if (!cand?.m || host.s.some(s => similar(s.m, cand.m)) || picked.some(o => similar(o.text, cand.m))) continue;
+    if (!cand?.m || host.s.some(s => alike(s.m, cand.m)) || picked.some(o => alike(o.text, cand.m))) continue;
     used.add(y); picked.push({card:y, text:cand.m, sub:y.w, ok:false});
   }
   return shuffle([{card:c, text:target.m, sub:'この文での意味', ok:true}, ...picked]);
@@ -7801,7 +7989,7 @@ function wordForms(h){
   if (h.endsWith('is')) add(h.slice(0, -2), 'es');          // analysis → analyses
   if (/(on|um)$/.test(h)) add(h.slice(0, -2), 'a');         // criterion → criteria, medium → media
   if (h.endsWith('us')) add(h.slice(0, -2), 'i');
-  for (const x of [IRR[h], FORMS_X[h]]) if (x) x.split('|').forEach(y => f.add(y));
+  for (const x of [IRR[h], FORMS_X[h]]) if (typeof x === 'string') x.split('|').forEach(y => f.add(y));
   return f;
 }
 function useHidesWord(c, ans){
@@ -8076,7 +8264,7 @@ function renderQ(){
   if (it.tries > (isSpell(it.type) ? 1 : 0) && (isSpell(it.type) || it.type === 'odd')) it.type = it.c.isD ? 'dform' : 'e2j';   // a missed spelling comes back as spelling once
   if (it.lis == null) { it.lis = lisFor(it); if (it.lis) it.type = 'lis'; }   // 聞き取り is decided once, when the question first comes up
   if (it.type === 'lis' && (it.tries > 0 || lisOff())) it.type = 'e2j';         // asked again after a miss: with the spelling
-  Q.cur = it; Q.answered = false; Q.hint = 0; Q.gaveUp = false; Q.picked = null; Q.typed = ''; Q.revealed = null; Q.drop = false;   // a card that comes back starts face down again
+  Q.cur = it; Q.answered = false; Q.hint = 0; Q.gaveUp = false; Q.picked = null; Q.typed = ''; Q.asForm = ''; Q.revealed = null; Q.drop = false;   // a card that comes back starts face down again
   Q.near = null; Q.retype = false; Q.lisNg = -1; Q.lisTapped = false; Q.trap = false;   // おしい waiting for the retype / 聞き取り's first wrong pick / 🔊 tapped / a trap among the options
   if (it.type === 'odd') { Q.choices = pickOdd(it.c); if (!Q.choices) it.type = 'j2e'; }
   else if (it.type === 'ctx' || it.type === 'use') { Q.choices = it.type === 'ctx' ? pickCtx(it.c, it.si) : pickUse(it.c, it.si); if (!Q.choices) it.type = 'e2j'; }
@@ -8315,6 +8503,7 @@ function answer(ok, grade){
     if (boost > 1 && np.due > today) np.due = today + Math.round((np.due - today) * boost);
     setProg(it.c, np); it.after = np; it.grade = g; it.tier = tier;
     snap.bump = {n:1, c:ok?1:0, nw:wasNew?1:0, rn:wasNew?0:1, rc:(!wasNew && ok)?1:0, t:ms};
+    if (!wasNew) snap.bump[it.p0.due > today ? 'rx' : 'rd'] = 1;   // rx: before its day, not one of today's reviews; rd: one of them (revDone)
     if (!card && swCheck(it.p0)) { snap.bump.kc = 1; snap.bump.kh = ok ? 1 : 0; }   // the first 4択 on a word sorted as 知ってる: was it right?
     // its XP: 苦手を特訓, 1 the first time a word is drilled today (then nothing); a review answered already today earns nothing more
     snap.xk = Q.opts.drill ? (xpDrilled(it.c) ? 'rep' : 'drill') : wasNew ? 'nw' : dayIdx(it.p0.last) === today ? 'rep' : 'rev';
@@ -8447,6 +8636,7 @@ function showFeedback(it, ok, np, back = -1, opt = {}){
   const no = (c.n && !c.isD) || obiTag(c) ? `<span class="no">${obiTag(c)}${c.n && !c.isD ? `No.${c.n}` : ''}</span>` : '';
   const head = `<div class="fb-word"><div class="e-line">${wordHTML(c, s0, 'e-word')}<button class="say" data-act="say" data-w="${esc(c.w)}" data-p="${esc(pos0)}" aria-label="発音">${QI.say}</button>${no}</div><div class="e-pron">${ipaHTML(c)}</div></div>`;
   const near = ok && Q.cur === it ? Q.near : null;   // おしい: 難しい, and on only after the word is typed right once
+  const asForm = ok && !near && Q.cur === it && isSpell(it.type) && Q.asForm;   // スペル: a form that fits the blank was typed (decided)
   const auto = ok && S.settings.autoNext && !opt.full && !near;
   const canUndo = !ok && np && it.type !== 'flash' && !Q.gaveUp;
   const tn = it.tier || ({4: 3, 3: 2, 2: 1})[it.grade];   // spelling has no tier: 簡単 reads as Excellent
@@ -8470,6 +8660,7 @@ function showFeedback(it, ok, np, back = -1, opt = {}){
       <div class="cmp-row ng"><div class="cmp-a"><span class="cmp-l">あなたの答え</span><span class="cw" lang="en">${mark(near.v, ai, an)}</span></div></div></div>`;
   }
   const gated = S.settings.senseCards;
+  if (asForm) cmp = `<p class="fb-base"><b lang="en">${esc(asForm)}</b> で正解。もとの形は <b lang="en">${esc(c.w)}</b></p>`;
   // a right answer: the 語法 point, a derivative's affix, the meanings (詳しく for the rest)
   const use = it.type === 'use' ? useNoteHTML(c, it.si) : '', aff = c.isD ? affixHTML(c) : '';
   const short = use + (c.isD ? `<div class="fb-mean">${esc(c.m)}<span class="muted"> ← ${esc(c.parent.w)}</span></div>${aff}`
@@ -8493,7 +8684,7 @@ function showFeedback(it, ok, np, back = -1, opt = {}){
   if (near) $('#retypein')?.focus();   // inside the tap or key that answered, so iPhone keeps the keyboard up
   Q.lockUntil = performance.now() + 250;
   // a sheet that says the next meaning or derivative opens stays up a little longer
-  const stay = opensNext(it, np) ? 1600 : it.type === 'flash' ? 350 : it.grade === 4 ? 700 : it.grade === 2 ? 2000 : Math.min(1400, 850 + 200 * (c.s.length - 1));
+  const stay = asForm ? 2000 : opensNext(it, np) ? 1600 : it.type === 'flash' ? 350 : it.grade === 4 ? 700 : it.grade === 2 ? 2000 : Math.min(1400, 850 + 200 * (c.s.length - 1));
   if (auto) Q.timer = setTimeout(nextQ, stay);
   if (opt.quiet) return;
   // let the error tone finish before the word plays
@@ -8617,14 +8808,25 @@ function dunno(){
 /* what was typed, as plain ASCII: full-width ａｂｃ, iPhone's curly ’ and long dashes count as the plain ones */
 const spellNorm = t => String(t).normalize('NFKC').replace(/[‘’‛′`´]/g, "'").replace(/[‐-―]/g, '-').replace(/\s+/g, ' ').trim().toLowerCase();
 const KANA = /[぀-ヿㇰ-ㇿｦ-ﾟ㐀-鿿]/;
+/* スペル: the word in the example's blank (the sentence renderQ shows), '' when no sentence is shown */
+const gapForm = it => { const c = it.c, ex = it.type === 'dspell' ? c.e : (c.s[it.si] || c.s[0]).e || c.e; return ex ? spellNorm((gapOf(ex, c.w) || [''])[0]) : ''; };
 function spellGo(){
   if (!Q || Q.answered) return;
   const inp = $('#spellin'); const raw = inp.value || '', v = spellNorm(raw); if (!v) { inp.focus(); return; }
   if (KANA.test(raw)) {   // typed on the Japanese keyboard: not graded, just a hint
-    if (!$('#spellnote')) inp.closest('.spell-row').insertAdjacentHTML('afterend', '<p class="spell-note" id="spellnote" role="alert">英字キーボードに切り替えてね（🌐 キー）</p>');
+    $('#spellnote')?.remove(); inp.closest('.spell-row').insertAdjacentHTML('afterend', '<p class="spell-note" id="spellnote" role="alert">英字キーボードに切り替えてね（🌐 キー）</p>');
     inp.focus(); return;
   }
-  const it = Q.cur, w = spellNorm(it.c.w), ok = v === w; Q.typed = raw.trim();
+  const it = Q.cur, w = spellNorm(it.c.w), gap = v !== w && v === gapForm(it);
+  // the example's blank holds another form of the word (decided, spent): typing that form is right too, and the sheet says the base form.
+  // A blank the app can't tie to the word (misled, the needn of needn't) isn't graded, like the Japanese keyboard
+  const form = gap && isForm(v, w);
+  if (gap && !form) {
+    $('#spellnote')?.remove(); inp.closest('.spell-row').insertAdjacentHTML('afterend', `<p class="spell-note" id="spellnote" role="alert">もとの形（${w.replace(/[^a-z]/g, '').length}文字）で入力してね</p>`);
+    inp.focus(); return;
+  }
+  let k = 0; while (form && w[k] === v[k]) k++;   // the sheet shows the form as graded (not ｄｅｃｉｄｅｄ / Spent), capitals as the headword has them (Fridays)
+  const ok = v === w || form; Q.typed = raw.trim(); Q.asForm = form ? it.c.w.slice(0, k) + v.slice(k) : '';
   // おしい: a headword of 5 letters or more, one letter off (added, dropped, changed or two swapped) and not another word
   const sp = !ok && it.type === 'spell' && w.replace(/[^a-z]/g, '').length >= 5 && !knownWord(v) ? slip(v, w) : null;
   inp.classList.add(ok ? 'ok' : sp ? 'near' : 'ng'); if (!ok && !sp) inp.value = `${inp.value} → ${it.c.w}`; inp.disabled = true;
@@ -9023,10 +9225,52 @@ function renderSwipeDone(){
 /* ---------- custom decks ---------- */
 let uidN = 0;
 const uid = p => p + Date.now().toString(36) + (uidN++ % 1296).toString(36) + Math.random().toString(36).slice(2,6);   // the counter keeps a big import's keys apart
-function touchDeck(id){ S.custom[id].upd = Date.now(); invalidateDecks(); save(); markDirty('deck_' + id, true); }
+/* 自作の単語帳 on two devices: the two copies' cards are joined one by one (pull) instead of the later save replacing the other.
+   gone = {card: t} travels in the deck: t > 0 the card was taken out at t, t < 0 it was put back at -t; the later mark
+   stands, so a card taken out here is not brought back by the other device's copy. A card is its ref (a 辞書 / 写真 word) or its k.
+   DECK_HAD: each deck's cards and marks as last seen here: touchDeck tells from it what a change took out or put back (an undo too).
+   gu: the deck's upd as this version saved it (docBodies). An older version (the iPhone app keeps its own copy of the code) leaves
+   no marks and carries gu along unchanged: a later save with gu !== upd is such a device's, and a card it lacks it took out */
+const cardId = x => x.ref || x.k, DECK_HAD = {};
+const cardBorn = x => parseInt(String(x.k || '').slice(1, 9), 36) || 0;   // uid('c') starts with the time it was made
+const goneJoin = (a, b) => { const g = {...(a || {})}; for (const [k, t] of Object.entries(b || {})) if (!(k in g) || Math.abs(t) > Math.abs(g[k])) g[k] = t; return g; };
+const canon = x => Array.isArray(x) ? x.map(canon) : x && typeof x === 'object' ? Object.fromEntries(Object.keys(x).sort().map(k => [k, canon(x[k])])) : x;   // the cloud hands a doc's fields back in its own order
+function deckSeen(id){ const d = S.custom[id]; if (d && !d.del && Array.isArray(d.cards)) DECK_HAD[id] = {ids: d.cards.map(cardId), gone: {...(d.gone || {})}}; else delete DECK_HAD[id]; }
+function deckSeenAll(){ for (const id of Object.keys(DECK_HAD)) delete DECK_HAD[id]; for (const id of Object.keys(S.custom)) deckSeen(id); }
+deckSeenAll();
+function deckGone(id){   // a deck just changed: mark what left it and what is in it again
+  const d = S.custom[id], had = DECK_HAD[id];
+  if (d && !d.del && Array.isArray(d.cards)) {
+    const now = Date.now(), ids = new Set(d.cards.map(cardId)), g = goneJoin(d.gone, had?.gone);
+    for (const k of had?.ids || []) if (!ids.has(k)) g[k] = now;
+    for (const k of ids) if (g[k] > 0) g[k] = -now;
+    if (Object.keys(g).length) d.gone = g; else delete d.gone;
+  }
+  deckSeen(id);
+}
+/* L: this device's deck, R: the cloud's (with every part's cards). The later save's name, order and wording of a card both
+   changed stand; the other's cards it lacks are added, unless marked gone. → the joined deck, and which side lacks something */
+function deckJoin(L, R){
+  const [N, O] = (R.upd || 0) > (L.upd || 0) ? [R, L] : [L, R], old = N === R && R.gu !== R.upd;   // old: the later save is an older version's
+  const gone = goneJoin(L.gone, R.gone), ids = new Set(), ks = new Set(), cards = [], ctx = {...(N.ctx || {})};
+  for (const D of [N, O]) for (const c of Array.isArray(D.cards) ? D.cards : []) {
+    if (!c) continue; const k = cardId(c); if (ids.has(k) || ks.has(c.k)) continue;
+    if (gone[k] > 0) { if (!c.ref || cardBorn(c) <= gone[k]) continue; gone[k] = -cardBorn(c); }   // taken out on the other device (a 辞書 word added again after that stays)
+    else if (old && D === O && !(Math.max(cardBorn(c), -(gone[k] || 0)) > R.gu)) { gone[k] = R.upd; continue; }   // that device took it out, as before (a card made or put back here after the save it started from stays)
+    ids.add(k); ks.add(c.k); cards.push(c);
+    if (D === O) { const ck = c.ref || O.id + '|' + c.k, x = O.ctx?.[ck]; if (x && !(ck in ctx)) ctx[ck] = x; }   // 写真の単語帳: its sentence comes along
+  }
+  const {np: _a, upd: _b, cards: _c, gone: _d, ctx: _e, gu: _f, ...head} = N, d = {...head, cards};
+  if (Object.keys(gone).length) d.gone = gone;
+  if (N.ctx || Object.keys(ctx).length) d.ctx = ctx;
+  const body = x => { const {np, upd, gu, ...r} = x; return JSON.stringify(canon(r)); }, s = body(d), inL = s !== body(L), inR = s !== body(R);
+  d.upd = !inR ? R.upd : !inL && (L.upd || 0) > (R.upd || 0) ? L.upd : Math.max(Date.now(), (L.upd || 0) + 1, (R.upd || 0) + 1);   // a new save gets a later time than both
+  return {d: clone(d), inL: inL || d.upd !== L.upd, inR};
+}
+function touchDeck(id){ deckGone(id); S.custom[id].upd = Date.now(); invalidateDecks(); save(); markDirty('deck_' + id, true); }
 function createDeck(name, cards=[]){
   const id = uid('u');
-  S.custom[id] = {id, name, desc:'自作の単語帳', created:Date.now(), upd:Date.now(), cards:cards.map(storeCard)};
+  S.custom[id] = {id, name, desc:'自作の単語帳', created:Date.now(), upd:Date.now(), cards:cards.map(storeCard)}; deckSeen(id);
   invalidateDecks(); save(); markDirty('deck_' + id, true);
   if (!S.settings.active.includes(id)) setSetting('active', [...S.settings.active, id]);
   return id;
@@ -9039,14 +9283,14 @@ function splitCSV(line){
   out.push(cur); return out;
 }
 function parseImport(text){
-  const clean = s => String(s||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').trim();
+  const clean = s => String(s||'').replace(/<br\s*\/?>/gi,' ').replace(/<\/?[a-z][^>]*>/gi,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').trim();
   const out = [];
   for (const raw of text.replace(/\r/g,'').split('\n')) {
     const line = raw.trim(); if (!line || line.startsWith('#')) continue;
     const f = (line.includes('\t') ? line.split('\t') : splitCSV(line)).map(clean);
     if (f.length < 2) continue;
     let w, p = '', m, e = '', j = '';
-    if (POS.includes(f[1]) && f.length >= 3) [w, p, m, e = '', j = ''] = f; else [w, m, e = '', j = ''] = f;
+    if ((POS.includes(f[1]) || !f[1]) && f.length >= 3) [w, p, m, e = '', j = ''] = f; else [w, m, e = '', j = ''] = f;
     if (!w || !m) continue;
     const s = parseSenseText(m, p); if (!s.length) continue;
     s[0].e = e; s[0].j = j;
@@ -9901,8 +10145,10 @@ const SCAN_ACT = {
 
 
 /* ---------- events ---------- */
+let CARD_UNDO = null, TAPHOLD = 0;   // 単語を削除's card and its place; taps do nothing until TAPHOLD (the second tap of a double tap on 削除)
 let RESET_UNDO = null, DECK_UNDO = null;   // 「元に戻す」: 記録をリセット's card and its record before the reset; 使うのをやめる's deck
 const ACT = {
+  acctJoin: () => acctAnswer(false), acctSwap: () => acctAnswer(true), acctOut: async () => { await signOutNow(); acctShow(); },   // 別のアカウント: the question's two answers
   grpNew: () => grpNew(), grpJoin: () => grpJoin(), grpMenu: () => grpMenu(), grpMember: t => grpMember(t.dataset.u), frBack: () => { route.fr = null; render(); scrollTo(0, SCROLL.frl || 0); }, frAch: () => frAch(),
   grpStamp: t => grpStamp(t.dataset.u, +t.dataset.s), grpKick: t => grpKick(t), grpBlock: t => grpBlock(t.dataset.u), grpReport: t => grpReport(t.dataset.u), grpLeave: t => grpLeave(t), grpClose: t => grpClose(t),
   grpCopy: () => copyText(fmtG(grpCur()), '招待コードをコピーしました'), grpShare: () => grpShare(),
@@ -10083,7 +10329,11 @@ const ACT = {
   makeDeck: () => makeDeckSheet(),
   addCard: t => cardForm(t.dataset.id, null),
   editCard: t => cardForm(t.dataset.deck, findCard(t.dataset.deck, t.dataset.k)),
-  delCard: t => { const d = S.custom[t.dataset.deck]; d.cards = d.cards.filter(c => c.k !== t.dataset.k); touchDeck(d.id); closeSheet(); render(); toast('削除しました'); },
+  delCard: t => { const d = S.custom[t.dataset.deck], i = d.cards.findIndex(c => c.k === t.dataset.k); CARD_UNDO = i < 0 ? null : {id: d.id, i, card: d.cards[i]}; TAPHOLD = Date.now() + 400; d.cards = d.cards.filter(c => c.k !== t.dataset.k); touchDeck(d.id); toast(t.closest?.('#cardform') ? '外しました' : '削除しました', CARD_UNDO && {label:'元に戻す', act:'undoDelCard'}, 6000); closeSheet(); render(); },
+  // the card goes back where it was (its record and memo were never removed); not into a deck that is gone or has it again (a sync in between)
+  undoDelCard: () => { const u = CARD_UNDO, d = u && S.custom[u.id]; CARD_UNDO = null; $('#toastroot').innerHTML = ''; if (!d || d.del) return;
+    if (!d.cards.some(c => c.k === u.card.k)) { d.cards.splice(Math.min(u.i, d.cards.length), 0, u.card); touchDeck(u.id); }
+    render(); toast('元に戻しました'); },
   renameDeck: t => { const d = S.custom[t.dataset.id];
     openSheet(`<div class="sheet-h"><h3>名前を変える</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
       <form id="renameform" data-id="${esc(d.id)}" style="display:flex;flex-direction:column;gap:12px"><input class="input" id="rname" value="${esc(d.name)}" required maxlength="40"><button class="btn btn-primary" type="submit">保存</button></form>`); },
@@ -10195,7 +10445,7 @@ const ACT = {
       const bl = S.settings.grpBlock || [];   // who is blocked stays blocked, whatever the backup is from
       S = normalize(o.data); if (bl.length) S.settings.grpBlock = [...new Set([...(S.settings.grpBlock || []), ...bl])]; S.settings.upd = Date.now(); const now = Date.now();
       for (const deck of Object.keys(S.prog)) markDirty('prog_'+deck);
-      for (const id of Object.keys(S.custom)) { S.custom[id].upd = now; markDirty('deck_'+id); }
+      for (const id of Object.keys(S.custom)) { deckGone(id); S.custom[id].upd = now; markDirty('deck_'+id); }
       for (const deck of Object.keys(S.notes)) markDirty('note_'+deck);
       if (S.ach) markDirty('ach'); achGrant(true);   // a backup from before 実績 (or before a badge was added): what it reaches, quietly
       if (S.dojo) markDirty('dojo');
@@ -10212,7 +10462,7 @@ const ACT = {
 document.addEventListener('click', e => {
   // a settings row flips its switch wherever it is tapped, as in the iPhone's Settings
   if (!e.target.closest('[data-act],a,input,select,textarea,label,summary')) { const s = e.target.closest('.frow')?.querySelector('.switch'); if (s) { s.click(); return; } }
-  const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
+  const t = e.target.closest('[data-act]'); if (!t || t.disabled || Date.now() < TAPHOLD) return;
   const fn = ACT[t.dataset.act]; if (fn) { e.preventDefault(); fn(t, e); }
 });
 document.addEventListener('contextmenu', e => { const t = e.target.closest('.wrow'); if (!t) return; e.preventDefault(); const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c); });
@@ -10349,7 +10599,7 @@ const hasProgress = () => Object.values(S.prog).some(d => d && Object.keys(d).le
    Both choices come before the chart, so on a 375×812 phone the 1日の目標 is in view above the buttons; the nickname (なんて呼べばいい？, may be left empty) and the chart are below them */
 /* the welcome's なんて呼べばいい？: kept when anything is typed (it can be left empty) */
 function obNick(){ const n = cleanNick($('#obnick')?.value); if (n && n !== S.settings.nick) setSetting('nick', n); }
-function onboard(){
+function onboard(swapped){
   const opts = [['junior','中学基礎','中学〜高校基礎'], ['j1','受験英単語 基礎','高校の基本〜共通テスト'], ['j2','受験英単語 標準','共通テスト〜中堅大'], ['j3','受験英単語 発展','難関大・英検2級〜準1級の入口'], ['tagi','必修多義語','知っている基本語の、入試で問われる意味'], ['theme','テーマ別 長文頻出語','環境・医療・経済などの専門語']]
     .filter(([id]) => deckById(id));
   const main = opts.filter(([id]) => /^(j\d|junior)$/.test(id)), more = opts.filter(([id]) => !/^(j\d|junior)$/.test(id));
@@ -10359,7 +10609,7 @@ function onboard(){
   // comes first (an installed Android / desktop app shares the browser's records: nothing here means a new learner)
   const back = IS_WEB && !!FIREBASE && IOS && isStandalone();
   openSheet(`<div class="ob">
-    <div class="ob-hd"><span class="ob-logo" aria-hidden="true">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span><h3>極（きわみ）へようこそ</h3></div>${iabNote()}
+    <div class="ob-hd"><span class="ob-logo" aria-hidden="true">${BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極'}</span><h3>極（きわみ）へようこそ</h3></div>${iabNote()}${swapped === true ? '<div class="iab" role="note"><span>切りかえました。前の記録はこの端末にとってあります</span></div>' : ''}
     ${back ? `<div class="ob-back">${mekuru('normal')}<div><b>Safariで使ってた？</b><span>ホーム画面の極は、Safariとは記録が別。ログインすると続きから使えるよ</span></div><button class="btn btn-primary btn-big btn-block" data-act="signIn">ログインで続きから</button></div>` : ''}
     <p class="ob-lead"><b>ぜんぶ無料で、広告もなし。登録しなくても使えます。</b>新しい単語はカードで覚えて、復習は4択でサクサク。忘れかけたころに復習が出るので、少ない回数で長く覚えられます。</p>
     <fieldset class="ob-f"><legend>どこから始める？</legend>
