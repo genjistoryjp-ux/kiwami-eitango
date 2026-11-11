@@ -76,6 +76,7 @@
   --surface:var(--bg); --surface-2:var(--fill); --pop:var(--bg); --line:var(--hair); --muted:var(--ink-2); --faint:var(--ink-3);
   --accent:var(--blue); --accent-soft:var(--blue-tint); --accent-2:color-mix(in srgb,var(--blue) 40%,transparent); --f-word:var(--f-en); --f-num:var(--f-en);
   --st-master:var(--blue); --st-learn:color-mix(in srgb,var(--blue) 42%,var(--bg)); --st-new:var(--track);
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);   /* the status bar and the home bar (0 in a browser): fitCheck reads them */
   --bg:#FFFFFF; --ink:#121216; --ink-2:#5E5E68; --ink-3:#8C8C96; --ink-tab:#6E6E78; --fill:#F2F2F5; --hair:rgba(18,18,22,.09); --track:rgba(18,18,22,.18);
   --logo:#083FF9; --blue:#2A45D8; --blue-hero:#2A45D8; --blue-tint:#EAEEFD; --orange:#F07A1E; --orange-track:#FBDCC3; --on-blue:#FFFFFF;
   /* one colour a deck: its started cover (--c-), the hero behind it alone (--h-, 12%+ darker), its card's tint (--t-) */
@@ -102,7 +103,7 @@
   /* the study screen (S/quiz/notes.md): right and wrong (not of the blue or the orange family), the word sizes, the steps */
   --ok:#1E9E5A; --ok-ink:#0E7642; --ok-tint:#E6F5EC; --ok-solid:#0E7642; --ng:#E5484D; --ng-ink:#C8303A; --ng-tint:#FDEDED;
   --hd-ink:#8A5208; --hd-tint:#FBF0D9;   /* 難しい on a card's grade button (もう一度 --ng-*, 正解 --ok-*, 簡単 --blue on --blue-tint) */
-  --step-todo:#E7E7EA; --step-redo:#F7C8CA; --line-card:rgba(18,18,22,.14); --scrim:rgba(18,18,22,.46); --grab:rgba(18,18,22,.16); --card-bg:#FFFFFF;
+  --step-todo:#E7E7EA; --step-redo:#F7C8CA; --line-card:rgba(18,18,22,.14); --scrim:rgba(18,18,22,.46); --sheet-edge:transparent; --grab:rgba(18,18,22,.16); --card-bg:#FFFFFF;
   --f-en:"Figtree",sans-serif; --f-ipa:"Noto Sans","Noto Sans JP",sans-serif;   /* 発音記号: Figtree has no ɪ ə */
   --fs-word:40px; --fs-entry:26px; --fs-answer:22px; --fs-stat:26px;
   --track-off:rgba(18,18,22,.2); --opts-track:rgba(18,18,22,.06);   /* 設定: a switch off, the groove of a choice */
@@ -113,25 +114,25 @@
 /* dark: the deck colours and the hero stay (white text on them either way); the page, its text and the tints go dark */
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#111114; --ink:#ECECF1; --ink-2:#A6A6B0; --ink-3:#777781; --ink-tab:#9D9DA7; --fill:#1F1F25; --hair:rgba(255,255,255,.10); --track:rgba(255,255,255,.20);
-  --blue:#8E9DFF; --blue-tint:#262D55; --orange-track:#5A3418;
+  --blue:#8E9DFF; --blue-tint:#262D55; --st-learn:color-mix(in srgb,var(--blue) 62%,var(--bg)); --orange-track:#5A3418;
   --t-kiso:#16271F; --t-hyojun:#2E1B16; --t-hatten:#29201A; --t-juku:#28231A; --t-tagi:#2C1A21; --t-theme:#22251A; --t-chu:#1B2227; --t-toeic:#2A1B28; --t-my:#222226;
   --paper:#E9E6DF; --paper-spine:rgba(18,18,22,.10); --tabbar-bg:rgba(17,17,20,.92);
   --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6); --sh-book-lg:0 1.5px 2.5px rgba(0,0,0,.45),0 14px 26px -10px rgba(0,0,0,.65);
   --ring-track:rgba(255,255,255,.14); --ring-star:rgba(255,255,255,.30); --seg-on:#2E2E36; --now-mix:45%;
   --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20; --hd-ink:#F0B35A; --hd-tint:#3A2B14;
-  --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
+  --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --sheet-edge:rgba(255,255,255,.16); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
   --blue-2:#4B5389; --track-off:rgba(255,255,255,.22); --opts-track:rgba(255,255,255,.08);
   --hm-1:#262D55; --hm-2:#3B4688; --hm-3:#5F6FCB; --hm-4:#8E9DFF; --md-pf:#4A4752; --md-yet-ring:rgba(255,255,255,.26); --md-yet-kj:rgba(255,255,255,.2);
 }}
 :root[data-theme="dark"]{
   --bg:#111114; --ink:#ECECF1; --ink-2:#A6A6B0; --ink-3:#777781; --ink-tab:#9D9DA7; --fill:#1F1F25; --hair:rgba(255,255,255,.10); --track:rgba(255,255,255,.20);
-  --blue:#8E9DFF; --blue-tint:#262D55; --orange-track:#5A3418;
+  --blue:#8E9DFF; --blue-tint:#262D55; --st-learn:color-mix(in srgb,var(--blue) 62%,var(--bg)); --orange-track:#5A3418;
   --t-kiso:#16271F; --t-hyojun:#2E1B16; --t-hatten:#29201A; --t-juku:#28231A; --t-tagi:#2C1A21; --t-theme:#22251A; --t-chu:#1B2227; --t-toeic:#2A1B28; --t-my:#222226;
   --paper:#E9E6DF; --paper-spine:rgba(18,18,22,.10); --tabbar-bg:rgba(17,17,20,.92);
   --sh-book:0 1px 1.5px rgba(0,0,0,.4),0 8px 16px -6px rgba(0,0,0,.6); --sh-book-lg:0 1.5px 2.5px rgba(0,0,0,.45),0 14px 26px -10px rgba(0,0,0,.65);
   --ring-track:rgba(255,255,255,.14); --ring-star:rgba(255,255,255,.30); --seg-on:#2E2E36; --now-mix:45%;
   --ok:#3DBE7A; --ok-ink:#6CD99E; --ok-tint:#16301F; --ok-solid:#17784A; --ng:#F0676B; --ng-ink:#FF8F93; --ng-tint:#3A1E20; --hd-ink:#F0B35A; --hd-tint:#3A2B14;
-  --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
+  --step-todo:#2C2C33; --step-redo:#5E3033; --line-card:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.62); --sheet-edge:rgba(255,255,255,.16); --grab:rgba(255,255,255,.22); --card-bg:#17171B;
   --blue-2:#4B5389; --track-off:rgba(255,255,255,.22); --opts-track:rgba(255,255,255,.08);
   --hm-1:#262D55; --hm-2:#3B4688; --hm-3:#5F6FCB; --hm-4:#8E9DFF; --md-pf:#4A4752; --md-yet-ring:rgba(255,255,255,.26); --md-yet-kj:rgba(255,255,255,.2);
 }
@@ -174,7 +175,7 @@ p{margin:0}
 .nudge{display:flex;flex-direction:column;gap:8px;margin-top:18px;padding:14px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);text-align:left}
 .nudge b{font-size:15px;line-height:1.45}
 .nudge span{font-size:13.5px;color:var(--muted)}
-.nudge .btn{min-height:42px}
+.nudge .btn{min-height:48px}
 .nudge.tip{gap:10px}
 .tip-l{display:flex;align-items:center;gap:10px}
 .tip-l .mekuru{width:46px;height:46px}
@@ -217,11 +218,11 @@ p{margin:0}
 .bignum span{font-size:12px;color:var(--muted);font-weight:700;margin-top:6px}
 .bignum.due b{color:var(--red)}
 .today-meta{font-size:12px;color:var(--muted)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;border-radius:12px;font-weight:700;font-size:15px;transition:transform .08s var(--ease-io),background var(--dur-1) var(--ease-io)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;border-radius:var(--r-pill);font-weight:700;font-size:15px;transition:transform .08s var(--ease-io),background var(--dur-1) var(--ease-io)}
 .btn:active{transform:scale(.98)}
-.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary{background:var(--blue-hero);color:var(--on-blue)}
 .btn-soft{background:var(--accent-soft);color:var(--accent)}
-.btn-ghost{background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.btn-ghost{background:var(--fill);border:1px solid transparent;color:var(--ink)}
 .btn-danger{background:var(--again-soft);color:var(--again)}
 .btn-block{width:100%}
 .btn[disabled]{opacity:.45;pointer-events:none}
@@ -254,13 +255,15 @@ p{margin:0}
 .words{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .wrow{display:grid;grid-template-columns:10px minmax(0,1.3fr) minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 14px;width:100%;text-align:left;border-top:1px solid var(--line)}
 .wrow:first-child{border-top:0}
+@media not all and (max-width:360px){#wordlist:has(.wdue:not(:empty)) .wrow{grid-template-columns:10px minmax(0,1.3fr) minmax(0,1fr) 64px}}
 .wdot{width:8px;height:8px;border-radius:50%;background:var(--st-new)}
 .wdot.learn{background:var(--st-learn)} .wdot.master{background:var(--st-master)}
 .wdot.leech{background:var(--again)}
+.wdot:not(.learn):not(.master):not(.leech){background:none;box-shadow:inset 0 0 0 1.5px var(--ink-3)}   /* 未学習: told by its shape, not by a paler grey */
 .wword{font-family:var(--f-word);font-weight:600;font-size:15px;overflow-wrap:break-word;line-height:1.3}
 @media (max-width:400px){.wword{font-size:15px}}
 .wmean{font-size:13.5px;color:var(--red);font-weight:700;overflow-wrap:anywhere;line-height:1.4;border-radius:4px;transition:background var(--dur-1) var(--ease-io),color var(--dur-1) var(--ease-io);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.wdue{font-size:12px;font-variant-numeric:tabular-nums;color:var(--faint);text-align:right;white-space:nowrap}
+.wdue{font-size:12px;font-variant-numeric:tabular-nums;color:var(--faint);text-align:right;white-space:normal;line-height:1.3;word-break:keep-all;overflow-wrap:anywhere}
 .redsheet .wmean{color:transparent;background:var(--sheet)}
 .redsheet .wrow.peek .wmean{color:var(--red);background:transparent}
 .more{padding:12px;text-align:center;border-top:1px solid var(--line)}
@@ -283,6 +286,7 @@ p{margin:0}
 .dk-dots span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
 .dk-dots i{width:9px;height:9px;border-radius:50%;background:var(--st-new)}
 .dk-dots i.m{background:var(--st-master)} .dk-dots i.l{background:var(--st-learn)}
+.dk-dots i:not(.m):not(.l){background:none;box-shadow:inset 0 0 0 1.5px var(--ink-3)}
 .dk-dots b{color:var(--ink)}
 .btn-go{min-height:56px;border-radius:14px;font-size:18px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2)}
 .btn-go .ico{width:16px;height:16px;fill:currentColor;stroke:none}
@@ -468,7 +472,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .wfrom{display:block;font-family:var(--f-ui);font-size:12px;font-weight:400;color:var(--faint)}
 .cats .chip{font-weight:400}
 .cat{font-size:12px;font-weight:700;color:var(--easy);padding:1px 7px;border-radius:999px;background:var(--easy-soft)}
-.wno{font-family:var(--f-ui);font-size:12px;color:var(--faint);margin-right:6px;font-weight:400;font-variant-numeric:tabular-nums}
+.wno{display:inline-block;font-family:var(--f-ui);font-size:12px;color:var(--faint);margin-right:6px;font-weight:400;font-variant-numeric:tabular-nums}
 #qbody{flex:none;padding-top:16px}
 .choices{display:flex;flex-direction:column;gap:9px;position:relative}
 .choices.veiled .choice,.choices.wait .choice{visibility:hidden}   /* wait: めくる's line about the bar is up (the clock hasn't started) */
@@ -592,6 +596,8 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .ctadock{position:fixed;left:0;right:0;z-index:19;bottom:calc(58px + env(safe-area-inset-bottom,0px));padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));
   background:linear-gradient(transparent,var(--bg) 35%);animation:rise var(--dur-2) var(--ease-out)}
 .ctadock .btn{max-width:528px;margin:0 auto;display:flex}
+.ctadock{transition:opacity var(--dur-1) var(--ease-io),visibility var(--dur-1)}
+#view.list-off .ctadock{visibility:hidden;opacity:0}   /* 単語一覧 is not on screen above the dock yet (deckIO) */
 .rate{margin-left:8px;font-family:var(--f-word);font-weight:600;font-size:13.5px;letter-spacing:.01em}
 .rate.t4{color:var(--perfect)} .rate.t3{color:var(--easy)} .rate.t2{color:var(--good)} .rate.t1{color:var(--hard)}
 .seg-sm button{padding:6px 10px;font-size:13.5px}
@@ -1026,8 +1032,8 @@ input[type=range]{accent-color:var(--accent);width:130px}
   .mkbubble{right:70px;max-width:calc(100% - 116px)}
 }
 /* sheet */
-.backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,14,22,.42);animation:fade var(--dur-1) var(--ease-out)}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up var(--dur-2) var(--ease-out);overscroll-behavior:contain}
+.backdrop{position:fixed;inset:0;z-index:60;background:var(--scrim);animation:fade var(--dur-1) var(--ease-out)}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-height:90%;overflow-y:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -1px 0 var(--sheet-edge),0 -10px 40px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);animation:up var(--dur-2) var(--ease-out);overscroll-behavior:contain}
 .sheet-in{max-width:560px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-block:10px 22px;display:flex;flex-direction:column;gap:14px}
 .grab{width:40px;height:4px;border-radius:2px;background:var(--line);align-self:center}
 .sheet-h{display:flex;align-items:center;gap:8px}
@@ -1044,7 +1050,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .plist b{font-family:var(--f-word)}
 .confirm{background:var(--again-soft);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
 .toast{position:fixed;left:50%;bottom:calc(84px + var(--kb,0px) + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:95;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:13.5px;font-weight:700;max-width:calc(100% - 32px);animation:rise var(--dur-2) var(--ease-out)}
-#app:has(.ctadock) ~ #toastroot .toast{bottom:calc(132px + var(--kb,0px) + env(safe-area-inset-bottom,0px))}   /* a page with a bottom dock (home, deck page): above its button (58 + 10 + 54 = 122px), not on it */
+#app:has(:where(#view:not(.list-off)) .ctadock) ~ #toastroot .toast{bottom:calc(132px + var(--kb,0px) + env(safe-area-inset-bottom,0px))}   /* a page with a bottom dock (home, deck page): above its button (58 + 10 + 54 = 122px), not on it */
 /* while studying or sorting, notices sit over the header row (between × and 1問もどす), clear of the timer bar, the speed label and the answers;
    one without a button lets taps through; their button is a full-height tap target */
 #screen:not([hidden]) ~ #toastroot .toast{top:calc(8px + env(safe-area-inset-top,0px));bottom:auto;max-width:calc(100% - 112px);font-size:13.5px;line-height:1.4}
@@ -1115,6 +1121,7 @@ html{touch-action:manipulation}
 .grab{position:relative}
 .grab::after{content:"";position:absolute;inset:-14px -60px}
 .sheet form .btn-primary[type=submit],#impgo{position:sticky;bottom:8px;z-index:1}
+#impgo::after{content:'';position:absolute;left:0;right:0;top:100%;height:8px;background:var(--bg)}
 /* === めくるの一言 (first run): めくる and one short line, the first time a thing matters. A tap on it or anywhere closes it
    (a tap on an answer button only closes it). On a study card it sits at the card's foot, above the buttons === */
 .tut{display:flex;align-items:flex-end;gap:2px;text-align:left;animation:mkin var(--dur-2) var(--ease-out) both}
@@ -1440,7 +1447,7 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--spine,6px);background:rgba(0,0,0,.17);box-shadow:1px 0 0 rgba(255,255,255,.24);z-index:1}
 .k-cover .ser{position:absolute;top:var(--top);left:var(--left);font-size:var(--cv-fs,var(--fs-min));font-weight:700;line-height:1;white-space:nowrap;color:#fff;font-feature-settings:"palt"}
 .k-cover .kj{position:absolute;left:var(--spine,6px);right:0;top:var(--kj-top);text-align:center;font-family:var(--f-cover);font-size:var(--kj);font-weight:400;line-height:1}
-.k-cover .obi{position:absolute;left:0;right:0;bottom:0;height:var(--obi);display:flex;align-items:center;padding:var(--obi-pt,3px) 4px 0 var(--left);font-size:var(--cv-fs,var(--fs-min));font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;color:#fff;background:rgba(0,0,0,.17);font-feature-settings:"palt"}
+.k-cover .obi{position:absolute;left:0;right:0;bottom:0;height:var(--obi);display:block;text-overflow:ellipsis;padding:calc((var(--obi) + var(--obi-pt,3px) - 1em) / 2) 0 0 var(--left);font-size:var(--cv-fs,var(--fs-min));font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;color:#fff;background:rgba(0,0,0,.17);font-feature-settings:"palt"}
 .k-cover.paper{background:var(--paper);color:var(--paper-ink);box-shadow:var(--sh-book),inset 0 0 0 1px rgba(18,18,22,.05)}
 .k-cover.paper::before{background:var(--paper-spine);box-shadow:none}
 .k-cover.paper .ser{color:var(--paper-ink-2)}
@@ -1449,6 +1456,8 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-cover.s-shelf{--w:88px;--h:118px;--top:9px;--left:14px;--kj-top:27px;--kj:var(--fs-kj-book);--obi:26px}
 /* 使っている単語帳: one card a deck, on its tint */
 .k-bk{width:min(290px,calc(100vw - 72px));border-radius:var(--r-card);padding:14px 14px 0;background:var(--tint)}
+.k-shelf > .k-bk:only-child{width:100%}   /* one deck: as wide as the hero; two or more keep 290 and the next one peeks */
+.k-shelf:has(> .k-bk:only-child)::after{content:none}
 .k-bk-main{display:flex;gap:14px;width:100%;text-align:left}
 .k-bk-info{flex:1;min-width:0;padding-top:1px}
 .k-bk-name{display:block;font-size:var(--fs-name);font-weight:700;line-height:1.45;font-feature-settings:"palt";overflow-wrap:anywhere}
@@ -1464,7 +1473,7 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-foot.plan .t{flex:1;min-width:0;color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .k-foot.plan .a{flex:none;margin-left:12px;display:flex;align-items:center;color:var(--blue);font-weight:700}
 /* もう一度やる: a square jacket a set */
-.k-set{width:148px;text-align:left}
+.k-set{position:relative;width:148px;text-align:left}
 .k-set-art{display:block;width:148px;height:148px;border-radius:var(--r-set);position:relative;overflow:hidden;color:#fff;background:var(--set)}
 .k-set-art .mk{position:absolute;top:10px;left:6.5px;width:18px;height:18px;opacity:.92;background:#fff;-webkit-mask:var(--brand) center/100% 100% no-repeat;mask:var(--brand) center/100% 100% no-repeat}
 .k-set-art .kj{position:absolute;left:10px;top:34px;font-family:var(--f-cover);font-size:var(--fs-kj-set);line-height:1;color:#fff}
@@ -1485,7 +1494,7 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-tmr > span{flex:1;padding:6px 0;color:var(--ink-2);font-weight:600}
 .k-tmr small{display:block;font-size:var(--fs-sub);font-weight:500;color:var(--muted);line-height:1.4}
 .k-tmr b{font-weight:700}
-.k-tmr svg{flex:none;width:16px;height:16px;color:var(--faint)}
+.k-tmr svg{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none;width:16px;height:16px;color:var(--faint)}
 .k-note .nudge{margin-top:0;border:0;background:var(--fill);border-radius:var(--r-card)}
 /* ⋯ のシート: a line icon and one line a row */
 .k-menu{display:flex;flex-direction:column}
@@ -1521,9 +1530,9 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .tab.has-new::after{content:"";position:absolute;top:5px;left:calc(50% + 7px);width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 2px var(--bg)}
 .k-fr-pts{margin:16px max(var(--pad),env(safe-area-inset-left,0px)) 0;padding:14px 16px 14px 34px;border-radius:var(--r-card);background:var(--fill);font-size:var(--fs-body);line-height:1.6;color:var(--ink)}
 .k-fr-pts li+li{margin-top:6px}
-.k-fr-acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px max(var(--pad),env(safe-area-inset-left,0px)) 0}
+.k-fr-acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:10px;margin:18px max(var(--pad),env(safe-area-inset-left,0px)) 0}
 .k-fr-acts.one{grid-template-columns:1fr}
-.k-fr-acts .btn{min-height:48px}
+.k-fr-acts .btn{min-height:48px;padding:0 10px;font-feature-settings:"palt"}
 .k-fr-gs{display:flex;gap:8px;overflow-x:auto;padding:12px max(var(--pad),env(safe-area-inset-left,0px)) 2px;scrollbar-width:none}
 .k-fr-gs::-webkit-scrollbar{display:none}
 .k-fr-gs button{flex:none;height:36px;max-width:60vw;padding:0 14px;border-radius:var(--r-pill);background:var(--fill);font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1549,9 +1558,9 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-fr-row .nm small{margin-left:6px;padding:1px 7px;border-radius:var(--r-pill);background:var(--blue);color:#fff;font-size:11px;font-weight:700;vertical-align:2px}
 .k-fr-row .v{flex:none;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
 .k-fr-row .v small{margin-left:2px;font-size:var(--fs-min);font-weight:700;color:var(--ink-2)}
-.k-fr-inv{display:flex;align-items:center;gap:8px;margin:18px max(var(--pad),env(safe-area-inset-left,0px)) 0;padding:12px 14px;border-radius:var(--r-card);background:var(--fill)}
-.k-fr-inv.in{margin:4px 0 0}
-.k-fr-inv>div{flex:1;min-width:0}
+.k-fr-inv{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px max(var(--pad),env(safe-area-inset-left,0px)) 0;padding:12px 14px;border-radius:var(--r-card);background:var(--fill)}
+.k-fr-inv.in{container-type:inline-size;margin:4px 0 0}
+.k-fr-inv>div{flex:1 0 auto;min-width:0}
 .k-fr-inv .l{margin:0;font-size:var(--fs-min);color:var(--ink-2);font-weight:700}
 .k-fr-inv .c{margin:2px 0 0;font-size:18px;font-weight:800;letter-spacing:.06em;white-space:nowrap}
 .k-fr-last{margin:18px max(var(--pad),env(safe-area-inset-left,0px)) 0;padding:14px 16px;border-radius:var(--r-card);background:#FBF3E2;color:#3D2E0E}
@@ -1576,9 +1585,13 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-fr-old{margin-top:4px}
 .k-sec .k-fr-danger{margin-top:16px}
 .k-fr-row.me{cursor:pointer}
+@container (max-width:319.9px){.k-fr-inv.in>div{flex-basis:100%}}
+.k-fr-safe .btn{padding:0 10px;font-feature-settings:"palt"}
+#view.kfr .k-fr-nums,#view.kfr .k-fr-stamps,#view.kfr .k-fr-safe,#view.kfr .k-sec > .k-pf-s,#view.kfr .k-sec > .btn.k-fr-danger{margin-left:max(var(--pad),env(safe-area-inset-left,0px));margin-right:max(var(--pad),env(safe-area-inset-right,0px))}
+#view.kfr .k-sec > .btn.k-fr-danger{width:calc(100% - max(var(--pad),env(safe-area-inset-left,0px)) - max(var(--pad),env(safe-area-inset-right,0px)))}
 .k-fr-stamp{min-height:46px;border-radius:12px;background:var(--fill);font-size:var(--fs-body);font-weight:700;color:var(--ink)}
 .k-fr-stamp:active{background:var(--blue-tint)}
-.k-fr-safe{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.k-fr-safe{display:grid;grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:8px}
 .btn.k-fr-danger{margin-top:18px;color:var(--ng-ink)}
 .k-fr-homew{padding:12px max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
 .k-fr-home{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px 10px 14px;border-radius:var(--r-card);background:var(--fill);text-align:left;color:var(--ink)}
@@ -1651,7 +1664,7 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 #view.dk .dsearch .search > .ico{width:20px;height:20px;stroke-width:2;color:var(--ink-2)}
 #view.dk .dsearch input{font-weight:500;color:var(--ink)}
 #view.dk .dsearch input::placeholder{color:var(--ink-2);font-size:var(--fs-body);font-weight:500}
-#view.dk .dsug{left:var(--pad);right:var(--pad);border:0;border-radius:var(--r-card);background:var(--bg);box-shadow:0 0 0 1px var(--hair),0 10px 28px rgba(18,18,22,.16)}
+#view.dk .dsug{position:static;margin:8px 0 12px;border:0;border-radius:var(--r-card);background:var(--card-bg);box-shadow:0 0 0 1px var(--line-card)}
 #view.dk #dictres:not(:empty){padding:0 max(var(--pad),env(safe-area-inset-right,0px)) 0 max(var(--pad),env(safe-area-inset-left,0px))}
 .k-empty{margin:0 max(var(--pad),env(safe-area-inset-left,0px));padding:14px 16px;border-radius:var(--r-card);background:var(--fill);color:var(--ink-2);font-size:var(--fs-body);line-height:1.6}
 /* 使っている単語帳: 2 big covers a row (165 at 375; they shrink with the column, so 320px and 文字「大」 keep 2) */
@@ -1770,6 +1783,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 :is(#view.dk,.sheet.v2) .btn{border-radius:var(--r-pill)}
 :is(#view.dk,.sheet.v2) .btn-primary{background:var(--blue-hero);color:var(--on-blue)}
 :is(#view.dk,.sheet.v2) .btn-ghost{background:var(--fill);border-color:transparent;color:var(--ink)}
+:is(#view,#sheetroot) :is(.nudge,.k-srow,.k-fr-inv) .btn-ghost{background:var(--bg)}   /* a ghost button on a grey card: the page colour, not the card's */
 :is(#view.dk,.sheet.v2) .btn-soft{background:var(--blue-tint);color:var(--blue)}
 :is(#view.dk,.sheet.v2) .btn-go{min-height:54px;box-shadow:none;font-size:var(--fs-cta);font-weight:800}
 :is(#view.dk,.sheet.v2) :is(.input,.textarea,.select){border:1.5px solid transparent;border-radius:12px;background:var(--fill);color:var(--ink)}
@@ -1807,7 +1821,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .sheet.v2 .tcard.holed::before,.sheet.v2 .tcard .ring{display:none}
 .sheet.v2 .cardview .qword{font-family:var(--f-en);font-weight:700;font-size:32px;letter-spacing:-.01em}
 .sheet.v2 .dplace{border:0;border-radius:var(--r-card);background:var(--fill)}
-.sheet.v2 .dacts{background:var(--bg)}
+.sheet.v2 .dacts{background:var(--bg);border-top:1px solid var(--hair)}
 .dplace > span.k-cover{flex:none;display:block;margin:0}
 /* a block's sheet: its ring (or the ★), its counts, which words, スタート */
 .sheet.v2 .bs-top .k-badge{width:56px;height:56px}
@@ -1867,7 +1881,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .study.v2 .qcard-in::after{content:"";flex:3 1 0}
 .study.v2 .qcard.leave{display:none}   /* nothing turns over: the next question is simply there */
 .study.v2 .qpos{display:flex;align-items:center;justify-content:center;gap:8px;min-height:24px}
-.study.v2 .pos,.fb.v2 .pos{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 4px;border:0;border-radius:var(--r-set);background:var(--fill);color:var(--ink-2);font-size:var(--fs-sub);font-weight:700;line-height:1;flex:none;font-family:var(--f-ui)}
+.study.v2 .pos,.fb.v2 .pos,.sw.v2 .swcard .pos{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 4px;border:0;border-radius:var(--r-set);background:var(--fill);color:var(--ink-2);font-size:var(--fs-sub);font-weight:700;line-height:1;flex:none;font-family:var(--f-ui)}
 .study.v2 .w-line{display:flex;align-items:center;justify-content:center;gap:8px;max-width:100%;padding-left:52px}   /* 🔊 44 + 8 to the right: the word's own centre in the middle */
 .study.v2 .w-line:has(.len-l),.study.v2 .w-line.fit{padding-left:0}   /* a long one: the word and its 🔊 together in the middle */
 .study.v2 .qword{min-width:0;font-family:var(--f-en);font-size:var(--fs-word);font-weight:700;line-height:1.15;letter-spacing:-.005em;text-wrap:balance;overflow-wrap:anywhere}
@@ -1878,7 +1892,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .study.v2 .say::before,.fb.v2 .say::before{content:"";position:absolute;left:50%;top:50%;width:var(--dot,44px);height:var(--dot,44px);transform:translate(-50%,-50%);border-radius:50%;background:var(--fill)}
 .study.v2 .say svg,.fb.v2 .say svg{position:relative;width:var(--ico,22px);height:var(--ico,22px)}
 .study.v2 .flashc .say,.fb.v2 .say{--dot:40px;--ico:20px}
-.study.v2 .qpat{display:inline-flex;align-items:center;min-height:28px;padding:2px 10px;border-radius:var(--r-set);background:var(--fill);font-family:var(--f-en);font-size:var(--fs-body);font-weight:700;color:var(--ink);line-height:1.3}
+.study.v2 .qpat,.sw.v2 .swcard .qpat{display:inline-flex;align-items:center;min-height:28px;padding:2px 10px;border-radius:var(--r-set);background:var(--fill);font-family:var(--f-en);font-size:var(--fs-body);font-weight:700;color:var(--ink);line-height:1.3}
 .study.v2 .qask{font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);font-feature-settings:"palt"}
 .study.v2 .qask b{color:var(--ng-ink)}
 .study.v2 .qask b.qw{color:var(--ink);font-family:var(--f-en);font-weight:700}
@@ -1913,7 +1927,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .study.v2 .unlock{height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:var(--r-pill);background:var(--ok-tint);font-size:var(--fs-min);font-weight:800;color:var(--ok-ink);white-space:nowrap;font-feature-settings:"palt";animation:fade .15s var(--ease-out)}
 /* the 4 options: grey boxes (16), the number a white key (the keyboard's 1–4) */
 .study.v2 .choices{gap:10px}
-.study.v2 .choice{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;height:auto;padding:8px 12px;border:0;border-radius:var(--r-card);background:var(--fill);color:var(--ink);font-family:var(--f-ui);font-size:var(--fs-name);font-weight:500;line-height:1.35;text-align:left;transition:background var(--dur-1) var(--ease-io),box-shadow var(--dur-1) var(--ease-io)}
+.study.v2 .choice{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;height:auto;padding:8px 12px;border:0;border-radius:var(--r-card);background:var(--fill);color:var(--ink);font-family:var(--f-ui);font-size:var(--fs-name);font-weight:500;line-height:1.35;text-align:left;transition:background var(--dur-1) var(--ease-io),box-shadow var(--dur-1) var(--ease-io),transform .08s var(--ease-io)}
 @media (hover:hover){.study.v2 .choice:hover{box-shadow:inset 0 0 0 1.5px var(--track)}}
 .study.v2 .choice .key{width:30px;height:30px;border:0;border-radius:var(--r-set);background:var(--bg);display:grid;place-items:center;flex:none;font-family:var(--f-en);font-size:var(--fs-body);font-weight:800;line-height:1;color:var(--ink-2)}
 .study.v2 .choice .key svg{width:17px;height:17px}
@@ -1962,7 +1976,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .study.v2 .flashc .qword{font-size:var(--fs-word)}
 .study.v2 .flashc .w-line{padding-left:48px}
 .study.v2 .flashc .w-line:has(.len-l),.study.v2 .flashc .w-line.fit{padding-left:0}
-.study.v2 .back-pron{margin:-6px 0 0;text-align:center}
+.study.v2 .back-pron,.sw.v2 .back-pron{margin:-6px 0 0;text-align:center}
 .study.v2 .back-front{display:flex;flex-direction:column;align-items:center;gap:2px}
 .study.v2 .back-face{width:100%;margin-top:0;padding-top:0;border-top:0;gap:0;align-items:center}
 .study.v2 .back-face::before{content:"";display:block;width:48px;height:2px;margin:10px auto 18px;background:var(--line-card)}
@@ -1988,8 +2002,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .study.v2 .back-face .ety{margin-top:14px;text-align:center;font-size:var(--fs-sub);color:var(--ink-2)}
 .study.v2 .back-face .ety .ep{font-family:var(--f-en);color:var(--ink)}
 .study.v2 .back-face .parent-line{justify-content:center;border-top:1px solid var(--hair)}
-.study.v2 .ipa,.fb.v2 .ipa{display:inline;font-family:var(--f-ipa);font-size:var(--fs-body);font-weight:400;color:var(--ink-2);letter-spacing:0}
-.study.v2 .kana,.fb.v2 .kana{display:inline;margin:0 0 0 10px;font-size:var(--fs-sub);font-weight:500;color:var(--ink-2)}
+.study.v2 .ipa,.fb.v2 .ipa,.sw.v2 .ipa{display:inline;font-family:var(--f-ipa);font-size:var(--fs-body);font-weight:400;color:var(--ink-2);letter-spacing:0}
+.study.v2 .kana,.fb.v2 .kana,.sw.v2 .kana{display:inline;margin:0 0 0 10px;font-size:var(--fs-sub);font-weight:500;color:var(--ink-2)}
 .study.v2 .sayex,.fb.v2 .sayex{width:32px;height:32px;margin-left:4px;border-radius:50%;background:var(--fill);color:var(--ink);vertical-align:-9px}
 .study.v2 .sayex .ico,.fb.v2 .sayex .ico{width:16px;height:16px}
 /* grading a card: どれくらい覚えてた？ and 4 buttons, each on its own light tint with its words in its colour, as before the new look
@@ -2007,14 +2021,23 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .short .study.v2 .qhead{margin-top:14px}
 .short .study.v2 .choice{min-height:52px}
 .short .study.v2 .choices{gap:8px}
+.vshort .study.v2 .qhead{margin-top:10px}
+.vshort .study.v2 .choice{min-height:48px}
+.vshort .study.v2 .choices{gap:6px}
+.vshort .study.v2{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.vshort .study.v2 .qcard-in{padding:2px 0;gap:6px}
+.vshort .study.v2 .qclock{margin-bottom:6px} .vshort .study.v2 .qclock.fl{margin-bottom:0}
 .short .study.v2 .qcard.flashc{margin-top:10px}
+.vshort .study.v2 .qcard.flashc,.short .study.v2 .qcard.flashc:has(.back-face){margin-top:6px;padding-block:12px}
+.vshort .study.v2 .qcard.flashc .qcard-in,.short .study.v2 .qcard.flashc:has(.back-face) .qcard-in{padding-top:2px}
+.short .study.v2:has(.back-face){padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
 .short .study.v2 .grade{min-height:64px}
 /* ---- the sheet: white, from below, its top 78px left over a dimmed screen (the steps stay bright above the scrim; taps still reach
    × and 1問もどす). A miss: the whole height, 次へ fixed at the foot, the rest scrolls ---- */
 .fb-scrim{position:fixed;inset:0;z-index:44;background:var(--scrim);pointer-events:none;animation:fade var(--dur-2) var(--ease-out)}
-.fb.v2{top:auto;max-height:calc(100% - 78px - env(safe-area-inset-top,0px));border:0;border-radius:var(--r-hero) var(--r-hero) 0 0;background:var(--bg);color:var(--ink);font-family:var(--f-ui);box-shadow:0 -8px 30px rgba(18,18,22,.14);padding-bottom:0;word-break:auto-phrase}
+.fb.v2{top:auto;max-height:calc(100% - 78px - env(safe-area-inset-top,0px));border:0;border-radius:var(--r-hero) var(--r-hero) 0 0;background:var(--bg);color:var(--ink);font-family:var(--f-ui);box-shadow:0 -1px 0 var(--sheet-edge),0 -8px 30px rgba(18,18,22,.14);padding-bottom:0;word-break:auto-phrase}
 .fb.v2.ng{top:calc(78px + env(safe-area-inset-top,0px))}
-.fb.v2.ng,.fb.v2.near{box-shadow:none}
+.fb.v2.ng,.fb.v2.near{box-shadow:0 -1px 0 var(--sheet-edge)}
 .fb.v2:has(#fbmore:not([hidden])){max-height:calc(100% - 78px - env(safe-area-inset-top,0px))}
 .fb.v2.near,.fb.v2.near:has(#fbmore:not([hidden])){bottom:var(--kb,0px);max-height:calc(100% - 78px - env(safe-area-inset-top,0px) - var(--kb,0px))}
 .fb.v2 .fb-in{flex:1 1 auto;min-height:0;max-width:560px;gap:0;padding:0 0 calc(22px + env(safe-area-inset-bottom,0px))}
@@ -2024,7 +2047,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .fb.v2 .fb-actions{flex:none;padding:10px max(20px,env(safe-area-inset-right,0px)) 0 max(20px,env(safe-area-inset-left,0px))}
 .fb.v2 .fb-actions > .btn{width:100%;min-height:56px}
 /* 1. the verdict: a 28 circle (× red / ✓ green), 不正解 21/800; on the right ↻ 3問あとにもう一度 (words only) */
-.fb.v2 .fb-head{display:flex;flex-wrap:nowrap;align-items:center;gap:9px;min-height:36px;color:var(--ink);font-size:var(--fs-sec);font-weight:800}
+.fb.v2 .fb-head{display:flex;flex:none;flex-wrap:wrap;align-items:center;gap:0 9px;min-height:36px;color:var(--ink);font-size:var(--fs-sec);font-weight:800}
 .fb.v2.ok .fb-head,.fb.v2.ng .fb-head,.fb.v2.near .fb-head{color:var(--ink)}
 .fb.v2 .fb-tt{display:inline-flex;align-items:center;gap:9px;letter-spacing:.01em;font-feature-settings:"palt"}
 .fb.v2 .mk{width:28px;height:28px;margin:0;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;font-size:15px;font-weight:800}
@@ -2033,6 +2056,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .fb.v2 .fb-head .rate{height:26px;display:inline-flex;align-items:center;margin-left:2px;padding:0 10px;border-radius:var(--r-pill);background:var(--ok-solid);color:#fff;font-family:var(--f-en);font-size:var(--fs-sub);font-weight:800}
 .fb.v2 .ivl{display:inline-flex;align-items:center;gap:4px;padding:0;background:none;font-family:var(--f-ui);font-size:var(--fs-sub);font-weight:700;color:var(--ink-2);white-space:nowrap;font-feature-settings:"palt"}
 .fb.v2 .ivl svg{width:16px;height:16px;flex:none}
+.fb.v2 .fb-r{display:flex;align-items:center;gap:9px;margin-left:auto;min-height:36px}   /* 次は◯日後 and 詳しく: one group, so a narrow screen or 文字「大きめ」 moves them to a second row together */
 .fb.v2 .fb-more{height:44px;margin:0 -4px 0 0;padding:0 4px 0 8px;border:0;border-radius:0;font-size:var(--fs-sub);font-weight:700;color:var(--blue)}
 /* 2. the word: 26/700, 🔊, the 帯 and No.; the reading under it */
 .fb.v2 .fb-word{display:block;margin-top:12px}
@@ -2091,9 +2115,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .fb.v2 .f-use{font-weight:700;color:var(--ink);font-feature-settings:"palt"}
 .fb.v2 .pat{display:inline;margin-left:6px;font-family:var(--f-en);font-size:var(--fs-sub);font-weight:600;color:var(--ink-2)}
 .fb.v2 .morph{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
-.fb.v2 .m{display:inline-flex;align-items:center;gap:4px;min-height:28px;padding:0 8px;border-radius:var(--r-set);background:var(--fill)}
-.fb.v2 .m b{font-family:var(--f-en);font-size:var(--fs-body);font-weight:700}
-.fb.v2 .m span{font-family:"Noto Sans JP",sans-serif;font-size:var(--fs-min);color:var(--ink-2)}
+.fb.v2 .morph .m{display:inline-flex;align-items:center;gap:4px;min-height:28px;padding:0 8px;border-radius:var(--r-set);background:var(--fill)}
+.fb.v2 .morph .m b{font-family:var(--f-en);font-size:var(--fs-body);font-weight:700}
+.fb.v2 .morph .m span{font-family:"Noto Sans JP",sans-serif;font-size:var(--fs-min);color:var(--ink-2)}
 .fb.v2 .plus{padding:0 1px;font-size:var(--fs-min);color:var(--ink-3)}
 .fb.v2 .f-row.fam{display:grid;align-items:start;gap:0 8px;margin:0;padding:0}
 .fb.v2 .f-row.fam .f-k{padding-top:15px}
@@ -2135,6 +2159,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
    always blue (the score is its star: a book's red or green would read as × or ○); the rest is rows of small grey names over bold
    figures, no boxes. Its own parts start with rs- ===== */
 .res.v2{padding-bottom:calc(34px + env(safe-area-inset-bottom,0px));word-break:auto-phrase}
+.screen:has(> .res.v2)::before{content:"";position:sticky;top:0;z-index:5;display:block;height:env(safe-area-inset-top,0px);margin-bottom:calc(-1 * env(safe-area-inset-top,0px));background:var(--bg)}   /* the status bar's cover: these screens scroll, and body::before is under #screen */
 .res.v2 button{font-feature-settings:"palt"}
 .res.v2.dock-on{padding-bottom:calc(98px + env(safe-area-inset-bottom,0px))}
 .res.v2 .k-hero{margin:0}
@@ -2179,6 +2204,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .rs-row svg{width:18px;height:18px;color:var(--blue);margin-right:-5px}
 .rs-home{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border-radius:var(--r-pill);background:var(--fill);color:var(--ink);font-size:var(--fs-name);font-weight:700;text-align:center}
 .rs-row:active,.rs-home:active,.rs-wr:active .b{opacity:.7}
+/* the press, wherever a finger lands: a row, a tab, a chip, an icon dims (as .rs-row above); a cover and an option sink like .k-play.
+   Only what is itself the button / a: :active reaches the parents too, and a div row holding － ＋ or chips must not dim with them */
+:is(.tab,button.k-blk,.wrow,.drow,button.k-srow,a.k-srow,.k-merow,.k-mrow,.mrow,.k-tmr,.k-foot,.k-quit,.k-set,.k-row,button.k-dk,button.k-uv,.k-fr-home,button.k-fr-row,button.k-djl-r,button.k-dan,.scan-hrow,.dplace,.dpar,.dback,.chip,.k-chip,.fchip,.blkchip,.scm-c,.sheetbtn,.iconbtn,.dclr,.k-fr-menu,.k-hit,.k-hit44,.say,.sayex,.link,.fb-more,.more-s,.k-fold-btn,.tip-go,.tip-x,.cmp-undo,.qundo,.dunno,.nosound,.veil,.toast-btn,.scan-go,.rc-open,.k-uv-ask-main,.k-prof-set,button.k-prof-goal,.k-prof-edit,a.k-logo,.lnote a,.k-pf-s a,.ob-more > summary,.k-segc button,.k-opts button,.k-step button,.k-goal .st button,.k-cal-nav button,.k-fr-gs button,.k-pf-icons button,.rs-dj button,.k-sec-t > button):not(:disabled):active{opacity:.6;transition:opacity .08s var(--ease-io)}
+:where(.ch,.k-bk-main,.k-book,.k-lib-it,.k-ser-it,.rs-dock-btn){transition:transform .08s var(--ease-io)}
+:is(.study.v2 .choice:enabled,.ch:enabled,.k-bk-main,.k-book,.k-lib-it,.k-ser-it,.rs-dock-btn):active{transform:scale(.98)}
+.study.v2 .choice:enabled:not(.ok):not(.ng):active{background:color-mix(in srgb,var(--ink) 9%,var(--fill))}
 /* the goal reached: the top bar pill's ring, closed and large (88), the streak at the hero's figure size, the week */
 .rs-cele{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:10px}
 .rs-ring{width:88px;height:88px}
@@ -2250,8 +2281,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 /* ===== 新デザイン5: 記録タブ（S/stats/notes.md。値は 375px のもの）=====
    #view.v2.kst: the title, the three numbers, 連続記録 (the big ring, the month, the お休みチケット), 覚えた単語 (the stacked bar, meanings and
    derivatives), each deck started, the next 4 weeks' reviews. The ring and the calendar are also the streak's sheet */
-#view.v2.kst,#view.v2.kcf{padding-left:0;padding-right:0}
-#view.v2.kst > .k-top,#view.v2.kcf > .k-top,#view.v2.kst > .iab,#view.v2.kcf > .iab{margin-left:max(var(--pad),env(safe-area-inset-left,0px));margin-right:max(var(--pad),env(safe-area-inset-right,0px))}
+#view.v2.kst,#view.v2.kcf,#view.v2.kfr{padding-left:0;padding-right:0}
+#view.v2.kst > .k-top,#view.v2.kcf > .k-top,#view.v2.kfr > .k-top,#view.v2.kfr > .iab,#view.v2.kst > .iab,#view.v2.kcf > .iab{margin-left:max(var(--pad),env(safe-area-inset-left,0px));margin-right:max(var(--pad),env(safe-area-inset-right,0px))}
 .k-big{display:flex;align-items:baseline;flex-wrap:wrap;margin:0;font-weight:800;line-height:1;font-feature-settings:"palt"}
 .k-big .pre{font-size:var(--fs-hero-pre);margin-right:3px}
 .k-big .n{font-family:var(--f-en);font-size:var(--fs-hero-num);letter-spacing:-.01em}
@@ -2790,7 +2821,7 @@ button.k-uv{width:calc(100% - 2 * max(var(--pad),env(safe-area-inset-left,0px)))
 .sw.v2 .swcard.next{border-color:var(--hair)}
 .sw.v2 .swcard.holed::before,.sw.v2 .swcard .ring{display:none}
 .sw.v2 .swcard .qword{font-family:var(--f-en);font-size:var(--fs-word);font-weight:700;line-height:1.15;letter-spacing:-.005em;overflow-wrap:anywhere}
-.sw.v2 .swcard .pos{font-size:var(--fs-min);font-weight:700;color:var(--ink-2);background:var(--fill);border:0;border-radius:var(--r-pill);padding:2px 8px 1px}
+.sw.v2 .kana{display:inline-block;max-width:calc(100% - 10px)}
 .sw.v2 .ipa{font-family:var(--f-ipa);font-size:var(--fs-body);color:var(--ink-2)}
 .sw.v2 .swmean{color:var(--ng-ink);font-size:var(--fs-answer)}
 .sw.v2 .swmean.hide{color:transparent;background:var(--ng);border-radius:var(--r-set)}
@@ -5567,6 +5598,25 @@ function installSheet(){
     <p class="ins-old">画面の下に<b>共有ボタン（□に↑）</b>があるiPhoneなら、そこから「ホーム画面に追加」でOK。次からは、ホーム画面の<b>「極」</b>から開いてね</p>
     <button class="btn btn-ghost btn-block" data-act="closeSheet">閉じる</button>`);
 }
+/* App Store版もあるよ (iPhone / iPad browsers, not opened from the home screen, not in an app's browser): once, from the 2nd study
+   day, on a day with no other card (not under めくるの一言, tipGap after a tip; it holds the results' tip like a tip: tipH).
+   Not logged in: ログインする first (the records stay apart: only the same account in both carries them), the card stays.
+   閉じる or the link puts it away for good (TUT.tip.app = that day, this device only like the tips) and holds the next card
+   2 days (tipD; ホーム画面に入れとこ too: appHeld). 設定 keeps a row (アプリとして使う) */
+const APP_STORE = ct => `https://apps.apple.com/app/apple-store/id6830993229?pt=129746076&ct=${ct}&mt=8`;
+const appStoreOK = () => IS_WEB && !IS_APP && IOS;
+const appHeld = () => TUT?.tip?.app > 1 && dayIdx() - TUT.tip.app < 2;
+function appCardHTML(){
+  if (!appStoreOK() || inApp || isStandalone() || !TUT || TUT.tip?.app || !tipGap() || daysBefore() < 1 || (FIREBASE && !Auth.ready)) return '';
+  const login = !!FIREBASE && !Auth.user;
+  TUT.tipH = dayIdx();
+  return `<div class="nudge" role="note"><b>App Storeにアプリ版もあるよ</b>
+    <span>${!FIREBASE ? 'アプリの記録は、ここ（ブラウザ）とは別だよ' : login ? 'アプリの記録は、ここ（ブラウザ）とは別。ログインしておけば、アプリでも同じアカウントで続きから使えるよ' : 'アプリの記録は、ここ（ブラウザ）とは別。アプリでも同じアカウントでログインすれば、続きから使えるよ'}</span>
+    <div class="btn-row">${login ? `<button class="btn btn-primary" data-act="nudgeLogin">ログインする</button><button class="btn btn-ghost" data-act="appGo">App Storeで見る</button></div>
+    <button class="link" data-act="appNo" style="align-self:center;min-height:44px;padding:0 12px">閉じる</button>`
+    : `<button class="btn btn-primary" data-act="appGo">App Storeで見る</button><button class="btn btn-ghost" data-act="appNo">閉じる</button></div>`}</div>`;
+}
+function appDone(t){ (TUT.tip ||= {}).app = TUT.tipD = dayIdx(); tutSave(); t.closest('.nudge')?.remove(); }
 async function downloadAllAudio(btn){
   const ids = [...new Set(Object.values(AUD_A).map(e => e[0]))].sort((a, b) => a - b);
   if (!navigator.serviceWorker?.controller) return toast('いまは音声を保存できません。ページを読み込み直すか、SafariやChromeで開いてね', null, 5000);   // the service worker does the keeping
@@ -6096,7 +6146,7 @@ function viewHome(){
   }
   // ひとこと: one card at a time, tipGap apart. 復習の量 on a heavy day, then 範囲 and 長文の写真 for those who stayed: the home has no way to either
   const dB = daysBefore(today), tipK = tk || !tipGap() ? '' : (heavy || c.due >= 30) && tipNew('ret') ? 'ret' : dB >= 3 && tipNew('blk') ? 'blk' : dB >= 5 && tipNew('scan') && learnedN() >= 100 ? 'scan' : '';
-  const note = act.length ? nudgeHTML() || (tipK ? (TUT.tipH = today, tipHTML(tipK, tipK === 'ret')) : '') || instHTML('home') : '';   // tipH: tipD moves only on a tap, and a card up holds the results' card too
+  const note = act.length ? nudgeHTML() || (tipK ? (TUT.tipH = today, tipHTML(tipK, tipK === 'ret')) : '') || (tk ? '' : appCardHTML()) || (appHeld() || (appStoreOK() && FIREBASE && !Auth.ready && !Auth.failed) ? '' : instHTML('home')) : '';   // tipH: tipD moves only on a tap, and a card up holds the results' card too
   return `${topbar()}${hero}${grpHome()}${note ? `<div class="k-note">${note}</div>` : ''}${inUse}${act.length ? homeUniv() : ''}${again}${shelf}${say}`;
 }
 /* the hero's ⋯: the other ways to go on (each only when it starts something), how questions are asked, the day's new words,
@@ -6206,7 +6256,7 @@ function wordRows(d){
     const p = prog(c), s = status(p);
     const due = p?.sus ? '出題しない' : isReview(p) ? (p.due <= today ? '復習' : `次 ${mdLabel(p.due)}`) : s === 'learn' ? '学習待ち' : '';
     return `<button class="wrow" data-act="card" data-deck="${esc(c.deck)}" data-k="${esc(c.k)}">
-      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword" lang="en">${c.n && !c.isD && d.builtin ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${p?.wk ? '<span class="dtag">苦手</span>' : ''}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD && c.s.length > 1 ? `<span class="wsn" lang="ja">意味${learnedSenses(c)}/${c.s.length}</span>` : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean"${route.red ? ' aria-hidden="true"' : ''}>${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !derivUnlocked(c) ? (!isReview(prog(c.parent)) ? '見出し語の後' : !settled(prog(c.parent)) ? '見出し語の復習後' : '前の派生語の後') : '')}</span></button>`;
+      <span class="wdot ${isLeech(p) ? 'leech' : s}"></span><span class="wword" lang="en">${c.n && !c.isD && d.builtin ? `<span class="wno">${c.n}</span>` : ''}${esc(c.w)}${p?.wk ? '<span class="dtag">苦手</span>' : ''}${c.isD ? `<span class="wfrom">← ${esc(c.parent.w)}</span>` : ''}${!c.isD && c.s.length > 1 ? `<span class="wsn" lang="ja">意味${learnedSenses(c)}/${c.s.length}</span>` : ''}${patHTML(c.pat, 'wpat')}</span><span class="wmean"${route.red ? ' aria-hidden="true"' : ''}>${esc(allMeanings(c))}</span><span class="wdue">${due || (c.isD && !d.direct?.has(c) && !derivUnlocked(c) ? (!isReview(prog(c.parent)) ? '見出し語<wbr>の後' : !settled(prog(c.parent)) ? '見出し語の<wbr>復習後' : '前の派生語<wbr>の後') : '')}</span></button>`;
   }).join('');
   return rows + (list.length > route.limit ? `<div class="more"><button class="link" data-act="more">さらに表示（残り${list.length - route.limit}語）</button></div>` : '');
 }
@@ -6348,9 +6398,17 @@ function viewDeck(){
 /* the deck page's switch, where the page scrolls to so that it sits just under the bar that comes down (0: no switch) */
 const dtabsY = () => { const s = $('#dksent'); return s ? Math.max(0, s.getBoundingClientRect().top + scrollY - ($('.k-mini')?.offsetHeight || 54)) : 0; };
 /* the bar with the name comes down once the name has gone under it; the switch gets its hairline once it has stopped */
-let dkIO = null;
+let dkIO = null, dkIO2 = null;
 function deckIO(v){
   dkIO?.disconnect(); dkIO = null;
+  // 単語一覧's study button (.ctadock) only while the list is on screen above it: not over 続きから and the search row at the top of the page.
+  // The dock's top is 73px above the tab bar's (its 74px, 1px of it over the bar's hairline); k: rects are as 文字の大きさ zooms them, offsetHeight is not
+  dkIO2?.disconnect(); dkIO2 = null; const wl = v.querySelector('#wordlist'), tb = $('.tabbar');
+  if (!wl || !tb) v.classList.remove('list-off');
+  else { const r = tb.getBoundingClientRect(), k = r.height / tb.offsetHeight || 1;
+    v.classList.toggle('list-off', wl.getBoundingClientRect().top > r.top - 73 * k);   // now, so that it is never drawn for a frame
+    if ('IntersectionObserver' in window) { dkIO2 = new IntersectionObserver(es => { const e = es[es.length - 1]; v.classList.toggle('list-off', !e.isIntersecting && e.boundingClientRect.top > 0); },
+      {rootMargin: `0px 0px -${Math.round((73 + tb.offsetHeight) * (S.settings.zoom || 1))}px 0px`}); dkIO2.observe(wl); } }
   const t = v.querySelector('.k-dh-t'), mini = v.querySelector('.k-mini'), sent = v.querySelector('#dksent'), sw = v.querySelector('.k-segw');
   if (!t || !mini || !('IntersectionObserver' in window)) return;
   const h = mini.offsetHeight || 54;
@@ -7513,7 +7571,7 @@ function viewSettings(){
     kOpts('rate', [[0.75, 'ゆっくり'], [0.95, 'ふつう'], [1.15, '速め']], '例文の読み上げの速さ'), kSw('sfx', '効果音'), kSw('haptic', '振動', '正解と不正解を振動でも知らせる')]))}
   ${IS_APP ? kSec('通知', kGroup([`<button class="k-srow" role="switch" aria-checked="${remGet().on}" data-act="remindToggle">${kTxt('毎日のリマインダー', '決めた時刻に、今日の英単語を知らせる')}<span class="k-sw" aria-hidden="true"></span></button>`,
       remGet().on ? kGo('remindSheet', '知らせる時刻', '', remGet().t) : '']))
-    : IS_WEB ? kSec('アプリとして使う', kGroup([inst, icsOK() ? kGo('icsSheet', 'カレンダーで毎日知らせる') : '', kGo('dlAudio', '音声をまとめてダウンロード', `<span data-prog>約${50}MB・Wi-Fiがおすすめ</span>`)])) : ''}
+    : IS_WEB ? kSec('アプリとして使う', kGroup([inst, appStoreOK() ? `<a class="k-srow" href="${APP_STORE('webapp_settings')}" target="_blank" rel="noopener">${kTxt('App Storeのアプリ版', '同じアカウントで、続きから使える')}${K_CHEV}</a>` : '', icsOK() ? kGo('icsSheet', 'カレンダーで毎日知らせる') : '', kGo('dlAudio', '音声をまとめてダウンロード', `<span data-prog>約${50}MB・Wi-Fiがおすすめ</span>`)])) : ''}
   ${IS_WEB && FIREBASE ? kSec('アカウント', kGroup([u ? `<div class="k-srow">${u.photoURL ? `<img class="k-me" src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}${kTxt(esc(u.displayName || 'ログイン中'), u.email ? esc(u.email) : '')}</div>
       <div class="k-srow">${kTxt('ユーザーID', Acct.uid === u.uid && Acct.id ? `<span class="k-idv">${fmtId(Acct.id)}</span>` : '準備中…')}${Acct.uid === u.uid && Acct.id ? '<button class="btn btn-ghost btn-sm" data-act="copyId">コピー</button>' : ''}</div>
       ${IS_APP ? '' : kGo('codeSheet', '特典コード', isPlus() ? `極プラス（${esc(plusWhy())}）` : 'コードを持っていたら、ここで使う')}${Acct.admin ? kGo('devSheet', '開発者メニュー', 'コードを作る・見る') : ''}${kGo('signOut', 'ログアウト', 'この端末の記録は残る')}${kGo('delAcctSheet', 'アカウントを削除', 'アカウントと、そこに保存した記録を消す')}`
@@ -8241,7 +8299,8 @@ const comboHTML = () => Q.combo >= 3 ? `<span class="qcombo" id="qcombo"><b>${Q.
 const locked = () => !!Q && performance.now() < (Q.lockUntil || 0);
 const nextOpts = () => Q?.done ? {deckIds: Q.opts.deckIds, flash: Q.opts.flash} : {};
 /* a short screen (iPhone SE (Safari / home screen), 文字「大」) packs the study screens tighter (.short), so わからない stays in view */
-function fitCheck(){ document.documentElement.classList.toggle('short', innerHeight / (S.settings.zoom || 1) < 660); }
+function fitCheck(){ const cs = getComputedStyle(document.documentElement), sa = (parseFloat(cs.getPropertyValue('--sat')) || 0) + (parseFloat(cs.getPropertyValue('--sab')) || 0);   // the app draws under the status bar and the home bar: they come off the height
+  document.documentElement.classList.toggle('vshort', innerHeight / (S.settings.zoom || 1) - sa < 660); document.documentElement.classList.toggle('short', innerHeight / (S.settings.zoom || 1) - sa < 700); }
 addEventListener('resize', () => { if (!$('#screen').hidden) { fitCheck(); fitWord(); } });
 /* the word on one line (a long one: two): first its 🔊 joins it in the middle (no offset), then the size steps down (320px, 文字「大」) */
 function fitWord(){
@@ -8674,7 +8733,7 @@ function showFeedback(it, ok, np, back = -1, opt = {}){
   const pk = Q.picked, tip = !ok && pk?.tip && !tipLeaks(pk.tip, [c.isS ? c.parent : c, pk.card]) ? pk.tip : '';
   const miss = !ok && !near, fold = auto || !!near;   // a right answer: the short version first, 詳しく for the rest
   $('#fb').innerHTML = `${miss || near ? '<div class="fb-scrim" aria-hidden="true"></div>' : ''}<div class="fb v2 ${near ? 'near' : ok ? 'ok' : 'ng'}" ${auto ? 'data-act="fbTap"' : ''}><div class="fb-in"><span class="grab" aria-hidden="true"></span><div class="fb-sc">
-    <div class="fb-head"><span class="fb-tt">${title}</span><span class="sp"></span>${when}${fold ? '<button class="fb-more" data-act="fbMore">詳しく</button>' : ''}</div>
+    <div class="fb-head"><span class="fb-tt">${title}</span><span class="fb-r">${when}${fold ? '<button class="fb-more" data-act="fbMore">詳しく</button>' : ''}</span></div>
     ${miss ? head + cmp : cmp + head}
     <div class="fb-body" id="fbshort" ${fold || miss ? '' : 'hidden'}>${miss ? exLine + factsHTML(it, np, tip) : short}</div>
     <div class="fb-body" id="fbmore" ${fold || miss ? 'hidden' : ''}>${miss ? '' : detailHTML(it, false)}</div></div>
@@ -8897,7 +8956,7 @@ function resWordHTML(it){
   const ex = ux || (s0?.e ? s0 : c.e ? {e: c.e, j: c.j} : null);
   const exLine = scanCtxHTML(c) + (ex ? `<div class="fb-exrow"><div class="ex-t"><div class="fb-ex" lang="en">${ex.h || markWord(ex.e, c.w)}</div>${ex.j ? `<div class="fb-ja">${esc(ex.j)}</div>` : ''}</div><button class="sayex" data-act="sayex" data-w="${esc(ex.e)}" lang="ja" aria-label="例文を聞く">${QI.say}</button></div>` : '');
   return `<div class="fb v2 rs-sheet ${good ? 'ok' : 'ng'}"><div class="fb-in"><div class="fb-sc">
-    <div class="fb-head"><span class="fb-tt">${mk}${verdict}</span><span class="sp"></span>${when}</div>
+    <div class="fb-head"><span class="fb-tt">${mk}${verdict}</span><span class="fb-r">${when}</span></div>
     ${head}${mean}<div class="fb-body">${exLine}${factsHTML(it, null, '')}</div></div>
     <div class="fb-actions"><button class="btn btn-primary" data-act="closeSheet">閉じる</button></div></div></div>`;
 }
@@ -9121,8 +9180,9 @@ function startSwipe(deckIds=activeIds(), first=false){
   openScreen(); renderSwipe();
 }
 function swCardHTML(c, cls){
+  const pr = ipaHTML(c);
   return `<div class="tcard holed swcard ${cls}" ${cls ? '' : 'id="swcard"'}><span class="ring"></span><span class="swlab l">知らない</span><span class="swlab r">知ってる</span>
-    <div class="qpos"><span class="pos">${esc(c.p||'—')}</span></div><div class="qword" lang="en">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}${ipaHTML(c)}
+    <div class="qpos"><span class="pos">${esc(c.p||'—')}</span></div><div class="qword" lang="en">${esc(c.w)}</div>${patHTML(c.pat, 'qpat')}${pr ? `<div class="back-pron">${pr}</div>` : ''}
     ${c.deck === 'tagi' ? `<div class="swmean" ${cls ? '' : 'id="swmean"'}>${esc(qm(studyMain(c)))}</div><div class="swask">この意味を知ってる？</div>` : `<div class="swmean hide" ${cls ? '' : 'id="swmean"'} aria-hidden="true">${esc(studyMain(c))}</div>`}${studyNote(c) ? `<div class="swnote">${studyNote(c)}</div>` : ''}</div>`;
 }
 const swOver = () => SW.i >= SW.cards.length || (SW.stop > 0 && SW.hist.filter(h => !h.known).length >= SW.stop);
@@ -9659,9 +9719,9 @@ function dictBox(x){
   return `<div class="dsearch${x ? ' on' : ''}"><label class="search">${I.search}<input id="dq" type="search" placeholder="辞書で調べる（英語でも日本語でも）" value="${esc(route.dq)}" autocomplete="off" enterkeyhint="search" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="辞書で調べる（英語でも日本語でも）"><button type="button" class="dclr" data-act="dictClear" aria-label="入力を消す"${route.dq ? '' : ' hidden'}><i>${I.close}</i></button></label>
     <div class="dsug" id="dsug" hidden></div></div>`;
 }
-/* focused and empty: the last words opened, over the shelves (a tap on one keeps the focus until the entry opens: no blur first) */
+/* focused and empty: the last words opened, above the shelves (a tap on one keeps the focus until the entry opens: no blur first) */
 function dictSug(on = document.activeElement?.id === 'dq'){
-  const b = $('#dsug'), i = $('#dq'); if (!b || !i) return;
+  const b = $('#dsug'), i = $('#dq'); if (!b || !i) return; if (on && i.value && !$('#shelves')?.hidden) return;   // typing: stays until the results replace the shelves
   const rc = on && !i.value ? dictRecentList().slice(0, 10) : [];
   b.innerHTML = rc.length ? `<div class="dsug-h">最近しらべた単語</div><div class="fchips">${rc.map(r => `<button class="fchip" data-act="dictOpen" data-k="${esc(r.k)}"><b lang="en">${esc(r.w)}</b></button>`).join('')}</div>` : '';
   b.hidden = !rc.length;
@@ -10399,6 +10459,8 @@ const ACT = {
   // ホーム画面に入れとこ: やり方を見る / あとで both put it off (once more 7 days later); 設定's やり方 just shows the steps
   instHow: t => { instPut(t); installSheet(); },
   instLater: t => instPut(t),
+  appGo: t => { appDone(t); window.open(APP_STORE('webapp_card'), '_blank', 'noopener'); },
+  appNo: t => appDone(t),
   instSheet: () => installSheet(),
   instLogin: () => { instAfter = Date.now(); loginSheet(); },
   copyUrl: () => { const u = new URL(location.href); u.searchParams.delete('openExternalBrowser'); const s = u.href;
@@ -10465,6 +10527,7 @@ document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t || t.disabled || Date.now() < TAPHOLD) return;
   const fn = ACT[t.dataset.act]; if (fn) { e.preventDefault(); fn(t, e); }
 });
+document.addEventListener('touchstart', () => {}, {passive: true});   // iOS WebKit shows :active only on a page that listens for touches
 document.addEventListener('contextmenu', e => { const t = e.target.closest('.wrow'); if (!t) return; e.preventDefault(); const c = findCard(t.dataset.deck, t.dataset.k); if (c) cardSheet(c); });
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.classList?.contains('scanpk')) { e.preventDefault(); e.target.querySelector('input')?.click(); return; }

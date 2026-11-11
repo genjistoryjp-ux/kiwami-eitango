@@ -255,6 +255,7 @@
     var url = SITE + 'r/' + sc.lv.k + '-' + sc.type + '/?s=' + code(sc);
     var text = '英単語力診断の結果は「' + ty.name + '」\n' + sc.lv.name + '（推定語彙数 約' + sc.words.toLocaleString('ja-JP') + '語）・' + sc.total + '点\n'
       + 'めくる「' + sc.mk + '」\n#英単語力診断';
+    if (window.kwApp) kwApp(root);   // on iPhone/iPad the app button goes to the App Store (layout.html)
     root.querySelector('.sd-x').href = 'https://x.com/intent/post?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
     root.querySelector('.sd-line').href = 'https://line.me/R/share?text=' + encodeURIComponent(text.replace(/\n#.*$/, '') + '\nあなたは何型？\n' + url);
     S.text = text; S.url = url;
