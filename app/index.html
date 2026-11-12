@@ -1375,6 +1375,9 @@ a.k-logo{text-decoration:none}a.k-logo:focus-visible{outline:2px solid var(--blu
 .k-avatar .syncdot{display:none;position:absolute;right:3px;bottom:5px;width:10px;height:10px;box-shadow:0 0 0 2px var(--bg)}
 .k-avatar .syncdot.err,.k-avatar .syncdot.syncing{display:block}
 @media (max-width:350px){.k-pill{gap:5px;padding-right:10px}.k-sep{margin:0 1px}}   /* 320px: 連続365日 ｜ お休み2枚 still in one pill */
+/* a screen too narrow for the bar (320px with 文字 大きめ; a long 連続 with 大きめ at 360px): topFit takes お休み out of the pill
+   (the ticket and its count stay), then the tickets */
+.k-top-r.t1 .k-tk-w,.k-top-r.t2 .k-sep,.k-top-r.t2 .k-tk{display:none}
 /* the home: no column gutter of its own (the shelves run edge to edge); each part keeps --pad */
 #view.v2.home{padding-left:0;padding-right:0}
 #view.v2.home > .k-top,#view.v2.home > .iab{margin-left:max(var(--pad),env(safe-area-inset-left,0px));margin-right:max(var(--pad),env(safe-area-inset-right,0px))}
@@ -2777,6 +2780,20 @@ button.k-uv{width:calc(100% - 2 * max(var(--pad),env(safe-area-inset-left,0px)))
 .k-uv-pick{min-height:min(620px,72vh)}   /* narrowing never makes the sheet jump shorter */
 .k-uv-pick [hidden]{display:none}
 .k-uv-pick .k-srow.f{border-top:0}
+/* 入試の日 (examBox, examSheet): its row under the 志望校's card and in its sheet; the sheet's month and day side by side, the
+   year on its own row under them (there from the start, dim until a month and a day are chosen: nothing moves when it comes on) */
+.k-uv + .k-ex{margin-top:10px}
+#view .k-uv + .k-ex .lab{font-weight:700}   /* on the home: as heavy as the card's name */
+/* on the home the row is the card's width and all of it is tapped: its words start where the card's do, its › under the card's */
+#view .k-uv + .k-ex{padding:0}
+#view .k-uv + .k-ex .k-srow{padding:11px 16px}
+#view .k-uv + .k-ex .k-srow > .k-chev{width:20px;height:20px;margin-right:0}
+.sheet .k-ex{margin-top:16px}
+.k-ex + .k-uv-go{margin-top:0}
+.k-ex-f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.k-ex-f .select{min-height:48px}
+.k-ex-f #exy{grid-column:1 / -1}
+.k-ex-f .select:disabled{opacity:.45}
 .k-goal .nm{font-size:var(--fs-name);font-weight:700;line-height:1.4;font-feature-settings:"palt"}
 .k-goal .st{display:flex;align-items:center;justify-content:space-between;margin:8px -2px 0}
 .k-goal .st button{width:48px;height:48px;display:grid;place-items:center;flex:none;color:var(--ink)}
@@ -5810,6 +5827,16 @@ function applyTheme(){
   if (IS_APP) natPlug('StatusBar')?.setStyle({style: t === 'dark' ? 'DARK' : t === 'light' ? 'LIGHT' : 'DEFAULT'}).catch(() => {});   // DEFAULT follows the phone
 }
 let viewKey = '';   // the page #view showed last time with nothing covering it
+/* the top bar on a screen too narrow for it: the face would run off the page and the whole page would scroll sideways, so
+   the pill gives up お休み, then the tickets (both still in the button's label and in its sheet). Only when it does not fit:
+   a bar that fits is left as it is */
+function topFit(v = $('#view')){
+  const r = v.querySelector('.k-top-r'), last = r?.lastElementChild; if (!last) return;
+  r.classList.remove('t1', 't2');
+  for (const c of ['t1', 't2']) { if (last.getBoundingClientRect().right <= v.getBoundingClientRect().right + 0.5) break; r.classList.add(c); }
+}
+let topW = 0;
+addEventListener('resize', () => { if (innerWidth !== topW) { topW = innerWidth; topFit(); } });   // turned on its side and back
 function render(){
   const v = $('#view'), key = route.tab + (route.tab === 'decks' && route.deck ? '/' + route.deck : route.tab === 'decks' && route.scan ? '/scan' : '');
   // drawing the same page again: the dock doesn't rise again, and VoiceOver / the keyboard stay on the control they were on
@@ -5823,6 +5850,7 @@ function render(){
   v.innerHTML = route.tab === 'home' ? viewHome()
     : route.tab === 'decks' ? (route.deck && deckById(route.deck) ? viewDeck() : viewDecks())
     : route.tab === 'stats' ? viewStats() : route.tab === 'friends' ? (route.fr ? viewFrRec() : viewFriends()) : viewSettings();
+  topFit(v);
   v.querySelectorAll('.chips.filter').forEach((e, i) => { if (sx[i]) e.scrollLeft = sx[i]; });
   if (still) v.querySelectorAll('.ctadock').forEach(d => d.classList.add('still'));
   if (sel) v.querySelector(sel)?.focus({preventScroll:true});
@@ -5863,7 +5891,7 @@ function topbar(){
   const av = IS_WEB && FIREBASE || u ? `<button id="syncbtn" class="k-hit k-avatar" data-act="me" aria-label="${esc(meLabel())}">${faceHTML('k-face', name)}<span id="syncdot" class="syncdot ${Sync.state}" aria-hidden="true"></span><span class="synclab sr-only">${syncShort()}</span></button>` : '';
   const glyph = BRAND ? `<i style="--brand:url(${BRAND})"></i>` : '極';   // on the web the logo goes back to the site's home (?home: a learner is not sent straight back here)
   return `<header class="k-top v2">${IS_WEB && !IS_APP ? `<a class="k-logo" href="/?home" aria-label="極（きわみ）のトップページへ">${glyph}</a>` : `<span class="k-logo" role="img" aria-label="極（きわみ）">${glyph}</span>`}
-    <div class="k-top-r"><button class="k-hit k-streak" data-act="streakSheet" aria-label="連続${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}、お休みチケット${st.freeze}枚"><span class="k-pill" aria-hidden="true"><span class="k-ring">${ring}</span>連続${st.n}日<span class="k-sep"></span><span class="k-tk">${K_ICO.ticket}お休み${st.freeze}枚</span></span></button>${av}</div></header>${iabNote()}`;
+    <div class="k-top-r"><button class="k-hit k-streak" data-act="streakSheet" aria-label="連続${st.n}日${st.done ? '（今日の目標は達成）' : '（今日はまだ）'}、お休みチケット${st.freeze}枚"><span class="k-pill" aria-hidden="true"><span class="k-ring">${ring}</span>連続${st.n}日<span class="k-sep"></span><span class="k-tk">${K_ICO.ticket}<span><span class="k-tk-w">お休み</span>${st.freeze}枚</span></span></span></button>${av}</div></header>${iabNote()}`;
 }
 /* n / l / m: 未学習・学習中・覚えた by status(); r: 学習ずみ (learnedIn) and pct, the deck's % (deckPct); q: sorted as まだ, not
    learned yet (status() counts them in l). So 覚えた m + the rest of 学習ずみ r - m + not yet n + q = total */
@@ -7443,7 +7471,7 @@ function univStore(){ if (!UNIV) { try { UNIV = JSON.parse(localStorage.getItem(
 function univKeep(){ try { localStorage.setItem(UNIV_LS, JSON.stringify(UNIV)); } catch(e) {} }
 /* one download at a time per file, and not again for a minute after one failed; done(ok) after */
 function univGet(path, put, done){
-  if (univBusy[path] || Date.now() - (univFail[path] || 0) < 6e4) return;
+  if (univBusy[path] || Date.now() - (univFail[path] || 0) < 6e4) return;   // asked again while it comes: only the first done is called (the list's is univListDone, for whichever sheet waits)
   univBusy[path] = fetch(UNIV_BASE + path).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(j => { put(j); univKeep(); delete univFail[path]; return true; }, () => { univFail[path] = Date.now(); return false; })
     .then(ok => { delete univBusy[path]; done?.(ok); });
@@ -7479,6 +7507,129 @@ const univNext = (r, nm) => !r.rest.length ? `${nm}に出た受験英単語は�
   : r.reach ? `90％まで、あと<b>${r.need.toLocaleString()}</b>語` : `受験英単語を全部覚えると${r.all.toFixed(0)}％`;
 const univNum = r => `<span class="k-uv-top"><b class="k-uv-n">${uv1(r.p)}<small>%</small></b><span class="k-uv-rd">が読める</span></span>`;
 const learnedCount = () => Object.values(S.prog || {}).reduce((n, d) => n + Object.values(d || {}).filter(isReview).length, 0);
+/* 入試の日 (S.settings.examDays {slug: 'YYYY-MM-DD'}: one day a university, each kept when the 志望校 changes; saved and synced
+   with the settings, and a version before this carries it along). Entered as a month, a day and a year: the year the next time
+   that day comes (today, the app's day from 4am, still to come) or one of the two after it, and stays as saved (a day gone by is said to be gone, never moved
+   on a year). A value that is no real date is read as none */
+const examMap = () => { const e = S.settings.examDays; return e && typeof e === 'object' && !Array.isArray(e) ? e : {}; };
+/* a university's day: E its day number (its noon through dayIdx), left the days to it (0 the day itself, under 0 gone by) */
+function examDay(slug = univSlug()){
+  const v = slug ? examMap()[slug] : null, m = typeof v === 'string' ? /^(\d{4})-(\d\d)-(\d\d)$/.exec(v) : null; if (!m) return null;
+  const y = +m[1], mo = +m[2], d = +m[3], at = new Date(y, mo - 1, d, 12);
+  if (at.getFullYear() !== y || at.getMonth() !== mo - 1 || at.getDate() !== d) return null;   // 02-30, a 13th month …
+  const E = dayIdx(at.getTime());
+  return {v, mo, d, E, left: E - dayIdx()};
+}
+/* the year a month and a day next come in, today counted; and that day's noon (2月29日 waits for a year that has it; no such
+   day, 4月31日: null) */
+const examYear = (mo, d) => { const t = new Date(dayIdx() * DAY); return t.getUTCFullYear() + (mo * 100 + d < (t.getUTCMonth() + 1) * 100 + t.getUTCDate() ? 1 : 0); };
+function examNext(mo, d){
+  for (let y = examYear(mo, d), n = 0; n < 8; n++, y++) { const at = new Date(y, mo - 1, d, 12); if (at.getMonth() === mo - 1 && at.getDate() === d) return at; }
+  return null;
+}
+/* the years a month and a day can be kept in (the 年 list): the year it next comes (examYear: the first, chosen when nothing
+   else is) and the two after it; 2月29日 only those of the three that have it (one at most; none: no 29日 in 2月's list) */
+const examReal = (y, mo, d) => { const at = new Date(y, mo - 1, d, 12); return at.getMonth() === mo - 1 && at.getDate() === d; };
+const examYrs = (mo, d) => { const y = examYear(mo, d); return [y, y + 1, y + 2].filter(n => examReal(n, mo, d)); };
+/* the days a month's list has (no month chosen yet: 31): 2月 has a 29日 when one of its years in the 年 list does */
+const examLen = mo => mo === 2 ? (examYrs(2, 29).length ? 29 : 28) : [4, 6, 9, 11].includes(mo) ? 30 : 31;
+const examOpts = (n, u, on) => `<option value="">${u}</option>` + Array.from({length: n}, (_, i) => `<option value="${i + 1}"${i + 1 === on ? ' selected' : ''}>${i + 1}${u}</option>`).join('');
+const examLeft = x => x.left > 0 ? `あと${x.left.toLocaleString()}日` : x.left ? 'この日は過ぎた' : '今日';
+const univName = slug => (slug === univSlug() && S.settings.univNm) || (univStore().list || []).find(x => x[0] === slug)?.[1] || (univStore().me?.slug === slug && univStore().me.d?.nm) || '';
+/* kGo to the day's sheet, its grey line on as many lines as it needs, folding between its phrases (、 and 。) */
+const exGo = (lab, sub, val = '', more = '') => `<button class="k-srow" data-act="examSheet"${more}><span class="txt"><span class="lab">${lab}</span>${sub ? `<span class="sub ml">${sub.replace(/[^、。・]+[、。・]?/g, m => `<span class="k-ph">${m}</span>`)}</span>` : ''}</span>${val ? `<span class="val"><span class="vt">${val}</span>${K_CHEV}</span>` : K_CHEV}</button>`;
+/* the row under the 志望校's card (home, its sheet): no day yet, the ask; else the day, the days left, and the words a day that
+   reach 90% by then (r: univCalc's; none while the numbers have not come. No pace on the day or after it, at 90% already,
+   when the data never reaches 90%, or when it would be more words a day than 1日の新しい単語 goes up to: 届きます is not said
+   of a pace the app has no setting for) */
+function examRow(slug, r){
+  const x = examDay(slug); if (!x) return exGo('入試の日を入れる', 'あと何日かと、1日のペースが出る');
+  const per = x.left >= 1 && r && r.need > 0 && r.reach && r.all >= 90 ? Math.ceil(r.need / x.left) : 0;
+  const pace = per && per <= STEP_RANGE.newPerDay[1] ? `90％まで、あと${r.need.toLocaleString()}語。入試まで${x.left.toLocaleString()}日なので、1日${per.toLocaleString()}語のペースで届きます` : '';
+  return exGo(`<span class="k-ph">入試の日</span> <span class="k-ph">${endDate(x.E)}</span>${x.left >= 0 ? `<span class="k-ph">（${examLeft(x)}）</span>` : ''}`, x.left < 0 ? 'この日は過ぎた。変えるか消すときはここから' : pace);
+}
+const examBox = (slug, r) => `<div class="k-grp k-ex">${examRow(slug, r)}</div>`;
+/* 設定's row: the day on the right, the days left under its name */
+const examSetRow = () => { const x = examDay(); return x ? exGo('入試の日', examLeft(x), endDate(x.E)) : exGo('入試の日', 'あと何日かと、1日のペースが出る'); };
+/* its sheet (the same from the home, the 志望校's sheet and 設定): the university, the month and the day, 保存, and 消す once
+   one is kept; under them the other universities' days (each opens this sheet for it), so none is kept out of sight.
+   The month, the day and the year start as the day kept; a day gone by starts empty (the lists would say its next year, which
+   nobody chose). The year's list is off until a month and a day are chosen. keep: drawn again (the list of names came) with what
+   is chosen left as it is */
+function examSheet(slug = univSlug(), keep = false){
+  if (!slug) return univSheet();
+  const x = examDay(slug), on = x && x.left >= 0 ? x : null, u = univStore(), mo = keep ? +$('#exm')?.value || 0 : on ? on.mo : 0, d = keep ? +$('#exd')?.value || 0 : on ? on.d : 0;
+  const y = keep ? 0 : on ? +on.v.slice(0, 4) : 0, a = keep ? +$('#exy')?.dataset.a || 0 : 0;   // drawn again: the day the learner's year was chosen for, as it was
+  const oth = Object.keys(examMap()).filter(s => s !== slug && examDay(s));
+  if (!u.list && oth.some(s => !univName(s))) univGet('/univ/list.json', l => { u.list = l; u.at = Date.now(); }, univListDone);
+  const rows = oth.filter(univName).map(s => { const o = examDay(s); return exGo(esc(univName(s)), `${endDate(o.E)}・${examLeft(o)}`, '', ` data-v="${esc(s)}"`); }).join('');
+  openSheet(`<div class="sheet-h"><h3>入試の日</h3><button class="iconbtn" data-act="closeSheet" aria-label="閉じる">${I.close}</button></div>
+    <div class="k-grp"><div class="k-srow"><span class="txt"><span class="lab">${esc(univName(slug) || '志望校')}</span><span class="sub ml" id="exwhen" role="status"></span></span></div></div>
+    <div class="k-ex-f"><select id="exm" class="select" aria-label="月">${examOpts(12, '月', mo)}</select><select id="exd" class="select" aria-label="日">${examOpts(examLen(mo), '日', d)}</select><select id="exy" class="select" aria-label="年" data-a="${a}" disabled><option value="">年</option></select></div>
+    <button class="btn btn-primary btn-block" id="exsave" data-act="examSave" data-v="${esc(slug)}">保存</button>
+    ${Object.keys(examMap()).includes(slug) ? `<button class="btn btn-ghost btn-block" data-act="examDel" data-v="${esc(slug)}">消す</button>` : ''}
+    ${rows ? `<h4 class="k-uv-h">ほかの大学の入試の日</h4><div class="k-grp">${rows}</div>` : ''}`, false, keep);
+  examSel(false, y);
+}
+/* a month, a day or a year chosen. The year's list is in its place from the start, off (its 年 alone) until a month and a day
+   are chosen, so nothing in the sheet moves when it comes on; then it is that day's years (examYrs; a day kept in a year
+   outside them, from elsewhere, is added as one more, so the sheet opens on it and 保存 keeps it).
+   data-a: the day the learner's year was chosen for (its day number: a year chosen in the list, or the day the sheet opened
+   on; 0: none yet). While 月 and 日 change, the year is the one of the list that puts the new day nearest to that day (so a
+   day put right stays in its year, and 2月 ⇄ 12月 stays in the same winter; of two as near, the earlier; a day only one year
+   has, 2月29日, shows that year and the learner's comes back with the next day). None yet: the first, the next time the day
+   comes (what was kept before there was a year to choose).
+   moved: the month, so the days are that month's; the day chosen stays, or becomes its last. 2月's 29日: a 29日 chosen while
+   no year is on yet (the day first, then 2月) stays, the year being the one that has it; with a year on, it stays when the
+   year 2月 would be in has it, else it is 28日 (so a 31日 moved onto 2月 never jumps to the leap year).
+   y: the year to start on; yr: the year was the one chosen. What 保存 would keep, with its year, is said under the
+   university's name */
+function examSel(moved, y = 0, yr = false){
+  const em = $('#exm'), ed = $('#exd'), ey = $('#exy'); if (!em || !ed || !ey) return;
+  const mo = +em.value || 0, idx = (n, m, d) => dayIdx(new Date(n, m - 1, d, 12).getTime());
+  const near = (ys, m, d) => { const a = +ey.dataset.a || 0; return a ? ys.reduce((p, n) => Math.abs(idx(n, m, d) - a) < Math.abs(idx(p, m, d) - a) ? n : p) : ys[0]; };
+  if (moved) {
+    const was = +ed.value || 0, len = examLen(mo), b = examYear(2, 29); let n = Math.min(was, len);
+    if (mo === 2 && n === 29 && !(was === 29 && ey.disabled) && !examReal(near([b, b + 1, b + 2], 2, 28), 2, 29)) n = 28;
+    ed.innerHTML = examOpts(len, '日', n);
+  }
+  const d = +ed.value || 0, ys = mo && d ? examYrs(mo, d) : [];
+  if (ys.length) {
+    const x = examDay($('#exsave')?.dataset.v), kept = x && x.left >= 0 && x.mo === mo && x.d === d ? +x.v.slice(0, 4) : 0;
+    if (kept && !ys.includes(kept)) ys.push(kept);
+    const set = y || (yr ? +ey.value || 0 : 0);   // opened on this year, or it was chosen in the list
+    if (set && ys.includes(set)) ey.dataset.a = idx(set, mo, d);
+    const on = near(ys, mo, d);
+    if ([...ey.options].map(o => o.value).join() !== ys.join()) ey.innerHTML = ys.map(n => `<option value="${n}">${n}年</option>`).join('');   // the same years: the list is left as it is (it may be the one open under the learner's finger)
+    ey.value = on;
+  } else ey.innerHTML = '<option value="">年</option>';
+  ey.disabled = !ys.length;
+  const at = ys.length ? new Date(+ey.value, mo - 1, d, 12) : null, left = at ? dayIdx(at.getTime()) - dayIdx() : 0;
+  $('#exwhen').textContent = at ? `${at.getFullYear()}年${mo}月${d}日（${left ? `あと${left.toLocaleString()}日` : '今日'}）` : '月と日を選ぶと、あと何日かが出る';
+  $('#exsave').disabled = !at;
+}
+/* 保存 and 消す close the sheet: the second tap of a double tap would land on whatever is under it (the tab bar), so taps wait
+   a moment (TAPHOLD, as 単語を削除 does) */
+function examSave(slug){
+  const ey = $('#exy'), mo = +$('#exm')?.value || 0, d = +$('#exd')?.value || 0, y = ey && !ey.disabled ? +ey.value || 0 : 0;
+  const at = slug && mo && d && y && examReal(y, mo, d) ? new Date(y, mo - 1, d, 12) : null;
+  if (!at || dayIdx(at.getTime()) < dayIdx()) { examSel(false); return; }   // no day to keep (the sheet stayed open past 4am and the day chosen went by): nothing is kept, and the lists and the line are put right for today
+  const p = n => String(n).padStart(2, '0');
+  setSetting('examDays', {...examMap(), [slug]: `${at.getFullYear()}-${p(mo)}-${p(d)}`});
+  TAPHOLD = Date.now() + 400; closeSheet(); render(); toast(`入試の日を${endDate(dayIdx(at.getTime()))}にした`);
+}
+function examDel(slug){
+  if (!Object.keys(examMap()).includes(slug)) { closeSheet(); render(); return; }   // gone already (another device's settings came while the sheet was open): nothing to remove, nothing said
+  const {[slug]: _gone, ...rest} = examMap();
+  setSetting('examDays', rest); TAPHOLD = Date.now() + 400; closeSheet(); render(); toast('入試の日を消した');
+}
+/* the list of universities came (or did not) while a sheet waited for it: that sheet is drawn again, whichever of the two
+   asked first (one download serves both) */
+function univListDone(ok){
+  const b = $('#exsave');
+  if ($('#sheetroot .k-uv-pick')) { if (ok || !univStore().list) univSheet(true); }
+  else if (ok && b) examSheet(b.dataset.v, true);
+}
 /* the home's 志望校: the share and the words to 90%; no university chosen yet, a quiet ask once 30 words are learned */
 function homeUniv(){
   const slug = univSlug();
@@ -7486,9 +7637,9 @@ function homeUniv(){
     : `<section class="k-sec" aria-label="志望校"><div class="k-uv-ask"><button class="k-uv-ask-main" data-act="univSheet"><span class="t">志望校を選ぶ${K_CHEV}</span><span class="s">大学の英文の何％が読めるかがわかる</span></button><button class="iconbtn" data-act="univNo" aria-label="志望校を選ばない">${I.close}</button></div></section>`;
   const D = univData(slug), nm = esc(S.settings.univNm || D?.nm || '志望校');
   const head = `<div class="k-sec-h"><h2 class="k-sec-t">志望校</h2></div>`;
-  if (!D) return `<section class="k-sec" aria-label="志望校">${head}<div class="k-uv"><span class="k-uv-nm">${nm}の英文</span><span class="k-uv-wait">${univFail[`/univ/${slug}/me.json`] ? '読みこめなかった。通信できるところで開くと出る' : '読みこみ中…'}</span></div></section>`;
+  if (!D) return `<section class="k-sec" aria-label="志望校">${head}<div class="k-uv"><span class="k-uv-nm">${nm}の英文</span><span class="k-uv-wait">${univFail[`/univ/${slug}/me.json`] ? '読みこめなかった。通信できるところで開くと出る' : '読みこみ中…'}</span></div>${examBox(slug)}</section>`;
   const r = univCalc(D);
-  return `<section class="k-sec" aria-label="志望校">${head}<button class="k-uv" data-act="univInfo"><span class="k-uv-nm">${nm}の英文${K_CHEV}</span>${univNum(r)}${univBar(r)}<span class="k-uv-next">${univNext(r, nm)}</span>${r.rest.some(x => !x[5]) ? '<span class="k-uv-next">よく出る、まだの単語を見る</span>' : ''}</button></section>`;
+  return `<section class="k-sec" aria-label="志望校">${head}<button class="k-uv" data-act="univInfo"><span class="k-uv-nm">${nm}の英文${K_CHEV}</span>${univNum(r)}${univBar(r)}<span class="k-uv-next">${univNext(r, nm)}</span>${r.rest.some(x => !x[5]) ? '<span class="k-uv-next">よく出る、まだの単語を見る</span>' : ''}</button>${examBox(slug, r)}</section>`;
 }
 /* its sheet: how the share is made, the words to learn next (in the most papers first; not just / most, which the papers use
    in a more basic sense), the university's page, and changing it */
@@ -7502,6 +7653,7 @@ function univInfo(){
     <div class="k-uv in">${univNum(r)}${univBar(r)}<span class="k-uv-next">${univNext(r, nm)}</span>
       <span class="k-uv-how">中学の単語で${r.base.toFixed(0)}％、アプリで＋${uv1(r.p - r.base)}ポイント。覚えた${r.known.toLocaleString()}語のうち、${nm}の入試${D.np}本に出た${r.mine.toLocaleString()}語で計算しています</span></div>
     ${li ? `<h4 class="k-uv-h">${nm}によく出る、まだ覚えていない単語</h4><div class="k-grp k-uv-l">${li}</div>` : ''}
+    ${examBox(slug, r)}
     <div class="k-grp k-uv-go">${kGo('univSheet', '志望校を変える', '', nm)}<a class="k-srow" href="${UNIV_BASE}/univ/${encodeURIComponent(slug)}/"${IS_WEB && !IS_APP ? '' : ' target="_blank" rel="noopener"'}>${kTxt(`${nm}によく出る英単語`, 'サイトで見る')}${K_CHEV}</a></div>`);
 }
 /* the universities to choose from, by 国立・公立・私立: narrowed by kind, by region (where the main campus is) and by a name
@@ -7511,7 +7663,7 @@ let univF = {t: '', r: ''};
 function univSheet(keep = false){
   const u = univStore(), cur = S.settings.univ || '';
   if (!u.list || Date.now() - (u.at || 0) > UNIV_WEEK)
-    univGet('/univ/list.json', l => { u.list = l; u.at = Date.now(); }, ok => { if ((ok || !u.list) && $('#sheetroot .k-uv-pick')) univSheet(true); });
+    univGet('/univ/list.json', l => { u.list = l; u.at = Date.now(); }, univListDone);
   const tl = {国立: '国立大学', 公立: '公立大学', 私立: '私立大学'};
   if (!keep) univF = {t: '', r: ''};
   const row = (v, nm, x) => `<button class="k-srow" role="radio" aria-checked="${cur === v}" data-act="univPick" data-v="${esc(v)}"${x ? ` data-q="${esc(nm)}" data-t="${esc(x[2])}" data-r="${esc(x[3] || '')}"` : ''}><span class="txt"><span class="lab">${esc(nm)}</span></span>${cur === v ? K_CHECK : ''}</button>`;
@@ -7569,7 +7721,7 @@ function viewSettings(){
     kOpts('dir', Object.entries(DIR_LABEL), '出題の向き', '自動は、覚え具合で英→日と日→英を切りかえる', s.dir || 'auto'),
     kOpts('mode', [['auto', '4択'], ['flash', 'カード']], '復習のしかた', 'カードは、めくって自分で採点する', isCardMode() ? 'flash' : 'auto')]))}
   ${more}
-  ${kSec('志望校', kGroup([kGo('univSheet', '大学', 'ホームに、英文の何％が読めるかが出る', univSlug() ? esc(s.univNm || '選んだ大学') : '選ばない')]))}
+  ${kSec('志望校', kGroup([kGo('univSheet', '大学', 'ホームに、英文の何％が読めるかが出る', univSlug() ? esc(s.univNm || '選んだ大学') : '選ばない'), univSlug() ? examSetRow() : '']))}
   ${kSec('表示', kGroup([kOpts('zoom', [[0.92, '小さめ'], [1, 'ふつう'], [1.12, '大きめ']], '文字の大きさ', '', s.zoom || 1, ' size'),
     kOpts('theme', [['auto', '自動'], ['light', 'オフ'], ['dark', 'オン']], 'ダークモード', '自動は、スマホの設定に合わせる', s.theme || 'auto')]))}
   ${kSec('音と振動', kGroup([kSw('autoSpeak', '単語を自動で読み上げる', 'オフにすると、聞き取りの問題も出ない'),
@@ -10253,6 +10405,7 @@ const ACT = {
     univFilter($('#univq')?.value || ''); },
   univInfo: () => univInfo(), univPick: t => univPick(t.dataset.v),
   univNo: () => { setSetting('univ', '-'); render(); toast('志望校は、設定からいつでも選べる'); },
+  examSheet: t => examSheet(t?.dataset?.v || univSlug()), examSave: t => examSave(t.dataset.v), examDel: t => examDel(t.dataset.v),
   swipeGo: () => { startSwipe(); closeSheet(); },   // from the ⋯ sheet: the sheet goes once the sort screen is up (no reload under it)
   // この単語帳に切りかえる: new words come from this deck first (the decks in use, in order)
   deckFirst: t => { const id = t.dataset.id, d = deckById(id); if (!d) return; setSetting('active', [id, ...S.settings.active.filter(x => x !== id)]); render(); toast(`新しい単語は「${bookName(d)}」から出します`); },
@@ -10603,6 +10756,7 @@ document.addEventListener('change', e => {
   if (e.target.id === 'scanfile' || e.target.id === 'scanmore' || e.target.id === 'scancam') { const fs = [...(e.target.files || [])]; e.target.value = ''; if (fs.length) scanPhoto(fs, e.target.id === 'scanmore'); return; }
   if (e.target.id === 'dkind') { const p = $('.k-dev-promo'); if (p) p.hidden = e.target.value !== 'promo'; }
   if (e.target.id === 'imptarget') { $('#impnamewrap').hidden = e.target.value !== '__new'; impPreview(); }
+  if (e.target.id === 'exm' || e.target.id === 'exd' || e.target.id === 'exy') examSel(e.target.id === 'exm', 0, e.target.id === 'exy');
   if (e.target.id === 'impfile') { const f = e.target.files?.[0]; IMP.file = ''; if (f) f.text().then(t => { IMP.file = t; impPreview(); }, () => impPreview()); else impPreview(); }
   if (e.target.id === 'imptext' && impT) { clearTimeout(impT); impT = null; impPreview(); }
   if (e.target.classList?.contains('impx-on')) { IMP.on.set(e.target.dataset.w, e.target.checked); impCount(); }
