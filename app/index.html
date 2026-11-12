@@ -415,7 +415,7 @@ input[type=range]{accent-color:var(--accent);width:130px}
 .qstage .behind{position:absolute;left:10px;right:10px;top:8px;bottom:-8px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);opacity:.6}
 .qstage .behind.b2{left:20px;right:20px;top:16px;bottom:-16px;opacity:.35}
 .qcard{flex:1;min-height:0;display:flex;padding:0;animation:cardin var(--dur-1) var(--ease-out)}
-.qcard-in{flex:1;min-height:0;overflow-y:auto;padding:30px 20px 18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;text-align:center}
+.qcard-in{flex:1;min-height:0;overflow-x:hidden;overflow-y:auto;padding:30px 20px 18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;text-align:center}
 .qcard-in>:first-child{margin-top:auto}.qcard-in>:last-child{margin-bottom:auto}
 @keyframes cardin{from{transform:translateX(18px);opacity:.3}to{transform:none;opacity:1}}
 .qtype{position:absolute;right:14px;top:12px;font-size:12px;font-weight:700;color:var(--faint);letter-spacing:.06em}
@@ -1989,6 +1989,11 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .study.v2 .back-face .pat{font-family:var(--f-en);font-size:var(--fs-body);font-weight:700;color:var(--ink-2)}
 .study.v2 .back-face .sex{margin-top:8px;font-family:var(--f-en);font-size:var(--fs-name);font-weight:500;line-height:1.4}
 .study.v2 .back-face .sja{font-size:var(--fs-body);color:var(--ink-2);line-height:1.5}
+/* the card does not scroll sideways: a phrase longer than the line (auto-phrase can make a whole clause one phrase) breaks inside it, and the example's
+   last word + 🔊 span (exSay) goes down whole while it fits on a line, else its marked phrase wraps between its words */
+.study.v2 .qcard-in :is(.sm,.sja,.kana,.pl-m){overflow-wrap:anywhere}
+.study.v2 .qcard-in .sex .nw{display:inline-block;max-width:100%}
+.study.v2 .qcard-in .sex .nw .mark{white-space:normal}
 .study.v2 .back-face .senses li.locked{display:block;font-size:var(--fs-sub);color:var(--ink-2)}
 /* a new meaning's answer: that meaning first, labelled and under the highlighter; the ones already learned below it, small and grey */
 .study.v2 .back-face .sback .senses li.hit{order:-1}
@@ -8302,11 +8307,21 @@ const nextOpts = () => Q?.done ? {deckIds: Q.opts.deckIds, flash: Q.opts.flash} 
 function fitCheck(){ const cs = getComputedStyle(document.documentElement), sa = (parseFloat(cs.getPropertyValue('--sat')) || 0) + (parseFloat(cs.getPropertyValue('--sab')) || 0);   // the app draws under the status bar and the home bar: they come off the height
   document.documentElement.classList.toggle('vshort', innerHeight / (S.settings.zoom || 1) - sa < 660); document.documentElement.classList.toggle('short', innerHeight / (S.settings.zoom || 1) - sa < 700); }
 addEventListener('resize', () => { if (!$('#screen').hidden) { fitCheck(); fitWord(); } });
+// a web font that comes after the word was sized changes its lines (Figtree italic, for 〜 to do, loads on first use): size it again
+try { document.fonts.addEventListener('loadingdone', () => { if (!$('#screen').hidden) fitWord(); }); } catch(e) {}
+{ const l = document.querySelector('link[href*="family=Figtree"]'), go = () => { try { document.fonts.load('italic 600 40px Figtree').catch(() => {}); } catch(e) {} };   // and is asked for early
+  if (l && l.media !== 'all') l.addEventListener('load', go, {once: true}); else go(); }
 /* the word on one line (a long one: two): first its 🔊 joins it in the middle (no offset), then the size steps down (320px, 文字「大」) */
 function fitWord(){
+  const ms = [...document.querySelectorAll('#qcard .qmeans li')];   // a meaning that is one long phrase (非言語コミュニケーション) and wider than the card: the list steps down, then it wraps
+  if (ms.length) { const ci = ms[0].closest('.qcard-in'), b = ci.getBoundingClientRect(), t = b.width / ci.offsetWidth || 1, wide = () => ms.some(li => { const r = li.getBoundingClientRect(); return r.right > b.right + t || r.left < b.left - t; });   // t: 1 css px (文字サイズ zooms the page)
+    ms.forEach(li => { li.style.fontSize = ''; li.style.overflowWrap = ''; });
+    for (let fs = parseFloat(getComputedStyle(ms[0]).fontSize); wide() && fs > 18; ) { fs -= 2; ms.forEach(li => { li.style.fontSize = fs + 'px'; }); }
+    if (wide()) ms.forEach(li => { li.style.overflowWrap = 'anywhere'; }); }
   const w = $('#qcard .qword'), wl = w?.parentElement; if (!w || !wl?.classList.contains('w-line')) return;
   wl.classList.remove('fit'); w.style.fontSize = '';
-  const over = () => { const fs = parseFloat(getComputedStyle(w).fontSize); return w.getBoundingClientRect().height > fs * (w.classList.contains('len-l') ? 2.7 : 1.6); };
+  const ci = wl.closest('.qcard-in'), side = () => { const b = ci.getBoundingClientRect(); return [w, ...wl.children].some(e => { const r = e.getBoundingClientRect(); return r.right > b.right + .5 || r.left < b.left - .5; }) || w.scrollWidth > w.clientWidth + 1; };   // the word or its 🔊 past the card's edge
+  const over = () => { const fs = parseFloat(getComputedStyle(w).fontSize); return w.getBoundingClientRect().height > fs * (w.classList.contains('len-l') ? 2.7 : 1.6) || (!!ci && side()); };
   if (!over()) return;
   wl.classList.add('fit');
   for (let fs = parseFloat(getComputedStyle(w).fontSize); over() && fs > 22; ) { fs -= 2; w.style.fontSize = fs + 'px'; }
@@ -8747,7 +8762,7 @@ function showFeedback(it, ok, np, back = -1, opt = {}){
   if (auto) Q.timer = setTimeout(nextQ, stay);
   if (opt.quiet) return;
   // let the error tone finish before the word plays
-  if (!ok || isSpell(it.type) || it.type === 'dform' || it.type === 'j2e' || it.type === 'use') setTimeout(() => { if (Q?.cur === it) playWord(c.w, (c.s[it.si] || c.s[0]).p); }, ok ? 0 : 230);
+  if (!ok || isSpell(it.type) || it.type === 'dform' || it.type === 'j2e' || it.type === 'use') setTimeout(() => { if (Q?.cur === it && Q.answered) playWord(c.w, (c.s[it.si] || c.s[0]).p); }, ok ? 0 : 230);   // not once 1問もどす has put it back face down
   haptic(ok);
   srSay(near ? `おしい。つづりは ${c.w}。正しく入力して次へ` : ok ? `正解。${RATE_NAME[it.tier] || ''}` : `不正解。正解は ${right ? right.text : c.w}`);
 }
@@ -8927,17 +8942,19 @@ function reveal(noProg = false){
   const wl = !it.flip && $('#qcard .w-line'); if (wl && pron) wl.insertAdjacentHTML('afterend', pron);   // the reading right under the word
   $('#qcard .qcard-in').insertAdjacentHTML('beforeend', `${front ? `<div class="back-front">${front}</div>` : ''}<div class="back-face">${back}${parentLine(c)}${ety}${it.flip ? scanCtxHTML(c, 'qscx') : ''}</div>`);
   const qp = $('#qcard .qpat'); if (qp && [...document.querySelectorAll('#qcard .back-face .pat')].some(x => x.firstChild?.textContent === qp.textContent)) qp.remove();   // the collocation once: under its meaning
-  if (it.flip) playWord(c.w, c.p);
+  if (it.flip) { fitWord(); if (!Q.timedOut) playWord(c.w, c.p); }   // the turned card: its word comes now, sized as on a front (a time-out: the miss plays it after the error tone)
   if (it.first !== null || it.sameDay) {
     // second look in this set (or today's check): the review date is already set, so only "again or got it" matters here
     $('#qbody').innerHTML = `<p class="g-q">どれくらい覚えてた？</p><div class="grades two">
       ${gb(1, 'もう一度', '<small>このセットでまた出す</small>')}${gb(3, '覚えた', '<small>次へ進む</small>')}</div>
       <p class="grade-note">${it.sameDay ? `今日のうちの確認です。次の復習は${ivlText(it.p0.due - today)}` : `次の復習は${it.after ? ivlText(it.after.due - today) : '明日'}（1回目の答えで決まっています）`}</p>`;
+    fitWord();   // the buttons made the card shorter (a desktop scrollbar can come): the word sized again in the card it ends up in
     return;
   }
   $('#qbody').innerHTML = `<p class="g-q">どれくらい覚えてた？</p><div class="grades">
     ${gb(1, 'もう一度', prev(1))}${gb(2, '難しい', prev(2))}${gb(3, '正解', prev(3))}${gb(4, '簡単', prev(4))}</div>`;
   if (isNew && !Q.opts.practice && tutNew('b1')) tutSay('b1', tutLine('b1'), $('#screen .qstage'));   // the first new card's back: which one to press
+  fitWord();   // as above, with the four buttons
 }
 const GRADE_FEEL = {1: 'まだムリ', 2: 'あやしい', 3: '覚えた', 4: '知ってた'};
 /* a word tapped on the results: the same sheet as a miss in study (S/quiz wrong) — how it went and when it comes back, the word
