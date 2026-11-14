@@ -90,7 +90,34 @@ body:has(.hero) .hd-r .srlink{display:none}
   .hero .sbox{--field-bg:#23356F;--field-ink:var(--ink);--field-ico:var(--sub);--field-ph:var(--sub);--btn-bg:var(--blue);--btn-ink:var(--bg)}
   .hero .sbox button:hover{background:var(--blue-ink)}
 }
-.qw{margin-top:12px;font-size:13px;line-height:1.6;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
+/* the four tiles under the search: 共通テストまで◯日, 志望校 (a GET form to /univ/), 診断, アプリ. 2×2 on a phone, one row from 720px */
+.hq{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 0}
+.hq-t{display:flex;flex-direction:column;justify-content:center;min-width:0;min-height:64px;margin:0;padding:10px 12px;border:1px solid rgba(255,255,255,.28);border-radius:var(--r);background:rgba(255,255,255,.1);color:#fff;line-height:1.4}
+a.hq-t:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
+.hero a.hq-t:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:var(--r)}
+.hq-t b,.hq-u label{font-size:15px;font-weight:700;word-break:auto-phrase}
+.hq-n{font:700 19px/1 var(--en);margin:0 2px}
+.hq-t small{margin-top:2px;font-size:12px;line-height:1.45;color:rgba(255,255,255,.86)}
+.hq-u{justify-content:flex-start}
+.hq-f{display:flex;align-items:center;height:44px;margin-top:6px;padding-left:10px;border-radius:6px;background:var(--field-bg)}
+.hq-f:focus-within{outline:2px solid #fff;outline-offset:2px}
+.hq-f input{flex:1;min-width:0;height:100%;padding:0;border:0;outline:0;background:none;font:400 16px var(--jp);color:var(--field-ink);-webkit-appearance:none;appearance:none}
+.hq-f input::placeholder{color:var(--field-ph)}
+.hq-f input::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+.hq-f button{flex:none;display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;background:none;color:var(--btn-ink,#fff);cursor:pointer}
+.hq-f button svg{width:32px;height:32px;padding:7px;border-radius:5px;background:var(--btn-bg)}
+.hq-f button:hover svg{background:#000}
+.hero .hq-f button:focus-visible{outline:0}
+.hero .hq-f button:focus-visible svg{outline:2px solid var(--btn-bg);outline-offset:1px}
+@media (max-width:359px){.hq{gap:6px}.hq-t{padding:9px 10px}.hq-f{padding-left:6px}}
+/* very narrow (a 320px phone with large text): one column, so no word is split and the name box stays usable */
+@media (max-width:299px){.hq{grid-template-columns:1fr}}
+@media (min-width:720px){.hq{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (prefers-color-scheme:dark){
+  .hq-f{--field-bg:#23356F;--field-ink:var(--ink);--field-ph:var(--sub);--btn-bg:var(--blue);--btn-ink:var(--bg);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+  .hq-f button:hover svg{background:var(--blue-ink)}
+}
+.qw{margin-top:16px;font-size:13px;line-height:1.6;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
 .qw span{color:rgba(255,255,255,.82);flex-basis:100%}
 .qw a{padding:10px 2px;margin:-7px 0;font-family:var(--en);font-weight:600;font-size:15px;text-decoration:underline;text-decoration-color:rgba(255,255,255,.5);text-underline-offset:3px}
 .hint{margin:10px 0 0;font-size:13px;color:rgba(255,255,255,.88)}
@@ -98,8 +125,8 @@ body:has(.hero) .hd-r .srlink{display:none}
 /* layout: one column on a phone (ranking first), main + side from 900px */
 .page{display:flex;flex-direction:column}
 .col-m,.col-s{display:contents}
-.a-intro{order:0}.a-art{order:1}.a-cg{order:2}.a-miss{order:3}.a-rank{order:4}
-.a-feat{order:5}.a-afx{order:6}.a-about{order:7}.a-app{order:8}
+.a-art{order:1}.a-cg{order:2}.a-miss{order:3}.a-rank{order:4}
+.a-feat{order:5}.a-afx{order:6}.a-intro{order:7}.a-about{order:8}.a-app{order:9}
 .a-about{margin-top:32px}
 .a-app{margin-top:12px}
 .intro p{margin:0 0 10px;font-size:15px;line-height:1.85}
@@ -423,7 +450,9 @@ ol.ms > li{scroll-margin-top:16px}
 .u-find input{box-sizing:border-box;width:100%;height:46px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);font:400 16px var(--jp);color:var(--ink)}
 .u-find input:focus{outline:2px solid var(--blue);outline-offset:1px;border-color:transparent}
 .u-none{margin:16px 0;color:var(--sub);font-size:14px}
-.u-none[hidden]{display:none}
+.u-none:empty{margin:0}
+.u-none a{color:var(--blue);text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.u-jump[hidden]{display:none}
 .u-jump{display:flex;gap:8px;margin:12px 0 0}
 .u-jump a{flex:1;display:flex;justify-content:center;align-items:baseline;gap:4px;padding:10px 0;border:1px solid var(--line);border-radius:999px;font-size:14px;font-weight:700;color:var(--ink);background:var(--card)}
 .u-jump a:hover{border-color:var(--blue);color:var(--blue)}
@@ -1044,7 +1073,7 @@ ol.ms.one > li::before{display:none}
   </div>
   <div class="snav-w"><div class="wrap snav-in">
     <nav class="snav" aria-label="メイン"><a href="/articles/">記事</a><a href="/chigai/">違い</a><a href="/gogen/">語源</a><a href="/words/">単語一覧</a><a href="/kyotsu/">共通テスト</a><a href="/univ/">志望校別</a><a href="/ranking/nyushi/" aria-current=page>ランキング</a><a href="/shindan/">単語力診断</a><a href="/search/">単語を調べる</a><script>(function(){var a=document.querySelector('.snav [aria-current]'),n=document.querySelector('.snav');if(!n)return;if(a&&n.scrollWidth>n.clientWidth){var p=a.previousElementSibling||a;n.scrollLeft+=p.getBoundingClientRect().left-n.getBoundingClientRect().left-12}var e=function(){var c=n.parentNode.classList;c.toggle('end',n.scrollLeft+n.clientWidth>=n.scrollWidth-4);c.toggle('st',n.scrollLeft>4)};e();n.addEventListener('scroll',e,{passive:true})})()</script></nav>
-    <form class="hsrch" action="/search/" method="get" role="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語を調べる" aria-label="英単語か日本語で調べる" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required></form>
+    <form class="hsrch" action="/search/" method="get" role="search" aria-label="英単語を調べる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語を調べる" aria-label="英単語か日本語で調べる" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required></form>
   </div></div>
 </header>
 <script>(function(){var S='https://apps.apple.com/app/apple-store/id6830993229?pt=129746076&ct=',P=[['.hd .applink','site_header'],['.apl a','site_card'],['.appbox a','site_ranking'],['.sd-app','site_shindan']],io=false;try{var n=navigator,u=n.userAgent;io=(/iP(hone|ad|od)/.test(u)||/Macintosh/.test(u)&&n.maxTouchPoints>1)&&n.standalone!==true&&!matchMedia('(display-mode: standalone)').matches&&localStorage.getItem('tangoloop.v1')==null}catch(e){io=false}function fx(a){var h=a.getAttribute('href')||'',i;if(/^https:\/\/apps\.apple\.com\//.test(h)){if(!/[?&]pt=/.test(h))a.href=S+(a.closest('.ft')?'site_footer':a.closest('.appsm')?'site_home':'site_link')+'&mt=8';return}if(!io||!/^\/app\/(\?|$)/.test(h)||a.closest('.ab'))return;for(i=0;i<P.length;i++)if(a.matches(P[i][0])){a.href=S+P[i][1]+'&mt=8';return}}window.kwApp=function(r){var l=r.querySelectorAll('a[href]'),i;for(i=0;i<l.length;i++)fx(l[i])};kwApp(document);document.addEventListener('DOMContentLoaded',function(){kwApp(document)});document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href]'),m;if(!a)return;fx(a);m=/^https:\/\/apps\.apple\.com\/.*[?&]ct=(\w+)/.exec(a.href);if(m&&typeof gtag==='function')try{gtag('event','app_store_click',{place:m[1]})}catch(x){}},true)})()</script>
