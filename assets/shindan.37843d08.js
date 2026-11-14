@@ -329,8 +329,8 @@
     var tw = g.measureText(String(sc.total)).width;
     g.fillStyle = INKC; g.font = '700 30px ' + JP; g.fillText('点　' + sc.title, 78 + tw, 376);
     drawMekuru(g, sc.mk, 54, 410, 112, 24, 360);
-    g.font = '700 24px ' + JP; g.fillStyle = INKC; g.fillText('極（きわみ）', 72, 604);
-    var bw2 = g.measureText('極（きわみ）').width;
+    g.font = '700 24px ' + JP; g.fillStyle = INKC; g.fillText('極（きわみ）英単語', 72, 604);
+    var bw2 = g.measureText('極（きわみ）英単語').width;
     g.fillStyle = SUBC; g.font = '500 20px ' + EN; g.fillText('kiwami-eitango.com/shindan/', 72 + bw2 + 16, 603);
     drawHex(g, sc, 870, 318, 168, 22, 40);
     return c;
