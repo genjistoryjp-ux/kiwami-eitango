@@ -8,7 +8,6 @@
 <link rel="canonical" href="https://kiwami-eitango.com/ranking/kyotsu/">
 <meta name="google-adsense-account" content="ca-pub-3219062907495876">
 <meta name="apple-itunes-app" content="app-id=6830993229">
-<script>if(location.hostname==="kiwami-eitango.com"){var a=document.createElement("script");a.async=true;a.crossOrigin="anonymous";a.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3219062907495876";document.head.appendChild(a)}</script>
 <meta property="og:type" content="website"><meta property="og:site_name" content="極（きわみ）英単語"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="共通テストに出た英単語ランキング（令和6〜8年度）｜極（きわみ）英単語"><meta property="og:description" content="令和6〜8年度の共通テスト英語12本に、受験英単語のどれが何本出たかを数えた上位50位。意味と数え方つき。"><meta property="og:url" content="https://kiwami-eitango.com/ranking/kyotsu/"><meta property="og:image" content="https://kiwami-eitango.com/ogp.png?v=eff554af"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="極（きわみ）英単語アプリ"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#111114" media="(prefers-color-scheme: dark)">
@@ -1061,6 +1060,249 @@ ol.ms.one > li::before{display:none}
 .ab .pv b a{color:var(--blue)}
 .ab .pv b a:hover{text-decoration:underline}
 .post .apl a{text-decoration:none}
+/*@rare{*/
+/* 珍しい英単語 (/rare/): 「珍語ノート」, a culture magazine's article. Paper ground, ink, one accent (朱); the big word in Playfair
+   Display, the headlines in Noto Serif JP (RARE_FONTS, these pages only). <body class="rz"> (build.py) re-tints the site's own tokens
+   so the shared header and footer sit on the same paper; nothing here reaches another page. build.py leaves this block out unless
+   KIWAMI_RARE_PAGES is set */
+.rz{--paper:#fff;--paper-2:#f6f6f5;--rule:#e3e3e1;--rule-2:#1d1d1f;--acc:#B23A20;--ph:#ececea;--ph-line:#d6d6d3;--bub:#fff;--bub-line:#1d1d1f;
+  --serif-en:"Playfair Display","Times New Roman",serif;--serif-jp:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho","YuMincho",serif;
+  --bg:var(--paper);--card:var(--paper);--soft:var(--paper-2);--line:var(--rule);--ink:#1d1d1f;--sub:#55555a;--mute:#6e6e73}
+@media (prefers-color-scheme:dark){
+  .rz{--paper:#151515;--paper-2:#202020;--rule:#353535;--rule-2:#ECECEC;--acc:#EE8A6E;--ph:#262626;--ph-line:#444444;--bub:#ECECEC;--bub-line:#ECECEC;
+    --ink:#ECECEC;--sub:#B5B5B5;--mute:#9A9A9A}
+}
+.rz .hd,.rz .snav-w{background:var(--paper)}
+.mz{max-width:700px;margin:0 auto;padding-bottom:8px}
+.mz p{margin:0 0 1.15em;line-height:1.9}
+.mz [lang="en"]{font-family:var(--en)}
+.mz a{color:inherit}
+.mz .nw{display:inline-block;max-width:100%}
+.mz-k{font-size:12px;font-weight:700;letter-spacing:.16em;color:var(--acc);margin:0 0 6px!important;line-height:1.4!important}
+/* the head of the article: the masthead line, the word big (its size from its length: --ch), the reading, the hook question */
+.mz-mast{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:22px;padding:7px 0 6px;border-top:3px solid var(--rule-2);border-bottom:1px solid var(--rule-2);font-size:12px;line-height:1.4}
+.mz-mast b{font-family:var(--serif-jp);font-weight:700;font-size:14px;letter-spacing:.14em}
+.mz-mast span{color:var(--acc);font-weight:700;letter-spacing:.06em;text-align:right}
+.mz .mz-word{font-family:var(--serif-en);font-weight:800;line-height:1.02;letter-spacing:-.012em;margin:22px 0 12px;
+  font-size:clamp(34px,calc((min(100vw,732px) - 32px) / (var(--ch,10) * .56)),88px);hyphens:manual;overflow-wrap:anywhere}
+.mz-pron{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:0 0 4px!important;line-height:1.5!important}
+.mz-pron .kana{font-size:17px;letter-spacing:.04em;color:var(--sub)}
+.mz-pron .kana b{color:var(--ink);font-weight:700;border-bottom:2px solid var(--acc)}
+.mz .mz-pron .ipa{font-size:15px;color:var(--mute);white-space:nowrap}
+.mz-pron .pos{font-size:12px;color:var(--sub);border:1px solid var(--rule);padding:0 7px;border-radius:3px;line-height:22px}
+.mz-also{font-size:13px;color:var(--mute);margin:0!important}
+.mz-dek{font-family:var(--serif-jp);font-weight:700;font-size:clamp(18px,5.9vw,22px);line-height:1.6!important;margin:26px 0 0!important;padding-top:16px;border-top:1px solid var(--rule);word-break:auto-phrase}
+.mz-hero{margin-bottom:26px}
+/* old pictures: full width at their own shape (a tall one beside its caption), 「ここを見て」, the museum label */
+.mz-img{margin:26px 0 30px}
+.mz-img img{display:block;width:100%;height:auto;background:var(--ph)}
+.mz-img.bleed{margin-left:-16px;margin-right:-16px}
+.mz-img.bleed figcaption{padding-left:16px;padding-right:16px}
+@media (min-width:732px){.mz-img.bleed{margin-left:0;margin-right:0}.mz-img.bleed figcaption{padding-left:0;padding-right:0}}
+.mz-img.first{margin-top:0}
+.mz-img figcaption{padding:12px 0 0;font-size:13.5px;line-height:1.7}
+.mz .look{font-size:14.5px;line-height:1.75;margin:0 0 8px;color:var(--ink)}
+.mz .look b{display:inline-block;font-size:11px;letter-spacing:.14em;color:var(--paper);background:var(--acc);padding:1px 7px;margin-right:8px;vertical-align:2px;line-height:1.6}
+.mz .lab{margin:0;padding:8px 0 0;border-top:1px solid var(--rule);font-size:12px;line-height:1.65;color:var(--mute)}
+.mz .lab b{display:block;font-family:var(--serif-jp);font-size:13.5px;color:var(--ink);font-weight:700}
+.mz .lab a{text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px}
+.mz-img.tall{display:grid;grid-template-columns:minmax(0,44%) minmax(0,1fr);column-gap:14px;align-items:end;margin-bottom:36px}
+.mz-img.tall figcaption{padding:0}
+.mz-img.tall .look{font-size:13.5px;line-height:1.7}
+.mz-img.tall .look b{display:table;margin:0 0 6px}
+.mz-img.tall .lab b{font-size:12.5px}
+@media (max-width:340px){.mz-img.tall{grid-template-columns:minmax(0,40%) minmax(0,1fr);column-gap:12px}}
+@media (prefers-color-scheme:dark){.mz-img.bleed img{border-top:1px solid var(--ph-line);border-bottom:1px solid var(--ph-line)}.mz .look b{color:#151515}
+  .mz-img img,.mz-tli img,.mz-cards img{filter:brightness(.9)}}
+/* この単語の、ここが変: 3 facts under the hero, each a jump to its section */
+.mz-hee{margin:4px 0 34px;border-top:3px solid var(--rule-2)}
+.mz-hee .mz-k{margin:14px 0 2px!important}
+.mz-hee ol{list-style:none;margin:0;padding:0}
+.mz-hee li{border-bottom:1px solid var(--rule)}
+.mz-hee a{display:grid;grid-template-columns:34px 1fr;column-gap:10px;padding:13px 0 12px;text-decoration:none}
+.mz-hee .n{grid-row:1/3;font-family:var(--serif-en);font-style:italic;font-weight:700;font-size:30px;line-height:1;color:var(--acc)}
+.mz-hee .t{font-weight:700;font-size:16px;line-height:1.6;word-break:auto-phrase}
+.mz-hee .go{font-size:12px;color:var(--mute);margin-top:3px;line-height:1.4}
+.mz-hee .go::after{content:" ↓";color:var(--acc)}
+.mz-hee a:hover .t{color:var(--acc)}
+.mz [id]{scroll-margin-top:12px}
+/* ひとことで言うと */
+.mz-def{margin:0 0 34px;padding:18px 0 4px;border-top:1px solid var(--rule-2)}
+.mz-def .m{font-family:var(--serif-jp);font-weight:700;font-size:27px;line-height:1.4;margin:0 0 8px;word-break:auto-phrase}
+.mz-def .s{color:var(--sub);margin-bottom:14px}
+.mz-def .s.only{color:var(--ink);font-size:18px;font-weight:700;line-height:1.75}
+.mz-meta{font-size:13px;color:var(--mute);line-height:1.7!important;margin:0!important;padding-top:10px;border-top:1px solid var(--rule)}
+.mz-meta .u{color:var(--acc);font-weight:700}
+.mz-meta i{font-style:normal;color:var(--rule);margin:0 .45em}
+.mz-meta>span{display:inline-block;max-width:100%}
+/* the sections: a numbered kicker, then the headline */
+.mz-sec{margin:0 0 40px}
+.mz-sh{margin:0 0 18px}
+.mz-kk{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;letter-spacing:.12em;color:var(--acc);margin:0 0 8px!important;line-height:1.4!important}
+.mz-kk .n{font-family:var(--serif-en);font-style:italic;font-weight:500;font-size:20px;letter-spacing:0;line-height:1}
+.mz-kk::after{content:"";flex:1;border-top:1px solid var(--rule)}
+.mz-sh h2{font-family:var(--serif-jp);font-weight:700;font-size:24px;line-height:1.5;margin:0;padding:0;border:0;letter-spacing:.01em;word-break:auto-phrase}
+.mz .mz-pq p,.mz-sh h2,.mz-dek,.mz-bub>span{text-wrap:balance}
+.mz .mz-sh h2 [lang="en"]{font-family:var(--serif-en);font-weight:700}
+/* the line said in the scene: a speech bubble (no picture) */
+.mz .mz-bub{margin:-2px 0 24px;padding-left:4px}
+.mz-bub>span{position:relative;display:inline-block;max-width:88%;padding:9px 16px;border-radius:18px;background:var(--bub);color:#1d1d1f;border:2px solid var(--bub-line);
+  font-weight:700;font-size:16px;line-height:1.55;word-break:auto-phrase}
+.mz-bub>span::before{content:"";position:absolute;top:-8px;left:26px;width:12px;height:12px;background:var(--bub);border-left:2px solid var(--bub-line);border-top:2px solid var(--bub-line);transform:rotate(45deg)}
+/* 語のつくり */
+.mz-parts{margin:0 0 40px;padding:20px 0 0;border-top:1px solid var(--rule)}
+.mz-parts figcaption.k-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.mz-unk{font-size:11.5px;font-weight:700;color:var(--sub);border:1px dashed var(--mute);padding:0 7px;line-height:21px;border-radius:3px;white-space:nowrap}
+.mz-pc{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-wrap:wrap;row-gap:14px}
+.mz-pc li{min-width:0;padding:0 14px;border-left:1px solid var(--rule)}
+.mz-pc li:first-child{padding-left:0;border-left:0}
+.mz-pc b{display:block;font-family:var(--serif-en)!important;font-weight:700;font-size:36px;line-height:1.15;padding-bottom:6px;border-bottom:3px solid var(--acc)}
+.mz-pc li:nth-child(even) b{border-bottom-color:var(--rule-2)}
+.mz-pc.long b{font-size:28px}
+.mz-pc .ja{display:block;font-weight:700;font-size:14px;margin-top:8px;line-height:1.4;word-break:auto-phrase}
+.mz-pc small{display:block;font-size:11.5px;color:var(--mute);line-height:1.5}
+.mz-parts.unk .mz-pc b{border-bottom-style:dashed}
+.mz .mz-eq{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin:20px 0 18px;padding:12px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);line-height:1.5}
+.mz-eq span{font-size:12.5px;color:var(--sub);font-weight:700;letter-spacing:.08em}
+.mz-eq b{font-family:var(--serif-jp);font-size:22px;line-height:1.4}
+.mz-kin{margin:0 0 14px}
+.mz .mz-kin p{font-size:13px;font-weight:700;color:var(--sub);margin:0 0 6px;line-height:1.5}
+.mz-kin ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+.mz-kin li{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:6px 0;border-bottom:1px dotted var(--rule);font-size:12px;color:var(--mute);min-width:0}
+.mz .mz-kin li b{font-family:var(--serif-en);font-size:17px;color:var(--ink);font-weight:700;overflow-wrap:anywhere}
+.mz .mz-fn{font-size:13px;color:var(--sub);line-height:1.75;margin-bottom:10px}
+.mz .mz-gl{font-size:13px;color:var(--sub);margin:0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.mz-gl a{color:var(--acc);font-weight:700;border-bottom:1px solid currentColor;line-height:1.5;text-decoration:none}
+/* 語源 parts (origin.parts) */
+.mz-ax{margin:0 0 20px;border-top:1px solid var(--rule-2)}
+.mz-ax div{display:grid;grid-template-columns:fit-content(45%) minmax(0,1fr);column-gap:14px;padding:10px 0;border-bottom:1px solid var(--rule)}
+.mz .mz-ax dt{font-family:var(--serif-en);font-weight:700;font-size:18px;line-height:1.4;overflow-wrap:anywhere}
+.mz-ax dd{margin:0;font-size:14.5px;line-height:1.7;overflow-wrap:anywhere}
+.mz-ax a{color:var(--acc);font-weight:700;font-size:13px;white-space:nowrap}
+.mz .mz-plain{font-size:14.5px;padding:10px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+/* pull-quote, side boxes */
+.mz-pq{margin:34px 0;padding:20px 0 18px;border-top:3px solid var(--rule-2);border-bottom:1px solid var(--rule-2)}
+.mz-pq::before{content:"\201C";display:block;font-family:var(--serif-en);font-size:64px;line-height:.6;height:28px;color:var(--acc)}
+.mz .mz-pq p{font-family:var(--serif-jp);font-weight:700;font-size:23px;line-height:1.6;margin:0 0 12px;word-break:auto-phrase}
+.mz-pq p:last-child{margin-bottom:0}
+.mz .mz-pq p.note{font-family:inherit;font-weight:400;font-size:12.5px;color:var(--sub);line-height:1.7;word-break:normal;text-wrap:wrap}
+.mz-box{background:var(--paper-2);padding:16px 18px 6px;margin:22px 0 26px;border-left:3px solid var(--acc)}
+.mz-box p{font-size:15px;line-height:1.85}
+.mz .mz-box .mz-big{font-family:var(--serif-en);font-weight:700;font-size:26px;line-height:1.25;margin:2px 0 10px;overflow-wrap:anywhere}
+.mz .mz-big i{font-style:normal;font-family:var(--serif-jp);font-weight:700;font-size:12px;color:var(--sub);margin-left:2px}
+.mz-big .op{color:var(--acc);margin:0 6px;font-weight:400}
+.mz .mz-cmp{margin:4px 0 26px}
+.mz-cmp div{grid-template-columns:minmax(0,7.4em) minmax(0,1fr);padding:12px 0}
+.mz .mz-cmp dt{font-size:19px;hyphens:auto}
+.mz-cmp dd{font-size:14px;line-height:1.75}
+.mz-cmp div.on dt{color:var(--acc)}
+.mz-cmp.long div{grid-template-columns:minmax(0,1fr);row-gap:2px}
+.mz .mz-warn{background:var(--paper-2);padding:14px 16px;border-left:3px solid var(--rule-2);font-size:15px}
+/* この言葉の歩み */
+.mz-tl{list-style:none;margin:0 0 26px;padding:0;border-top:1px solid var(--rule-2)}
+.mz-tl li{display:grid;grid-template-columns:62px minmax(0,1fr);column-gap:12px;padding:11px 0 12px;border-bottom:1px solid var(--rule);line-height:1.7;font-size:15px}
+.mz-tl li>b{font-family:var(--serif-en);font-weight:700;font-size:22px;line-height:1.2;font-variant-numeric:lining-nums}
+.mz-tl li>b.now{font-family:var(--serif-jp);font-size:18px}
+.mz-tl li.hl>b{color:var(--acc)}
+.mz-tl li.hl>span{font-weight:700}
+.mz-tl li>span{word-break:auto-phrase}
+.mz-tli{grid-column:2;display:grid;grid-template-columns:88px minmax(0,1fr);column-gap:12px;align-items:start;margin:10px 0 2px}
+.mz-tli img{display:block;width:100%;height:auto;background:var(--ph)}
+.mz-tli figcaption{font-size:12.5px;line-height:1.65}
+.mz-tli .look{font-size:13px;line-height:1.65;margin-bottom:6px}
+.mz-tli .look b{display:table;margin:0 0 4px}
+.mz-tli .lab b{font-size:12.5px}
+/* 例文 */
+.mz-ex{margin:0 0 20px;padding:0 0 18px;border-bottom:1px solid var(--rule)}
+.mz .mz-ex .en{font-family:var(--serif-en);font-weight:400;font-size:18px;line-height:1.6;margin:0 0 8px}
+.mz-ex .en b{font-style:italic;font-weight:700;color:var(--acc)}
+.mz-ex .exn{font-style:normal;white-space:nowrap}
+.mz-ex .say.exs{display:inline-grid;width:30px;height:30px;margin:0 0 0 6px;vertical-align:-7px;position:relative}
+.mz-ex .say.exs svg{width:16px;height:16px}
+.mz .mz-ex .ja{font-size:14.5px;color:var(--sub);margin:0;line-height:1.75}
+.mz .mz-note{font-size:13px;color:var(--sub);line-height:1.75}
+/* 似た言葉 */
+.mz-rel{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule-2)}
+.mz-rel li{border-bottom:1px solid var(--rule)}
+.mz-rel a,.mz-rel .r{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;padding:12px 0;text-decoration:none}
+.mz .mz-rel b{font-family:var(--serif-en);font-weight:700;font-size:20px;line-height:1.35;overflow-wrap:anywhere}
+.mz .mz-rel b:not([lang]){font-family:var(--jp);font-size:16px}
+.mz .mz-rel b:not([lang]) [lang="en"]{font-family:var(--serif-en);font-size:20px}
+.mz-rel em{font-style:normal;font-size:11px;font-weight:700;color:var(--mute);letter-spacing:.06em;align-self:center;white-space:nowrap}
+.mz-rel .m{grid-column:1/-1;font-size:13.5px;color:var(--sub);line-height:1.7;margin-top:2px}
+.mz-rel a:hover b{color:var(--acc)}
+/* 次の珍語, the articles */
+.mz-next{margin:44px 0 30px;padding:18px 0 0;border-top:3px solid var(--rule-2)}
+.mz-next+.mz-next{margin-top:-6px}
+.mz-next ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
+.mz-next a{display:block;padding:14px 16px;background:var(--paper-2);text-decoration:none}
+.mz .mz-next a b{display:block;font-family:var(--serif-en);font-weight:800;font-size:25px;line-height:1.2;overflow-wrap:anywhere}
+.mz .mz-next a b.ja{font-family:var(--serif-jp);font-weight:700;font-size:17px;line-height:1.5}
+.mz-next a>span{display:block;font-size:13px;color:var(--sub);margin-top:4px;line-height:1.6}
+.mz-next a:hover b{color:var(--acc)}
+.mz .mz-back{font-size:14px;font-weight:700;margin:16px 0 28px}
+.mz-back a{display:block;color:var(--acc);background:var(--paper-2);padding:14px 18px;text-decoration:none}
+.mz-back a:hover{text-decoration:underline}
+/* 調べた資料 (folded) */
+.mz-src{border-top:1px solid var(--rule);padding:6px 0 0;font-size:12.5px;color:var(--sub)}
+.mz-src summary{cursor:pointer;font-weight:700;color:var(--ink);padding:10px 0;font-size:13.5px;list-style-position:inside}
+.mz-src h3{font-size:12.5px;margin:14px 0 4px;color:var(--ink)}
+.mz-src ul{margin:0;padding-left:1.2em;line-height:1.7}
+.mz-src li{margin:3px 0}
+.mz-src a{text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px;overflow-wrap:anywhere}
+.mz .mz-src p{font-size:12.5px;line-height:1.75;margin:6px 0 0}
+.mz .kad{margin:0 0 36px}
+/* /rare/: the front page. The lead word, theme jumps, the word cards (the picture small at the right), the ABC / 50音 lists,
+   what the labels mean last */
+.mz-ttl{font-family:var(--serif-jp);font-weight:700;font-size:clamp(34px,11vw,44px);line-height:1.25;margin:20px 0 0;padding:0;border:0;letter-spacing:.02em}
+.mz-idx .mz-dek{font-size:clamp(17px,5.4vw,20px);margin-top:16px!important}
+.mz .mz-lede{margin:14px 0 0;color:var(--sub);font-size:14.5px;line-height:1.8}
+.mz-idx .mz-hero{margin-bottom:22px}
+.mz-lead{margin:0 0 28px;padding-bottom:22px;border-bottom:1px solid var(--rule-2)}
+.mz-lead a{display:block;text-decoration:none}
+.mz-lead .mz-img{display:block;margin-top:0;margin-bottom:16px}
+.mz-lead .mz-img.tl img{width:auto;max-width:100%;max-height:440px;margin:0 auto}
+.mz-lead .mz-k{display:block}
+.mz .mz-lead .w{display:block;font-family:var(--serif-en);font-weight:800;line-height:1.02;letter-spacing:-.012em;margin:4px 0 6px;
+  font-size:clamp(34px,calc((min(100vw,732px) - 32px) / (var(--ch,10) * .56)),72px);overflow-wrap:anywhere}
+.mz-lead .k{display:block;font-size:13px;color:var(--mute);line-height:1.5}
+.mz-lead .h{display:block;font-family:var(--serif-jp);font-weight:700;font-size:clamp(18px,5.9vw,22px);line-height:1.6;margin-top:14px;text-wrap:balance;word-break:auto-phrase}
+.mz-lead .m{display:block;font-size:14px;color:var(--sub);line-height:1.75;margin-top:8px}
+.mz-lead .go{display:inline-block;margin-top:10px;font-size:13.5px;font-weight:700;color:var(--acc)}
+.mz-lead a:hover .w{color:var(--acc)}
+.mz .mz-jump{margin:0 0 30px;padding:11px 0;border-top:1px solid var(--rule-2);border-bottom:1px solid var(--rule);font-size:14px;line-height:2}
+.mz-jump span{white-space:nowrap}
+.mz-jump a{font-weight:700;text-decoration:none}
+.mz-jump i{font-style:normal;color:var(--mute);margin:0 .45em}
+.mz-jump a:hover{color:var(--acc)}
+.mz-th{margin:0 0 34px}
+.mz-thh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:11px;border-top:3px solid var(--rule-2)}
+.mz-thh h2{font-family:var(--serif-jp);font-weight:700;font-size:19px;line-height:1.5;margin:0;padding:0;border:0;letter-spacing:.02em}
+.mz-thh span{font-size:12px;font-weight:700;color:var(--acc);letter-spacing:.08em;white-space:nowrap}
+.mz-about{margin:44px 0 0}
+.mz-about .mz-box{margin-top:0}
+.mz-cards{list-style:none;margin:0;padding:0}
+.mz-cards li{border-bottom:1px solid var(--rule)}
+.mz-cards a{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"t" "w" "k" "h" "m";padding:16px 0 15px;text-decoration:none}
+.mz-cards a.pic{grid-template-columns:minmax(0,1fr) 108px;grid-template-areas:"t t" "w w" "k k" "h i" "m i";column-gap:14px}
+.mz .mz-cards .w{grid-area:w;font-family:var(--serif-en);font-weight:800;line-height:1.08;font-size:clamp(24px,calc((min(100vw,732px) - 32px) / (var(--ch,10) * .56)),36px);overflow-wrap:anywhere}
+.mz-cards .mz-k{grid-area:t;margin-bottom:2px!important}
+.mz-cards .k{grid-area:k;font-size:12.5px;color:var(--mute);margin-top:4px;line-height:1.5}
+.mz-cards .h{grid-area:h;font-weight:700;font-size:15px;line-height:1.65;margin-top:8px;word-break:auto-phrase}
+.mz-cards .m{grid-area:m;font-size:13px;color:var(--sub);line-height:1.7;margin-top:6px}
+.mz-cards img{grid-area:i;align-self:start;margin-top:10px;width:108px;height:81px;object-fit:cover;background:var(--ph)}
+.mz-cards img.tall{object-position:50% 25%}
+.mz-cards a:hover .w{color:var(--acc)}
+.mz-wl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px}
+.mz-wl.kana{grid-template-columns:minmax(0,1fr)}
+.mz-wl li{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px;padding:9px 0;border-bottom:1px solid var(--rule);min-width:0}
+.mz-wl a{font-weight:700;font-size:15px;line-height:1.5;overflow-wrap:anywhere;line-break:strict;text-decoration:none}
+.mz .mz-wl a[lang]{font-family:var(--serif-en);font-size:17px}
+.mz-wl span{font-size:11.5px;color:var(--mute);line-height:1.5;overflow-wrap:anywhere}
+.mz-wl a:hover{color:var(--acc)}
+@media (max-width:359px){.mz-sh h2{font-size:22px}.mz .mz-pq p{font-size:21px}.mz-pc b{font-size:32px}.mz-pc.long b{font-size:24px}.mz-pc li{padding:0 10px}
+  .mz-cards a.pic{grid-template-columns:minmax(0,1fr) 92px}.mz-cards img{width:92px;height:69px}.mz-wl{grid-template-columns:minmax(0,1fr)}}
+/*}@rare*/
 </style>
 </head>
 <body>
@@ -1074,7 +1316,7 @@ ol.ms.one > li::before{display:none}
     <nav class="hd-r" aria-label="検索とアプリ"><a class="srlink" href="/search/" aria-label="英単語を調べる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a><a class="applink" href="/app/">無料アプリ</a></nav>
   </div>
   <div class="snav-w"><div class="wrap snav-in">
-    <nav class="snav" aria-label="メイン"><a href="/articles/">記事</a><a href="/chigai/">違い</a><a href="/gogen/">語源</a><a href="/words/">単語一覧</a><a href="/kyotsu/">共通テスト</a><a href="/univ/">志望校別</a><a href="/ranking/nyushi/" aria-current=page>ランキング</a><a href="/shindan/">単語力診断</a><a href="/search/">単語を調べる</a><script>(function(){var a=document.querySelector('.snav [aria-current]'),n=document.querySelector('.snav');if(!n)return;if(a&&n.scrollWidth>n.clientWidth){var p=a.previousElementSibling||a;n.scrollLeft+=p.getBoundingClientRect().left-n.getBoundingClientRect().left-12}var e=function(){var c=n.parentNode.classList;c.toggle('end',n.scrollLeft+n.clientWidth>=n.scrollWidth-4);c.toggle('st',n.scrollLeft>4)};e();n.addEventListener('scroll',e,{passive:true})})()</script></nav>
+    <nav class="snav" aria-label="メイン"><a href="/articles/">記事</a><a href="/chigai/">違い</a><a href="/gogen/">語源</a><a href="/words/">単語一覧</a><a href="/rare/">珍しい単語</a><a href="/kyotsu/">共通テスト</a><a href="/univ/">志望校別</a><a href="/ranking/nyushi/" aria-current=page>ランキング</a><a href="/shindan/">単語力診断</a><a href="/search/">単語を調べる</a><script>(function(){var a=document.querySelector('.snav [aria-current]'),n=document.querySelector('.snav');if(!n)return;if(a&&n.scrollWidth>n.clientWidth){var p=a.previousElementSibling||a;n.scrollLeft+=p.getBoundingClientRect().left-n.getBoundingClientRect().left-12}var e=function(){var c=n.parentNode.classList;c.toggle('end',n.scrollLeft+n.clientWidth>=n.scrollWidth-4);c.toggle('st',n.scrollLeft>4)};e();n.addEventListener('scroll',e,{passive:true})})()</script></nav>
     <form class="hsrch" action="/search/" method="get" role="search" aria-label="英単語を調べる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" name="q" placeholder="英単語を調べる" aria-label="英単語か日本語で調べる" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" required></form>
   </div></div>
 </header>
@@ -1086,7 +1328,7 @@ ol.ms.one > li::before{display:none}
   <p class="lede">令和6〜8年度の共通テスト英語12本に、何本出たかの上位50語。</p>
   <div class="rk full">
     <div class="rk-hd"><span>順位</span><span>単語と意味</span><span>本数</span><span>回数</span></div>
-    <div class="rk-row"><span class="rk-n top">1</span><div class="rk-w"><a href="/words/view/" lang="en">view</a><span>意見、見方</span></div><span class="rk-v num">11<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n top">2</span><div class="rk-w"><a href="/words/local/" lang="en">local</a><span>地元の、その土地の</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">51回</span></div><div class="rk-row"><span class="rk-n top">3</span><div class="rk-w"><a href="/words/event/" lang="en">event</a><span><i class="rk-x">入試で多い意味</i>（重要な）出来事</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">44回</span></div><div class="rk-row"><span class="rk-n">4</span><div class="rk-w"><a href="/words/include/" lang="en">include</a><span>～を含む</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">5</span><div class="rk-w"><a href="/words/research/" lang="en">research</a><span>研究、調査</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">6</span><div class="rk-w"><a href="/words/improve/" lang="en">improve</a><span>～を改善する、向上させる</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">45回</span></div><div class="rk-row"><span class="rk-n">7</span><div class="rk-w"><a href="/words/experience/" lang="en">experience</a><span>経験、体験</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">42回</span></div><div class="rk-row"><span class="rk-n">8</span><div class="rk-w"><a href="/words/information/" lang="en">information</a><span>情報</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">37回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/words/create/" lang="en">create</a><span>～を創り出す、生み出す</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/words/decide/" lang="en">decide</a><span>～を決める、決心する</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">11</span><div class="rk-w"><a href="/words/require/" lang="en">require</a><span>～を必要とする</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">23回</span></div><div class="rk-row"><span class="rk-n">12</span><div class="rk-w"><a href="/words/consider/" lang="en">consider</a><span><i class="rk-x">入試で多い意味</i>～を…とみなす、思う</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">22回</span></div><div class="rk-row"><span class="rk-n">13</span><div class="rk-w"><a href="/words/common/" lang="en">common</a><span>よくある、ありふれた</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">20回</span></div><div class="rk-row"><span class="rk-n">14</span><div class="rk-w"><a href="/words/available/" lang="en">available</a><span>利用できる、手に入る</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">18回</span></div><div class="rk-row"><span class="rk-n">15</span><div class="rk-w"><a href="/words/continue/" lang="en">continue</a><span>～を続ける、続く</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">15回</span></div><div class="rk-row"><span class="rk-n">16</span><div class="rk-w"><a href="/words/probably/" lang="en">probably</a><span>たぶん、おそらく</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">11回</span></div><div class="rk-row"><span class="rk-n">17</span><div class="rk-w"><a href="/words/activity/" lang="en">activity</a><span>活動</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">49回</span></div><div class="rk-row"><span class="rk-n">18</span><div class="rk-w"><a href="/words/benefit/" lang="en">benefit</a><span>利益、恩恵、利点</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">31回</span></div><div class="rk-row"><span class="rk-n">19</span><div class="rk-w"><a href="/words/reduce/" lang="en">reduce</a><span>～を減らす</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">30回</span></div><div class="rk-row"><span class="rk-n">20</span><div class="rk-w"><a href="/words/provide/" lang="en">provide</a><span>～を提供する、与える</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">29回</span></div><div class="rk-row"><span class="rk-n">21</span><div class="rk-w"><a href="/words/health/" lang="en">health</a><span>健康</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">25回</span></div><div class="rk-row"><span class="rk-n">22</span><div class="rk-w"><a href="/words/various/" lang="en">various</a><span>さまざまな</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">24回</span></div><div class="rk-row"><span class="rk-n">23</span><div class="rk-w"><a href="/words/describe/" lang="en">describe</a><span>～を描写する、説明する</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">22回</span></div><div class="rk-row"><span class="rk-n">24</span><div class="rk-w"><a href="/words/although/" lang="en">although</a><span>～だけれども、～にもかかわらず</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">25</span><div class="rk-w"><a href="/words/seem/" lang="en">seem</a><span>～のように見える、思われる</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">20回</span></div><div class="rk-row"><span class="rk-n">26</span><div class="rk-w"><a href="/words/develop/" lang="en">develop</a><span>～を発達させる、開発する</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">19回</span></div><div class="rk-row"><span class="rk-n">27</span><div class="rk-w"><a href="/words/environment/" lang="en">environment</a><span>（自然）環境</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">16回</span></div><div class="rk-row"><span class="rk-n">28</span><div class="rk-w"><a href="/words/explain/" lang="en">explain</a><span>～を説明する</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">15回</span></div><div class="rk-row"><span class="rk-n">28</span><div class="rk-w"><a href="/words/tend/" lang="en">tend</a><span>～する傾向がある、～しがちだ</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">15回</span></div><div class="rk-row"><span class="rk-n">30</span><div class="rk-w"><a href="/words/attention/" lang="en">attention</a><span><i class="rk-x">入試で多い意味</i>注目、関心</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">14回</span></div><div class="rk-row"><span class="rk-n">30</span><div class="rk-w"><a href="/words/encourage/" lang="en">encourage</a><span>～を励ます、（励まして）促す</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">14回</span></div><div class="rk-row"><span class="rk-n">30</span><div class="rk-w"><a href="/words/finally/" lang="en">finally</a><span>ついに、やっと</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">14回</span></div><div class="rk-row"><span class="rk-n">33</span><div class="rk-w"><a href="/words/fact/" lang="en">fact</a><span>事実</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">13回</span></div><div class="rk-row"><span class="rk-n">33</span><div class="rk-w"><a href="/words/instead/" lang="en">instead</a><span><i class="rk-x">入試で多い意味</i>（instead of）～の代わりに</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">13回</span></div><div class="rk-row"><span class="rk-n">35</span><div class="rk-w"><a href="/words/effective/" lang="en">effective</a><span>効果的な、有効な</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">8回</span></div><div class="rk-row"><span class="rk-n">36</span><div class="rk-w"><a href="/words/technology/" lang="en">technology</a><span>科学技術</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">45回</span></div><div class="rk-row"><span class="rk-n">37</span><div class="rk-w"><a href="/words/reason/" lang="en">reason</a><span>理由</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">36回</span></div><div class="rk-row"><span class="rk-n">38</span><div class="rk-w"><a href="/words/result/" lang="en">result</a><span>結果</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">27回</span></div><div class="rk-row"><span class="rk-n">39</span><div class="rk-w"><a href="/words/focus/" lang="en">focus</a><span>～に集中する、重点を置く</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">26回</span></div><div class="rk-row"><span class="rk-n">40</span><div class="rk-w"><a href="/words/item/" lang="en">item</a><span>品物、品目</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">25回</span></div><div class="rk-row"><span class="rk-n">41</span><div class="rk-w"><a href="/words/rate/" lang="en">rate</a><span>割合、率</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">24回</span></div><div class="rk-row"><span class="rk-n">42</span><div class="rk-w"><a href="/words/article/" lang="en">article</a><span>記事</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">42</span><div class="rk-w"><a href="/words/prepare/" lang="en">prepare</a><span>～に備える、準備をする</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">44</span><div class="rk-w"><a href="/words/exchange/" lang="en">exchange</a><span><i class="rk-x">入試で多い意味</i>交換、交流</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">20回</span></div><div class="rk-row"><span class="rk-n">45</span><div class="rk-w"><a href="/words/customer/" lang="en">customer</a><span>客、顧客</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">18回</span></div><div class="rk-row"><span class="rk-n">45</span><div class="rk-w"><a href="/words/increase/" lang="en">increase</a><span>増える、～を増やす</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">18回</span></div><div class="rk-row"><span class="rk-n">47</span><div class="rk-w"><a href="/words/allow/" lang="en">allow</a><span>～を可能にする</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">17回</span></div><div class="rk-row"><span class="rk-n">47</span><div class="rk-w"><a href="/words/appear/" lang="en">appear</a><span><i class="rk-x">入試で多い意味</i>～のように見える、～らしい</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">17回</span></div><div class="rk-row"><span class="rk-n">47</span><div class="rk-w"><a href="/words/waste/" lang="en">waste</a><span><i class="rk-x">入試で多い意味</i>廃棄物、ごみ</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">17回</span></div><div class="rk-row"><span class="rk-n">50</span><div class="rk-w"><a href="/words/amount/" lang="en">amount</a><span>量、額</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">16回</span></div><div class="rk-row"><span class="rk-n">50</span><div class="rk-w"><a href="/words/effect/" lang="en">effect</a><span>影響</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">16回</span></div>
+    <div class="rk-row"><span class="rk-n top">1</span><div class="rk-w"><a href="/words/view/" lang="en">view</a><span>意見、見方</span></div><span class="rk-v num">11<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n top">2</span><div class="rk-w"><a href="/words/local/" lang="en">local</a><span>地元の、その土地の</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">51回</span></div><div class="rk-row"><span class="rk-n top">3</span><div class="rk-w"><a href="/words/event/" lang="en">event</a><span><i class="rk-x">入試で多い意味</i>（重要な）出来事</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">44回</span></div><div class="rk-row"><span class="rk-n">4</span><div class="rk-w"><a href="/words/include/" lang="en">include</a><span>～を含む</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">5</span><div class="rk-w"><a href="/words/research/" lang="en">research</a><span>研究、調査</span></div><span class="rk-v num">10<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">6</span><div class="rk-w"><a href="/words/improve/" lang="en">improve</a><span>～を改善する、向上させる</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">45回</span></div><div class="rk-row"><span class="rk-n">7</span><div class="rk-w"><a href="/words/experience/" lang="en">experience</a><span>経験、体験</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">42回</span></div><div class="rk-row"><span class="rk-n">8</span><div class="rk-w"><a href="/words/information/" lang="en">information</a><span>情報</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">37回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/words/create/" lang="en">create</a><span>～を創り出す、生み出す</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">9</span><div class="rk-w"><a href="/words/decide/" lang="en">decide</a><span>～を決める、決心する</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">28回</span></div><div class="rk-row"><span class="rk-n">11</span><div class="rk-w"><a href="/words/require/" lang="en">require</a><span>～を必要とする</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">23回</span></div><div class="rk-row"><span class="rk-n">12</span><div class="rk-w"><a href="/words/consider/" lang="en">consider</a><span><i class="rk-x">入試で多い意味</i>～を…とみなす、思う</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">22回</span></div><div class="rk-row"><span class="rk-n">13</span><div class="rk-w"><a href="/words/common/" lang="en">common</a><span>よくある、ありふれた</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">20回</span></div><div class="rk-row"><span class="rk-n">14</span><div class="rk-w"><a href="/words/available/" lang="en">available</a><span>利用できる、手に入る</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">18回</span></div><div class="rk-row"><span class="rk-n">15</span><div class="rk-w"><a href="/words/continue/" lang="en">continue</a><span>～を続ける、続く</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">15回</span></div><div class="rk-row"><span class="rk-n">16</span><div class="rk-w"><a href="/words/probably/" lang="en">probably</a><span>たぶん、おそらく</span></div><span class="rk-v num">9<small>本</small></span><span class="rk-c num">11回</span></div><div class="rk-row"><span class="rk-n">17</span><div class="rk-w"><a href="/words/activity/" lang="en">activity</a><span>活動</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">49回</span></div><div class="rk-row"><span class="rk-n">18</span><div class="rk-w"><a href="/words/benefit/" lang="en">benefit</a><span>利益、恩恵、利点</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">31回</span></div><div class="rk-row"><span class="rk-n">19</span><div class="rk-w"><a href="/words/reduce/" lang="en">reduce</a><span>～を減らす</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">30回</span></div><div class="rk-row"><span class="rk-n">20</span><div class="rk-w"><a href="/words/provide/" lang="en">provide</a><span>～を提供する、与える</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">29回</span></div><div class="rk-row"><span class="rk-n">21</span><div class="rk-w"><a href="/words/health/" lang="en">health</a><span>健康</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">25回</span></div><div class="rk-row"><span class="rk-n">22</span><div class="rk-w"><a href="/words/various/" lang="en">various</a><span>さまざまな</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">24回</span></div><div class="rk-row"><span class="rk-n">23</span><div class="rk-w"><a href="/words/describe/" lang="en">describe</a><span>～を描写する、説明する</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">22回</span></div><div class="rk-row"><span class="rk-n">24</span><div class="rk-w"><a href="/words/although/" lang="en">although</a><span>～だけれども、～にもかかわらず</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">25</span><div class="rk-w"><a href="/words/seem/" lang="en">seem</a><span>～のように見える、思われる</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">20回</span></div><div class="rk-row"><span class="rk-n">26</span><div class="rk-w"><a href="/words/develop/" lang="en">develop</a><span>～を発達させる、開発する</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">19回</span></div><div class="rk-row"><span class="rk-n">27</span><div class="rk-w"><a href="/words/environment/" lang="en">environment</a><span>（自然）環境</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">16回</span></div><div class="rk-row"><span class="rk-n">28</span><div class="rk-w"><a href="/words/explain/" lang="en">explain</a><span>～を説明する</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">15回</span></div><div class="rk-row"><span class="rk-n">28</span><div class="rk-w"><a href="/words/tend/" lang="en">tend</a><span>～する傾向がある、～しがちだ</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">15回</span></div><div class="rk-row"><span class="rk-n">30</span><div class="rk-w"><a href="/words/attention/" lang="en">attention</a><span><i class="rk-x">入試で多い意味</i>注目、関心</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">14回</span></div><div class="rk-row"><span class="rk-n">30</span><div class="rk-w"><a href="/words/encourage/" lang="en">encourage</a><span>～を励ます、（励まして）促す</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">14回</span></div><div class="rk-row"><span class="rk-n">30</span><div class="rk-w"><a href="/words/finally/" lang="en">finally</a><span>ついに、やっと</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">14回</span></div><div class="rk-row"><span class="rk-n">33</span><div class="rk-w"><a href="/words/fact/" lang="en">fact</a><span>事実</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">13回</span></div><div class="rk-row"><span class="rk-n">33</span><div class="rk-w"><a href="/words/instead/" lang="en">instead</a><span><i class="rk-x">入試で多い意味</i>（instead of）～の代わりに</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">13回</span></div><div class="rk-row"><span class="rk-n">35</span><div class="rk-w"><a href="/words/effective/" lang="en">effective</a><span>効果的な、有効な</span></div><span class="rk-v num">8<small>本</small></span><span class="rk-c num">8回</span></div><div class="rk-row"><span class="rk-n">36</span><div class="rk-w"><a href="/words/technology/" lang="en">technology</a><span>科学技術</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">45回</span></div><div class="rk-row"><span class="rk-n">37</span><div class="rk-w"><a href="/words/reason/" lang="en">reason</a><span>理由</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">36回</span></div><div class="rk-row"><span class="rk-n">38</span><div class="rk-w"><a href="/words/result/" lang="en">result</a><span>結果</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">27回</span></div><div class="rk-row"><span class="rk-n">39</span><div class="rk-w"><a href="/words/focus/" lang="en">focus</a><span>集中する、重点を置く</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">26回</span></div><div class="rk-row"><span class="rk-n">40</span><div class="rk-w"><a href="/words/item/" lang="en">item</a><span>品物、品目</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">25回</span></div><div class="rk-row"><span class="rk-n">41</span><div class="rk-w"><a href="/words/rate/" lang="en">rate</a><span>割合、率</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">24回</span></div><div class="rk-row"><span class="rk-n">42</span><div class="rk-w"><a href="/words/article/" lang="en">article</a><span>記事</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">42</span><div class="rk-w"><a href="/words/prepare/" lang="en">prepare</a><span>準備をする、備える</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">21回</span></div><div class="rk-row"><span class="rk-n">44</span><div class="rk-w"><a href="/words/exchange/" lang="en">exchange</a><span><i class="rk-x">入試で多い意味</i>交換、交流</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">20回</span></div><div class="rk-row"><span class="rk-n">45</span><div class="rk-w"><a href="/words/customer/" lang="en">customer</a><span>客、顧客</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">18回</span></div><div class="rk-row"><span class="rk-n">45</span><div class="rk-w"><a href="/words/increase/" lang="en">increase</a><span>増える、～を増やす</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">18回</span></div><div class="rk-row"><span class="rk-n">47</span><div class="rk-w"><a href="/words/allow/" lang="en">allow</a><span>～を可能にする</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">17回</span></div><div class="rk-row"><span class="rk-n">47</span><div class="rk-w"><a href="/words/appear/" lang="en">appear</a><span><i class="rk-x">入試で多い意味</i>～のように見える、～らしい</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">17回</span></div><div class="rk-row"><span class="rk-n">47</span><div class="rk-w"><a href="/words/waste/" lang="en">waste</a><span><i class="rk-x">入試で多い意味</i>廃棄物、ごみ</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">17回</span></div><div class="rk-row"><span class="rk-n">50</span><div class="rk-w"><a href="/words/amount/" lang="en">amount</a><span>量、額</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">16回</span></div><div class="rk-row"><span class="rk-n">50</span><div class="rk-w"><a href="/words/effect/" lang="en">effect</a><span>影響</span></div><span class="rk-v num">7<small>本</small></span><span class="rk-c num">16回</span></div>
   </div>
   <div class="rk-foot"><p class="rk-note">本数＝12本のうち何本に出たか、回数＝12本での合計。</p></div>
   <a class="sd-promo" href="/kyotsu/"><span class="sd-promo-t"><b>共通テスト直前</b><small>直前に覚える英単語100語（意味をかくして確認）と、レベルごとに英文の何％が読めるか</small></span><span class="sd-promo-go">見る →</span></a>
@@ -1134,7 +1376,7 @@ ol.ms.one > li::before{display:none}
     <div class="ft-c">© 2026 極（きわみ）英単語</div>
   </div>
 </footer>
-<script src="/assets/sug.d432a7dd.js" defer></script>
+<script src="/assets/sug.88b3d754.js" defer></script>
 <script>if(location.hostname==="kiwami-eitango.com"){window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","G-4FGEKWQYJH");var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-4FGEKWQYJH";document.head.appendChild(g);}</script><!-- Cloudflare Web Analytics --><script>if(location.hostname==="kiwami-eitango.com"){var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",'{"token": "5dedc341bc184ed59cae8fbf670adedf"}');document.body.appendChild(s)}</script>
 </body>
 </html>
