@@ -294,6 +294,10 @@ a.hq-t:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)
 .say{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--blue);display:grid;place-items:center;cursor:pointer;padding:0}
 .say:hover{background:var(--blue-50)}
 .say svg{width:20px;height:20px}
+.say[hidden]{display:none!important}
+.dxw .dxn{margin:12px 0 0;font-size:14px;line-height:1.7;color:var(--sub);word-break:auto-phrase;text-wrap:pretty}
+.dxw .dxn + .dxn{margin-top:6px}
+.dxw .dxn a{color:var(--blue);font-weight:600}
 .wd .gist{list-style:none;margin:6px 0 4px;padding:0;font-size:15px;line-height:1.8}
 .wd .gist li{display:flex;align-items:baseline;gap:8px;padding:1px 0}
 .wd .gist .no,.wd .bar-l .no,.wd .lead2 .no,.wd .warn .no{flex:none;width:19px;height:19px;border-radius:50%;background:var(--ink);color:var(--bg);font:700 11px/19px var(--en);text-align:center}
@@ -482,6 +486,7 @@ ol.ms.one > li{padding-left:0}
 ol.ms.one > li::before{display:none}
 .wd .ety > span{white-space:nowrap}
 .wjump{margin:4px 0 6px}
+.wjump a[aria-current]{border-color:var(--blue);color:var(--blue)}
 .wli .cnote{margin:0 0 4px}
 .wli .wl .rk-x{font-style:normal;margin-right:3px}
 .rk-also{margin:10px 0 0;font-size:13px}
@@ -1131,6 +1136,7 @@ ol.ms.one > li::before{display:none}
         <li><a href="/words/">受験英単語一覧</a></li>
         <li><a href="/rare/">受験以外の英単語</a></li>
         <li><a href="/body/">体の英単語</a></li>
+        <li><a href="/words/dict/">そのほかの英単語</a></li>
         <li><a href="/gogen/">接頭語・接尾語（語源）</a></li>
         <li><a href="/chigai/">まぎらわしい英単語の違い</a></li>
         <li><a href="/app/">アプリを開く</a></li>
