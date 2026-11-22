@@ -1061,8 +1061,9 @@ ol.ms.one > li::before{display:none}
 .ab .pv b a:hover{text-decoration:underline}
 .post .apl a{text-decoration:none}
 /*@rare{*/
-/* 受験以外の英単語 (/rare/<slug>/ and /rare/; build.py rare_page, rare_index): the word page's frame (article.art.wd.wk), a plain
-   dictionary entry. Pictures beside the text from 760px; tables scroll inside div.tbl, never the page */
+/* 受験以外の英単語 (/rare/<slug>/ and /rare/) and 体の英単語 (/body/…; build.py rare_page, rare_index): the word page's frame
+   (article.art.wd.wk), a plain dictionary entry. Pictures beside the text from 760px; tables scroll inside div.tbl, never the page;
+   li.th: a list item with its small picture */
 .wk p{line-height:1.9;margin:.6em 0}
 .wk h1{overflow-wrap:anywhere}
 .wk .wh .pr{flex-wrap:wrap;gap:0 12px;white-space:normal;max-width:100%}
@@ -1098,6 +1099,8 @@ ol.ms.one > li::before{display:none}
 .wkl .k{margin-right:10px;font-size:13px;color:var(--sub)}
 .wkl .m{font-size:14px;font-weight:700}
 .wkl p{margin:2px 0 0;font-size:14px;line-height:1.7;color:var(--sub)}
+.wkl li.th{display:flow-root}
+.wkl li.th>img{float:right;width:64px;height:64px;margin:2px 0 4px 12px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:var(--soft)}
 /*}@rare*/
 </style>
 </head>
@@ -1153,6 +1156,7 @@ ol.ms.one > li::before{display:none}
         <li><a href="/search/">英単語を調べる</a></li>
         <li><a href="/words/">受験英単語一覧</a></li>
         <li><a href="/rare/">受験以外の英単語</a></li>
+        <li><a href="/body/">体の英単語</a></li>
         <li><a href="/gogen/">接頭語・接尾語（語源）</a></li>
         <li><a href="/chigai/">まぎらわしい英単語の違い</a></li>
         <li><a href="/app/">アプリを開く</a></li>
