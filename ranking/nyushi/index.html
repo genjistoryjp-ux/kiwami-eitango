@@ -1065,6 +1065,44 @@ ol.ms.one > li::before{display:none}
 .ab .pv b a{color:var(--blue)}
 .ab .pv b a:hover{text-decoration:underline}
 .post .apl a{text-decoration:none}
+/* 分野別の英単語 (/fields/): the link to it from the word lists and the search, the chips under a word page's headword,
+   the hub's cards, a field's list (the box that narrows it, the 受験 label) */
+.fgo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 10px;padding:12px 16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+.fgo b{font-size:15px;font-weight:700;color:var(--blue)}
+.fgo span{font:500 13px var(--en);color:var(--sub);white-space:nowrap}
+.fgo span::after{content:"";display:inline-block;width:6px;height:6px;margin:0 2px 0 8px;border:solid currentColor;border-width:1.5px 1.5px 0 0;transform:rotate(45deg);vertical-align:1px}
+.fgo:hover{border-color:var(--blue)}
+.srch .fgo{margin-top:24px}
+.wd .wfld{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.wfld a{font-size:13px;line-height:20px;padding:5px 12px;border:1px solid var(--line);border-radius:999px;color:var(--sub);background:var(--card)}
+.wfld a:hover{border-color:var(--blue);color:var(--blue)}
+.fh .wsec{scroll-margin-top:8px}
+.fcards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.fcards a{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:2px 12px;height:100%;padding:12px 16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+.fcards b{font-size:16px;line-height:1.5;font-weight:700}
+.fcards small{font:500 13px var(--en);color:var(--mute);white-space:nowrap}
+.fcards span{grid-column:1/-1;font-size:14px;line-height:1.5;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fcards a:hover{border-color:var(--blue)}
+.fcards a:hover b{color:var(--blue)}
+.fsel{display:flex;gap:8px;margin:16px 0 0}
+.fsel[hidden]{display:none}
+.fsel .u-find{flex:1;min-width:0;margin:0}
+.fex{flex:none;height:46px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:600 14px var(--jp);cursor:pointer}
+.fex small{font:500 12px var(--en);color:var(--mute);margin-left:6px}
+.fex[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-50);color:var(--blue-ink)}
+.fex[aria-pressed="true"] small{color:inherit}
+.fl .wsec{padding-top:20px}
+.wl .fx{flex:none;align-self:center;font:600 11px/1 var(--jp);font-style:normal;color:var(--blue-ink);background:var(--blue-50);border-radius:3px;padding:3px 5px}
+.fl .flg{scroll-margin-top:8px}
+.fl .flg[hidden],.fl-j[hidden]{display:none}
+.fl .flg + .flg{margin-top:4px}
+.fl .rel small{font:500 12px var(--en);color:var(--mute);margin-left:6px}
+.fl .rel a:hover small{color:inherit}
+.fl .fback{margin:28px 0 0}
+.fback a{display:inline-block;padding:10px 0;font-size:15px;font-weight:600;color:var(--blue)}
+.fback a::after{content:"";display:inline-block;width:6px;height:6px;margin-left:8px;border:solid currentColor;border-width:1.5px 1.5px 0 0;transform:rotate(45deg);vertical-align:2px}
+@media (min-width:600px){.fcards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:900px){.fgo{max-width:440px}.fcards{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.fsel{max-width:600px}}
 /*@rare{*/
 /* 受験以外の英単語 (/rare/<slug>/ and /rare/) and 体の英単語 (/body/…; build.py rare_page, rare_index): the word page's frame
    (article.art.wd.wk), a plain dictionary entry. Pictures beside the text from 760px; tables scroll inside div.tbl, never the page;
@@ -1154,6 +1192,7 @@ ol.ms.one > li::before{display:none}
       <div><h2>調べる・覚える</h2><ul class="ft-l">
         <li><a href="/search/">英単語を調べる</a></li>
         <li><a href="/words/">受験英単語一覧</a></li>
+        <li><a href="/fields/">分野別の英単語</a></li>
         <li><a href="/rare/">受験以外の英単語</a></li>
         <li><a href="/body/">体の英単語</a></li>
         <li><a href="/words/dict/">そのほかの英単語</a></li>
